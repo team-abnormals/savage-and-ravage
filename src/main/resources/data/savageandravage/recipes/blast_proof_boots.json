@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "X X",
+    "X X"
+  ],
+  "key": {
+    "X": {
+      "item": "savageandravage:blast_proof_plating"
+    }
+  },
+  "result": {
+    "item": "savageandravage:griefer_boots"
+  }
+}
