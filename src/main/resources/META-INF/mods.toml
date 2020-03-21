@@ -1,0 +1,22 @@
+modLoader="javafml"
+loaderVersion="[31,)"
+issueTrackerURL="http://my.issue.tracker/"
+
+[[mods]] #mandatory
+modId="savageandravage"
+version="${file.jarVersion}"
+displayName="Savage & Ravage"
+displayURL="http://example.com/"
+logoFile="examplemod.png"
+credits="credit to bagel all bagel he the best" 
+authors="Farcr & Bagel"
+description='''
+theres like ravagers and savagers and stuff
+'''
+
+[[dependencies.savageandravage]] 
+    modId="forge"
+    mandatory=true
+    versionRange="[31,)"
+    ordering="NONE"
+    side="BOTH"
