@@ -18,5 +18,7 @@ public class SRItems {
 	public static RegistryObject<Item> GRIEFER_LEGGINGS = RegistryUtils.createItem("griefer_leggings", () -> new Item(new Item.Properties().group(ItemGroup.COMBAT)));
 	public static RegistryObject<Item> GRIEFER_BOOTS = RegistryUtils.createItem("griefer_boots", () -> new Item(new Item.Properties().group(ItemGroup.COMBAT)));
 	
+	public static RegistryObject<Item> POULTRY_FARMING_HAT = RegistryUtils.createItem("poultry_farming_hat", () -> new Item(new Item.Properties().group(ItemGroup.TOOLS	)));
+	
 	public static RegistryObject<Item> CREEPER_SPORES = RegistryUtils.createItem("creeper_spores", () -> new Item(new Item.Properties().group(ItemGroup.MATERIALS)));
 }
