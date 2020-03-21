@@ -1,0 +1,36 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "savageandravage:creeper_spores"
+        },
+        {
+            "item": "savageandravage:creeper_spores"
+        },
+        {
+            "item": "savageandravage:creeper_spores"
+        },
+        {
+            "item": "savageandravage:creeper_spores"
+        },
+        {
+            "item": "savageandravage:creeper_spores"
+        },
+        {
+            "item": "savageandravage:creeper_spores"
+        },
+        {
+            "item": "savageandravage:creeper_spores"
+        },
+        {
+            "item": "savageandravage:creeper_spores"
+        },
+        {
+            "item": "savageandravage:creeper_spores"
+        }
+    ],
+    "result": {
+        "item": "savageandravage:creeper_spore_sack",
+        "count": 1
+    }
+}

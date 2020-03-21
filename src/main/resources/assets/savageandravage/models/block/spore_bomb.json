@@ -1,0 +1,8 @@
+{
+    "parent": "block/cube_bottom_top",
+    "textures": {
+        "top": "savageandravage:block/spore_bomb_top",
+        "bottom": "savageandravage:block/spore_bomb_bottom",
+        "side": "savageandravage:block/spore_bomb_side"
+    }
+}
