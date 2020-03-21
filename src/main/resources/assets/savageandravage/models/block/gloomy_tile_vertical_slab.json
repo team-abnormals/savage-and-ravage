@@ -1,5 +1,5 @@
 {
-    "parent": "quark:block/vertical_slab",
+    "parent": "savageandravage:block/vertical_slab",
     "textures": {
         "side": "savageandravage:block/gloomy_tiles",
         "top": "savageandravage:block/gloomy_tiles",
