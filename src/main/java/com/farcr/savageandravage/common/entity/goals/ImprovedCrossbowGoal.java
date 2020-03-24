@@ -57,6 +57,8 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 
 	   public void tick() {
 		      LivingEntity livingentity = this.field_220748_a.getAttackTarget();
+		      this.field_220748_a.setAggroed(true); /* i had to put this in because minecraft doesnt think shooting an arrow at another entity is
+		      aggression.  */
 		      if (livingentity != null) {
 		         boolean flag = this.field_220748_a.getEntitySenses().canSee(livingentity);
 		         boolean flag1 = this.field_220752_e > 0;
