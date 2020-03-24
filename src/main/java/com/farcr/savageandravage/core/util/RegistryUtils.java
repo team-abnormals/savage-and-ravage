@@ -1,5 +1,6 @@
 package com.farcr.savageandravage.core.util;
 
+import com.farcr.savageandravage.common.item.SRSpawnEgg;
 import com.farcr.savageandravage.core.registry.SRBlocks;
 import com.farcr.savageandravage.core.registry.SREntities;
 import com.farcr.savageandravage.core.registry.SRItems;
@@ -24,6 +25,13 @@ public class RegistryUtils {
 	public static BlockItem createSimpleItemBlock(Block block, ItemGroup itemGroup) {
         return (BlockItem) new BlockItem(block, new Item.Properties().group(itemGroup)).setRegistryName(block.getRegistryName());
     }
+
+    //Imported from Buzzier Bees
+	public static RegistryObject<Item> createSpawnEggItem(String entityName, Supplier<EntityType<?>> supplier, int primaryColor, int secondaryColor, ItemGroup group) {
+		RegistryObject<Item> spawnEgg = SRItems.ITEMS.register(entityName + "_spawn_egg", () -> new SRSpawnEgg(supplier, primaryColor, secondaryColor, new Item.Properties().group(group)));
+		SRItems.SPAWN_EGGS.add(spawnEgg);
+		return spawnEgg;
+	}
 	
 	public static <B extends Block> RegistryObject<B> createBlock(String name, Supplier<? extends B> supplier, ItemGroup itemGroup) {
         RegistryObject<B> block = SRBlocks.BLOCKS.register(name, supplier);
@@ -49,8 +57,8 @@ public class RegistryUtils {
 		return item;
 	}
 
-	public static <E extends EntityType<?>> RegistryObject<E> createEntity(String name, Supplier<? extends E> supplier) {
+	/*public static <E extends EntityType<?>> RegistryObject<E> createEntity(String name, Supplier<? extends E> supplier) {
 		RegistryObject<E> entity = SREntities.ENTITIES.register(name, supplier);
 		return entity;
-	}
+	}*/
 }
