@@ -2,30 +2,52 @@ package com.farcr.savageandravage.client.model;
 
 import com.farcr.savageandravage.common.entity.CreepieEntity;
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-
-import net.minecraft.client.renderer.entity.model.EntityModel;
+import net.minecraft.client.renderer.entity.model.SegmentedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 
 /**
- * Creepie - Farcr
+ * CreepieModel - TallestEgg
  * Created using Tabula 7.1.0
  */
-public class CreepieModel<C extends CreepieEntity> extends EntityModel<CreepieEntity> {
-	public ModelRenderer head;
+public class CreepieModel extends SegmentedModel<CreepieEntity> {
+	public ModelRenderer field_78134_c;
+	public ModelRenderer field_78132_e;
+	public ModelRenderer field_78130_g;
+	public ModelRenderer field_78129_f;
+	public ModelRenderer field_78135_a;
+	public ModelRenderer field_78131_d;
 
 	public CreepieModel() {
 		this.textureWidth = 64;
 		this.textureHeight = 32;
-		this.head = new ModelRenderer(this, 0, 0);
-		this.head.setRotationPoint(-3.0F, 9.0F, -3.0F);
-		this.head.addBox(0.0F, 0.0F, 0.0F, 6, 6, 6, 0.0F);
+		this.field_78129_f = new ModelRenderer(this, 0, 16);
+		this.field_78129_f.setRotationPoint(-2.0F, 18.0F, -4.0F);
+		this.field_78129_f.addBox(-2.0F, 0.0F, -2.0F, 4, 6, 4, 0.0F);
+		this.field_78135_a = new ModelRenderer(this, 0, 0);
+		this.field_78135_a.setRotationPoint(0.0F, 6.0F, 0.0F);
+		this.field_78135_a.addBox(-4.0F, -8.0F, -4.0F, 8, 8, 8, 2.0F);
+		this.field_78134_c = new ModelRenderer(this, 16, 16);
+		this.field_78134_c.setRotationPoint(0.0F, 6.0F, 0.0F);
+		this.field_78134_c.addBox(-4.0F, 0.0F, -2.0F, 8, 12, 4, 0.0F);
+		this.field_78132_e = new ModelRenderer(this, 0, 16);
+		this.field_78132_e.setRotationPoint(2.0F, 18.0F, 4.0F);
+		this.field_78132_e.addBox(-2.0F, 0.0F, -2.0F, 4, 6, 4, 0.0F);
+		this.field_78130_g = new ModelRenderer(this, 0, 16);
+		this.field_78130_g.setRotationPoint(2.0F, 18.0F, -4.0F);
+		this.field_78130_g.addBox(-2.0F, 0.0F, -2.0F, 4, 6, 4, 0.0F);
+		this.field_78131_d = new ModelRenderer(this, 0, 16);
+		this.field_78131_d.setRotationPoint(-2.0F, 18.0F, 4.0F);
+		this.field_78131_d.addBox(-2.0F, 0.0F, -2.0F, 4, 6, 4, 0.0F);
 	}
 
 	@Override
 	public void setRotationAngles(CreepieEntity creepieEntity, float v, float v1, float v2, float v3, float v4) {
 
+	}
+
+	@Override
+	public Iterable<ModelRenderer> getParts() {
+		return ImmutableList.of(this.field_78129_f, this.field_78135_a, this.field_78134_c, this.field_78132_e, this.field_78130_g, this.field_78131_d);
 	}
 
 	/**
@@ -36,13 +58,5 @@ public class CreepieModel<C extends CreepieEntity> extends EntityModel<CreepieEn
 		modelRenderer.rotateAngleY = y;
 		modelRenderer.rotateAngleZ = z;
 	}
-
-	public Iterable<ModelRenderer> getParts() {
-		return ImmutableList.of(this.head);
-	}
-
-	@Override
-	public void render(MatrixStack matrixStack, IVertexBuilder iVertexBuilder, int i, int i1, float v, float v1, float v2, float v3) {
-		/**auto-implemented by IntelliJ, review this later*/
-	}
 }
+
