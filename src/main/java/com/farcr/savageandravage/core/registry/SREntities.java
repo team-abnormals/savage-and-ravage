@@ -5,7 +5,6 @@ import com.farcr.savageandravage.client.render.SkeletonVillagerRenderer;
 import com.farcr.savageandravage.common.entity.CreepieEntity;
 import com.farcr.savageandravage.common.entity.SkeletonVillagerEntity;
 import com.farcr.savageandravage.core.SavageAndRavage;
-import com.farcr.savageandravage.core.util.RegistryUtils;
 
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
