@@ -13,7 +13,7 @@ public class CreepieRenderer extends MobRenderer<CreepieEntity, CreeperModel<Cre
     private static final ResourceLocation CREEPIE_TEXTURES = new ResourceLocation("textures/entity/creeper/creeper.png");
     
     public CreepieRenderer(EntityRendererManager renderManagerIn) {
-		super(renderManagerIn, new CreeperModel<CreepieEntity>(), 0.25F);
+		super(renderManagerIn, new CreeperModel<CreepieEntity>(), 0.3F);
     }
 
     protected void preRenderCallback(CreepieEntity entitylivingbaseIn, MatrixStack matrixStackIn, float partialTickTime) {
