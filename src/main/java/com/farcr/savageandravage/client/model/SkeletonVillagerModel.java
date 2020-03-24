@@ -134,10 +134,19 @@ public class SkeletonVillagerModel extends SegmentedModel<SkeletonVillagerEntity
 		return this.Head;
 	}
 
-	@Override
-	public void translateHand(HandSide sideIn, MatrixStack matrixStackIn) {
-		// TODO Auto-generated method stub
-		
+    protected ModelRenderer getArmForSide(HandSide side) 
+    {
+	  return side == HandSide.LEFT ? this.LeftArm : this.RightArm;
 	}
 
+
+	@Override
+	public void translateHand(HandSide sideIn, MatrixStack matrixStackIn) 
+	{
+	  float f = sideIn == HandSide.RIGHT ? 1.0F : -1.0F;
+	  ModelRenderer modelrenderer = this.getArmForSide(sideIn);
+	  modelrenderer.rotationPointX += f;
+	  modelrenderer.translateRotate(matrixStackIn);
+	  modelrenderer.rotationPointX -= f;
+	}
 }
