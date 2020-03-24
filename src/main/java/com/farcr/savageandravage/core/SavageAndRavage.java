@@ -1,6 +1,7 @@
 package com.farcr.savageandravage.core;
 
 import com.farcr.savageandravage.core.registry.SRBlocks;
+import com.farcr.savageandravage.core.registry.SREntities;
 import com.farcr.savageandravage.core.registry.SRItems;
 
 import net.minecraftforge.api.distmarker.Dist;
@@ -23,7 +24,7 @@ public class SavageAndRavage
     	
         SRBlocks.BLOCKS.register(modEventBus);
         SRItems.ITEMS.register(modEventBus);
-        //SREntities.ENTITY_TYPES.register(modEventBus);
+        SREntities.ENTITIES.register(modEventBus);
         //SRBlocks.PAINTINGS.register(modEventBus);
         
         MinecraftForge.EVENT_BUS.register(this);
@@ -41,7 +42,7 @@ public class SavageAndRavage
     
     private void clientSetup(final FMLClientSetupEvent event) {
     	//SRData.setRenderLayers();
-    	//SREntities.registerRendering();
+    	SREntities.registerRendering();
         //SRData.registerBlockColors();
     }
 }

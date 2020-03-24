@@ -1,10 +1,13 @@
 package com.farcr.savageandravage.core.util;
 
 import com.farcr.savageandravage.core.registry.SRBlocks;
+import com.farcr.savageandravage.core.registry.SREntities;
 import com.farcr.savageandravage.core.registry.SRItems;
 import com.google.common.base.Supplier;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -44,5 +47,10 @@ public class RegistryUtils {
     	Supplier<? extends I> determinedSupplier = ModList.get().isLoaded(mod) ? compat_supplier : supplier;
     	RegistryObject<I> item = SRItems.ITEMS.register(name, determinedSupplier);
 		return item;
+	}
+
+	public static <E extends EntityType<?>> RegistryObject<E> createEntity(String name, Supplier<? extends E> supplier) {
+		RegistryObject<E> entity = SREntities.ENTITIES.register(name, supplier);
+		return entity;
 	}
 }
