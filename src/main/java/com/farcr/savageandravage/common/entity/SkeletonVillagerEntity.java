@@ -44,6 +44,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
@@ -107,10 +108,20 @@ public class SkeletonVillagerEntity extends AbstractSkeletonEntity implements IC
 	   this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, VillagerEntity.class, true));
 	}
 
-	@Override
+	protected SoundEvent getAmbientSound() {
+		return SoundEvents.ENTITY_SKELETON_AMBIENT;
+	}
+
+	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
+		return SoundEvents.ENTITY_SKELETON_HURT;
+	}
+	
+	protected SoundEvent getDeathSound() {
+		return SoundEvents.ENTITY_SKELETON_DEATH;
+	}
+	
 	protected SoundEvent getStepSound() {
-		// TODO Auto-generated method stub
-		return null;
+		return SoundEvents.ENTITY_SKELETON_STEP;
 	}
 
 	@Override
