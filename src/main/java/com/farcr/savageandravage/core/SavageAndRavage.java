@@ -1,5 +1,6 @@
 package com.farcr.savageandravage.core;
 
+import com.farcr.savageandravage.core.events.SREvents;
 import com.farcr.savageandravage.core.registry.SRBlocks;
 import com.farcr.savageandravage.core.registry.SREntities;
 import com.farcr.savageandravage.core.registry.SRItems;
@@ -28,6 +29,7 @@ public class SavageAndRavage
         //SRBlocks.PAINTINGS.register(modEventBus);
         
         MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(SREvents.class);
         
         modEventBus.addListener(this::commonSetup);
     	DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
