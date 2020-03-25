@@ -43,6 +43,7 @@ public class SavageAndRavage
     private void clientSetup(final FMLClientSetupEvent event) {
     	//SRData.setRenderLayers();
     	SREntities.registerRendering();
+    	SREntities.addEntitySpawns();
         //SRData.registerBlockColors();
     }
 }
