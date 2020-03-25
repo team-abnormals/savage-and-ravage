@@ -18,11 +18,13 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 	   private final float field_220751_d;
 	   private int field_220752_e;
 	   private int field_220753_f;
+	   private double blockstillbackup;
 
-	   public ImprovedCrossbowGoal(T p_i50322_1_, double p_i50322_2_, float p_i50322_4_) {
+	   public ImprovedCrossbowGoal(T p_i50322_1_, double p_i50322_2_, float p_i50322_4_, double blockstillbackup) {
 	      this.field_220748_a = p_i50322_1_;
 	      this.field_220750_c = p_i50322_2_;
 	      this.field_220751_d = p_i50322_4_ * p_i50322_4_;
+	      this.blockstillbackup = blockstillbackup;
 	      this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
 	   }
 
@@ -76,7 +78,7 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 		         
 		         double d1 = livingentity.getDistance(field_220748_a);	         
 		         //makes the entity that has this goal backup if the attack target is 10 blocks infront of them.
-		         if (d1 <= 9.0D) {
+		         if (d1 <= blockstillbackup) {
 		          this.field_220748_a.getMoveHelper().strafe(-10.0F, 0); 
 		          this.field_220748_a.faceEntity(livingentity, 30.0F, 30.0F);
 		         }
