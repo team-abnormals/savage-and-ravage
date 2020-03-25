@@ -2,12 +2,10 @@ package com.farcr.savageandravage.core.util;
 
 import com.farcr.savageandravage.common.item.SRSpawnEgg;
 import com.farcr.savageandravage.core.registry.SRBlocks;
-import com.farcr.savageandravage.core.registry.SREntities;
 import com.farcr.savageandravage.core.registry.SRItems;
 import com.google.common.base.Supplier;
 
 import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
