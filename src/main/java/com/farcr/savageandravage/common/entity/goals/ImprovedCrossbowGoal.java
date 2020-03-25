@@ -72,11 +72,11 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 		            --this.field_220752_e;
 		         }
 		         
-		         double d1 = livingentity.getDistanceSq(field_220748_a);
 		         
 		         
+		         double d1 = livingentity.getDistance(field_220748_a);	         
 		         //makes the entity that has this goal backup if the attack target is 10 blocks infront of them.
-		         if (d1 <= 10) {
+		         if (d1 <= 9.0D) {
 		          this.field_220748_a.getMoveHelper().strafe(-10.0F, 0); 
 		          this.field_220748_a.faceEntity(livingentity, 30.0F, 30.0F);
 		         }
