@@ -29,6 +29,7 @@ public class SRItems {
 	
 	public static RegistryObject<Item> CREEPER_SPORES = RegistryUtils.createItem("creeper_spores", () -> new Item(new Item.Properties().group(ItemGroup.MATERIALS)));
 
+	//these colors are place holders dw
 	public static RegistryObject<Item> CREEPIE_SPAWN_EGG = RegistryUtils.createSpawnEggItem("creepie", () -> SREntities.CREEPIE.get(), 894731, 0, ItemGroup.MISC);
-	public static RegistryObject<Item> SKELETON_VILLAGER_SPAWN_EGG = RegistryUtils.createSpawnEggItem("skeleton_villager", () -> SREntities.SKELETON_VILLAGER.get(), 5651507, 4802889, ItemGroup.MISC);
+	public static RegistryObject<Item> SKELETON_VILLAGER_SPAWN_EGG = RegistryUtils.createSpawnEggItem("skeleton_villager", () -> SREntities.SKELETON_VILLAGER.get(), 12698049, 4802889, ItemGroup.MISC);
 }

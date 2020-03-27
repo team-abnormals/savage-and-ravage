@@ -16,6 +16,10 @@
 	
 	"item.savageandravage.creeper_spores": "Creeper Spores",
 	"block.savageandravage.creeper_spore_sack": "Creeper Spore Sack",
-	"block.savageandravage.spore_bomb": "Spore Bomb"
+	"block.savageandravage.spore_bomb": "Spore Bomb",
+        "entity.savageandravage.skeleton_villager": "Skeleton Villager",
+        "entity.savageandravage.creepie": "Creepie",
+        "item.savageandravage.skeleton_villager_spawn_egg": "Skeleton Villager Spawn Egg",
+        "item.savageandravage.creepie_spawn_egg": "Creepie Spawn Egg"
 	
 }
