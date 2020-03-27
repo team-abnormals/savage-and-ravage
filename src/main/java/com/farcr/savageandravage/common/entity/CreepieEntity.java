@@ -8,7 +8,7 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
 
 public class CreepieEntity extends MonsterEntity {
-    public CreepieEntity(EntityType<? extends MonsterEntity> type, World worldIn){
+    public CreepieEntity(EntityType<? extends CreepieEntity> type, World worldIn){
         super(type, worldIn);
     }
     
