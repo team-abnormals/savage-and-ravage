@@ -43,5 +43,4 @@ public class SREntities {
     		biome.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(SKELETON_VILLAGER.get(), 5, 5, 5));
     	}
     }
-    
 }
