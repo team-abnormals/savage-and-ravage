@@ -75,7 +75,7 @@ public class SkeletonVillagerModel extends SegmentedModel<SkeletonVillagerEntity
 	@Override
 	public Iterable<ModelRenderer> getParts()
 	{
-		return ImmutableList.of(this.Head, this.Body, this.RightLeg, this.LeftLeg, this.RightArm, this.LeftArm, this.LeftClosedArm, this.RightClosedArm, this.MiddleClosedArm);
+		return ImmutableList.of(this.Head, this.Body, this.RightLeg, this.LeftLeg, this.RightArm, this.LeftArm, this.MiddleClosedArm);
 	}
 
     /**
