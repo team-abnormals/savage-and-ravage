@@ -1,8 +1,11 @@
 package com.farcr.savageandravage.core.events;
 
+import com.farcr.savageandravage.common.entity.SkeletonVillagerEntity;
 import com.farcr.savageandravage.common.entity.goals.ImprovedCrossbowGoal;
 
+import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.ai.goal.RangedCrossbowAttackGoal;
+import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.monster.PillagerEntity;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -21,6 +24,11 @@ public class SREvents
      		    pillager.goalSelector.removeGoal(crossbowGoal);  
      		    pillager.goalSelector.addGoal(3, aiCrossBow);
            });
+		}
+		if(event.getEntity() instanceof VillagerEntity)  
+		{
+		   VillagerEntity villager = (VillagerEntity)event.getEntity();
+		   villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, SkeletonVillagerEntity.class, 15.0F, 0.5D, 0.5D));
 		}
 	}
 
