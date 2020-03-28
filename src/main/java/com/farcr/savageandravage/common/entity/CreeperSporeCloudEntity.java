@@ -1,8 +1,5 @@
 package com.farcr.savageandravage.common.entity;
 
-import com.farcr.savageandravage.core.registry.SREntities;
-
-import net.minecraft.entity.AreaEffectCloudEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.projectile.ThrowableEntity;
 import net.minecraft.util.math.RayTraceResult;
