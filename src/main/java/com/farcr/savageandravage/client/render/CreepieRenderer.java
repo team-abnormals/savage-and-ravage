@@ -17,7 +17,7 @@ public class CreepieRenderer extends MobRenderer<CreepieEntity, CreepieModel>{
     }
 
     protected void preRenderCallback(CreepieEntity entitylivingbaseIn, MatrixStack matrixStackIn, float partialTickTime) {
-        matrixStackIn.scale(0.5F, 0.5F, 0.5F); //it small - no need for this now, it seems
+        matrixStackIn.scale(0.5F, 0.5F, 0.5F); //it small
     }
 
     @Override

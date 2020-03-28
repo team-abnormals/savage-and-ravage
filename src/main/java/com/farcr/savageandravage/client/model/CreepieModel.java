@@ -4,50 +4,56 @@ import com.farcr.savageandravage.common.entity.CreepieEntity;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.renderer.entity.model.SegmentedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraft.util.math.MathHelper;
 
 /**
  * CreepieModel - TallestEgg
  * Created using Tabula 7.1.0
  */
 public class CreepieModel extends SegmentedModel<CreepieEntity> {
-	public ModelRenderer field_78134_c;
-	public ModelRenderer field_78132_e;
-	public ModelRenderer field_78130_g;
-	public ModelRenderer field_78129_f;
-	public ModelRenderer field_78135_a;
-	public ModelRenderer field_78131_d;
+	public ModelRenderer head;
+	public ModelRenderer body;
+	public ModelRenderer leg1;
+	public ModelRenderer leg2;
+	public ModelRenderer leg3;
+	public ModelRenderer leg4;
 
 	public CreepieModel() {
 		this.textureWidth = 64;
 		this.textureHeight = 32;
-		this.field_78129_f = new ModelRenderer(this, 0, 16);
-		this.field_78129_f.setRotationPoint(-2.0F, 18.0F, -4.0F);
-		this.field_78129_f.addBox(-2.0F, 0.0F, -2.0F, 4, 6, 4, 0.0F);
-		this.field_78135_a = new ModelRenderer(this, 0, 0);
-		this.field_78135_a.setRotationPoint(0.0F, 6.0F, 0.0F);
-		this.field_78135_a.addBox(-4.0F, -8.0F, -4.0F, 8, 8, 8, 2.0F);
-		this.field_78134_c = new ModelRenderer(this, 16, 16);
-		this.field_78134_c.setRotationPoint(0.0F, 6.0F, 0.0F);
-		this.field_78134_c.addBox(-4.0F, 0.0F, -2.0F, 8, 12, 4, 0.0F);
-		this.field_78132_e = new ModelRenderer(this, 0, 16);
-		this.field_78132_e.setRotationPoint(2.0F, 18.0F, 4.0F);
-		this.field_78132_e.addBox(-2.0F, 0.0F, -2.0F, 4, 6, 4, 0.0F);
-		this.field_78130_g = new ModelRenderer(this, 0, 16);
-		this.field_78130_g.setRotationPoint(2.0F, 18.0F, -4.0F);
-		this.field_78130_g.addBox(-2.0F, 0.0F, -2.0F, 4, 6, 4, 0.0F);
-		this.field_78131_d = new ModelRenderer(this, 0, 16);
-		this.field_78131_d.setRotationPoint(-2.0F, 18.0F, 4.0F);
-		this.field_78131_d.addBox(-2.0F, 0.0F, -2.0F, 4, 6, 4, 0.0F);
+		this.head = new ModelRenderer(this, 0, 0);
+		this.head.setRotationPoint(0.0F, 6.0F, 0.0F);
+		this.head.addBox(-4.0F, -8.0F, -4.0F, 8, 8, 8, 2.0F);
+		this.body = new ModelRenderer(this, 16, 16);
+		this.body.setRotationPoint(0.0F, 6.0F, 0.0F);
+		this.body.addBox(-4.0F, 0.0F, -2.0F, 8, 12, 4, 0.0F);
+		this.leg1 = new ModelRenderer(this, 0, 16);
+		this.leg1.setRotationPoint(2.0F, 18.0F, 4.0F);
+		this.leg1.addBox(-2.0F, 0.0F, -2.0F, 4, 6, 4, 0.0F);
+		this.leg2 = new ModelRenderer(this, 0, 16);
+		this.leg2.setRotationPoint(-2.0F, 18.0F, 4.0F);
+		this.leg2.addBox(-2.0F, 0.0F, -2.0F, 4, 6, 4, 0.0F);
+		this.leg3 = new ModelRenderer(this, 0, 16);
+		this.leg3.setRotationPoint(2.0F, 18.0F, -4.0F);
+		this.leg3.addBox(-2.0F, 0.0F, -2.0F, 4, 6, 4, 0.0F);
+		this.leg4 = new ModelRenderer(this, 0, 16);
+		this.leg4.setRotationPoint(-2.0F, 18.0F, -4.0F);
+		this.leg4.addBox(-2.0F, 0.0F, -2.0F, 4, 6, 4, 0.0F);
 	}
 
 	@Override
-	public void setRotationAngles(CreepieEntity creepieEntity, float v, float v1, float v2, float v3, float v4) {
-
+	public void setRotationAngles(CreepieEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+		this.head.rotateAngleY = netHeadYaw * 0.017453292F;
+		this.head.rotateAngleX = headPitch * 0.017453292F;
+		this.leg1.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+		this.leg2.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + 3.1415927F) * 1.4F * limbSwingAmount;
+		this.leg3.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + 3.1415927F) * 1.4F * limbSwingAmount;
+		this.leg4.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
 	}
 
 	@Override
 	public Iterable<ModelRenderer> getParts() {
-		return ImmutableList.of(this.field_78129_f, this.field_78135_a, this.field_78134_c, this.field_78132_e, this.field_78130_g, this.field_78131_d);
+		return ImmutableList.of(this.leg4, this.head, this.body, this.leg1, this.leg3, this.leg2);
 	}
 
 	/**
