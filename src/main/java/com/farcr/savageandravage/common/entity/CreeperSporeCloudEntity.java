@@ -1,7 +1,14 @@
 package com.farcr.savageandravage.common.entity;
 
+import com.farcr.savageandravage.core.registry.SREntities;
+
+import net.minecraft.entity.AreaEffectCloudEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.projectile.ThrowableEntity;
+import net.minecraft.particles.ParticleTypes;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
@@ -13,17 +20,40 @@ public class CreeperSporeCloudEntity extends ThrowableEntity {
 
     @Override
     protected void onImpact(RayTraceResult result) {
-        //this.summonCreepies(); soon
+    	if (result.getType() == RayTraceResult.Type.ENTITY) {
+            Entity entity = ((EntityRayTraceResult) result).getEntity();
+
+            if (this.getThrower() == entity && this.ticksExisted < 4) {
+                return;
+            }
+
+            entity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), (float) 2);
+    	}
+    	 this.summonCreepies();
+    	 this.world.setEntityState(this, (byte) 3);
+         this.remove();
     }
     
     //soon
-   /* public void summonCreepies() 
+    public void summonCreepies() 
     {
-      CreepieEntity creepie = SREntities.CREEPIE.get().create(world);
-      AreaEffectCloudEntity areaeffectcloudentity = new AreaEffectCloudEntity(world, getPosition().getX(),getPosition().getY(), getPosition().getZ());
-      creepie.setLocationAndAngles(creepie.getPosX(), creepie.getPosY(), creepie.getPosZ(), creepie.getYaw(prevRotationYaw), creepie.getPitch(prevRotationPitch));
-      this.world.addEntity(creepie);
-    } */
+      AreaEffectCloudEntity aoe = new AreaEffectCloudEntity(world, this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ());
+      aoe.setOwner(getThrower());
+      aoe.setParticleData(ParticleTypes.SNEEZE);
+      for (int radius = 0; radius < world.rand.nextInt(); ++radius) {
+        aoe.setRadius(radius);
+      }
+      aoe.setRadiusOnUse(-0.05F);
+      aoe.setDuration(100);
+      aoe.setRadiusPerTick(-aoe.getRadius() / (float) aoe.getDuration());
+      this.world.addEntity(aoe);
+      for (int i = 0; i < aoe.getRadius() && this.ticksExisted <= 50; ++i) 
+      {
+        CreepieEntity creepie = SREntities.CREEPIE.get().create(world);
+        creepie.setLocationAndAngles(this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ() + 0.0F, 0.0F, 0.0F);
+        this.world.addEntity(creepie);
+      }
+    } 
 
     @Override
     protected void registerData() {
