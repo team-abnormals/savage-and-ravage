@@ -47,7 +47,7 @@ public class CreeperSporeCloudEntity extends ThrowableEntity {
       aoe.setDuration(100);
       aoe.setRadiusPerTick(-aoe.getRadius() / (float) aoe.getDuration());
       this.world.addEntity(aoe);
-      for (int i = 0; i < aoe.getRadius() && this.ticksExisted <= 50; ++i) 
+      for (int i = 0; i < aoe.getRadius() + this.world.rand.nextInt(2); ++i) 
       {
         CreepieEntity creepie = SREntities.CREEPIE.get().create(world);
         creepie.setLocationAndAngles(this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ() + 0.0F, 0.0F, 0.0F);
