@@ -1,12 +1,12 @@
 package com.farcr.savageandravage.common.entity;
 
 import com.farcr.savageandravage.core.registry.SREntities;
+import com.farcr.savageandravage.core.registry.SRParticles;
 
 import net.minecraft.entity.AreaEffectCloudEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.projectile.ThrowableEntity;
-import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
@@ -39,7 +39,7 @@ public class CreeperSporeCloudEntity extends ThrowableEntity {
     {
       AreaEffectCloudEntity aoe = new AreaEffectCloudEntity(world, this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ());
       aoe.setOwner(getThrower());
-      aoe.setParticleData(ParticleTypes.SNEEZE);
+      aoe.setParticleData(SRParticles.CREEPER_SPORES.get());
       for (int radius = 0; radius < world.rand.nextInt(); ++radius) {
         aoe.setRadius(radius);
       }

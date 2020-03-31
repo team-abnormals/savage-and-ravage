@@ -4,6 +4,7 @@ import com.farcr.savageandravage.core.events.SREvents;
 import com.farcr.savageandravage.core.registry.SRBlocks;
 import com.farcr.savageandravage.core.registry.SREntities;
 import com.farcr.savageandravage.core.registry.SRItems;
+import com.farcr.savageandravage.core.registry.SRParticles;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
@@ -26,6 +27,7 @@ public class SavageAndRavage
         SRBlocks.BLOCKS.register(modEventBus);
         SRItems.ITEMS.register(modEventBus);
         SREntities.ENTITIES.register(modEventBus);
+        SRParticles.PARTICLES.register(modEventBus);
         //SRBlocks.PAINTINGS.register(modEventBus);
         
         MinecraftForge.EVENT_BUS.register(this);
