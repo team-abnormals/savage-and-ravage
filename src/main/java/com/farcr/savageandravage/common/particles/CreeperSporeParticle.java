@@ -81,8 +81,6 @@ public class CreeperSporeParticle extends SpriteTexturedParticle
 
 		      public Particle makeParticle(BasicParticleType typeIn, World worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
 		         Particle particle = new CreeperSporeParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, this.spriteSet);
-		         particle.setColor(200.0F, 50.0F, 120.0F);
-		         particle.setAlphaF(0.4F);
 		         return particle;
 		      }
 	   }
