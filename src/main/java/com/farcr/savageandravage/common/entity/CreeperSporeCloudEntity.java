@@ -6,6 +6,7 @@ import com.farcr.savageandravage.core.registry.SRParticles;
 import net.minecraft.entity.AreaEffectCloudEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.ThrowableEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
@@ -22,7 +23,11 @@ public class CreeperSporeCloudEntity extends ThrowableEntity {
         super(type, worldIn);
     }
 
-    @Override
+    public CreeperSporeCloudEntity(World worldIn, LivingEntity throwerIn) {
+        super(SREntities.CREEPER_SPORE_CLOUD.get(), throwerIn, worldIn);
+     }
+
+	@Override
     protected void onImpact(RayTraceResult result) {
     	if (result.getType() == RayTraceResult.Type.ENTITY) {
             Entity entity = ((EntityRayTraceResult) result).getEntity();
@@ -51,7 +56,7 @@ public class CreeperSporeCloudEntity extends ThrowableEntity {
       aoe.setDuration(100);
       aoe.setRadiusPerTick(-aoe.getRadius() / (float) aoe.getDuration());
       this.world.addEntity(aoe); 
-      if (aoe.ticksExisted <= 50.0) //TODO an attempt on making the creepies spawn instantly, i will work on this later.
+      //if (aoe.ticksExisted <= 50.0)  //TODO an attempt on making the creepies spawn instantly, i will work on this later.
       for (int i = 0; i < aoe.getRadius(); ++i) 
       {
         CreepieEntity creepie = SREntities.CREEPIE.get().create(world);

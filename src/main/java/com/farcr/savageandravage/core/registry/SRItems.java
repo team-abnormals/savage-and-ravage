@@ -1,6 +1,6 @@
 package com.farcr.savageandravage.core.registry;
 
-import com.farcr.savageandravage.common.item.SRArmorMaterial;
+import com.farcr.savageandravage.common.item.*;
 import com.farcr.savageandravage.core.SavageAndRavage;
 import com.farcr.savageandravage.core.util.RegistryUtils;
 
@@ -27,7 +27,7 @@ public class SRItems {
 	
 	public static RegistryObject<Item> POULTRY_FARMING_HAT = RegistryUtils.createItem("poultry_farming_hat", () -> new Item(new Item.Properties().group(ItemGroup.TOOLS	)));
 	
-	public static RegistryObject<Item> CREEPER_SPORES = RegistryUtils.createItem("creeper_spores", () -> new Item(new Item.Properties().group(ItemGroup.MATERIALS)));
+	public static RegistryObject<Item> CREEPER_SPORES = RegistryUtils.createItem("creeper_spores", () -> new CreeperSporesItem(new Item.Properties().group(ItemGroup.MATERIALS)));
 
 	//these colors are place holders dw
 	public static RegistryObject<Item> CREEPIE_SPAWN_EGG = RegistryUtils.createSpawnEggItem("creepie", () -> SREntities.CREEPIE.get(), 894731, 0, ItemGroup.MISC);
