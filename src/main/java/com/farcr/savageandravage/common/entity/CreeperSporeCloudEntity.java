@@ -9,10 +9,12 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.ThrowableEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.IPacket;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 public class CreeperSporeCloudEntity extends ThrowableEntity {
 	
@@ -69,7 +71,20 @@ public class CreeperSporeCloudEntity extends ThrowableEntity {
         super.writeAdditional(compound);
         compound.putInt("Size", this.size);
      }
+    
+    public void tick() 
+    {
+    	super.tick();
+    	this.world.addParticle(SRParticles.CREEPER_SPORES.get(), this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ() - 0.0D, 0.0D, 0.0D, 0.0D);
+    }
+    
+    @Override
+    public IPacket<?> createSpawnPacket()
+    {
+        return NetworkHooks.getEntitySpawningPacket(this);
+    }
 
+    
     public void readAdditional(CompoundNBT compound) 
     {
       super.readAdditional(compound);

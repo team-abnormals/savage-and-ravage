@@ -1,5 +1,6 @@
 package com.farcr.savageandravage.core.registry;
 
+import com.farcr.savageandravage.client.render.CreeperSporeRenderer;
 import com.farcr.savageandravage.client.render.CreepieRenderer;
 import com.farcr.savageandravage.client.render.SkeletonVillagerRenderer;
 import com.farcr.savageandravage.common.entity.CreeperSporeCloudEntity;
@@ -31,6 +32,7 @@ public class SREntities {
     public static void registerRendering() {
         RenderingRegistry.registerEntityRenderingHandler((EntityType<? extends CreepieEntity>)CREEPIE.get(), CreepieRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler((EntityType<? extends SkeletonVillagerEntity>)SKELETON_VILLAGER.get(), SkeletonVillagerRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler((EntityType<? extends CreeperSporeCloudEntity>)CREEPER_SPORE_CLOUD.get(), CreeperSporeRenderer::new);
     }
     
     public static void addEntitySpawns() {
