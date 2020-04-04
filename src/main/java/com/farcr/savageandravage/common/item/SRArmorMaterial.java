@@ -1,6 +1,7 @@
 package com.farcr.savageandravage.common.item;
 
 import java.util.function.Supplier;
+
 import com.farcr.savageandravage.core.registry.SRItems;
 
 import net.minecraft.inventory.EquipmentSlotType;

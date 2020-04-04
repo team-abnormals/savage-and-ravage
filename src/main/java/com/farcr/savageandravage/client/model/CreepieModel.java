@@ -2,6 +2,7 @@ package com.farcr.savageandravage.client.model;
 
 import com.farcr.savageandravage.common.entity.CreepieEntity;
 import com.google.common.collect.ImmutableList;
+
 import net.minecraft.client.renderer.entity.model.SegmentedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.util.math.MathHelper;

@@ -1,11 +1,11 @@
 package com.farcr.savageandravage.common.item;
 
+import java.util.function.Supplier;
+
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.nbt.CompoundNBT;
-
-import java.util.function.Supplier;
 
 // Remove this once forge implements a way to add entity spawn eggs without this thing.
 //Imported from Buzzier Bees

@@ -19,7 +19,8 @@ public class CreeperSporesItem extends Item
 		super(properties);
 	}
 
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
+	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) 
+	{
 	      ItemStack itemstack = playerIn.getHeldItem(handIn);
 	      worldIn.playSound((PlayerEntity)null, playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ(), SoundEvents.ENTITY_EGG_THROW, SoundCategory.PLAYERS, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
 	         CreeperSporeCloudEntity spores = new CreeperSporeCloudEntity(worldIn, playerIn);

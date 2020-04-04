@@ -15,7 +15,7 @@ public class SREvents
 	@SubscribeEvent
 	public static void onLivingSpawned(EntityJoinWorldEvent event) 
 	{
-		if(event.getEntity() instanceof PillagerEntity) 
+		if (event.getEntity() instanceof PillagerEntity) 
 		{
 			PillagerEntity pillager = (PillagerEntity)event.getEntity();
 			ImprovedCrossbowGoal<PillagerEntity> aiCrossBow = new ImprovedCrossbowGoal<PillagerEntity>(pillager, 1.0D, 8.0F, 9.0D);
@@ -25,7 +25,8 @@ public class SREvents
      		    pillager.goalSelector.addGoal(3, aiCrossBow);
            });
 		}
-		if(event.getEntity() instanceof VillagerEntity)  
+		
+		if (event.getEntity() instanceof VillagerEntity)  
 		{
 		   VillagerEntity villager = (VillagerEntity)event.getEntity();
 		   villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, SkeletonVillagerEntity.class, 15.0F, 0.5D, 0.5D));

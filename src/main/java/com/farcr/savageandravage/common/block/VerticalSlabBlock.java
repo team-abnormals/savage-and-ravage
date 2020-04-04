@@ -1,5 +1,7 @@
 package com.farcr.savageandravage.common.block;
 
+import javax.annotation.Nonnull;
+
 /*
 This class was taken and edited from Quark to allow for Compatiblity between it and Savage and Ravage.
 */
@@ -27,8 +29,6 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
-
-import javax.annotation.Nonnull;
 
 @SuppressWarnings("deprecation")
 public class VerticalSlabBlock extends Block implements IWaterLoggable {
