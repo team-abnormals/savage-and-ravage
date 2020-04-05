@@ -14,15 +14,15 @@ import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.entity.passive.CatEntity;
 import net.minecraft.entity.passive.OcelotEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 
-public class CreepieEntity extends CreeperEntity{
-    @SuppressWarnings("unused")
-	private int explosionRadius;
+public class CreepieEntity extends CreeperEntity {
+	private float explosionRadius;
 
     public CreepieEntity(EntityType<? extends CreepieEntity> type, World worldIn) {
         super(type, worldIn);
-        this.explosionRadius = 3;
+        this.explosionRadius = 1.3f;
     }
 
     @Override
@@ -45,5 +45,18 @@ public class CreepieEntity extends CreeperEntity{
         super.registerAttributes();
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(5.0);
         this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.35D);
+    }
+
+    @Override
+    protected void explode() {
+        if (!this.world.isRemote) {
+            Explosion.Mode explosion$mode = Explosion.Mode.NONE;
+            float chargedModifier = this.isCharged() ? 2.0F : 1.0F;
+            this.dead = true;
+            this.world.createExplosion(this, this.getPosX(), this.getPosY(), this.getPosZ(), this.explosionRadius * chargedModifier, explosion$mode);
+            this.remove();
+            this.spawnLingeringCloud();
+        }
+
     }
 }
