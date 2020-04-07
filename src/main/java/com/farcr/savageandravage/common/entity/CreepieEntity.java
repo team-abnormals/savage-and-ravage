@@ -48,7 +48,7 @@ public class CreepieEntity extends CreeperEntity {
     }
 
     @Override
-    protected void explode() {
+	protected void explode() {
         if (!this.world.isRemote) {
             Explosion.Mode explosion$mode = Explosion.Mode.NONE;
             float chargedModifier = this.isCharged() ? 2.0F : 1.0F;
