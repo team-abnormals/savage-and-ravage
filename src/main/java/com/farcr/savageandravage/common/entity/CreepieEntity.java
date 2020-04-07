@@ -22,7 +22,7 @@ public class CreepieEntity extends CreeperEntity {
 
     public CreepieEntity(EntityType<? extends CreepieEntity> type, World worldIn) {
         super(type, worldIn);
-        this.explosionRadius = 1.3f;
+        this.explosionRadius = 1.2f;
     }
 
     @Override
