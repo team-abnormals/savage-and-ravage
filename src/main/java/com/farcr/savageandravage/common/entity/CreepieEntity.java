@@ -3,8 +3,8 @@ package com.farcr.savageandravage.common.entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
-import net.minecraft.entity.ai.goal.CreeperSwellGoal;
 import net.minecraft.entity.ai.goal.HurtByTargetGoal;
+import com.farcr.savageandravage.common.entity.goals.CreepieSwellGoal;
 import net.minecraft.entity.ai.goal.LookAtGoal;
 import net.minecraft.entity.ai.goal.LookRandomlyGoal;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
@@ -28,7 +28,7 @@ public class CreepieEntity extends CreeperEntity {
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new SwimGoal(this));
-        this.goalSelector.addGoal(2, new CreeperSwellGoal(this));
+        this.goalSelector.addGoal(2, new CreepieSwellGoal(this));
         this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, OcelotEntity.class, 6.0F, 1.0D, 1.2D));
         this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, CatEntity.class, 6.0F, 1.0D, 1.2D));
         this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0D, false));
