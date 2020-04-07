@@ -38,7 +38,7 @@ public class CreepieSwellGoal extends CreeperSwellGoal {
         }
         else {
             this.swellingCreepie.setCreeperState(1);
-            this.swellingCreepie.getNavigator().tryMoveToEntityLiving(creeperAttackTarget, /*this.swellingCreepie.getAIMoveSpeed()*/ 0.8D);
+            this.swellingCreepie.getNavigator().tryMoveToEntityLiving(creeperAttackTarget,0.8D);
         }
     }
 }
