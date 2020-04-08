@@ -48,10 +48,10 @@ public class SREvents
 		{
 			CreeperEntity creeper = (CreeperEntity)event.getExplosion().getExplosivePlacedBy();
 			event.getAffectedBlocks().clear();
-			creeper.entityDropItem(new ItemStack(SRItems.CREEPER_SPORES.get(), 1 + creeper.world.rand.nextInt(11)));
+			creeper.entityDropItem(new ItemStack(SRItems.CREEPER_SPORES.get(), 1 + creeper.world.rand.nextInt(5)));
 			CreeperSporeCloudEntity spores = new CreeperSporeCloudEntity(SREntities.CREEPER_SPORE_CLOUD.get(), event.getWorld());
-			spores.size = (int) creeper.getHealth();
-			spores.radius = spores.size / 5;
+			spores.size = (int) (creeper.getHealth() / 5);
+			spores.radius = (int) (spores.size / 5);
 			spores.copyLocationAndAnglesFrom(creeper);
 			creeper.world.addEntity(spores);
 		}
