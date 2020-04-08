@@ -54,9 +54,4 @@ public class RegistryUtils {
     	RegistryObject<I> item = SRItems.ITEMS.register(name, determinedSupplier);
 		return item;
 	}
-
-	/*public static <E extends EntityType<?>> RegistryObject<E> createEntity(String name, Supplier<? extends E> supplier) {
-		RegistryObject<E> entity = SREntities.ENTITIES.register(name, supplier);
-		return entity;
-	}*/
 }
