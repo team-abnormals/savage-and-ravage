@@ -23,10 +23,11 @@ public class CreeperSporesItem extends Item
 	{
 	      ItemStack itemstack = playerIn.getHeldItem(handIn);
 	      worldIn.playSound((PlayerEntity)null, playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ(), SoundEvents.ENTITY_EGG_THROW, SoundCategory.PLAYERS, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
-	         CreeperSporeCloudEntity spores = new CreeperSporeCloudEntity(worldIn, playerIn);
-	         spores.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 0.99F, 1.0F);
-	         spores.size = worldIn.rand.nextInt(3);
-	         worldIn.addEntity(spores);
+	      CreeperSporeCloudEntity spores = new CreeperSporeCloudEntity(worldIn, playerIn);
+	      spores.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 0.99F, 1.0F);
+	      spores.size = worldIn.rand.nextInt(3);
+	      spores.radius = spores.size;
+	      worldIn.addEntity(spores);
 
 	      playerIn.addStat(Stats.ITEM_USED.get(this));
 	      if (!playerIn.abilities.isCreativeMode) {

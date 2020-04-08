@@ -52,7 +52,7 @@ public class SavageAndRavage
 	private void registerItemColors(ColorHandlerEvent.Item event) 
 	{
 	   for(RegistryObject<Item> items : SRItems.SPAWN_EGGS) 
-	   {
+	   {	
 	    if (ObfuscationReflectionHelper.getPrivateValue(RegistryObject.class, items, "value") != null) {
 	    Item item = items.get();
 	    if (item instanceof SRSpawnEgg) 

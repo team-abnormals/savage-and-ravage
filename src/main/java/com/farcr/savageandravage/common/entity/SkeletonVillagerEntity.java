@@ -90,7 +90,6 @@ public class SkeletonVillagerEntity extends AbstractSkeletonEntity implements IC
 	         } else {
 	            super.setCombatTask();
 	         } 
-
 	      }
 	   }
 	

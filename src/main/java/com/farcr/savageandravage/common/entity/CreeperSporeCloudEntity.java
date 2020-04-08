@@ -19,6 +19,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 public class CreeperSporeCloudEntity extends ThrowableEntity {
 	
 	public int size = 1;
+	public int radius = 1;
 	
     public CreeperSporeCloudEntity(EntityType<? extends CreeperSporeCloudEntity> type, World worldIn) 
     {
@@ -48,18 +49,18 @@ public class CreeperSporeCloudEntity extends ThrowableEntity {
     public void summonCreepies() 
     {
       AreaEffectCloudEntity aoe = new AreaEffectCloudEntity(world, this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ());
-      aoe.setOwner(getThrower());
+      aoe.setOwner(this.getThrower());
       aoe.setParticleData(SRParticles.CREEPER_SPORES.get());
-      for (int radius = 0; radius < world.rand.nextInt(); ++radius) {
-        aoe.setRadius(radius);
+      for (int randoradius = 0; randoradius < world.rand.nextInt(); ++radius) {
+        aoe.setRadius(randoradius);
       }
-      aoe.setRadius(size);
+      aoe.setRadius(radius);
       aoe.setRadiusOnUse(-0.05F);
       aoe.setDuration(100);
       aoe.setRadiusPerTick(-aoe.getRadius() / (float) aoe.getDuration());
       this.world.addEntity(aoe); 
       //if (aoe.ticksExisted <= 50.0)  //TODO an attempt on making the creepies spawn instantly, i will work on this later.
-      for (int i = 0; i < aoe.getRadius(); ++i) 
+      for (int i = 0; i < size; ++i) 
       {
         CreepieEntity creepie = SREntities.CREEPIE.get().create(world);
         creepie.setLocationAndAngles(this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ() + 0.0F, 0.0F, 0.0F);
@@ -91,6 +92,11 @@ public class CreeperSporeCloudEntity extends ThrowableEntity {
        if (compound.contains("Size", 99)) 
        {
            this.size = compound.getInt("Size");
+       }
+       
+       if (compound.contains("Radius", 99)) 
+       {
+           this.radius = compound.getInt("Radius");
        }
      }
 
