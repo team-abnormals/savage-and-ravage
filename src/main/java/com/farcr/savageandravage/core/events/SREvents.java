@@ -51,7 +51,7 @@ public class SREvents
 			creeper.entityDropItem(new ItemStack(SRItems.CREEPER_SPORES.get(), 1 + creeper.world.rand.nextInt(11)));
 			CreeperSporeCloudEntity spores = new CreeperSporeCloudEntity(SREntities.CREEPER_SPORE_CLOUD.get(), event.getWorld());
 			spores.size = (int) creeper.getHealth();
-			spores.radius = spores.size / 4;
+			spores.radius = spores.size / 5;
 			spores.copyLocationAndAnglesFrom(creeper);
 			creeper.world.addEntity(spores);
 		}
