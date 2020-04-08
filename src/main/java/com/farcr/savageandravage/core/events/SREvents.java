@@ -14,6 +14,7 @@ import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.entity.monster.PillagerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -40,6 +41,19 @@ public class SREvents
 		}
 	}
 	
+	@SubscribeEvent
+	public static void onLivingDrops(LivingDropsEvent event) 
+	{
+	   if (event.getEntity() instanceof CreeperEntity && !(event.getEntity() instanceof CreepieEntity))
+	   {
+	    CreeperEntity creeper = (CreeperEntity)event.getEntity();
+	    if (event.getSource().isExplosion()) 
+	    {
+	     creeper.entityDropItem(new ItemStack(SRItems.CREEPER_SPORES.get(), 1 + creeper.world.rand.nextInt(5)));
+	    }
+	   }
+	 }
+	
 	
 	@SubscribeEvent
 	public static void onExplosion(ExplosionEvent.Detonate event)
@@ -48,7 +62,6 @@ public class SREvents
 		{
 			CreeperEntity creeper = (CreeperEntity)event.getExplosion().getExplosivePlacedBy();
 			event.getAffectedBlocks().clear();
-			creeper.entityDropItem(new ItemStack(SRItems.CREEPER_SPORES.get(), 1 + creeper.world.rand.nextInt(5)));
 			CreeperSporeCloudEntity spores = new CreeperSporeCloudEntity(SREntities.CREEPER_SPORE_CLOUD.get(), event.getWorld());
 			spores.size = (int) (creeper.getHealth() / 5);
 			spores.radius = (int) (spores.size / 5);
