@@ -20,7 +20,7 @@ public class CreeperSporeCloudEntity extends ThrowableEntity {
 	
 	public int size = 1;
 	
-    public CreeperSporeCloudEntity(EntityType<? extends CreeperSporeCloudEntity> type, World worldIn) 
+    public CreeperSporeCloudEntity(EntityType<? extends CreeperSporeCloudEntity> type, World worldIn)
     {
         super(type, worldIn);
     }
@@ -63,6 +63,12 @@ public class CreeperSporeCloudEntity extends ThrowableEntity {
       {
         CreepieEntity creepie = SREntities.CREEPIE.get().create(world);
         creepie.setLocationAndAngles(this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ() + 0.0F, 0.0F, 0.0F);
+        try {
+            creepie.setOwnerId(getThrower().getUniqueID());
+        }
+        catch (NullPointerException nullPointer){
+            creepie.setOwnerId(null); //TODO check later to see if this is the best way to implement this
+        }
         this.world.addEntity(creepie);
       }
     } 
