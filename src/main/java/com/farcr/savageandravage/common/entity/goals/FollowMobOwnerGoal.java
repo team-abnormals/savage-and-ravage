@@ -11,9 +11,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorldReader;
 
 import java.util.EnumSet;
-//TODO rename the unmapped fields
+//TODO rename the unmapped fields using official mappings as reference
 public class FollowMobOwnerGoal extends Goal {
-    private final MobEntity followingEntity;
+    private final MobEntity ownedMob;
     private LivingEntity owner;
     private final IWorldReader world;
     private final double followSpeed;
@@ -22,18 +22,18 @@ public class FollowMobOwnerGoal extends Goal {
     private final float maxDist;
     private final float minDist;
     private float oldWaterCost;
-    private final boolean field_226326_j_;
+    private final boolean unmappedBoolean;
 
-    public FollowMobOwnerGoal(IOwnableMob entityIn, double followSpeed, float minDist, float maxDist, boolean p_i225711_6_) {
-        this.followingEntity = (MobEntity)entityIn;
-        this.world = followingEntity.world;
+    public FollowMobOwnerGoal(MobEntity entityIn, double followSpeed, float minimumDistance, float maximumDistance, boolean p_i225711_6_) {
+        this.ownedMob = entityIn;
+        this.world = entityIn.world;
         this.followSpeed = followSpeed;
-        this.navigator = followingEntity.getNavigator();
-        this.minDist = minDist;
-        this.maxDist = maxDist;
-        this.field_226326_j_ = p_i225711_6_;
+        this.navigator = entityIn.getNavigator();
+        this.minDist = minimumDistance;
+        this.maxDist = maximumDistance;
+        this.unmappedBoolean = p_i225711_6_;
         this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
-        if (!(followingEntity.getNavigator() instanceof GroundPathNavigator) && !(followingEntity.getNavigator() instanceof FlyingPathNavigator)) {
+        if (!(entityIn.getNavigator() instanceof GroundPathNavigator) && !(entityIn.getNavigator() instanceof FlyingPathNavigator)) {
             throw new IllegalArgumentException("Unsupported mob type for FollowOwnerGoal");
         }
     }
@@ -43,12 +43,12 @@ public class FollowMobOwnerGoal extends Goal {
      * method as well.
      */
     public boolean shouldExecute() {
-        LivingEntity livingentity = ((IOwnableMob)this.followingEntity).getOwner(); //TODO this feels hacky, find better solution
+        LivingEntity livingentity = ((IOwnableMob)this.ownedMob).getOwner();
         if (livingentity == null) {
             return false;
         } else if (livingentity.isSpectator()) {
             return false;
-        } else if (this.followingEntity.getDistanceSq(livingentity) < (double)(this.minDist * this.minDist)) {
+        } else if (this.ownedMob.getDistanceSq(livingentity) < (double)(this.minDist * this.minDist)) {
             return false;
         } else {
             this.owner = livingentity;
@@ -62,8 +62,9 @@ public class FollowMobOwnerGoal extends Goal {
     public boolean shouldContinueExecuting() {
         if (this.navigator.noPath()) {
             return false;
+
         } else {
-            return !(this.followingEntity.getDistanceSq(this.owner) <= (double)(this.maxDist * this.maxDist));
+            return !(this.ownedMob.getDistanceSq(this.owner) <= (double)(this.maxDist * this.maxDist));
         }
     }
 
@@ -72,8 +73,8 @@ public class FollowMobOwnerGoal extends Goal {
      */
     public void startExecuting() {
         this.timeToRecalcPath = 0;
-        this.oldWaterCost = this.followingEntity.getPathPriority(PathNodeType.WATER);
-        this.followingEntity.setPathPriority(PathNodeType.WATER, 0.0F);
+        this.oldWaterCost = this.ownedMob.getPathPriority(PathNodeType.WATER);
+        this.ownedMob.setPathPriority(PathNodeType.WATER, 0.0F);
     }
 
     /**
@@ -82,18 +83,18 @@ public class FollowMobOwnerGoal extends Goal {
     public void resetTask() {
         this.owner = null;
         this.navigator.clearPath();
-        this.followingEntity.setPathPriority(PathNodeType.WATER, this.oldWaterCost);
+        this.ownedMob.setPathPriority(PathNodeType.WATER, this.oldWaterCost);
     }
 
     /**
      * Keep ticking a continuous task that has already been started
      */
     public void tick() {
-        this.followingEntity.getLookController().setLookPositionWithEntity(this.owner, 10.0F, (float)this.followingEntity.getVerticalFaceSpeed());
+        this.ownedMob.getLookController().setLookPositionWithEntity(this.owner, 10.0F, (float)this.ownedMob.getVerticalFaceSpeed());
         if (--this.timeToRecalcPath <= 0) {
             this.timeToRecalcPath = 10;
-            if (!this.followingEntity.getLeashed() && !this.followingEntity.isPassenger()) {
-                if (this.followingEntity.getDistanceSq(this.owner) >= 144.0D) {
+            if (!this.ownedMob.getLeashed() && !this.ownedMob.isPassenger()) {
+                if (this.ownedMob.getDistanceSq(this.owner) >= 144.0D) {
                     this.func_226330_g_();
                 } else {
                     this.navigator.tryMoveToEntityLiving(this.owner, this.followSpeed);
@@ -124,7 +125,7 @@ public class FollowMobOwnerGoal extends Goal {
         } else if (!this.func_226329_a_(new BlockPos(p_226328_1_, p_226328_2_, p_226328_3_))) {
             return false;
         } else {
-            this.followingEntity.setLocationAndAngles((double)((float)p_226328_1_ + 0.5F), (double)p_226328_2_, (double)((float)p_226328_3_ + 0.5F), this.followingEntity.rotationYaw, this.followingEntity.rotationPitch);
+            this.ownedMob.setLocationAndAngles((double)((float)p_226328_1_ + 0.5F), (double)p_226328_2_, (double)((float)p_226328_3_ + 0.5F), this.ownedMob.rotationYaw, this.ownedMob.rotationPitch);
             this.navigator.clearPath();
             return true;
         }
@@ -136,16 +137,16 @@ public class FollowMobOwnerGoal extends Goal {
             return false;
         } else {
             BlockState blockstate = this.world.getBlockState(p_226329_1_.down());
-            if (!this.field_226326_j_ && blockstate.getBlock() instanceof LeavesBlock) {
+            if (!this.unmappedBoolean && blockstate.getBlock() instanceof LeavesBlock) {
                 return false;
             } else {
-                BlockPos blockpos = p_226329_1_.subtract(new BlockPos(this.followingEntity));
-                return this.world.hasNoCollisions(this.followingEntity, this.followingEntity.getBoundingBox().offset(blockpos));
+                BlockPos blockpos = p_226329_1_.subtract(new BlockPos(this.ownedMob));
+                return this.world.hasNoCollisions(this.ownedMob, this.ownedMob.getBoundingBox().offset(blockpos));
             }
         }
     }
 
     private int func_226327_a_(int p_226327_1_, int p_226327_2_) {
-        return this.followingEntity.getRNG().nextInt(p_226327_2_ - p_226327_1_ + 1) + p_226327_1_;
+        return this.ownedMob.getRNG().nextInt(p_226327_2_ - p_226327_1_ + 1) + p_226327_1_;
     }
 }
