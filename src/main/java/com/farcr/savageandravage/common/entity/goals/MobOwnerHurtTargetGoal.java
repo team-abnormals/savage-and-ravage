@@ -9,14 +9,14 @@ import net.minecraft.entity.ai.goal.TargetGoal;
 
 import java.util.EnumSet;
 
-public class ImprovedOwnerHurtByTargetGoal extends TargetGoal {
-    private IOwnableMob defendingEntity;
+public class MobOwnerHurtTargetGoal extends TargetGoal {
+    private final IOwnableMob defendingEntity;
     private LivingEntity attacker;
     private int timestamp;
 
-    public ImprovedOwnerHurtByTargetGoal(MobEntity defendingEntityIn) {
-        super(defendingEntityIn, false);
-        this.defendingEntity = (IOwnableMob)defendingEntityIn;
+    public MobOwnerHurtTargetGoal(MobEntity theEntitydefendingEntityIn) {
+        super(theEntitydefendingEntityIn, false);
+        this.defendingEntity = (IOwnableMob)theEntitydefendingEntityIn;
         this.setMutexFlags(EnumSet.of(Goal.Flag.TARGET));
     }
 
@@ -26,13 +26,13 @@ public class ImprovedOwnerHurtByTargetGoal extends TargetGoal {
      */
     public boolean shouldExecute() {
         if (this.defendingEntity.getOwnerId()!=null) {
-            LivingEntity owner = this.defendingEntity.getOwner();
-            if (owner == null) {
+            LivingEntity livingentity = this.defendingEntity.getOwner();
+            if (livingentity == null) {
                 return false;
             } else {
-                this.attacker = owner.getRevengeTarget();
-                int i = owner.getRevengeTimer();
-                return i != this.timestamp && this.isSuitableTarget(this.attacker, EntityPredicate.DEFAULT) && this.defendingEntity.shouldAttackEntity(this.attacker, owner);
+                this.attacker = livingentity.getLastAttackedEntity();
+                int i = livingentity.getLastAttackedEntityTime();
+                return i != this.timestamp && this.isSuitableTarget(this.attacker, EntityPredicate.DEFAULT) && this.defendingEntity.shouldAttackEntity(this.attacker, livingentity);
             }
         } else {
             return false;
@@ -46,7 +46,7 @@ public class ImprovedOwnerHurtByTargetGoal extends TargetGoal {
         this.goalOwner.setAttackTarget(this.attacker);
         LivingEntity livingentity = this.defendingEntity.getOwner();
         if (livingentity != null) {
-            this.timestamp = livingentity.getRevengeTimer();
+            this.timestamp = livingentity.getLastAttackedEntityTime();
         }
 
         super.startExecuting();

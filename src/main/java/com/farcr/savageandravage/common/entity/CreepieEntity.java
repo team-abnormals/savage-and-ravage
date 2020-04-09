@@ -1,23 +1,31 @@
 package com.farcr.savageandravage.common.entity;
 
-import com.farcr.savageandravage.common.entity.goals.ImprovedOwnerHurtByTargetGoal;
-import com.farcr.savageandravage.common.entity.goals.ImprovedOwnerHurtTargetGoal;
+import com.farcr.savageandravage.common.entity.goals.*;
+import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.goal.*;
-import com.farcr.savageandravage.common.entity.goals.CreepieSwellGoal;
 import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.entity.passive.CatEntity;
 import net.minecraft.entity.passive.OcelotEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.particles.IParticleData;
+import net.minecraft.particles.ParticleTypes;
+import net.minecraft.scoreboard.Team;
 import net.minecraft.server.management.PreYggdrasilConverter;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.Explosion;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
@@ -25,17 +33,11 @@ import java.util.UUID;
 
 public class CreepieEntity extends CreeperEntity implements IOwnableMob {
 	private float explosionRadius;
-	private LivingEntity creepieCreator;
     private static final DataParameter<Optional<UUID>> OWNER_UNIQUE_ID = EntityDataManager.createKey(CreepieEntity.class, DataSerializers.OPTIONAL_UNIQUE_ID);
 
 
     public CreepieEntity(EntityType<? extends CreepieEntity> type, World worldIn) {
         super(type, worldIn);
-        this.explosionRadius = 1.2f;
-    }
-    public CreepieEntity(EntityType<? extends CreepieEntity> type, LivingEntity creator,  World worldIn) {
-        super(type, worldIn);
-        this.creepieCreator = creator;
         this.explosionRadius = 1.2f;
     }
 
@@ -46,16 +48,15 @@ public class CreepieEntity extends CreeperEntity implements IOwnableMob {
         this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, OcelotEntity.class, 6.0F, 1.0D, 1.2D));
         this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, CatEntity.class, 6.0F, 1.0D, 1.2D));
         this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0D, false));
-        //this.goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F, false));
+        //this.goalSelector.addGoal(6, new FollowMobOwnerGoal(this, 1.0D, 10.0F, 2.0F, false));
         this.goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 0.8D));
         this.goalSelector.addGoal(6, new LookAtGoal(this, PlayerEntity.class, 8.0F));
         this.goalSelector.addGoal(6, new LookRandomlyGoal(this));
-        this.targetSelector.addGoal(1, new ImprovedOwnerHurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new ImprovedOwnerHurtTargetGoal(this));
+        this.targetSelector.addGoal(1, new MobOwnerHurtByTargetGoal(this));
+        this.targetSelector.addGoal(2, new MobOwnerHurtTargetGoal(this));
         this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
-        if(creepieCreator==null){
-            this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
-        }
+        //this.targetSelector.addGoal(1, new ConditionalNearestAttackableTargetGoal(this, PlayerEntity.class, true));
+        //It looks like the goal selector isn't called for every separate entity, just the general type, so this is needed. No idea why it worked before
     }
 
     @Override
@@ -91,8 +92,12 @@ public class CreepieEntity extends CreeperEntity implements IOwnableMob {
         } else {
             compound.putString("OwnerUUID", this.getOwnerId().toString());
         }
+
     }
 
+    /**
+     * (abstract) Protected helper method to read subclass entity data from NBT.
+     */
     public void readAdditional(CompoundNBT compound) {
         super.readAdditional(compound);
         String s;
@@ -104,13 +109,26 @@ public class CreepieEntity extends CreeperEntity implements IOwnableMob {
         }
 
         if (!s.isEmpty()) {
-            this.setOwnerId(UUID.fromString(s));
+            try {
+                this.setOwnerId(UUID.fromString(s));
+            } catch (Throwable var4) {
+                this.setOwnerId(null);
+            }
         }
-
     }
-    @Override
+
     public boolean canBeLeashedTo(PlayerEntity player) {
         return !this.getLeashed();
+    }
+
+
+    @Nullable
+    public UUID getOwnerId() {
+        return this.dataManager.get(OWNER_UNIQUE_ID).orElse((UUID)null);
+    }
+
+    public void setOwnerId(@Nullable UUID p_184754_1_) {
+        this.dataManager.set(OWNER_UNIQUE_ID, Optional.ofNullable(p_184754_1_));
     }
 
     @Nullable
@@ -123,21 +141,8 @@ public class CreepieEntity extends CreeperEntity implements IOwnableMob {
         }
     }
 
-    @Nullable
-    public UUID getOwnerId() {
-        return this.dataManager.get(OWNER_UNIQUE_ID).orElse((UUID)null);
-    }
-
-    public void setOwnerId(@Nullable UUID p_184754_1_) {
-        this.dataManager.set(OWNER_UNIQUE_ID, Optional.ofNullable(p_184754_1_));
-    }
-
-    public boolean shouldAttackEntity(LivingEntity target, LivingEntity owner) {
-        return true;
-    }
-
     public boolean canAttack(LivingEntity target) {
-        return this.isOwner(target) && super.canAttack(target);
+        return this.isOwner(target) ? false : super.canAttack(target);
     }
 
     public boolean isOwner(LivingEntity entityIn) {
@@ -145,5 +150,37 @@ public class CreepieEntity extends CreeperEntity implements IOwnableMob {
     }
 
 
+    public boolean shouldAttackEntity(LivingEntity target, LivingEntity owner) {
+        return true;
+    }
+
+    public Team getTeam() {
+        if (this.getOwnerId()!=null) {
+            LivingEntity livingentity = this.getOwner();
+            if (livingentity != null) {
+                return livingentity.getTeam();
+            }
+        }
+
+        return super.getTeam();
+    }
+
+    /**
+     * Returns whether this Entity is on the same team as the given Entity.
+     */
+    public boolean isOnSameTeam(Entity entityIn) {
+        if (this.getOwnerId()!=null) {
+            LivingEntity livingentity = this.getOwner();
+            if (entityIn == livingentity) {
+                return true;
+            }
+
+            if (livingentity != null) {
+                return livingentity.isOnSameTeam(entityIn);
+            }
+        }
+
+        return super.isOnSameTeam(entityIn);
+    }
 
 }
