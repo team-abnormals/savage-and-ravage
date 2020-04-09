@@ -2,12 +2,11 @@ package com.farcr.savageandravage.common.entity;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraftforge.common.extensions.IForgeEntity;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
 
-public interface IOwnableMob extends IForgeEntity {
+public interface IOwnableMob {
     LivingEntity getOwner();
     UUID getOwnerId();
     void setOwnerId(@Nullable UUID uuid);
