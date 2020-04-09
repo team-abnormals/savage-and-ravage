@@ -55,7 +55,7 @@ public class CreepieEntity extends CreeperEntity implements IOwnableMob {
         this.targetSelector.addGoal(1, new MobOwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new MobOwnerHurtTargetGoal(this));
         this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
-        //this.targetSelector.addGoal(1, new ConditionalNearestAttackableTargetGoal(this, PlayerEntity.class, true));
+        this.targetSelector.addGoal(1, new ConditionalNearestAttackableTargetGoal(this, PlayerEntity.class, true));
         //It looks like the goal selector isn't called for every separate entity, just the general type, so this is needed. No idea why it worked before
     }
 

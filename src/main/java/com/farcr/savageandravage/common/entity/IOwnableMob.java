@@ -4,6 +4,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.CompoundNBT;
 
 import javax.annotation.Nullable;
+import java.util.PrimitiveIterator;
 import java.util.UUID;
 
 public interface IOwnableMob {
