@@ -80,8 +80,9 @@ public class SkeletonVillagerEntity extends AbstractSkeletonEntity implements IC
 	}
 	
 	@Override
-	public void setCombatTask() {
+	public void setCombatTask() 
 	{
+	 {
 	         this.goalSelector.removeGoal(this.aiMelee);
 	         this.goalSelector.removeGoal(this.aiCrossBow);
 	         ItemStack itemstack = this.getHeldItem(ProjectileHelper.getHandWith(this, Items.CROSSBOW));
@@ -90,8 +91,8 @@ public class SkeletonVillagerEntity extends AbstractSkeletonEntity implements IC
 	         } else {
 	            super.setCombatTask();
 	         } 
-	      }
-	   }
+	  }
+	}
 	
 	protected void registerGoals() 
 	{

@@ -18,9 +18,9 @@ public class SRParticles
 {
 	public static final DeferredRegister<ParticleType<?>> PARTICLES = new DeferredRegister<>(ForgeRegistries.PARTICLE_TYPES, SavageAndRavage.MODID);
 	
-	public static final RegistryObject<BasicParticleType> CREEPER_SPORES = createBasicParticleType("creeper_spores", true);
+	public static final RegistryObject<BasicParticleType> CREEPER_SPORES = createParticleType("creeper_spores", true);
 	
-	private static RegistryObject<BasicParticleType> createBasicParticleType(String name, boolean alwaysShow) {
+	private static RegistryObject<BasicParticleType> createParticleType(String name, boolean alwaysShow) {
 		RegistryObject<BasicParticleType> particleType = PARTICLES.register(name, () -> new BasicParticleType(alwaysShow));
 		return particleType;
 	}

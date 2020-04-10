@@ -1,11 +1,11 @@
 package com.farcr.savageandravage.common.entity;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.nbt.CompoundNBT;
+import java.util.UUID;
 
 import javax.annotation.Nullable;
-import java.util.PrimitiveIterator;
-import java.util.UUID;
+
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.nbt.CompoundNBT;
 
 public interface IOwnableMob {
     LivingEntity getOwner();

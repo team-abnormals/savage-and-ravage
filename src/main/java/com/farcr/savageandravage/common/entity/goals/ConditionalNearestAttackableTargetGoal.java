@@ -1,11 +1,9 @@
 package com.farcr.savageandravage.common.entity.goals;
 
-import com.farcr.savageandravage.common.entity.CreepieEntity;
 import com.farcr.savageandravage.common.entity.IOwnableMob;
+
 import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
-import net.minecraft.entity.player.PlayerEntity;
 
 public class ConditionalNearestAttackableTargetGoal extends NearestAttackableTargetGoal {
     public ConditionalNearestAttackableTargetGoal(MobEntity goalOwnerIn, Class targetClassIn, boolean checkSight) {
