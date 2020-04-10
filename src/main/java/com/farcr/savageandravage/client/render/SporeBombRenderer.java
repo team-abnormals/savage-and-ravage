@@ -44,6 +44,7 @@ public class SporeBombRenderer extends EntityRenderer<SporeBombEntity>
 		  super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
 	   }
 	   
+	   @SuppressWarnings("deprecation")
 	   public static void renderTntFlash(BlockState blockStateIn, MatrixStack matrixStackIn, IRenderTypeBuffer renderTypeBuffer, int combinedLight, boolean doFullBright) 
 	   {
 		      int i;

@@ -1,5 +1,7 @@
 package com.farcr.savageandravage.common.entity.block;
 
+import java.util.Random;
+
 import javax.annotation.Nullable;
 
 import com.farcr.savageandravage.common.entity.CreeperSporeCloudEntity;
@@ -20,6 +22,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
@@ -69,7 +72,6 @@ public class SporeBombEntity extends TNTEntity
 	      if (this.fuse <= 0) {
 	         this.remove();
 	         if (!this.world.isRemote) {
-	        	 
 	            this.spawnSporeCloud();
 	            this.world.playSound((PlayerEntity)null, this.getPosX(), this.getPosY(), this.getPosZ(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 1.0F, 1.0F);
 	         }
@@ -82,9 +84,12 @@ public class SporeBombEntity extends TNTEntity
 
 	   }
 
-	   protected void spawnSporeCloud() {
+	   public void spawnSporeCloud() 
+	   {
 		   CreeperSporeCloudEntity sporecloud = new CreeperSporeCloudEntity(SREntities.CREEPER_SPORE_CLOUD.get(), world);
-		   sporecloud.size = this.world.rand.nextInt(7);
+		   Random rand = new Random();
+		   sporecloud.size = rand.nextInt(6) + 4;
+		   this.world.createExplosion(this, this.getPosX(), this.getPosYHeight(0.0625D), this.getPosZ(), 4.0F, Explosion.Mode.NONE); //hacky.
 		   sporecloud.copyLocationAndAnglesFrom(this);
 		   this.world.addEntity(sporecloud);
 	   }
@@ -140,4 +145,5 @@ public class SporeBombEntity extends TNTEntity
 	    {
 	        return NetworkHooks.getEntitySpawningPacket(this);
 	    }
+
 }

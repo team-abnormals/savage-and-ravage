@@ -19,7 +19,6 @@ import net.minecraftforge.fml.network.NetworkHooks;
 public class CreeperSporeCloudEntity extends ThrowableEntity {
 	
 	public int size = 1;
-	public int radius = 1;
 	
     public CreeperSporeCloudEntity(EntityType<? extends CreeperSporeCloudEntity> type, World worldIn)
     {
@@ -51,10 +50,10 @@ public class CreeperSporeCloudEntity extends ThrowableEntity {
       AreaEffectCloudEntity aoe = new AreaEffectCloudEntity(world, this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ());
       aoe.setOwner(this.getThrower());
       aoe.setParticleData(SRParticles.CREEPER_SPORES.get());
-      for (int randoradius = 0; randoradius < world.rand.nextInt(); ++radius) {
+      for (int randoradius = 0; randoradius < world.rand.nextInt(); ++randoradius) {
         aoe.setRadius(randoradius);
       }
-      aoe.setRadius(radius);
+      aoe.setRadius(size + 0.3F);
       aoe.setRadiusOnUse(-0.05F);
       aoe.setDuration(100);
       aoe.setRadiusPerTick(-aoe.getRadius() / (float) aoe.getDuration());
@@ -98,11 +97,6 @@ public class CreeperSporeCloudEntity extends ThrowableEntity {
        if (compound.contains("Size", 99)) 
        {
            this.size = compound.getInt("Size");
-       }
-       
-       if (compound.contains("Radius", 99)) 
-       {
-           this.radius = compound.getInt("Radius");
        }
      }
 

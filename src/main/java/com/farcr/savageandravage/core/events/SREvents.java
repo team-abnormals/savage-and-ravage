@@ -9,7 +9,7 @@ import com.farcr.savageandravage.core.registry.SRItems;
 
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.ai.goal.RangedCrossbowAttackGoal;
-import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.entity.monster.PillagerEntity;
 import net.minecraft.item.ItemStack;
@@ -34,9 +34,9 @@ public class SREvents
            });
 		}
 		
-		if (event.getEntity() instanceof VillagerEntity)  
+		if (event.getEntity() instanceof AbstractVillagerEntity)  
 		{
-		   VillagerEntity villager = (VillagerEntity)event.getEntity();
+		   AbstractVillagerEntity villager = (AbstractVillagerEntity)event.getEntity();
 		   villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, SkeletonVillagerEntity.class, 15.0F, 0.5D, 0.5D));
 		}
 	}
@@ -64,7 +64,6 @@ public class SREvents
 			event.getAffectedBlocks().clear();
 			CreeperSporeCloudEntity spores = new CreeperSporeCloudEntity(SREntities.CREEPER_SPORE_CLOUD.get(), event.getWorld());
 			spores.size = (int) (creeper.getHealth() / 5);
-			spores.radius = (int) (spores.size / 5);
 			spores.copyLocationAndAnglesFrom(creeper);
 			creeper.world.addEntity(spores);
 		}
