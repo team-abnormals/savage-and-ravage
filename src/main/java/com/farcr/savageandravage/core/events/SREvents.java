@@ -7,14 +7,18 @@ import com.farcr.savageandravage.common.entity.goals.ImprovedCrossbowGoal;
 import com.farcr.savageandravage.core.registry.SREntities;
 import com.farcr.savageandravage.core.registry.SRItems;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.ai.goal.RangedCrossbowAttackGoal;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.entity.monster.PillagerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -66,6 +70,24 @@ public class SREvents
 			spores.size = (int) (creeper.getHealth() / 5);
 			spores.copyLocationAndAnglesFrom(creeper);
 			creeper.world.addEntity(spores);
+		}
+	}
+
+	@SubscribeEvent
+	public static void onInteractWithEntity(PlayerInteractEvent.EntityInteract event){
+		Item heldItem = event.getItemStack().getItem();
+		Entity target = event.getTarget();
+		if (target instanceof CreeperEntity && heldItem == Items.CREEPER_SPAWN_EGG) {
+			CreepieEntity creepieEntity = new CreepieEntity(SREntities.CREEPIE.get(), event.getWorld());
+			creepieEntity.copyLocationAndAnglesFrom(target);
+			if (event.getItemStack().hasDisplayName()) {
+				creepieEntity.setCustomName(event.getItemStack().getDisplayName());
+			}
+			if (!event.getPlayer().abilities.isCreativeMode) {
+				event.getItemStack().shrink(1);
+			}
+			event.getWorld().addEntity(creepieEntity);
+
 		}
 	}
 
