@@ -68,7 +68,7 @@ public class CreeperSporeCloudEntity extends ThrowableEntity {
             creepie.setOwnerId(getThrower().getUniqueID());
         }
         catch (NullPointerException nullPointer){
-            creepie.setOwnerId(null); //TODO check later to see if this is the best way to implement this
+            creepie.setOwnerId(null);
         }
         this.world.addEntity(creepie);
       }
