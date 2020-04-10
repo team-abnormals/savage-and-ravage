@@ -6,6 +6,7 @@
 	"block.savageandravage.gloomy_tile_wall": "Gloomy Tile Wall",
 	
 	"item.savageandravage.blast_proof_plating": "Blast-Proof Plating",
+	"block.savageandravage.blast_proof_plates": "Blast-Proof Plates",
 	"item.savageandravage.griefer_helmet": "Griefer Helmet",
 	"item.savageandravage.griefer_chestplate": "Griefer Chestplate",
 	"item.savageandravage.griefer_leggings": "Griefer Leggings",
@@ -17,10 +18,11 @@
 	"item.savageandravage.creeper_spores": "Creeper Spores",
 	"block.savageandravage.creeper_spore_sack": "Creeper Spore Sack",
 	"block.savageandravage.spore_bomb": "Spore Bomb",
-        "entity.savageandravage.skeleton_villager": "Skeleton Villager",
-        "entity.savageandravage.creepie": "Creepie",
-        "entity.savageandravage.creeper_spore_cloud": "Creeper Spore Cloud",
-        "item.savageandravage.skeleton_villager_spawn_egg": "Skeleton Villager Spawn Egg",
-        "item.savageandravage.creepie_spawn_egg": "Creepie Spawn Egg"
+	"entity.savageandravage.creeper_spore_cloud": "Creeper Spore Cloud",
+	"entity.savageandravage.creepie": "Creepie",
+	"item.savageandravage.creepie_spawn_egg": "Creepie Spawn Egg",
+	
+    "entity.savageandravage.skeleton_villager": "Skeleton Villager",
+    "item.savageandravage.skeleton_villager_spawn_egg": "Skeleton Villager Spawn Egg"
 	
 }

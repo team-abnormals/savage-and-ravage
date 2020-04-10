@@ -1,0 +1,6 @@
+{
+    "parent": "block/cube_all",
+    "textures": {
+        "all": "savageandravage:block/blast_proof_plates"
+    }
+}
