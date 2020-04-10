@@ -11,7 +11,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorldReader;
 
 import java.util.EnumSet;
-//TODO rename the unmapped fields using official mappings as reference
+
 public class FollowMobOwnerGoal extends Goal {
     private final MobEntity ownedMob;
     private LivingEntity owner;
