@@ -26,7 +26,6 @@ public class CreeperSporesItem extends Item
 	      CreeperSporeCloudEntity spores = new CreeperSporeCloudEntity(worldIn, playerIn);
 	      spores.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 0.99F, 1.0F);
 	      spores.size = worldIn.rand.nextInt(3);
-	      spores.radius = spores.size;
 	      worldIn.addEntity(spores);
 
 	      playerIn.addStat(Stats.ITEM_USED.get(this));
