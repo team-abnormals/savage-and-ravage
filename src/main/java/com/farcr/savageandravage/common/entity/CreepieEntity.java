@@ -41,7 +41,7 @@ public class CreepieEntity extends CreeperEntity implements IOwnableMob {
         this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, OcelotEntity.class, 6.0F, 1.0D, 1.2D));
         this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, CatEntity.class, 6.0F, 1.0D, 1.2D));
         this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0D, false));
-        this.goalSelector.addGoal(6, new FollowMobOwnerGoal(this, 1.0D, 10.0F, 2.0F, false));
+        this.goalSelector.addGoal(6, new FollowMobOwnerGoal(this, 1.0D, 5.0F, 4.0F, false));
         this.goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 0.8D));
         this.goalSelector.addGoal(6, new LookAtGoal(this, PlayerEntity.class, 8.0F));
         this.goalSelector.addGoal(6, new LookRandomlyGoal(this));
@@ -49,7 +49,6 @@ public class CreepieEntity extends CreeperEntity implements IOwnableMob {
         this.targetSelector.addGoal(2, new MobOwnerHurtTargetGoal(this));
         this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(1, new ConditionalNearestAttackableTargetGoal(this, PlayerEntity.class, true));
-        //It looks like the goal selector isn't called for every separate entity, just the general type, so this is needed. No idea why it worked before
     }
 
     @Override
