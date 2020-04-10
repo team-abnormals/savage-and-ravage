@@ -5,7 +5,6 @@ import com.farcr.savageandravage.core.registry.SRParticles;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.CreeperEntity;
-import net.minecraft.entity.monster.ZombieVillagerEntity;
 import net.minecraft.entity.passive.CatEntity;
 import net.minecraft.entity.passive.OcelotEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -84,7 +83,7 @@ public class CreepieEntity extends CreeperEntity implements IOwnableMob {
      * positive, it get's decremented each tick. Don't confuse this with EntityLiving.getAge. With a negative value the
      * Entity is considered a child.
      */
-    public int getGrowingAge() {
+    private int getGrowingAge() {
         if (this.world.isRemote) {
             return this.growingAge < 0 ? -1 : 1;
         } else {
@@ -219,7 +218,7 @@ public class CreepieEntity extends CreeperEntity implements IOwnableMob {
             if (this.conversionTime <= 0) {
                 this.finishConversion((ServerWorld)this.world);
             }
-            //this.world.addParticle(SRParticles.CREEPER_SPORES.get(), this.getPosXRandom(1.0D), this.getPosYRandom() + 0.5D, this.getPosZRandom(1.0D), 0.0D, 0.0D, 0.0D);
+            this.world.addParticle(SRParticles.CREEPER_SPORES.get(), this.getPosXRandom(1.0D), this.getPosYRandom(), this.getPosZRandom(1.0D), 0.0D, 0.0D, 0.0D);
         }
 
         super.tick();
@@ -255,20 +254,17 @@ public class CreepieEntity extends CreeperEntity implements IOwnableMob {
      */
     private void onGrowingIntoCreeper() {
         if (!this.world.isRemote) {
-            this.startConverting(200); //10 seconds before it converts
+            this.startConverting(this.rand.nextInt(80)+160); //10 seconds before it converts
         }
 
     }
 
-
     /**
-     * If Animal, checks if the age timer is negative
+     * Checks if the age timer is negative
      */
     private boolean isNotCreeper() {
         return this.getGrowingAge() < 0;
     }
-
-    /**Pretty sure this isn't needed, will check later*/
 
     public boolean canBeLeashedTo(PlayerEntity player) {
         return !this.getLeashed();
@@ -304,7 +300,14 @@ public class CreepieEntity extends CreeperEntity implements IOwnableMob {
 
 
     public boolean shouldAttackEntity(LivingEntity target, LivingEntity owner) {
-        return true;
+        if (target instanceof CreepieEntity) {
+            CreepieEntity creepieEntity = (CreepieEntity) target;
+            return creepieEntity.getOwner() != owner;
+        } else if (target instanceof PlayerEntity && owner instanceof PlayerEntity && !((PlayerEntity)owner).canAttackPlayer((PlayerEntity)target)) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     public boolean isConverting() {
