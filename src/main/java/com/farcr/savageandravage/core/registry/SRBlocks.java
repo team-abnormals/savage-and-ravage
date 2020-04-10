@@ -31,6 +31,7 @@ public class SRBlocks {
 	public static RegistryObject<Block> GLOOMY_TILE_WALL 			= RegistryUtils.createBlock("gloomy_tile_wall", () -> new WallBlock(BlockProperties.GLOOMY_TILES), ItemGroup.DECORATIONS);
 	public static RegistryObject<Block> SPORE_BOMB 			        = RegistryUtils.createBlock("spore_bomb", () -> new SporeBombBlock(BlockProperties.SPORE_BOMB), ItemGroup.REDSTONE);
 	public static RegistryObject<Block> GLOOMY_TILE_VERTICAL_SLAB   = RegistryUtils.createBlockCompat("quark", "gloomy_tile_vertical_slab", () -> new VerticalSlabBlock(BlockProperties.GLOOMY_TILES), ItemGroup.BUILDING_BLOCKS);
-	
+	public static RegistryObject<Block> BLAST_PROOF_PLATES          = RegistryUtils.createBlock("blast_proof_plates", () -> new Block(Block.Properties.create(Material.ROCK).hardnessAndResistance(2.0F, 1200.0F)), ItemGroup.BUILDING_BLOCKS);
+
 	public static RegistryObject<Block> CREEPER_SPORE_SACK		    = RegistryUtils.createBlockCompat("quark", "creeper_spore_sack", () -> new Block(Block.Properties.create(Material.WOOL, MaterialColor.LIME_TERRACOTTA).hardnessAndResistance(0.5F).sound(SoundType.CLOTH)), ItemGroup.DECORATIONS);
 }

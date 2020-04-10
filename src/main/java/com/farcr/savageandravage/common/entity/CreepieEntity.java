@@ -216,15 +216,16 @@ public class CreepieEntity extends CreeperEntity implements IOwnableMob {
      * Called to update the entity's position/logic.
      */
     public void tick() {
-        if (!this.world.isRemote && this.isAlive() && this.isConverting()) {
-            this.conversionTime --;
-            if (this.conversionTime <= 0) {
-                this.finishConversion((ServerWorld)this.world);
-            }
-            this.world.addParticle(SRParticles.CREEPER_SPORES.get(), this.getPosXRandom(1.0D), this.getPosYRandom(), this.getPosZRandom(1.0D), 0.0D, 0.0D, 0.0D);
-        }
-
         super.tick();
+        if (this.isAlive() && this.isConverting()) {
+            if(!this.world.isRemote) {
+                this.conversionTime--;
+                if (this.conversionTime <= 0) {
+                    this.finishConversion((ServerWorld) this.world);
+                }
+            }
+            this.world.addParticle(SRParticles.CREEPER_SPORES.get(), this.getPosX() -0.5d + (double)(this.rand.nextFloat()), this.getPosY()+0.5d, this.getPosZ() -0.5d + (double)(this.rand.nextFloat()), 0.0D, (double)(this.rand.nextFloat() / 5.0F), 0.0D);
+        }
     }
 
     @Override
@@ -398,5 +399,6 @@ public class CreepieEntity extends CreeperEntity implements IOwnableMob {
     {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
+
 
 }
