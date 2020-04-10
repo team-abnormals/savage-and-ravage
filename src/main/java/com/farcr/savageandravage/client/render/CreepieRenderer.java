@@ -41,4 +41,12 @@ public class CreepieRenderer extends MobRenderer<CreepieEntity, CreepieModel>{
         return CREEPIE_TEXTURES;
     }
 
+    protected void applyRotations(CreepieEntity entityLiving, MatrixStack matrixStackIn, float ageInTicks, float rotationYaw, float partialTicks) {
+        if (entityLiving.isConverting()) {
+            rotationYaw += (float)(Math.cos((double)entityLiving.ticksExisted * 3.25D) * Math.PI * 0.25D);
+        }
+
+        super.applyRotations(entityLiving, matrixStackIn, ageInTicks, rotationYaw, partialTicks);
+    }
+
 }

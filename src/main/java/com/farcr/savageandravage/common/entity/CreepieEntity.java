@@ -1,9 +1,11 @@
 package com.farcr.savageandravage.common.entity;
 
 import com.farcr.savageandravage.common.entity.goals.*;
+import com.farcr.savageandravage.core.registry.SRParticles;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.CreeperEntity;
+import net.minecraft.entity.monster.ZombieVillagerEntity;
 import net.minecraft.entity.passive.CatEntity;
 import net.minecraft.entity.passive.OcelotEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -18,9 +20,13 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.server.management.PreYggdrasilConverter;
 import net.minecraft.util.Hand;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
@@ -31,8 +37,9 @@ public class CreepieEntity extends CreeperEntity implements IOwnableMob {
     private int growingAge = -24000; //I literally had to do this because the entity was being deleted before it got the chance to have its age set, update order moment
     private int forcedAge;
     private int forcedAgeTimer;
+    private int conversionTime;
     private static final DataParameter<Optional<UUID>> OWNER_UNIQUE_ID = EntityDataManager.createKey(CreepieEntity.class, DataSerializers.OPTIONAL_UNIQUE_ID);
-
+    private static final DataParameter<Boolean> CONVERTING = EntityDataManager.createKey(CreepieEntity.class, DataSerializers.BOOLEAN);
 
     public CreepieEntity(EntityType<? extends CreepieEntity> type, World worldIn) {
         super(type, worldIn);
@@ -68,6 +75,8 @@ public class CreepieEntity extends CreeperEntity implements IOwnableMob {
     protected void registerData(){
         super.registerData();
         this.dataManager.register(OWNER_UNIQUE_ID, Optional.empty());
+        this.dataManager.register(CONVERTING, false);
+
     }
 
     /**
@@ -144,6 +153,7 @@ public class CreepieEntity extends CreeperEntity implements IOwnableMob {
         }
         compound.putInt("Age", this.getGrowingAge());
         compound.putInt("ForcedAge", this.forcedAge);
+        compound.putInt("ConversionTime", this.isConverting() ? this.conversionTime : -1);
     }
 
     /**
@@ -168,7 +178,9 @@ public class CreepieEntity extends CreeperEntity implements IOwnableMob {
         }
         this.setGrowingAge(compound.getInt("Age"));
         this.forcedAge = compound.getInt("ForcedAge");
-
+        if (compound.contains("ConversionTime", 99) && compound.getInt("ConversionTime") > -1) {
+            this.startConverting(compound.getInt("ConversionTime"));
+        }
     }
 
     /**
@@ -196,6 +208,21 @@ public class CreepieEntity extends CreeperEntity implements IOwnableMob {
             }
         }
 
+    }
+
+    /**
+     * Called to update the entity's position/logic.
+     */
+    public void tick() {
+        if (!this.world.isRemote && this.isAlive() && this.isConverting()) {
+            this.conversionTime --;
+            if (this.conversionTime <= 0) {
+                this.finishConversion((ServerWorld)this.world);
+            }
+            //this.world.addParticle(SRParticles.CREEPER_SPORES.get(), this.getPosXRandom(1.0D), this.getPosYRandom() + 0.5D, this.getPosZRandom(1.0D), 0.0D, 0.0D, 0.0D);
+        }
+
+        super.tick();
     }
 
     @Override
@@ -227,25 +254,12 @@ public class CreepieEntity extends CreeperEntity implements IOwnableMob {
      * an adult)
      */
     private void onGrowingIntoCreeper() {
-        CreeperEntity creeperEntity = EntityType.CREEPER.create(this.world);
-        creeperEntity.copyLocationAndAnglesFrom(this.getEntity());
-        creeperEntity.onInitialSpawn(this.world, this.world.getDifficultyForLocation(new BlockPos(creeperEntity)), SpawnReason.CONVERSION, null, (CompoundNBT)null);
-        this.dead = true;
-        this.remove();
-        creeperEntity.setNoAI(this.isAIDisabled());
-        if (this.hasCustomName()) {
-            creeperEntity.setCustomName(this.getCustomName());
-            creeperEntity.setCustomNameVisible(this.isCustomNameVisible());
+        if (!this.world.isRemote) {
+            this.startConverting(200); //10 seconds before it converts
         }
 
-        if (this.isNoDespawnRequired()) {
-            creeperEntity.enablePersistence();
-        }
-
-        creeperEntity.setInvulnerable(this.isInvulnerable());
-        this.world.addEntity(creeperEntity);
-        this.world.playEvent((PlayerEntity)null, 1026, new BlockPos(this), 0);
     }
+
 
     /**
      * If Animal, checks if the age timer is negative
@@ -266,8 +280,8 @@ public class CreepieEntity extends CreeperEntity implements IOwnableMob {
         return this.dataManager.get(OWNER_UNIQUE_ID).orElse((UUID)null);
     }
 
-    public void setOwnerId(@Nullable UUID p_184754_1_) {
-        this.dataManager.set(OWNER_UNIQUE_ID, Optional.ofNullable(p_184754_1_));
+    public void setOwnerId(@Nullable UUID ownerId) {
+        this.dataManager.set(OWNER_UNIQUE_ID, Optional.ofNullable(ownerId));
     }
 
     @Nullable
@@ -291,6 +305,57 @@ public class CreepieEntity extends CreeperEntity implements IOwnableMob {
 
     public boolean shouldAttackEntity(LivingEntity target, LivingEntity owner) {
         return true;
+    }
+
+    public boolean isConverting() {
+        return this.getDataManager().get(CONVERTING);
+    }
+
+    /**
+     * Starts conversion of this zombie villager to a villager
+     */
+    private void startConverting( int conversionTimeIn) {
+        this.conversionTime = conversionTimeIn;
+        this.getDataManager().set(CONVERTING, true);
+        this.world.setEntityState(this, (byte)16);
+    }
+
+
+    private void finishConversion(ServerWorld world) {
+        CreeperEntity creeperEntity = EntityType.CREEPER.create(this.world);
+        creeperEntity.copyLocationAndAnglesFrom(this.getEntity());
+        creeperEntity.onInitialSpawn(this.world, this.world.getDifficultyForLocation(new BlockPos(creeperEntity)), SpawnReason.CONVERSION, null, (CompoundNBT)null);
+        this.dead = true;
+        this.remove();
+        creeperEntity.setNoAI(this.isAIDisabled());
+        if (this.hasCustomName()) {
+            creeperEntity.setCustomName(this.getCustomName());
+            creeperEntity.setCustomNameVisible(this.isCustomNameVisible());
+        }
+
+        if (this.isNoDespawnRequired()) {
+            creeperEntity.enablePersistence();
+        }
+
+        creeperEntity.setInvulnerable(this.isInvulnerable());
+        this.world.addEntity(creeperEntity);
+        this.world.playEvent((PlayerEntity)null, 1026, new BlockPos(this), 0);
+    }
+
+
+    /**
+     * Handler for {@link World#setEntityState} - creates the sound for when the creepie starts converting
+     */
+    @OnlyIn(Dist.CLIENT)
+    public void handleStatusUpdate(byte id) {
+        if (id == 16) {
+            if (!this.isSilent()) {
+                this.world.playSound(this.getPosX(), this.getPosYEye(), this.getPosZ(), SoundEvents.ENTITY_ZOMBIE_VILLAGER_CURE, this.getSoundCategory(), 1.0F + this.rand.nextFloat(), this.rand.nextFloat() * 0.7F + 0.3F, false);
+            }
+
+        } else {
+            super.handleStatusUpdate(id);
+        }
     }
 
     public Team getTeam() {
