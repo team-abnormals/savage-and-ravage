@@ -3,13 +3,10 @@ package com.farcr.savageandravage.common.entity;
 import com.farcr.savageandravage.common.entity.goals.*;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.monster.CreeperEntity;
-import net.minecraft.entity.monster.ZombieVillagerEntity;
 import net.minecraft.entity.passive.CatEntity;
 import net.minecraft.entity.passive.OcelotEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BoneMealItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
@@ -21,9 +18,8 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.server.management.PreYggdrasilConverter;
 import net.minecraft.util.Hand;
-import net.minecraft.world.DifficultyInstance;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -98,7 +94,7 @@ public class CreepieEntity extends CreeperEntity implements IOwnableMob {
             i = 0;
         }
 
-        int j = i - i;
+        int j = 0/*i - i*/;
         this.setGrowingAge(i);
         if (updateForcedAge) {
             this.forcedAge += j;
@@ -117,7 +113,7 @@ public class CreepieEntity extends CreeperEntity implements IOwnableMob {
      * The age value may be negative or positive or zero. If it's negative, it get's incremented on each tick, if it's
      * positive, it get's decremented each tick. With a negative value the Entity is considered a child.
      */
-    public void setGrowingAge(int age) {
+    private void setGrowingAge(int age) {
         int i = this.growingAge;
         this.growingAge = age;
         if (i < 0 && age >= 0 || i >= 0 && age < 0) {
@@ -208,7 +204,7 @@ public class CreepieEntity extends CreeperEntity implements IOwnableMob {
         if (itemstack.getItem() == Items.BONE_MEAL) {
             if (this.isNotCreeper()) {
                 this.consumeItemFromStack(player, itemstack);
-                player.func_226292_a_(hand, true); /**this makes the player's hand swing*/
+                player.func_226292_a_(hand, true); //this makes the player's hand swing
                 this.ageUp((int)((float)(-this.getGrowingAge() / 20) * 0.1F), true);
                 return true;
             }
@@ -219,7 +215,7 @@ public class CreepieEntity extends CreeperEntity implements IOwnableMob {
     /**
      * Decreases ItemStack size by one
      */
-    protected void consumeItemFromStack(PlayerEntity player, ItemStack stack) {
+    private void consumeItemFromStack(PlayerEntity player, ItemStack stack) {
         if (!player.abilities.isCreativeMode) {
             stack.shrink(1);
         }
@@ -230,17 +226,31 @@ public class CreepieEntity extends CreeperEntity implements IOwnableMob {
      * This is called when Entity's growing age timer reaches 0 (negative values are considered as a child, positive as
      * an adult)
      */
-    protected void onGrowingIntoCreeper() {
+    private void onGrowingIntoCreeper() {
         CreeperEntity creeperEntity = EntityType.CREEPER.create(this.world);
         creeperEntity.copyLocationAndAnglesFrom(this.getEntity());
+        creeperEntity.onInitialSpawn(this.world, this.world.getDifficultyForLocation(new BlockPos(creeperEntity)), SpawnReason.CONVERSION, null, (CompoundNBT)null);
         this.dead = true;
         this.remove();
+        creeperEntity.setNoAI(this.isAIDisabled());
+        if (this.hasCustomName()) {
+            creeperEntity.setCustomName(this.getCustomName());
+            creeperEntity.setCustomNameVisible(this.isCustomNameVisible());
+        }
+
+        if (this.isNoDespawnRequired()) {
+            creeperEntity.enablePersistence();
+        }
+
+        creeperEntity.setInvulnerable(this.isInvulnerable());
+        this.world.addEntity(creeperEntity);
+        this.world.playEvent((PlayerEntity)null, 1026, new BlockPos(this), 0);
     }
 
     /**
      * If Animal, checks if the age timer is negative
      */
-    public boolean isNotCreeper() {
+    private boolean isNotCreeper() {
         return this.getGrowingAge() < 0;
     }
 
@@ -271,10 +281,10 @@ public class CreepieEntity extends CreeperEntity implements IOwnableMob {
     }
 
     public boolean canAttack(LivingEntity target) {
-        return this.isOwner(target) ? false : super.canAttack(target);
+        return !this.isOwner(target) && super.canAttack(target); /*this was originally this.isOwner(target) ? false : super.canAttack(target), change back if this breaks*/
     }
 
-    public boolean isOwner(LivingEntity entityIn) {
+    private boolean isOwner(LivingEntity entityIn) {
         return entityIn == this.getOwner();
     }
 
