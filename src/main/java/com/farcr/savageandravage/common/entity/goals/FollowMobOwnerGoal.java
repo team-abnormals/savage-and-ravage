@@ -22,16 +22,16 @@ public class FollowMobOwnerGoal extends Goal {
     private final float maxDist;
     private final float minDist;
     private float oldWaterCost;
-    private final boolean unmappedBoolean;
+    private final boolean canFly;
 
-    public FollowMobOwnerGoal(MobEntity entityIn, double followSpeed, float minimumDistance, float maximumDistance, boolean p_i225711_6_) {
+    public FollowMobOwnerGoal(MobEntity entityIn, double followSpeed, float minimumDistance, float maximumDistance, boolean canFly) {
         this.ownedMob = entityIn;
         this.world = entityIn.world;
         this.followSpeed = followSpeed;
         this.navigator = entityIn.getNavigator();
         this.minDist = minimumDistance;
         this.maxDist = maximumDistance;
-        this.unmappedBoolean = p_i225711_6_;
+        this.canFly = canFly;
         this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
         if (!(entityIn.getNavigator() instanceof GroundPathNavigator) && !(entityIn.getNavigator() instanceof FlyingPathNavigator)) {
             throw new IllegalArgumentException("Unsupported mob type for FollowOwnerGoal");
@@ -95,7 +95,7 @@ public class FollowMobOwnerGoal extends Goal {
             this.timeToRecalcPath = 10;
             if (!this.ownedMob.getLeashed() && !this.ownedMob.isPassenger()) {
                 if (this.ownedMob.getDistanceSq(this.owner) >= 144.0D) {
-                    this.func_226330_g_();
+                    this.teleportToOwner();
                 } else {
                     this.navigator.tryMoveToEntityLiving(this.owner, this.followSpeed);
                 }
@@ -104,14 +104,14 @@ public class FollowMobOwnerGoal extends Goal {
         }
     }
 
-    private void func_226330_g_() {
+    private void teleportToOwner() {
         BlockPos blockpos = new BlockPos(this.owner);
 
         for(int i = 0; i < 10; ++i) {
-            int j = this.func_226327_a_(-3, 3);
-            int k = this.func_226327_a_(-1, 1);
-            int l = this.func_226327_a_(-3, 3);
-            boolean flag = this.func_226328_a_(blockpos.getX() + j, blockpos.getY() + k, blockpos.getZ() + l);
+            int j = this.inclusiveRandomInt(-3, 3);
+            int k = this.inclusiveRandomInt(-1, 1);
+            int l = this.inclusiveRandomInt(-3, 3);
+            boolean flag = this.possiblyTeleportTo(blockpos.getX() + j, blockpos.getY() + k, blockpos.getZ() + l);
             if (flag) {
                 return;
             }
@@ -119,34 +119,34 @@ public class FollowMobOwnerGoal extends Goal {
 
     }
 
-    private boolean func_226328_a_(int p_226328_1_, int p_226328_2_, int p_226328_3_) {
-        if (Math.abs((double)p_226328_1_ - this.owner.getPosX()) < 2.0D && Math.abs((double)p_226328_3_ - this.owner.getPosZ()) < 2.0D) {
+    private boolean possiblyTeleportTo(int x, int y, int z) {
+        if (Math.abs((double)x - this.owner.getPosX()) < 2.0D && Math.abs((double)z - this.owner.getPosZ()) < 2.0D) {
             return false;
-        } else if (!this.func_226329_a_(new BlockPos(p_226328_1_, p_226328_2_, p_226328_3_))) {
+        } else if (!this.canTeleportTo(new BlockPos(x, y, z))) {
             return false;
         } else {
-            this.ownedMob.setLocationAndAngles((double)((float)p_226328_1_ + 0.5F), (double)p_226328_2_, (double)((float)p_226328_3_ + 0.5F), this.ownedMob.rotationYaw, this.ownedMob.rotationPitch);
+            this.ownedMob.setLocationAndAngles((double)((float)x + 0.5F), (double)y, (double)((float)z + 0.5F), this.ownedMob.rotationYaw, this.ownedMob.rotationPitch);
             this.navigator.clearPath();
             return true;
         }
     }
 
-    private boolean func_226329_a_(BlockPos p_226329_1_) {
-        PathNodeType pathnodetype = WalkNodeProcessor.func_227480_b_(this.world, p_226329_1_.getX(), p_226329_1_.getY(), p_226329_1_.getZ());
+    private boolean canTeleportTo(BlockPos blockPositionIn) {
+        PathNodeType pathnodetype = WalkNodeProcessor.func_227480_b_(this.world, blockPositionIn.getX(), blockPositionIn.getY(), blockPositionIn.getZ());
         if (pathnodetype != PathNodeType.WALKABLE) {
             return false;
         } else {
-            BlockState blockstate = this.world.getBlockState(p_226329_1_.down());
-            if (!this.unmappedBoolean && blockstate.getBlock() instanceof LeavesBlock) {
+            BlockState blockstate = this.world.getBlockState(blockPositionIn.down());
+            if (!this.canFly && blockstate.getBlock() instanceof LeavesBlock) {
                 return false;
             } else {
-                BlockPos blockpos = p_226329_1_.subtract(new BlockPos(this.ownedMob));
+                BlockPos blockpos = blockPositionIn.subtract(new BlockPos(this.ownedMob));
                 return this.world.hasNoCollisions(this.ownedMob, this.ownedMob.getBoundingBox().offset(blockpos));
             }
         }
     }
 
-    private int func_226327_a_(int p_226327_1_, int p_226327_2_) {
-        return this.ownedMob.getRNG().nextInt(p_226327_2_ - p_226327_1_ + 1) + p_226327_1_;
+    private int inclusiveRandomInt(int lowerBound, int upperBound) {
+        return this.ownedMob.getRNG().nextInt( upperBound - lowerBound + 1) + lowerBound;
     }
 }
