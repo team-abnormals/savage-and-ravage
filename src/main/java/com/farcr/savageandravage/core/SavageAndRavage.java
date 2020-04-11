@@ -2,6 +2,7 @@ package com.farcr.savageandravage.core;
 
 import com.farcr.savageandravage.common.entity.CreeperSporeCloudEntity;
 import com.farcr.savageandravage.common.item.SRSpawnEgg;
+import com.farcr.savageandravage.common.structure.PillagerOutpostReplacer;
 import com.farcr.savageandravage.core.events.SREvents;
 import com.farcr.savageandravage.core.registry.SRBlocks;
 import com.farcr.savageandravage.core.registry.SREntities;
@@ -14,7 +15,6 @@ import net.minecraft.dispenser.ProjectileDispenseBehavior;
 import net.minecraft.entity.IProjectile;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Util;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ColorHandlerEvent;
@@ -84,7 +84,8 @@ public class SavageAndRavage
 				return creeperSporeCloud;
 			}
 		});
-    }
+		PillagerOutpostReplacer.inject();
+	}
     
     private void clientSetup(final FMLClientSetupEvent event) {
     	//SRData.setRenderLayers();
