@@ -8,6 +8,7 @@ import com.farcr.savageandravage.core.registry.SRBlocks;
 import com.farcr.savageandravage.core.registry.SREntities;
 import com.farcr.savageandravage.core.registry.SRItems;
 import com.farcr.savageandravage.core.registry.SRParticles;
+import com.farcr.savageandravage.core.registry.SRSounds;
 
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.dispenser.IPosition;
@@ -42,6 +43,7 @@ public class SavageAndRavage
         SRItems.ITEMS.register(modEventBus);
         SREntities.ENTITIES.register(modEventBus);
         SRParticles.PARTICLES.register(modEventBus);
+        SRSounds.SOUNDS.register(modEventBus);
         //SRBlocks.PAINTINGS.register(modEventBus);
         
         MinecraftForge.EVENT_BUS.register(this);

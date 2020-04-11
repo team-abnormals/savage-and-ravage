@@ -1,8 +1,10 @@
 package com.farcr.savageandravage.core.util;
 
 import com.farcr.savageandravage.common.item.SRSpawnEgg;
+import com.farcr.savageandravage.core.SavageAndRavage;
 import com.farcr.savageandravage.core.registry.SRBlocks;
 import com.farcr.savageandravage.core.registry.SRItems;
+import com.farcr.savageandravage.core.registry.SRSounds;
 import com.google.common.base.Supplier;
 
 import net.minecraft.block.Block;
@@ -10,6 +12,9 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.registry.Registry;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.RegistryObject;
 

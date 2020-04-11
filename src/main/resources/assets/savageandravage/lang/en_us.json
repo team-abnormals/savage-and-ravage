@@ -20,9 +20,11 @@
 	"block.savageandravage.spore_bomb": "Spore Bomb",
 	"entity.savageandravage.creeper_spore_cloud": "Creeper Spore Cloud",
 	"entity.savageandravage.creepie": "Creepie",
-	"item.savageandravage.creepie_spawn_egg": "Creepie Spawn Egg",
-	
+	"entity.savageandravage.spore_bomb": "Spore Bomb",
+        "savageandravage:subtitles.creepie.hurt": "Creepie Hurts",
+        "savageandravage:subtitles.creepie.death": "Creepie Death",
+	"savageandravage:subtitles.creepie.fuse": "Creepie Hisses",
+
     "entity.savageandravage.skeleton_villager": "Skeleton Villager",
     "item.savageandravage.skeleton_villager_spawn_egg": "Skeleton Villager Spawn Egg"
-	
 }
