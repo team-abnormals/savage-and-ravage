@@ -7,20 +7,27 @@ import com.farcr.savageandravage.common.entity.goals.ImprovedCrossbowGoal;
 import com.farcr.savageandravage.core.registry.SREntities;
 import com.farcr.savageandravage.core.registry.SRItems;
 
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.ai.goal.RangedCrossbowAttackGoal;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.entity.monster.PillagerEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.stats.Stats;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class SREvents
 {
@@ -88,6 +95,21 @@ public class SREvents
 			}
 			event.getWorld().addEntity(creepieEntity);
 
+		}
+	}
+
+	@SubscribeEvent
+	public static void potSRItem(PlayerInteractEvent.RightClickBlock event) {
+		BlockPos pos = event.getPos();
+		ItemStack item = event.getItemStack();
+		World world = event.getWorld();
+		PlayerEntity player = event.getPlayer();
+		ResourceLocation pot = new ResourceLocation(("savageandravage:potted_" + item.getItem().getRegistryName().getPath()));
+		if (world.getBlockState(pos).getBlock() == Blocks.FLOWER_POT && ForgeRegistries.BLOCKS.containsKey(pot)) {
+			world.setBlockState(pos, ForgeRegistries.BLOCKS.getValue(pot).getDefaultState());
+			event.getPlayer().swingArm(event.getHand());
+			player.addStat(Stats.POT_FLOWER);
+			if (!event.getPlayer().abilities.isCreativeMode) item.shrink(1);
 		}
 	}
 

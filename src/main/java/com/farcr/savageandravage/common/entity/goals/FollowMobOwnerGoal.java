@@ -95,7 +95,7 @@ public class FollowMobOwnerGoal extends Goal {
             this.timeToRecalcPath = 10;
             if (!this.ownedMob.getLeashed() && !this.ownedMob.isPassenger()) {
                 if (this.ownedMob.getDistanceSq(this.owner) >= 144.0D) {
-                    this.teleportToOwner();
+                    this.teleportToTheOwner();
                 } else {
                     this.navigator.tryMoveToEntityLiving(this.owner, this.followSpeed);
                 }
@@ -104,7 +104,7 @@ public class FollowMobOwnerGoal extends Goal {
         }
     }
 
-    private void teleportToOwner() {
+    private void teleportToTheOwner() {
         BlockPos blockpos = new BlockPos(this.owner);
 
         for(int i = 0; i < 10; ++i) {
@@ -122,7 +122,7 @@ public class FollowMobOwnerGoal extends Goal {
     private boolean possiblyTeleportTo(int x, int y, int z) {
         if (Math.abs((double)x - this.owner.getPosX()) < 2.0D && Math.abs((double)z - this.owner.getPosZ()) < 2.0D) {
             return false;
-        } else if (!this.canTeleportTo(new BlockPos(x, y, z))) {
+        } else if (!this.isAbleToTeleportTo(new BlockPos(x, y, z))) {
             return false;
         } else {
             this.ownedMob.setLocationAndAngles((double)((float)x + 0.5F), (double)y, (double)((float)z + 0.5F), this.ownedMob.rotationYaw, this.ownedMob.rotationPitch);
@@ -131,7 +131,7 @@ public class FollowMobOwnerGoal extends Goal {
         }
     }
 
-    private boolean canTeleportTo(BlockPos blockPositionIn) {
+    private boolean isAbleToTeleportTo(BlockPos blockPositionIn) {
         PathNodeType pathnodetype = WalkNodeProcessor.func_227480_b_(this.world, blockPositionIn.getX(), blockPositionIn.getY(), blockPositionIn.getZ());
         if (pathnodetype != PathNodeType.WALKABLE) {
             return false;
