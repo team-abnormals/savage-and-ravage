@@ -2,9 +2,9 @@
 	"credit": "Made by Farcr",
 	"ambientocclusion": false,
 	"textures": {
-		"particle": "savageandravage:block/flower_pot",
-		"flowerpot": "savageandravage:block/flower_pot",
-		"dirt": "savageandravage:block/dirt",
+		"particle": "minecraft:block/flower_pot",
+		"flowerpot": "minecraft:block/flower_pot",
+		"dirt": "minecraft:block/dirt",
 		"plant": "savageandravage:block/potted_creeper_spores"
 	},
 	"elements": [
@@ -58,18 +58,6 @@
 			"faces": {
 				"up": {"uv": [6, 6, 10, 10], "texture": "#dirt"},
 				"down": {"uv": [6, 12, 10, 16], "texture": "#flowerpot", "cullface": "down"}
-			}
-		},
-		{
-			"from": [3, 4, 3],
-			"to": [6, 8, 6],
-			"faces": {
-				"north": {"uv": [13, 12, 16, 16], "texture": "#plant"},
-				"east": {"uv": [13, 12, 16, 16], "texture": "#plant"},
-				"south": {"uv": [13, 12, 16, 16], "texture": "#plant"},
-				"west": {"uv": [13, 12, 16, 16], "texture": "#plant"},
-				"up": {"uv": [13, 9, 16, 12], "texture": "#plant"},
-				"down": {"uv": [13, 9, 16, 12], "texture": "#plant"}
 			}
 		},
 		{
