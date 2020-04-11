@@ -1,0 +1,26 @@
+{
+ "entity.creepie.hurt": {
+  "category" : "hostile",
+   "sounds": [
+     "savageandravage:entity/creepie/creepie_hurt1",
+     "savageandravage:entity/creepie/creepie_hurt2",
+     "savageandravage:entity/creepie/creepie_hurt3",
+     "savageandravage:entity/creepie/creepie_hurt4"
+    ],
+    "subtitle": "savageandravage:subtitles.creepie.hurt"
+   },
+  "entity.creepie.death": {
+  "category" : "hostile",
+   "sounds": [
+     "savageandravage:entity/creepie/creepie_death"
+    ],
+    "subtitle": "savageandravage:subtitles.creepie.death"
+   },
+ "entity.creepie.primed": {
+  "category" : "hostile",
+   "sounds": [
+     "savageandravage:entity/creepie/creepie_fuse"
+    ],
+    "subtitle": "savageandravage:subtitles.creepie.fuse"
+   }
+}

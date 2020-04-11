@@ -1,9 +1,30 @@
 package com.farcr.savageandravage.common.entity;
 
-import com.farcr.savageandravage.common.entity.goals.*;
+import java.util.Optional;
+import java.util.UUID;
+
+import javax.annotation.Nullable;
+
+import com.farcr.savageandravage.common.entity.goals.ConditionalNearestAttackableTargetGoal;
+import com.farcr.savageandravage.common.entity.goals.CreepieSwellGoal;
+import com.farcr.savageandravage.common.entity.goals.FollowMobOwnerGoal;
+import com.farcr.savageandravage.common.entity.goals.MobOwnerHurtByTargetGoal;
+import com.farcr.savageandravage.common.entity.goals.MobOwnerHurtTargetGoal;
 import com.farcr.savageandravage.core.registry.SRParticles;
-import net.minecraft.entity.*;
-import net.minecraft.entity.ai.goal.*;
+import com.farcr.savageandravage.core.registry.SRSounds;
+
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.ai.goal.AvoidEntityGoal;
+import net.minecraft.entity.ai.goal.HurtByTargetGoal;
+import net.minecraft.entity.ai.goal.LookAtGoal;
+import net.minecraft.entity.ai.goal.LookRandomlyGoal;
+import net.minecraft.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.entity.ai.goal.SwimGoal;
+import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
 import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.entity.passive.CatEntity;
 import net.minecraft.entity.passive.OcelotEntity;
@@ -15,11 +36,12 @@ import net.minecraft.network.IPacket;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.server.management.PreYggdrasilConverter;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
@@ -28,11 +50,6 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
-import org.lwjgl.system.NonnullDefault;
-
-import javax.annotation.Nullable;
-import java.util.Optional;
-import java.util.UUID;
 
 public class CreepieEntity extends CreeperEntity implements IOwnableMob {
 	private float explosionRadius;
@@ -212,12 +229,30 @@ public class CreepieEntity extends CreeperEntity implements IOwnableMob {
         }
 
     }
+    
+    protected float getSoundPitch() {
+        return (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.5F;
+     }
+    
+    protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
+        return SRSounds.CREEPIE_HURT.get();
+     }
+
+     protected SoundEvent getDeathSound() {
+        return SRSounds.CREEPIE_DEATH.get();
+     }
 
     /**
      * Called to update the entity's position/logic.
      */
     public void tick() {
         super.tick();
+        if (this.isAlive()) {
+            int i = this.getCreeperState();
+            if (i > 0 && this.timeSinceIgnited == 0) {
+               this.playSound(SRSounds.CREEPIE_PRIMED.get(), this.getSoundVolume(), this.getSoundPitch()); //in the subtitles, the subtitle for this sound also plays but it also says the creeper fuse sound is playing too? i really dont know what happened there.
+            }
+        }
         if (this.isAlive() && this.isConverting()) {
             if(!this.world.isRemote) {
                 this.conversionTime--;
