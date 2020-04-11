@@ -29,6 +29,10 @@ public class CreeperSporeCloudEntity extends ThrowableEntity {
         super(SREntities.CREEPER_SPORE_CLOUD.get(), throwerIn, worldIn);
      }
 
+    public CreeperSporeCloudEntity(World worldIn, double x, double y, double z) {
+        super(SREntities.CREEPER_SPORE_CLOUD.get(), x, y, z, worldIn);
+    }
+
 	@Override
     protected void onImpact(RayTraceResult result) {
     	if (result.getType() == RayTraceResult.Type.ENTITY) {

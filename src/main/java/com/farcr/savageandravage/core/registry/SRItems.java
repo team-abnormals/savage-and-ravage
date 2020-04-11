@@ -9,9 +9,7 @@ import com.farcr.savageandravage.core.util.RegistryUtils;
 import com.google.common.collect.Lists;
 
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
+import net.minecraft.item.*;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -32,4 +30,5 @@ public class SRItems {
 
 	//these colors are place holders dw
 	public static RegistryObject<Item> SKELETON_VILLAGER_SPAWN_EGG = RegistryUtils.createSpawnEggItem("skeleton_villager", () -> SREntities.SKELETON_VILLAGER.get(), 12698049, 4802889, ItemGroup.MISC);
+
 }

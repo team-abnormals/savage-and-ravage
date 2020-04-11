@@ -1,5 +1,6 @@
 package com.farcr.savageandravage.core;
 
+import com.farcr.savageandravage.common.entity.CreeperSporeCloudEntity;
 import com.farcr.savageandravage.common.item.SRSpawnEgg;
 import com.farcr.savageandravage.core.events.SREvents;
 import com.farcr.savageandravage.core.registry.SRBlocks;
@@ -7,7 +8,14 @@ import com.farcr.savageandravage.core.registry.SREntities;
 import com.farcr.savageandravage.core.registry.SRItems;
 import com.farcr.savageandravage.core.registry.SRParticles;
 
+import net.minecraft.block.DispenserBlock;
+import net.minecraft.dispenser.IPosition;
+import net.minecraft.dispenser.ProjectileDispenseBehavior;
+import net.minecraft.entity.IProjectile;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.Util;
+import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -69,6 +77,13 @@ public class SavageAndRavage
     private void commonSetup(final FMLCommonSetupEvent event) {
         //SRData.registerBlockData();
         //SRFeatures.generateFeatures();
+		DispenserBlock.registerDispenseBehavior(SRItems.CREEPER_SPORES.get(), new ProjectileDispenseBehavior() {
+			@Override
+			protected IProjectile getProjectileEntity(World worldIn, IPosition position, ItemStack stackIn) {
+				CreeperSporeCloudEntity creeperSporeCloud = new CreeperSporeCloudEntity(worldIn, position.getX(), position.getY(), position.getZ());
+				return creeperSporeCloud;
+			}
+		});
     }
     
     private void clientSetup(final FMLClientSetupEvent event) {
