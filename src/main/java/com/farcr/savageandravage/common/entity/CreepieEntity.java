@@ -46,6 +46,7 @@ public class CreepieEntity extends CreeperEntity implements IOwnableMob {
     public CreepieEntity(EntityType<? extends CreepieEntity> type, World worldIn) {
         super(type, worldIn);
         this.explosionRadius = 1.2f;
+        this.experienceValue = 2;
     }
 
 
@@ -70,7 +71,7 @@ public class CreepieEntity extends CreeperEntity implements IOwnableMob {
     protected void registerAttributes(){
         super.registerAttributes();
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(5.0);
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.35D);
+        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.35D);;
     }
 
     @Override
