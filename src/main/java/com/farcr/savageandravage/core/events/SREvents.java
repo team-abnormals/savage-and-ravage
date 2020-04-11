@@ -61,7 +61,6 @@ public class SREvents
 		
 		//complain to me if this doesnt work!
 		if (event.getEntity() instanceof AbstractIllagerEntity && !(event.getEntity() instanceof EvokerEntity)) {
-
             AbstractIllagerEntity illager = (AbstractIllagerEntity)event.getEntity();
 			if (event.getWorld().getDifficulty() == Difficulty.HARD) 
 			{
