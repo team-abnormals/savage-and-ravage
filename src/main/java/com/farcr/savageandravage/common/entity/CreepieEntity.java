@@ -245,12 +245,13 @@ public class CreepieEntity extends CreeperEntity implements IOwnableMob {
     /**
      * Called to update the entity's position/logic.
      */
+    @Override
     public void tick() {
         super.tick();
         if (this.isAlive()) {
             int i = this.getCreeperState();
             if (i > 0 && this.timeSinceIgnited == 0) {
-               this.playSound(SRSounds.CREEPIE_PRIMED.get(), this.getSoundVolume(), this.getSoundPitch()); //in the subtitles, the subtitle for this sound also plays but it also says the creeper fuse sound is playing too? i really dont know what happened there.
+               this.playSound(SRSounds.CREEPIE_PRIMED.get(), this.getSoundVolume(), this.getSoundPitch());
             }
         }
         if (this.isAlive() && this.isConverting()) {
