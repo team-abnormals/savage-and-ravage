@@ -85,15 +85,16 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 
 		         double d0 = this.entity.getDistanceSq(livingentity);
 		         boolean flag2 = (d0 > (double)this.field_220751_d || this.field_220752_e < 5) && this.field_220753_f == 0;
-		         if (flag2) {
-		        	 this.entity.getNavigator().tryMoveToEntityLiving(livingentity, this.func_220747_j() ? this.field_220750_c : this.field_220750_c * 0.5D);
+		         if (flag2)
+		         {
+		          this.entity.getNavigator().tryMoveToEntityLiving(livingentity, this.func_220747_j() ? this.field_220750_c : this.field_220750_c * 0.5D);
 		         } else {
 		            this.entity.getNavigator().clearPath();
 		         }
 
 		         this.entity.getLookController().setLookPositionWithEntity(livingentity, 30.0F, 30.0F);
 		         if (this.field_220749_b == ImprovedCrossbowGoal.CrossbowState.UNCHARGED) {
-		            if (!flag2) {
+		            if (flag) {
 		               this.entity.setActiveHand(ProjectileHelper.getHandWith(this.entity, Items.CROSSBOW));
 		               this.field_220749_b = ImprovedCrossbowGoal.CrossbowState.CHARGING;
 		               ((ICrossbowUser)this.entity).setCharging(true);
