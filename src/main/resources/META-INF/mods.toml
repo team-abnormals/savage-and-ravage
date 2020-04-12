@@ -1,17 +1,17 @@
 modLoader="javafml"
 loaderVersion="[31,)"
-issueTrackerURL="http://my.issue.tracker/"
+issueTrackerURL="http://https://github.com/Farcr/SavageAndRavage/issues"
 
 [[mods]] #mandatory
 modId="savageandravage"
 version="${file.jarVersion}"
 displayName="Savage & Ravage"
-displayURL="http://example.com/"
-logoFile="examplemod.png"
-credits="credit to bagel all bagel he the best" 
+#displayURL="http://example.com/" should this link to the curseforge page?
+logoFile="logo.png"
+credits="MCVinnyQ, for many of the ideas."
 authors="Farcr, Bagel, TallestEgg and Voliant"
 description='''
-theres like ravagers and savagers and stuff
+A mod that improves and expands on illagers.
 '''
 
 [[dependencies.savageandravage]] 
