@@ -61,7 +61,6 @@ public class SREvents
 		
 		//complain to me if this doesnt work!
 		if (event.getEntity() instanceof AbstractIllagerEntity && !(event.getEntity() instanceof EvokerEntity)) {
-
             AbstractIllagerEntity illager = (AbstractIllagerEntity)event.getEntity();
 			if (event.getWorld().getDifficulty() == Difficulty.HARD) 
 			{
@@ -70,13 +69,13 @@ public class SREvents
             	   for (int i = 0; i < 1; i++) {
                        VindicatorEntity vindicator = EntityType.VINDICATOR.create(event.getWorld());
                        vindicator.resetPatrolTarget();
-                       vindicator.setPosition((double) illager.getPosition().getX(), (double) illager.getPosition().getY(), (double) illager.getPosition().getZ());
+                       vindicator.copyLocationAndAnglesFrom(illager);
                        if (illager.isLeader()) {
                     	  vindicator.setLeader(true); 
                        }
                        vindicator.onInitialSpawn(event.getWorld(), event.getWorld().getDifficultyForLocation(illager.getPosition()), SpawnReason.PATROL, (ILivingEntityData) null, (CompoundNBT) null);
+                       illager.world.addEntity(vindicator);
                        illager.remove();
-                       event.getWorld().addEntity(vindicator);
             }
             }
            }
