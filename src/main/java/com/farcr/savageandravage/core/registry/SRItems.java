@@ -19,10 +19,10 @@ public class SRItems {
 	public static final List<RegistryObject<Item>> SPAWN_EGGS = Lists.newArrayList();
 
 	public static RegistryObject<Item> BLAST_PROOF_PLATING = RegistryUtils.createItem("blast_proof_plating", () -> new Item(new Item.Properties().group(ItemGroup.MATERIALS)));
-	public static RegistryObject<Item> GRIEFER_HELMET = RegistryUtils.createItem("griefer_helmet", () -> new ArmorItem(SRArmorMaterial.GRIEFER, EquipmentSlotType.HEAD, new Item.Properties().group(ItemGroup.COMBAT)));
+	/*public static RegistryObject<Item> GRIEFER_HELMET = RegistryUtils.createItem("griefer_helmet", () -> new ArmorItem(SRArmorMaterial.GRIEFER, EquipmentSlotType.HEAD, new Item.Properties().group(ItemGroup.COMBAT)));
 	public static RegistryObject<Item> GRIEFER_CHESTPLATE = RegistryUtils.createItem("griefer_chestplate", () -> new ArmorItem(SRArmorMaterial.GRIEFER, EquipmentSlotType.CHEST, new Item.Properties().group(ItemGroup.COMBAT)));
 	public static RegistryObject<Item> GRIEFER_LEGGINGS = RegistryUtils.createItem("griefer_leggings", () -> new ArmorItem(SRArmorMaterial.GRIEFER, EquipmentSlotType.LEGS, new Item.Properties().group(ItemGroup.COMBAT)));
-	public static RegistryObject<Item> GRIEFER_BOOTS = RegistryUtils.createItem("griefer_boots", () -> new ArmorItem(SRArmorMaterial.GRIEFER, EquipmentSlotType.FEET, new Item.Properties().group(ItemGroup.COMBAT)));
+	public static RegistryObject<Item> GRIEFER_BOOTS = RegistryUtils.createItem("griefer_boots", () -> new ArmorItem(SRArmorMaterial.GRIEFER, EquipmentSlotType.FEET, new Item.Properties().group(ItemGroup.COMBAT)));*/
 	
 	public static RegistryObject<Item> POULTRY_FARMING_HAT = RegistryUtils.createItem("poultry_farming_hat", () -> new Item(new Item.Properties().group(ItemGroup.TOOLS	)));
 	
