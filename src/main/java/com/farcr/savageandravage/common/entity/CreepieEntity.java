@@ -233,11 +233,13 @@ public class CreepieEntity extends CreeperEntity implements IOwnableMob {
     protected float getSoundPitch() {
         return (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.5F;
      }
-    
+
+     @Override
     protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
         return SRSounds.CREEPIE_HURT.get();
      }
 
+     @Override
      protected SoundEvent getDeathSound() {
         return SRSounds.CREEPIE_DEATH.get();
      }
