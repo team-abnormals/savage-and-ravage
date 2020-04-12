@@ -1,4 +1,4 @@
-package com.farcr.savageandravage.common.structure;
+/**package com.farcr.savageandravage.common.structure;
 
 import com.farcr.savageandravage.core.SavageAndRavage;
 import com.google.common.collect.ImmutableList;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.function.UnaryOperator;
 
 public final class PillagerOutpostReplacer extends JigsawPatternRegistry {
-    private static final IStructureProcessorType PROCESSOR = Registry.register(Registry.STRUCTURE_PROCESSOR, new ResourceLocation(SavageAndRavage.MODID, "pillager_outpost"), Processor::new);
+    private static final IStructureProcessorType PROCESSOR = Registry.register(Registry.STRUCTURE_PROCESSOR, new ResourceLocation(SavageAndRavage.MODID, "empty"), Processor::new);
 
     private final JigsawPatternRegistry registry;
 
@@ -93,4 +93,4 @@ public final class PillagerOutpostReplacer extends JigsawPatternRegistry {
             return new Dynamic<>(ops, ops.emptyMap());
         }
     }
-}
+}*/

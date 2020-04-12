@@ -2,7 +2,6 @@ package com.farcr.savageandravage.core;
 
 import com.farcr.savageandravage.common.entity.CreeperSporeCloudEntity;
 import com.farcr.savageandravage.common.item.SRSpawnEgg;
-import com.farcr.savageandravage.common.structure.PillagerOutpostReplacer;
 import com.farcr.savageandravage.core.events.SREvents;
 import com.farcr.savageandravage.core.registry.SRBlocks;
 import com.farcr.savageandravage.core.registry.SREntities;
@@ -86,7 +85,7 @@ public class SavageAndRavage
 				return creeperSporeCloud;
 			}
 		});
-		PillagerOutpostReplacer.inject();
+		//PillagerOutpostReplacer.inject();
 	}
     
     private void clientSetup(final FMLClientSetupEvent event) {
