@@ -32,5 +32,19 @@
     "result": {
         "item": "savageandravage:creeper_spore_sack",
         "count": 1
+    },
+  "result": {
+    "item": "swampexpansion:cattail_seed_sack"
+  },
+  "conditions": [
+    {
+      "type": "forge:and",
+      "values": [
+        {
+          "type": "forge:mod_loaded",
+          "modid": "quark"
+        }
+      ]
     }
+  ]
 }

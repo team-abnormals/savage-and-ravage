@@ -1,0 +1,8 @@
+{
+    "parent": "savageandravage:block/vertical_slab",
+    "textures": {
+        "side": "savageandravage:block/blast_proof_plates",
+        "top": "savageandravage:block/blast_proof_plates",
+        "bottom": "savageandravage:block/blast_proof_plates"
+    }
+}
