@@ -9,18 +9,26 @@ import com.farcr.savageandravage.core.registry.SRItems;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ILivingEntityData;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.ai.goal.RangedCrossbowAttackGoal;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
+import net.minecraft.entity.monster.AbstractIllagerEntity;
 import net.minecraft.entity.monster.CreeperEntity;
+import net.minecraft.entity.monster.EvokerEntity;
 import net.minecraft.entity.monster.PillagerEntity;
+import net.minecraft.entity.monster.VindicatorEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
@@ -49,6 +57,28 @@ public class SREvents
 		{
 		   AbstractVillagerEntity villager = (AbstractVillagerEntity)event.getEntity();
 		   villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, SkeletonVillagerEntity.class, 15.0F, 0.5D, 0.5D));
+		}
+		
+		//yell at me if theres a crash regarding this.
+		if (event.getEntity() instanceof AbstractIllagerEntity && !(event.getEntity() instanceof EvokerEntity)) {
+            AbstractIllagerEntity illager = (AbstractIllagerEntity)event.getEntity();
+			if (event.getWorld().getDifficulty() == Difficulty.HARD) 
+			{
+             if (illager.getRaid() == null && illager.hasPatrolTarget() && event.getWorld().rand.nextInt(5) == 0)
+             {
+            	   for (int i = 0; i < 1; i++) {
+                       VindicatorEntity vindicator = EntityType.VINDICATOR.create(event.getWorld());
+                       vindicator.resetPatrolTarget();
+                       vindicator.copyLocationAndAnglesFrom(illager);
+                       if (illager.isLeader()) {
+                    	  vindicator.setLeader(true); 
+                       }
+                       vindicator.onInitialSpawn(event.getWorld(), event.getWorld().getDifficultyForLocation(illager.getPosition()), SpawnReason.PATROL, (ILivingEntityData) null, (CompoundNBT) null);
+                       illager.world.addEntity(vindicator);
+                       illager.remove();
+            }
+            }
+           }
 		}
 	}
 	
@@ -81,7 +111,7 @@ public class SREvents
 	}
 
 	@SubscribeEvent
-	public static void onInteractWithEntity(PlayerInteractEvent.EntityInteract event){
+	public static void onInteractWithEntity(PlayerInteractEvent.EntityInteract event) {
 		Item heldItem = event.getItemStack().getItem();
 		Entity target = event.getTarget();
 		if (target instanceof CreeperEntity && heldItem == Items.CREEPER_SPAWN_EGG) {
