@@ -7,6 +7,7 @@ import net.minecraft.entity.ICrossbowUser;
 import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.projectile.ProjectileHelper;
 import net.minecraft.item.CrossbowItem;
 import net.minecraft.item.ItemStack;
@@ -78,7 +79,7 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 		         
 		         double d1 = livingentity.getDistance(entity);	         
 		         //makes the entity that has this goal backup if the attack target is whatever number blockstillbackup is, infront of them.
-		         if (d1 <= blockstillbackup) {
+		         if (d1 <= blockstillbackup  && !(entity.getAttackTarget() instanceof VillagerEntity)) {
 		            this.entity.getMoveHelper().strafe(-10.0F, 0); 
 		            this.entity.faceEntity(livingentity, 30.0F, 30.0F);
 		         }
