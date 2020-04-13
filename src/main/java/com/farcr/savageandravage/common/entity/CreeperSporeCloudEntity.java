@@ -10,6 +10,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.ThrowableEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
@@ -67,13 +68,14 @@ public class CreeperSporeCloudEntity extends ThrowableEntity {
       {
         CreepieEntity creepie = SREntities.CREEPIE.get().create(world);
         creepie.setLocationAndAngles(this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ() + 0.0F, 0.0F, 0.0F);
-        try {
-            creepie.setOwnerId(getThrower().getUniqueID());
+        if(!(getThrower().getActivePotionEffects().contains(Effects.INVISIBILITY))) {
+            try {
+                creepie.setOwnerId(getThrower().getUniqueID());
+            } catch (NullPointerException nullPointer) {
+                creepie.setOwnerId(null);
+            }
+            this.world.addEntity(creepie);
         }
-        catch (NullPointerException nullPointer){
-            creepie.setOwnerId(null);
-        }
-        this.world.addEntity(creepie);
       }
     } 
     
