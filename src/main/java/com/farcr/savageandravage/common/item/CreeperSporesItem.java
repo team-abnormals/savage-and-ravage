@@ -21,7 +21,7 @@ public class CreeperSporesItem extends Item
 	      worldIn.playSound((PlayerEntity)null, playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ(), SoundEvents.ENTITY_EGG_THROW, SoundCategory.PLAYERS, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
 	      CreeperSporeCloudEntity spores = new CreeperSporeCloudEntity(worldIn, playerIn);
 	      spores.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 0.99F, 1.0F);
-	      spores.size = worldIn.rand.nextInt(3);
+	      spores.size = worldIn.rand.nextInt(1) + 3; //wip still working on this.
 	      worldIn.addEntity(spores);
 
 	      playerIn.addStat(Stats.ITEM_USED.get(this));
