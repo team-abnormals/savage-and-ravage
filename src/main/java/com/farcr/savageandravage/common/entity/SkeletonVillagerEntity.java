@@ -57,7 +57,7 @@ import net.minecraft.world.World;
 public class SkeletonVillagerEntity extends AbstractSkeletonEntity implements ICrossbowUser, IRangedAttackMob 
 {
     private static final DataParameter<Boolean> DATA_CHARGING_STATE = EntityDataManager.createKey(SkeletonVillagerEntity.class, DataSerializers.BOOLEAN);
-    private final ImprovedCrossbowGoal<SkeletonVillagerEntity> aiCrossBow = new ImprovedCrossbowGoal<SkeletonVillagerEntity>(this, 1.0D, 8.0F, 9.0D);
+    private final ImprovedCrossbowGoal<SkeletonVillagerEntity> aiCrossBow = new ImprovedCrossbowGoal<SkeletonVillagerEntity>(this, 1.0D, 8.0F, 5.0D);
     private final MeleeAttackGoal aiMelee = new MeleeAttackGoal(this, 1.2D, false) {
        public void resetTask() {
           super.resetTask();

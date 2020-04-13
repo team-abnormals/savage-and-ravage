@@ -80,7 +80,7 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 		         double d1 = livingentity.getDistance(entity);	         
 		         //makes the entity that has this goal backup if the attack target is whatever number blockstillbackup is, infront of them.
 		         if (d1 <= blockstillbackup  && !(entity.getAttackTarget() instanceof AbstractVillagerEntity)) {
-		            this.entity.getMoveHelper().strafe(-10.0F, 0); 
+		            this.entity.getMoveHelper().strafe(-3.0F, 0); 
 		            this.entity.faceEntity(livingentity, 30.0F, 30.0F);
 		         }
 

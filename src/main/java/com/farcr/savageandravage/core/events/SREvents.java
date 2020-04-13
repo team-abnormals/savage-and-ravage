@@ -37,7 +37,7 @@ public class SREvents
 		if (event.getEntity() instanceof PillagerEntity) 
 		{
 			PillagerEntity pillager = (PillagerEntity)event.getEntity();
-			ImprovedCrossbowGoal<PillagerEntity> aiCrossBow = new ImprovedCrossbowGoal<PillagerEntity>(pillager, 1.0D, 8.0F, 9.0D);
+			ImprovedCrossbowGoal<PillagerEntity> aiCrossBow = new ImprovedCrossbowGoal<PillagerEntity>(pillager, 1.0D, 8.0F, 5.0D);
 			 pillager.goalSelector.goals.stream().map(it -> it.inner).filter(it -> it instanceof RangedCrossbowAttackGoal<?>)
               .findFirst().ifPresent(crossbowGoal -> {
      		    pillager.goalSelector.removeGoal(crossbowGoal);  
