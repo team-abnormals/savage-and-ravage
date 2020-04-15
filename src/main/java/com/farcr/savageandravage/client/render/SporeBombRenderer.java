@@ -39,13 +39,13 @@ public class SporeBombRenderer extends EntityRenderer<SporeBombEntity>
 		  matrixStackIn.rotate(Vector3f.YP.rotationDegrees(-90.0F));
 		  matrixStackIn.translate(-0.5D, -0.5D, 0.5D);
 		  matrixStackIn.rotate(Vector3f.YP.rotationDegrees(90.0F));
-		  SporeBombRenderer.renderTntFlash(SRBlocks.SPORE_BOMB.get().getDefaultState(), matrixStackIn, bufferIn, packedLightIn, entityIn.getFuse() / 5 % 2 == 0);
+		  SporeBombRenderer.renderBombFlash(SRBlocks.SPORE_BOMB.get().getDefaultState(), matrixStackIn, bufferIn, packedLightIn, entityIn.getFuse() / 5 % 2 == 0);
 		  matrixStackIn.pop();
 		  super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
 	   }
 	   
 	   @SuppressWarnings("deprecation")
-	   public static void renderTntFlash(BlockState blockStateIn, MatrixStack matrixStackIn, IRenderTypeBuffer renderTypeBuffer, int combinedLight, boolean doFullBright) 
+	   public static void renderBombFlash(BlockState blockStateIn, MatrixStack matrixStackIn, IRenderTypeBuffer renderTypeBuffer, int combinedLight, boolean doFullBright) 
 	   {
 		      int i;
 		      if (doFullBright) {

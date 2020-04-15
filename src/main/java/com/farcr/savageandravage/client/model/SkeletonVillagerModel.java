@@ -8,15 +8,14 @@ import net.minecraft.client.renderer.entity.model.IHasArm;
 import net.minecraft.client.renderer.entity.model.IHasHead;
 import net.minecraft.client.renderer.entity.model.SegmentedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraft.item.CrossbowItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.item.ShootableItem;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.math.MathHelper;
 
-/**
- * ModelSkeletonVillager - Undefined
- * Created using Tabula 7.1.0
+/*
+  ModelSkeletonVillager - Vinny
  */
 public class SkeletonVillagerModel extends SegmentedModel<SkeletonVillagerEntity> implements IHasArm, IHasHead {
     public ModelRenderer Head;
@@ -29,6 +28,7 @@ public class SkeletonVillagerModel extends SegmentedModel<SkeletonVillagerEntity
     public ModelRenderer Nose;
     public ModelRenderer RightClosedArm;
     public ModelRenderer LeftClosedArm;
+    public float floatthing; 
 
     public SkeletonVillagerModel() {
         this.textureWidth = 64;
@@ -118,7 +118,7 @@ public class SkeletonVillagerModel extends SegmentedModel<SkeletonVillagerEntity
            this.RightArm.rotateAngleX -= f * 1.2F - f1 * 0.4F;
            this.LeftArm.rotateAngleX -= f * 1.2F - f1 * 0.4F;
        }
-       if (entityIn.isHolding(Items.CROSSBOW)) 
+       if (itemstack.getItem() instanceof CrossbowItem) 
        {
        	 if (entityIn.getPrimaryHand() == HandSide.RIGHT) 
 	          {
@@ -135,21 +135,24 @@ public class SkeletonVillagerModel extends SegmentedModel<SkeletonVillagerEntity
        	         this.LeftArm.rotateAngleX = (-(float)Math.PI / 2F) + this.Head.rotateAngleX + 0.1F;
 
 	           }
-       }
        if (entityIn.isCharging()) {
           if (entityIn.getPrimaryHand() == HandSide.RIGHT) 
           {
         	  this.RightArm.rotateAngleY = -0.8F;
               this.RightArm.rotateAngleX = -0.97079635F;
               this.LeftArm.rotateAngleX = -0.97079635F;
-           this.LeftArm.rotateAngleY =  MathHelper.cos(ageInTicks * 0.2F); // one of the most hackest things i've written.
+              float f2 = MathHelper.clamp(this.floatthing, 0.0F, 25.0F);
+              this.LeftArm.rotateAngleY = MathHelper.lerp(f2 / 25.0F, 0.4F, 0.85F);
+              this.LeftArm.rotateAngleX = MathHelper.lerp(f2 / 25.0F, this.LeftArm.rotateAngleX, (-(float)Math.PI / 2F));
           }
           if (entityIn.getPrimaryHand() == HandSide.LEFT) 
           {
-           this.RightArm.rotateAngleY = -0.97079635F;
-           this.RightArm.rotateAngleX = -0.97079635F;
-           this.LeftArm.rotateAngleX = -0.8F;
-           this.RightArm.rotateAngleY =  MathHelper.cos(ageInTicks * 0.2F);
+              this.LeftArm.rotateAngleY = 0.8F;
+              this.RightArm.rotateAngleX = -0.97079635F;
+              this.LeftArm.rotateAngleX = -0.97079635F;
+              float f2 = MathHelper.clamp(this.floatthing, 0.0F, 25.0F);
+              this.RightArm.rotateAngleY = MathHelper.lerp(f2 / 25.0F, -0.4F, -0.85F);
+              this.RightArm.rotateAngleX = MathHelper.lerp(f2 / 25.0F, this.RightArm.rotateAngleX, (-(float)Math.PI / 2F));
           }
         }
 	   boolean flag = entityIn.isAggressive();
@@ -161,14 +164,23 @@ public class SkeletonVillagerModel extends SegmentedModel<SkeletonVillagerEntity
 	     this.MiddleClosedArm.showModel = false;
 	     this.LeftArm.showModel = true;
   	     this.RightArm.showModel = true;
-	   } else if (!flag) {
+	   } 
+	   else if (!flag) 
+	   {
 	  	     this.RightClosedArm.showModel = true;
 	  	     this.LeftClosedArm.showModel = true;
 	  	     this.MiddleClosedArm.showModel = true;
 	  	     this.LeftArm.showModel = false;
 	  	     this.RightArm.showModel = false;
-	     }
-	     
+	    }
+       }
+	}
+	
+	@Override
+	public void setLivingAnimations(SkeletonVillagerEntity entityIn, float limbSwing, float limbSwingAmount, float partialTick) 
+	{
+	  this.floatthing = (float)entityIn.getItemInUseMaxCount();
+	  super.setLivingAnimations(entityIn, limbSwing, limbSwingAmount, partialTick);
 	}
 
 	@Override
