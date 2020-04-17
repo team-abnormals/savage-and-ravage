@@ -174,6 +174,15 @@ public class SkeletonVillagerModel extends SegmentedModel<SkeletonVillagerEntity
 	  	     this.RightArm.showModel = false;
 	    }
        }
+       if (this.isSitting) 
+	   {
+	     this.RightLeg.rotateAngleX = -1.4137167F;
+	     this.RightLeg.rotateAngleY = ((float)Math.PI / 10F);
+	     this.RightLeg.rotateAngleZ = 0.07853982F;
+	     this.LeftLeg.rotateAngleX = -1.4137167F;
+	     this.LeftLeg.rotateAngleY = (-(float)Math.PI / 10F);
+	     this.LeftLeg.rotateAngleZ = -0.07853982F;
+	   } 
 	}
 	
 	@Override

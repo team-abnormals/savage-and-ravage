@@ -10,14 +10,12 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.ThrowableEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
-import net.minecraft.potion.Effect;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
-import org.apache.commons.lang3.ObjectUtils;
 
 public class CreeperSporeCloudEntity extends ThrowableEntity {
 	
@@ -65,7 +63,7 @@ public class CreeperSporeCloudEntity extends ThrowableEntity {
       aoe.setDuration(100);
       aoe.setRadiusPerTick(-aoe.getRadius() / (float) aoe.getDuration());
       this.world.addEntity(aoe); 
-      //if (aoe.ticksExisted <= 50.0)  //TODO an attempt on making the creepies spawn instantly, i will work on this later.
+      //if (aoe.ticksExisted <= 50.0)  //TODO an attempt on making not the creepies spawn instantly, i will work on this later.
       for (int i = 0; i < size; ++i) 
       {
         CreepieEntity creepie = SREntities.CREEPIE.get().create(world);

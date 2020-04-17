@@ -32,6 +32,7 @@ import net.minecraft.entity.ai.goal.RestrictSunGoal;
 import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.AbstractSkeletonEntity;
+import net.minecraft.entity.monster.SpiderEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -69,7 +70,6 @@ public class SkeletonVillagerEntity extends AbstractSkeletonEntity implements IC
           SkeletonVillagerEntity.this.setAggroed(true);
        }
     };
-
     public CreatureAttribute getCreatureAttribute() {
         return CreatureAttribute.UNDEAD;
      }
@@ -80,20 +80,29 @@ public class SkeletonVillagerEntity extends AbstractSkeletonEntity implements IC
 	}
 	
 	@Override
+	public double getYOffset() 
+	{
+	  return -0.4D;
+	}
+	
+	@Override
 	public void setCombatTask() 
 	{
 	 {
-	         this.goalSelector.removeGoal(this.aiMelee);
-	         this.goalSelector.removeGoal(this.aiCrossBow);
-	         ItemStack itemstack = this.getHeldItem(ProjectileHelper.getHandWith(this, Items.CROSSBOW));
-	         if (itemstack.getItem() instanceof CrossbowItem) {
-	            this.goalSelector.addGoal(2, this.aiCrossBow);
-	         } else {
-	            super.setCombatTask();
-	         } 
+	   this.goalSelector.removeGoal(this.aiMelee);
+	   this.goalSelector.removeGoal(this.aiCrossBow);
+	   ItemStack itemstack = this.getHeldItem(ProjectileHelper.getHandWith(this, Items.CROSSBOW));
+	   if (itemstack.getItem() instanceof CrossbowItem) 
+	   {
+	      this.goalSelector.addGoal(3, this.aiCrossBow);
+	   } else 
+	   {
+	     super.setCombatTask();
+	   } 
 	  }
 	}
 	
+	@Override
 	protected void registerGoals() 
 	{
 	   this.goalSelector.addGoal(2, new RestrictSunGoal(this));
@@ -135,6 +144,13 @@ public class SkeletonVillagerEntity extends AbstractSkeletonEntity implements IC
 	{
 	   this.setEquipmentBasedOnDifficulty(difficultyIn);
 	   this.setEnchantmentBasedOnDifficulty(difficultyIn);
+	   if (worldIn.getRandom().nextInt(100) == 0) 
+	   {
+	     SpiderEntity spider = EntityType.SPIDER.create(this.world);
+	     spider.copyLocationAndAnglesFrom(this);
+	     worldIn.addEntity(spider);
+	     this.startRiding(spider);
+	   }
 	   this.setCombatTask();
 	   return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
 	}
@@ -147,7 +163,6 @@ public class SkeletonVillagerEntity extends AbstractSkeletonEntity implements IC
 	         map.put(Enchantments.PIERCING, 1);
 	         EnchantmentHelper.setEnchantments(map, itemstack);
 	      }
-
 	      this.setItemStackToSlot(EquipmentSlotType.MAINHAND, itemstack);
 	}
 	 
@@ -166,7 +181,6 @@ public class SkeletonVillagerEntity extends AbstractSkeletonEntity implements IC
 	  {
 	   CrossbowItem.fireProjectiles(this.world, this, hand, itemstack, 1.6F, (float)(14 - this.world.getDifficulty().getId() * 4));
 	  }
-
 	  this.idleTime = 0;
 	}
 	
