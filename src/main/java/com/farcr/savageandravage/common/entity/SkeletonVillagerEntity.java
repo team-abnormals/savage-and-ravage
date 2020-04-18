@@ -134,9 +134,9 @@ public class SkeletonVillagerEntity extends AbstractSkeletonEntity implements IC
 	}
 
 	@Override
-	public void setCharging(boolean p_213671_1_) 
+	public void setCharging(boolean trueorfalse) 
 	{
-	  this.dataManager.set(DATA_CHARGING_STATE, p_213671_1_);
+	  this.dataManager.set(DATA_CHARGING_STATE, trueorfalse);
 	}
 	
 	@Nullable
@@ -157,13 +157,14 @@ public class SkeletonVillagerEntity extends AbstractSkeletonEntity implements IC
 	
 	protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty) 
 	{
-	     ItemStack itemstack = new ItemStack(Items.CROSSBOW);
-	      if (this.rand.nextInt(300) == 0) {
-	         Map<Enchantment, Integer> map = Maps.newHashMap();
-	         map.put(Enchantments.PIERCING, 1);
-	         EnchantmentHelper.setEnchantments(map, itemstack);
-	      }
-	      this.setItemStackToSlot(EquipmentSlotType.MAINHAND, itemstack);
+	  ItemStack itemstack = new ItemStack(Items.CROSSBOW);
+	  if (this.rand.nextInt(300) == 0) 
+	  {
+	    Map<Enchantment, Integer> map = Maps.newHashMap();
+	    map.put(Enchantments.PIERCING, 1);
+	    EnchantmentHelper.setEnchantments(map, itemstack);
+	   }
+	   this.setItemStackToSlot(EquipmentSlotType.MAINHAND, itemstack);
 	}
 	 
     protected void registerData()
@@ -177,7 +178,7 @@ public class SkeletonVillagerEntity extends AbstractSkeletonEntity implements IC
 	{
 	  Hand hand = ProjectileHelper.getHandWith(this, Items.CROSSBOW);
 	  ItemStack itemstack = this.getHeldItem(hand);
-	  if (this.isHolding(Items.CROSSBOW)) 
+	  if (itemstack.getItem() instanceof CrossbowItem)
 	  {
 	   CrossbowItem.fireProjectiles(this.world, this, hand, itemstack, 1.6F, (float)(14 - this.world.getDifficulty().getId() * 4));
 	  }
@@ -210,25 +211,25 @@ public class SkeletonVillagerEntity extends AbstractSkeletonEntity implements IC
 	  double d1 = target.getPosZ() - this.getPosZ();
 	  double d2 = (double)MathHelper.sqrt(d0 * d0 + d1 * d1);
 	  double d3 = target.getPosYHeight(0.3333333333333333D) - entity.getPosY() + d2 * (double)0.2F;
-	  Vector3f vector3f = this.func_213673_a(new Vec3d(d0, d3, d1), projectileAngle);
+	  Vector3f vector3f = this.aim(new Vec3d(d0, d3, d1), projectileAngle);
 	  projectile.shoot((double)vector3f.getX(), (double)vector3f.getY(), (double)vector3f.getZ(), 1.6F, (float)(14 - this.world.getDifficulty().getId() * 4));
 	  this.playSound(SoundEvents.ITEM_CROSSBOW_SHOOT, 1.0F, 1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
 	}
 
-   private Vector3f func_213673_a(Vec3d p_213673_1_, float p_213673_2_) 
-   {
-	Vec3d vec3d = p_213673_1_.normalize();
-	Vec3d vec3d1 = vec3d.crossProduct(new Vec3d(0.0D, 1.0D, 0.0D));
+    private Vector3f aim(Vec3d p_213673_1_, float p_213673_2_) 
+    {
+	 Vec3d vec3d = p_213673_1_.normalize();
+	 Vec3d vec3d1 = vec3d.crossProduct(new Vec3d(0.0D, 1.0D, 0.0D));
 	  if (vec3d1.lengthSquared() <= 1.0E-7D) 
 	  {
        vec3d1 = vec3d.crossProduct(this.getUpVector(1.0F));
 	  }
-	Quaternion quaternion = new Quaternion(new Vector3f(vec3d1), 90.0F, true);
-	Vector3f vector3f = new Vector3f(vec3d);
-    vector3f.transform(quaternion);
-	Quaternion quaternion1 = new Quaternion(vector3f, p_213673_2_, true);
-	Vector3f vector3f1 = new Vector3f(vec3d);
-	vector3f1.transform(quaternion1);
+	 Quaternion quaternion = new Quaternion(new Vector3f(vec3d1), 90.0F, true);
+	 Vector3f vector3f = new Vector3f(vec3d);
+     vector3f.transform(quaternion);
+	 Quaternion quaternion1 = new Quaternion(vector3f, p_213673_2_, true);
+	 Vector3f vector3f1 = new Vector3f(vec3d);
+	 vector3f1.transform(quaternion1);
 	 return vector3f1;
-	}
+   }
 }

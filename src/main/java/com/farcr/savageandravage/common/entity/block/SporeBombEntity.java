@@ -1,7 +1,5 @@
 package com.farcr.savageandravage.common.entity.block;
 
-import java.util.Random;
-
 import javax.annotation.Nullable;
 
 import com.farcr.savageandravage.common.entity.CreeperSporeCloudEntity;
