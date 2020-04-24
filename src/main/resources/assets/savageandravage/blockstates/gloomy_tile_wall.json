@@ -7,7 +7,7 @@
             "apply": { "model": "savageandravage:block/gloomy_tile_wall_side", "uvlock": true }
         },
         {   "when": { "east": "true" },
-            "apply": { "model": "savageandravage:block/gloomy_tilewall_side", "y": 90, "uvlock": true }
+            "apply": { "model": "savageandravage:block/loomy_tile_wall_side", "y": 90, "uvlock": true }
         },
         {   "when": { "south": "true" },
             "apply": { "model": "savageandravage:block/gloomy_tile_wall_side", "y": 180, "uvlock": true }
