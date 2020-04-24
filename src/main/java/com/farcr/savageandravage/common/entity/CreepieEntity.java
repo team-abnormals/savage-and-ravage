@@ -74,7 +74,7 @@ public class CreepieEntity extends CreeperEntity implements IOwnableMob {
         this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, OcelotEntity.class, 6.0F, 1.0D, 1.2D));
         this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, CatEntity.class, 6.0F, 1.0D, 1.2D));
         this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0D, false));
-        this.goalSelector.addGoal(6, new FollowMobOwnerGoal(this, 1.0D, 5.0F, 4.0F, false));
+        this.goalSelector.addGoal(6, new FollowMobOwnerGoal(this, 1.0D, 5.0F, 0.8F, false));
         this.goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 0.8D));
         this.goalSelector.addGoal(6, new LookAtGoal(this, PlayerEntity.class, 8.0F));
         this.goalSelector.addGoal(6, new LookRandomlyGoal(this));
@@ -88,7 +88,7 @@ public class CreepieEntity extends CreeperEntity implements IOwnableMob {
     protected void registerAttributes(){
         super.registerAttributes();
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(5.0);
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.35D);;
+        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.35D);
     }
 
     @Override
@@ -126,7 +126,7 @@ public class CreepieEntity extends CreeperEntity implements IOwnableMob {
         int j = 0/*i - i*/;
         this.setGrowingAge(i);
         if (updateForcedAge) {
-            this.forcedAge += j;
+            this.forcedAge += j; //TODO see if this is needed since j seems to always equal 0
             if (this.forcedAgeTimer == 0) {
                 this.forcedAgeTimer = 40;
             }
@@ -164,6 +164,7 @@ public class CreepieEntity extends CreeperEntity implements IOwnableMob {
 
     }
 
+    @Override
     public void writeAdditional(CompoundNBT compound) {
         super.writeAdditional(compound);
         if (this.getOwnerId() == null) {
@@ -179,6 +180,7 @@ public class CreepieEntity extends CreeperEntity implements IOwnableMob {
     /**
      * (abstract) Protected helper method to read subclass entity data from NBT.
      */
+    @Override
     public void readAdditional(CompoundNBT compound) {
         super.readAdditional(compound);
         String s;

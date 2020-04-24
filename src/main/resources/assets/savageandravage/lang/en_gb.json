@@ -1,12 +1,12 @@
 {
 	"block.savageandravage.gloomy_tiles": "Gloomy Tiles",
-	"block.savageandravage.chiseled_gloomy_tiles": "Chiseled Gloomy Tiles",
 	"block.savageandravage.gloomy_tile_stairs": "Gloomy Tile Stairs",
 	"block.savageandravage.gloomy_tile_slab": "Gloomy Tile Slab",
 	"block.savageandravage.gloomy_tile_wall": "Gloomy Tile Wall",
 	"block.savageandravage.gloomy_tile_vertical_slab": "Gloomy Tile Vertical Slab",
-	"block.savageandravage.chiseled_gloomy_tiles": "Chiseled Gloomy Tiles",
+	"block.savageandravage.chiseled_gloomy_tiles": "Chiselled Gloomy Tiles",
 	"block.savageandravage.runed_gloomy_tiles": "Runed Gloomy Tiles",
+	"entity.savageandravage.rune_prison": "Rune Prison",
 
 	"item.savageandravage.blast_proof_plating": "Blast-Proof Plating",
 	"block.savageandravage.blast_proof_plates": "Blast-Proof Plates",
@@ -19,8 +19,7 @@
 	"item.savageandravage.griefer_boots": "Griefer Boots",
 	
 	"item.savageandravage.poultry_farming_hat": "Poultry Farming Hat",
-	
-	
+
 	"item.savageandravage.creeper_spores": "Creeper Spores",
 	"block.savageandravage.creeper_spore_sack": "Creeper Spore Sack",
 	"block.savageandravage.spore_bomb": "Spore Bomb",

@@ -69,7 +69,7 @@ public class CreeperSporeCloudEntity extends ThrowableEntity {
         CreepieEntity creepie = SREntities.CREEPIE.get().create(world);
         creepie.setLocationAndAngles(this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ() + 0.0F, 0.0F, 0.0F);
         boolean throwerIsInvisible;
-        try{
+        try{ //TODO see if these two checks are needed
             throwerIsInvisible = getThrower().isPotionActive(Effects.INVISIBILITY);
         }
         catch(NullPointerException nullPointer){
