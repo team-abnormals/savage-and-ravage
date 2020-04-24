@@ -40,7 +40,7 @@ public class SavageAndRavage
         SRParticles.PARTICLES.register(modEventBus);
         SRSounds.SOUNDS.register(modEventBus);
         //SRBlocks.PAINTINGS.register(modEventBus);
-        
+
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(SREvents.class);
         
@@ -77,8 +77,7 @@ public class SavageAndRavage
 		DispenserBlock.registerDispenseBehavior(SRItems.CREEPER_SPORES.get(), new ProjectileDispenseBehavior() {
 			@Override
 			protected IProjectile getProjectileEntity(World worldIn, IPosition position, ItemStack stackIn) {
-				CreeperSporeCloudEntity creeperSporeCloud = new CreeperSporeCloudEntity(worldIn, position.getX(), position.getY(), position.getZ());
-				return creeperSporeCloud;
+				return new CreeperSporeCloudEntity(worldIn, position.getX(), position.getY(), position.getZ());
 			}
 		});
 	}

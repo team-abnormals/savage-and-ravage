@@ -1,6 +1,7 @@
 package com.farcr.savageandravage.core.registry;
 
 import com.farcr.savageandravage.common.block.ImprovedFlowerPotBlock;
+import com.farcr.savageandravage.common.block.RunedGloomyTilesBlock;
 import com.farcr.savageandravage.common.block.SporeBombBlock;
 import com.farcr.savageandravage.common.block.VerticalSlabBlock;
 import com.farcr.savageandravage.core.SavageAndRavage;
@@ -16,6 +17,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.rmi.registry.Registry;
+
 @SuppressWarnings("deprecation")
 @Mod.EventBusSubscriber(modid = SavageAndRavage.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class SRBlocks {
@@ -25,8 +28,10 @@ public class SRBlocks {
 	public static RegistryObject<Block> GLOOMY_TILE_STAIRS 		    = RegistryUtils.createBlock("gloomy_tile_stairs", () -> new StairsBlock(GLOOMY_TILES.get().getDefaultState(), BlockProperties.GLOOMY_TILES), ItemGroup.BUILDING_BLOCKS);
 	public static RegistryObject<Block> GLOOMY_TILE_WALL 			= RegistryUtils.createBlock("gloomy_tile_wall", () -> new WallBlock(BlockProperties.GLOOMY_TILES), ItemGroup.DECORATIONS);
 	public static RegistryObject<Block> GLOOMY_TILE_SLAB 			= RegistryUtils.createBlock("gloomy_tile_slab", () -> new SlabBlock(BlockProperties.GLOOMY_TILES), ItemGroup.BUILDING_BLOCKS);
+	public static RegistryObject<Block> CHISELED_GLOOMY_TILES       = RegistryUtils.createBlock("chiseled_gloomy_tiles", () -> new Block(BlockProperties.GLOOMY_TILES), ItemGroup.BUILDING_BLOCKS);
 	public static RegistryObject<Block> GLOOMY_TILE_VERTICAL_SLAB   = RegistryUtils.createBlockCompat("quark", "gloomy_tile_vertical_slab", () -> new VerticalSlabBlock(BlockProperties.GLOOMY_TILES), ItemGroup.BUILDING_BLOCKS);
-	
+	public static RegistryObject<Block> RUNED_GLOOMY_TILES          = RegistryUtils.createBlock("runed_gloomy_tiles", () -> new RunedGloomyTilesBlock(BlockProperties.GLOOMY_TILES), ItemGroup.BUILDING_BLOCKS);
+
 	public static RegistryObject<Block> BLAST_PROOF_PLATES          = RegistryUtils.createBlock("blast_proof_plates", () -> new Block(BlockProperties.BLAST_PROOF_PLATES), ItemGroup.BUILDING_BLOCKS);
 	public static RegistryObject<Block> BLAST_PROOF_STAIRS 		    = RegistryUtils.createBlock("blast_proof_stairs", () -> new StairsBlock(BLAST_PROOF_PLATES.get().getDefaultState(), BlockProperties.BLAST_PROOF_PLATES), ItemGroup.BUILDING_BLOCKS);
 	public static RegistryObject<Block> BLAST_PROOF_SLAB 			= RegistryUtils.createBlock("blast_proof_slab", () -> new SlabBlock(BlockProperties.BLAST_PROOF_PLATES), ItemGroup.BUILDING_BLOCKS);
