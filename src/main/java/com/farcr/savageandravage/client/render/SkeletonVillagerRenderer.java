@@ -32,6 +32,6 @@ public class SkeletonVillagerRenderer extends MobRenderer<SkeletonVillagerEntity
     @Override
 	public ResourceLocation getEntityTexture(SkeletonVillagerEntity entity) 
     {
-    	return SKELETON_VILLAGER_TEXTURES;	
+    	return SKELETON_VILLAGER_TEXTURES;
     }
 }

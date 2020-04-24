@@ -4,6 +4,7 @@ import com.farcr.savageandravage.common.item.SRSpawnEgg;
 import com.farcr.savageandravage.core.SavageAndRavage;
 import com.farcr.savageandravage.core.registry.SRBlocks;
 import com.farcr.savageandravage.core.registry.SRItems;
+import com.farcr.savageandravage.core.registry.SRParticles;
 import com.farcr.savageandravage.core.registry.SRSounds;
 import com.google.common.base.Supplier;
 
@@ -12,6 +13,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.particles.BasicParticleType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.registry.Registry;
@@ -58,5 +60,14 @@ public class RegistryUtils {
     	Supplier<? extends I> determinedSupplier = ModList.get().isLoaded(mod) ? compat_supplier : supplier;
     	RegistryObject<I> item = SRItems.ITEMS.register(name, determinedSupplier);
 		return item;
+	}
+    
+    public static RegistryObject<SoundEvent> createSound(String name) {
+		return SRSounds.SOUNDS.register(name, () -> new SoundEvent(new ResourceLocation(SavageAndRavage.MODID, name)));
+	}
+    
+	public static RegistryObject<BasicParticleType> createParticle(String name, boolean alwaysShow) {
+		RegistryObject<BasicParticleType> particleType = SRParticles.PARTICLES.register(name, () -> new BasicParticleType(alwaysShow));
+		return particleType;
 	}
 }

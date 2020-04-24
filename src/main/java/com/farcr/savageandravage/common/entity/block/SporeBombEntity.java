@@ -1,7 +1,5 @@
 package com.farcr.savageandravage.common.entity.block;
 
-import java.util.Random;
-
 import javax.annotation.Nullable;
 
 import com.farcr.savageandravage.common.entity.CreeperSporeCloudEntity;
@@ -87,8 +85,7 @@ public class SporeBombEntity extends TNTEntity
 	   public void spawnSporeCloud() 
 	   {
 		   CreeperSporeCloudEntity sporecloud = new CreeperSporeCloudEntity(SREntities.CREEPER_SPORE_CLOUD.get(), world);
-		   Random rand = new Random();
-		   sporecloud.size = rand.nextInt(6) + 4;
+		   sporecloud.size = 4 + sporecloud.world.rand.nextInt(6);
 		   this.world.createExplosion(this, this.getPosX(), this.getPosYHeight(0.0625D), this.getPosZ(), 4.0F, Explosion.Mode.NONE); //hacky.
 		   sporecloud.copyLocationAndAnglesFrom(this);
 		   this.world.addEntity(sporecloud);

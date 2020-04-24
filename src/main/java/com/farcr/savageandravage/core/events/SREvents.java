@@ -15,9 +15,13 @@ import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.entity.monster.PillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.FireworkRocketItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -37,12 +41,17 @@ public class SREvents
 		if (event.getEntity() instanceof PillagerEntity) 
 		{
 			PillagerEntity pillager = (PillagerEntity)event.getEntity();
-			ImprovedCrossbowGoal<PillagerEntity> aiCrossBow = new ImprovedCrossbowGoal<PillagerEntity>(pillager, 1.0D, 8.0F, 9.0D);
+			ImprovedCrossbowGoal<PillagerEntity> aiCrossBow = new ImprovedCrossbowGoal<PillagerEntity>(pillager, 1.0D, 8.0F, 5.0D);
 			 pillager.goalSelector.goals.stream().map(it -> it.inner).filter(it -> it instanceof RangedCrossbowAttackGoal<?>)
               .findFirst().ifPresent(crossbowGoal -> {
      		    pillager.goalSelector.removeGoal(crossbowGoal);  
      		    pillager.goalSelector.addGoal(3, aiCrossBow);
            });
+			 if (event.getWorld().rand.nextInt(100) == 0)
+			 {
+				 pillager.setItemStackToSlot(EquipmentSlotType.OFFHAND, createRocket());
+				 pillager.setDropChance(EquipmentSlotType.OFFHAND, 2.0F);
+			 }
 		}
 		
 		if (event.getEntity() instanceof AbstractVillagerEntity)  
@@ -110,6 +119,24 @@ public class SREvents
 			player.addStat(Stats.POT_FLOWER);
 			if (!event.getPlayer().abilities.isCreativeMode) item.shrink(1);
 		}
+	}
+	
+	public static ItemStack createRocket()
+	{
+	    ItemStack rocket= new ItemStack(Items.FIREWORK_ROCKET);
+        ItemStack star = new ItemStack(Items.FIREWORK_STAR);
+        CompoundNBT compoundnbt = star.getOrCreateChildTag("Explosion");
+        compoundnbt.putInt("Type", FireworkRocketItem.Shape.BURST.func_196071_a());
+        CompoundNBT compoundnbt1 = rocket.getOrCreateChildTag("Fireworks");
+        ListNBT listnbt = new ListNBT();
+        CompoundNBT compoundnbt2 = star.getChildTag("Explosion");
+        if (compoundnbt2 != null) {
+            listnbt.add(compoundnbt2);
+        }
+        if (!listnbt.isEmpty()) {
+            compoundnbt1.put("Explosions", listnbt);
+        }
+        return rocket;
 	}
 
 }
