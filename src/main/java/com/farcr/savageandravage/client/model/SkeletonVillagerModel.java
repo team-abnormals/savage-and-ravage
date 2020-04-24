@@ -92,6 +92,33 @@ public class SkeletonVillagerModel extends SegmentedModel<SkeletonVillagerEntity
 	public void setRotationAngles(SkeletonVillagerEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) 
 	{
 	   ItemStack itemstack = entityIn.getHeldItemMainhand();
+       if (this.isSitting) 
+	   {
+	     this.RightLeg.rotateAngleX = -1.4137167F;
+	     this.RightLeg.rotateAngleY = ((float)Math.PI / 10F);
+	     this.RightLeg.rotateAngleZ = 0.07853982F;
+	     this.LeftLeg.rotateAngleX = -1.4137167F;
+	     this.LeftLeg.rotateAngleY = (-(float)Math.PI / 10F);
+	     this.LeftLeg.rotateAngleZ = -0.07853982F;
+	   }  else {
+		   boolean flag = entityIn.isAggressive();
+		   // hacky but gives me time to work on the real monsters.
+		   if (flag) 
+		   {
+		     this.RightClosedArm.showModel = false;
+		     this.LeftClosedArm.showModel = false;
+		     this.MiddleClosedArm.showModel = false;
+		     this.LeftArm.showModel = true;
+	  	     this.RightArm.showModel = true;
+		   } 
+		   if (!flag) 
+		   {
+		  	     this.RightClosedArm.showModel = true;
+		  	     this.LeftClosedArm.showModel = true;
+		  	     this.MiddleClosedArm.showModel = true;
+		  	     this.LeftArm.showModel = false;
+		  	     this.RightArm.showModel = false;
+		    }
 	   this.Head.rotateAngleY = netHeadYaw * ((float)Math.PI / 180F);
 	   this.Head.rotateAngleX = headPitch * ((float)Math.PI / 180F);
 	   this.RightLeg.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
@@ -106,8 +133,6 @@ public class SkeletonVillagerModel extends SegmentedModel<SkeletonVillagerEntity
        this.LeftArm.rotateAngleZ = 0.0F;
        this.RightArm.rotateAngleY = -(0.1F - f * 0.6F);
        this.LeftArm.rotateAngleY = 0.1F - f * 0.6F;
-       this.RightArm.rotateAngleX -= f * 1.2F - f1 * 0.4F;
-       this.LeftArm.rotateAngleX -= f * 1.2F - f1 * 0.4F;
        this.RightArm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 2.0F * limbSwingAmount * 0.5F;
        this.RightArm.rotateAngleY = 0.0F;
        this.RightArm.rotateAngleZ = 0.0F;
@@ -115,8 +140,10 @@ public class SkeletonVillagerModel extends SegmentedModel<SkeletonVillagerEntity
        this.LeftArm.rotateAngleY = 0.0F;
        this.LeftArm.rotateAngleZ = 0.0F;
        if (entityIn.isAggressive() && (itemstack.isEmpty() || !(itemstack.getItem() instanceof ShootableItem))) {
-           this.RightArm.rotateAngleX -= f * 1.2F - f1 * 0.4F;
-           this.LeftArm.rotateAngleX -= f * 1.2F - f1 * 0.4F;
+           this.LeftArm.rotateAngleX -= f * 2.2F - f1 * 0.4F;
+           this.LeftArm.rotateAngleZ -= f * 1.0 - f1 * 1.0F;
+           this.RightArm.rotateAngleX -= f * 2.2F - f1 * 0.4F;
+           this.RightArm.rotateAngleZ -= f * 1.0 - f1 * 1.0F;
        }
        if (itemstack.getItem() instanceof CrossbowItem) 
        {
@@ -154,35 +181,9 @@ public class SkeletonVillagerModel extends SegmentedModel<SkeletonVillagerEntity
               this.RightArm.rotateAngleY = MathHelper.lerp(f2 / 25.0F, -0.4F, -0.85F);
               this.RightArm.rotateAngleX = MathHelper.lerp(f2 / 25.0F, this.RightArm.rotateAngleX, (-(float)Math.PI / 2F));
           }
-        }
-	   boolean flag = entityIn.isAggressive();
-	   // hacky but gives me time to work on the real monsters.
-	   if (flag) 
-	   {
-	     this.RightClosedArm.showModel = false;
-	     this.LeftClosedArm.showModel = false;
-	     this.MiddleClosedArm.showModel = false;
-	     this.LeftArm.showModel = true;
-  	     this.RightArm.showModel = true;
-	   } 
-	   else if (!flag) 
-	   {
-	  	     this.RightClosedArm.showModel = true;
-	  	     this.LeftClosedArm.showModel = true;
-	  	     this.MiddleClosedArm.showModel = true;
-	  	     this.LeftArm.showModel = false;
-	  	     this.RightArm.showModel = false;
-	    }
        }
-       if (this.isSitting) 
-	   {
-	     this.RightLeg.rotateAngleX = -1.4137167F;
-	     this.RightLeg.rotateAngleY = ((float)Math.PI / 10F);
-	     this.RightLeg.rotateAngleZ = 0.07853982F;
-	     this.LeftLeg.rotateAngleX = -1.4137167F;
-	     this.LeftLeg.rotateAngleY = (-(float)Math.PI / 10F);
-	     this.LeftLeg.rotateAngleZ = -0.07853982F;
-	   } 
+       }
+	   }
 	}
 	
 	@Override
