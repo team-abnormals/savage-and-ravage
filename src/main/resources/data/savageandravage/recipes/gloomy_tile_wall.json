@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "savageandravage:gloomy_tiles"
+    }
+  },
+  "result": {
+    "item": "savageandravage:gloomy_tile_wall",
+    "count": 6
+  }
+}
