@@ -30,6 +30,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -39,6 +40,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jline.builtins.TTop;
 
 import java.util.Random;
 
@@ -128,14 +130,15 @@ public class SREvents
 			player.addStat(Stats.POT_FLOWER);
 			if (!event.getPlayer().abilities.isCreativeMode) heldItemStack.shrink(1);
 		}
-		if (event.getWorld().getBlockState(blockPos).getBlock() instanceof AbstractBannerBlock) {
-			//if(event.getWorld().getBlockState(event.getFace().getDirectionVec().offset(event.getFace(),1)) instanceof FireBlock){
-
-			//}
+		if (event.getWorld().getBlockState(blockPos).getBlock() instanceof AbstractBannerBlock && event.getWorld().getEntitiesWithinAABB(BurningBannerEntity.class, new AxisAlignedBB(blockPos)).isEmpty()) {
 			TileEntity te = event.getWorld().getTileEntity(blockPos);
 			Boolean isFlintAndSteel = heldItem instanceof FlintAndSteelItem;
 			Boolean isFireCharge = heldItem instanceof FireChargeItem;
 			if ((isFlintAndSteel || isFireCharge)) {
+				//TODO make this work
+				if(event.getWorld().getBlockState(event.getPos().offset(event.getFace())).getBlock() instanceof FireBlock){
+					event.getWorld().removeBlock(event.getPos().offset(event.getFace()), false);
+				}
 				BannerTileEntity banner = (BannerTileEntity) te;
 				TranslationTextComponent bannerName;
 				try {
@@ -154,9 +157,7 @@ public class SREvents
 							});
 						}
 					}
-					if (event.getWorld().getEntitiesWithinAABB(BurningBannerEntity.class, event.getWorld().getBlockState(blockPos).getRenderShape(event.getWorld(), blockPos).getBoundingBox()).isEmpty()) {
-						event.getWorld().addEntity(new BurningBannerEntity(event.getWorld(),  blockPos));
-					}
+					event.getWorld().addEntity(new BurningBannerEntity(event.getWorld(),  blockPos));
 				}
 			}
 		}

@@ -67,7 +67,6 @@ public class BurningBannerEntity extends Entity {
                 } else if (world.getBlockState(getBannerPosition()).get(BlockStateProperties.ROTATION_0_15) == 7 || world.getBlockState(getBannerPosition()).get(BlockStateProperties.ROTATION_0_15) == 15) {
                     boundingBox = new AxisAlignedBB(0, 0, 0, 0.8, 1.65, 0.6);
                 }
-                //TODO see if setting more than one position here is necessary
             }
             if (world.getBlockState(getBannerPosition()).getBlock() instanceof WallBannerBlock) {
                 switch (world.getBlockState(getBannerPosition()).get(BlockStateProperties.HORIZONTAL_FACING)) {
