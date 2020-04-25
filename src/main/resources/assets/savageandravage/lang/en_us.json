@@ -27,10 +27,12 @@
 	"entity.savageandravage.creeper_spore_cloud": "Creeper Spore Cloud",
 	"entity.savageandravage.creepie": "Creepie",
 	"entity.savageandravage.spore_bomb": "Spore Bomb",
-        "savageandravage:subtitles.creepie.hurt": "Creepie hurts",
-        "savageandravage:subtitles.creepie.death": "Creepie dies",
+    "savageandravage:subtitles.creepie.hurt": "Creepie hurts",
+    "savageandravage:subtitles.creepie.death": "Creepie dies",
 	"savageandravage:subtitles.creepie.fuse": "Creepie hisses",
 
     "entity.savageandravage.skeleton_villager": "Skeleton Villager",
-    "item.savageandravage.skeleton_villager_spawn_egg": "Skeleton Villager Spawn Egg"
+    "item.savageandravage.skeleton_villager_spawn_egg": "Skeleton Villager Spawn Egg",
+	
+	"advancements.adventure.voluntary_exile.description": "Set fire to an Ominous Banner.\nMaybe consider staying away from villages for the time being..."
 }
