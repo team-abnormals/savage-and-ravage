@@ -1,5 +1,6 @@
 package com.farcr.savageandravage.core.events;
 
+import com.farcr.savageandravage.common.advancement.SRTriggers;
 import com.farcr.savageandravage.common.entity.BurningBannerEntity;
 import com.farcr.savageandravage.common.entity.CreeperSporeCloudEntity;
 import com.farcr.savageandravage.common.entity.CreepieEntity;
@@ -23,6 +24,8 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.stats.Stats;
 import net.minecraft.tileentity.BannerTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -31,7 +34,9 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.GameRules;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -132,9 +137,6 @@ public class SREvents
 			Boolean isFlintAndSteel = heldItem instanceof FlintAndSteelItem;
 			Boolean isFireCharge = heldItem instanceof FireChargeItem;
 			if ((isFlintAndSteel || isFireCharge)) {
-				/*if(event.getWorld().getBlockState(event.getPos().offset(event.getFace())).getBlock() instanceof FireBlock){
-					event.getWorld().removeBlock(event.getPos().offset(event.getFace()), false); TODO come back to this later
-				}*/
 				BannerTileEntity banner = (BannerTileEntity) te;
 				TranslationTextComponent bannerName;
 				try {
@@ -143,6 +145,9 @@ public class SREvents
 					bannerName = null;
 				}
 				if (bannerName.getKey().contains("block.minecraft.ominous_banner")) {
+					/*if(event.getWorld().getBlockState(event.getPos().offset(event.getFace())).getBlock() instanceof FireBlock){
+					event.getWorld().removeBlock(event.getPos().offset(event.getFace()), false); TODO come back to this later
+				}*/
 					if (isFlintAndSteel) {
 						event.getWorld().playSound(player, blockPos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, new Random().nextFloat() * 0.4F + 0.8F);
 						player.swingArm(event.getHand());
@@ -152,6 +157,9 @@ public class SREvents
 								p_219998_1_.sendBreakAnimation(event.getHand());
 							});
 						}
+					}
+					if (player instanceof ServerPlayerEntity) {
+						SRTriggers.BURN_BANNER.trigger((ServerPlayerEntity)player);
 					}
 					event.getWorld().addEntity(new BurningBannerEntity(event.getWorld(),  blockPos));
 				}
