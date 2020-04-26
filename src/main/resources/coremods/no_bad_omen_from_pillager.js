@@ -15,7 +15,7 @@ function initializeCoreMod() {
                 var instructionNumber = method.instructions.size();
                 for (var i = 0; i < instructionNumber; ++i) {
                 	var instruction = method.instructions.get(i);
-                	print("The current opcode is"+instruction.getOpcode())
+                	print("[savageandravage coremod] The current instruction is "+instruction+", and its opcode is "+instruction.getOpcode())
                 }
 
                 return method;
