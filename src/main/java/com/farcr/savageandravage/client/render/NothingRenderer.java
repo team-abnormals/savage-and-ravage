@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 
+//Used for CreeperSpores and BurningBanner - entities with no model
 public class NothingRenderer extends EntityRenderer<Entity> {
     public NothingRenderer(EntityRendererManager renderManager) {
         super(renderManager);
