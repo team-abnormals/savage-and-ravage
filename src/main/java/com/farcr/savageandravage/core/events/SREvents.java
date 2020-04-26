@@ -11,7 +11,6 @@ import com.farcr.savageandravage.core.registry.SRItems;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.AbstractBannerBlock;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.FireBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.ai.goal.RangedCrossbowAttackGoal;
@@ -33,14 +32,12 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.jline.builtins.TTop;
 
 import java.util.Random;
 
@@ -135,10 +132,9 @@ public class SREvents
 			Boolean isFlintAndSteel = heldItem instanceof FlintAndSteelItem;
 			Boolean isFireCharge = heldItem instanceof FireChargeItem;
 			if ((isFlintAndSteel || isFireCharge)) {
-				//TODO make this work
-				if(event.getWorld().getBlockState(event.getPos().offset(event.getFace())).getBlock() instanceof FireBlock){
-					event.getWorld().removeBlock(event.getPos().offset(event.getFace()), false);
-				}
+				/*if(event.getWorld().getBlockState(event.getPos().offset(event.getFace())).getBlock() instanceof FireBlock){
+					event.getWorld().removeBlock(event.getPos().offset(event.getFace()), false); TODO come back to this later
+				}*/
 				BannerTileEntity banner = (BannerTileEntity) te;
 				TranslationTextComponent bannerName;
 				try {

@@ -126,25 +126,26 @@ public class BurningBannerEntity extends Entity {
             blockDestroyed = true;
         }
         if(world.isRemote){
-            double randomPositionX = this.getRenderBoundingBox().getMin(Direction.Axis.X) + (world.rand.nextFloat() * this.getRenderBoundingBox().getXSize());
-            double randomPositionY = this.getRenderBoundingBox().getMin(Direction.Axis.Y) + (world.rand.nextFloat() * this.getRenderBoundingBox().getYSize());
-            double randomPositionZ = this.getRenderBoundingBox().getMin(Direction.Axis.Z) + (world.rand.nextFloat() * this.getRenderBoundingBox().getZSize());
-            if (getTicksTillRemove() > 10) {
-                if (world.rand.nextInt(5) == 2) {
-                    world.addParticle(ParticleTypes.FLAME, randomPositionX, randomPositionY, randomPositionZ - 0.0D, 0.0D, 0.0D, 0.0D);
+            for(int i=0; i<5; i++) {
+                double randomPositionX = this.getRenderBoundingBox().getMin(Direction.Axis.X) + (world.rand.nextFloat() * this.getRenderBoundingBox().getXSize());
+                double randomPositionY = this.getRenderBoundingBox().getMin(Direction.Axis.Y) + (world.rand.nextFloat() * this.getRenderBoundingBox().getYSize());
+                double randomPositionZ = this.getRenderBoundingBox().getMin(Direction.Axis.Z) + (world.rand.nextFloat() * this.getRenderBoundingBox().getZSize());
+                if (getTicksTillRemove() > 10) {
+                    if (world.rand.nextInt(5) == 2) {
+                        world.addParticle(ParticleTypes.FLAME, randomPositionX, randomPositionY, randomPositionZ - 0.0D, 0.0D, 0.0D, 0.0D);
+                    }
+                    if (world.rand.nextInt(5) == 3) {
+                        world.addParticle(ParticleTypes.LAVA, randomPositionX, randomPositionY, randomPositionZ - 0.0D, 0.0D, 0.0D, 0.0D);
+                    }
+                } else if (getTicksTillRemove() < 10) {
+                    world.addParticle(ParticleTypes.LARGE_SMOKE, randomPositionX, randomPositionY, randomPositionZ - 0.0D, 0.0D, 0.0D, 0.0D);
                 }
-                if (world.rand.nextInt(5) == 3) {
-                    world.addParticle(ParticleTypes.LAVA, randomPositionX, randomPositionY, randomPositionZ - 0.0D, 0.0D, 0.0D, 0.0D);
-                }
-            }
-            else if (getTicksTillRemove() < 10){
-                world.addParticle(ParticleTypes.LARGE_SMOKE, randomPositionX, randomPositionY, randomPositionZ - 0.0D, 0.0D, 0.0D, 0.0D);
             }
         }
         if(!world.isRemote) {
             try {
                 if (getTicksTillRemove() > 10 && world.getBlockState(getBannerPosition()).getBlock() != this.currentBanner) {
-                    this.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH, 1.0F, world.rand.nextFloat() * 0.4F + 0.8F);
+                    this.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH, 4F, world.rand.nextFloat() * 0.4F + 0.8F);
                     this.blockDestroyed = true;
                 }
             }
@@ -153,11 +154,11 @@ public class BurningBannerEntity extends Entity {
                 //Swallowed because of crash when summoning
             }
             if (getTicksTillRemove() == 10) {
-                this.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH, 1.0F, world.rand.nextFloat() * 0.4F + 0.8F);
+                this.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH, 4F, world.rand.nextFloat() * 0.4F + 0.8F);
                 world.removeBlock(getBannerPosition(), false);
             }
             if (getTicksTillRemove() > 10) {
-                this.playSound(SoundEvents.BLOCK_FIRE_AMBIENT, 1.0F, world.rand.nextFloat() * 0.4F + 0.8F);
+                this.playSound(SoundEvents.BLOCK_FIRE_AMBIENT, 4F, world.rand.nextFloat() * 0.4F + 0.8F);
             }
         }
     }
