@@ -9,8 +9,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 
 //Used for CreeperSpores and BurningBanner - entities with no model
-public class NothingRenderer extends EntityRenderer<Entity> {
-    public NothingRenderer(EntityRendererManager renderManager) {
+public class NoModelRenderer extends EntityRenderer<Entity> {
+    public NoModelRenderer(EntityRendererManager renderManager) {
         super(renderManager);
     }
     

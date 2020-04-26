@@ -8,8 +8,6 @@ import com.farcr.savageandravage.common.entity.SkeletonVillagerEntity;
 import com.farcr.savageandravage.common.entity.block.SporeBombEntity;
 import com.farcr.savageandravage.core.SavageAndRavage;
 
-import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
@@ -19,7 +17,6 @@ import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.RegistryObject;
-import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
@@ -38,9 +35,9 @@ public class SREntities {
     public static void registerRendering() {
         RenderingRegistry.registerEntityRenderingHandler(CREEPIE.get(), CreepieRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(SKELETON_VILLAGER.get(), SkeletonVillagerRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(CREEPER_SPORE_CLOUD.get(), NothingRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(CREEPER_SPORE_CLOUD.get(), NoModelRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(SPORE_BOMB.get(), SporeBombRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(BURNING_BANNER.get(), NothingRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(BURNING_BANNER.get(), NoModelRenderer::new);
     }
     
     public static void addEntitySpawns() {

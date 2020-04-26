@@ -168,6 +168,20 @@ public class SREvents
 					if (player instanceof ServerPlayerEntity) {
 						SRTriggers.BURN_BANNER.trigger((ServerPlayerEntity)player);
 					}
+					EffectInstance badOmenOnPlayer = event.getPlayer().getActivePotionEffect(Effects.BAD_OMEN);
+					int i = 1;
+					if (badOmenOnPlayer != null) {
+						i += badOmenOnPlayer.getAmplifier();
+						event.getPlayer().removeActivePotionEffect(Effects.BAD_OMEN);
+					} else {
+						--i;
+					}
+
+					i = MathHelper.clamp(i, 0, 5);
+					EffectInstance effectinstance = new EffectInstance(Effects.BAD_OMEN, 120000, i, false, false, true);
+					if (!(event.getWorld().getGameRules().getBoolean(GameRules.DISABLE_RAIDS))) {
+						event.getPlayer().addPotionEffect(effectinstance);
+					}
 					event.getWorld().addEntity(new BurningBannerEntity(event.getWorld(),  blockPos));
 				}
 			}
