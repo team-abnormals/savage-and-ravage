@@ -158,7 +158,6 @@ public class SREvents
 							});
 						}
 					}
-					//TODO fix fire charge edge case
 					if(!(event.getWorld().getBlockState(blockPos.offset(event.getFace())).isAir())){
 						event.getWorld().playSound(player, blockPos, SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.BLOCKS, 1.0F, (new Random().nextFloat() - new Random().nextFloat()) * 0.2F + 1.0F);
 						player.swingArm(event.getHand());
