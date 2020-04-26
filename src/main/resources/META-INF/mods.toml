@@ -8,8 +8,8 @@ version="${file.jarVersion}"
 displayName="Savage & Ravage"
 #displayURL="http://example.com/" should this link to the curseforge page?
 logoFile="logo.png"
-credits="MCVinnyQ, for many of the ideas, and SmellyModder, for some code."
 authors="Farcr, Bagel, TallestEgg and Voliant"
+credits="MCVinnyQ, for some of the ideas used here, and SmellyModder, for contributing code."
 description='''
 A mod that improves and expands on illagers through new structures, enemies and challenges.
 '''
