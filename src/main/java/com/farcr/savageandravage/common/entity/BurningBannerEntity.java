@@ -145,7 +145,7 @@ public class BurningBannerEntity extends Entity {
         if(!world.isRemote) {
             try {
                 if (getTicksTillRemove() > 10 && world.getBlockState(getBannerPosition()).getBlock() != this.currentBanner) {
-                    this.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH, 4F, world.rand.nextFloat() * 0.4F + 0.8F);
+                    this.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH, 2F, world.rand.nextFloat() * 0.4F + 0.8F);
                     this.blockDestroyed = true;
                 }
             }
@@ -154,11 +154,11 @@ public class BurningBannerEntity extends Entity {
                 //Swallowed because of crash when summoning
             }
             if (getTicksTillRemove() == 10) {
-                this.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH, 4F, world.rand.nextFloat() * 0.4F + 0.8F);
+                this.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH, 2F, world.rand.nextFloat() * 0.4F + 0.8F);
                 world.removeBlock(getBannerPosition(), false);
             }
             if (getTicksTillRemove() > 10) {
-                this.playSound(SoundEvents.BLOCK_FIRE_AMBIENT, 4F, world.rand.nextFloat() * 0.4F + 0.8F);
+                this.playSound(SoundEvents.BLOCK_FIRE_AMBIENT, 2F, world.rand.nextFloat() * 0.4F + 0.8F);
             }
         }
     }

@@ -1,16 +1,23 @@
+var Opcodes = org.objectweb.asm.Opcodes;
+var VarInsnNode = org.objectweb.asm.tree.VarInsnNode;
+var InsnList = org.objectweb.asm.tree.InsnList;
+
 function initializeCoreMod() {
     return {
         'no-bad-omen-from-pillager': {
             'target': {
                 'type': 'METHOD',
                 'class': 'net.minecraft.entity.monster.AbstractRaiderEntity',
-                'name': 'func_70645_a',
+                'methodName': 'func_70645_a', //#onDeath
                 'methodDesc': '(Lnet/minecraft/util/DamageSource;)V'
             },
             'transformer': function(method) {
-                for(var i in method.instructions){
-                    print("The current opcode is" + method.instructions.get(i).getOpcode());
+                var instructionNumber = method.instructions.size();
+                for (var i = 0; i < instructionNumber; ++i) {
+                	var instruction = instructions.get(i);
+                	print("The current opcode is"+instruction.getOpcode())
                 }
+
                 return method;
             }
         }

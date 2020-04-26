@@ -153,9 +153,17 @@ public class SREvents
 						player.swingArm(event.getHand());
 						if (player instanceof ServerPlayerEntity) {
 							CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayerEntity) player, blockPos, heldItemStack);
-							event.getItemStack().damageItem(1, player, (p_219998_1_) -> {
+							heldItemStack.damageItem(1, player, (p_219998_1_) -> {
 								p_219998_1_.sendBreakAnimation(event.getHand());
 							});
+						}
+					}
+					//TODO fix fire charge edge case
+					if(!(event.getWorld().getBlockState(blockPos.offset(event.getFace())).isAir())){
+						event.getWorld().playSound(player, blockPos, SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.BLOCKS, 1.0F, (new Random().nextFloat() - new Random().nextFloat()) * 0.2F + 1.0F);
+						player.swingArm(event.getHand());
+						if(!(player.abilities.isCreativeMode)) {
+							heldItemStack.shrink(1);
 						}
 					}
 					if (player instanceof ServerPlayerEntity) {
