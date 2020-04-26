@@ -38,9 +38,9 @@ public class SREntities {
     public static void registerRendering() {
         RenderingRegistry.registerEntityRenderingHandler(CREEPIE.get(), CreepieRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(SKELETON_VILLAGER.get(), SkeletonVillagerRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(CREEPER_SPORE_CLOUD.get(), CreeperSporeRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(CREEPER_SPORE_CLOUD.get(), NothingRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(SPORE_BOMB.get(), SporeBombRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(BURNING_BANNER.get(), BurningBannerRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(BURNING_BANNER.get(), NothingRenderer::new);
     }
     
     public static void addEntitySpawns() {
