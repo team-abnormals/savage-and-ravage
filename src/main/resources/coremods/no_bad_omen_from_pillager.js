@@ -14,7 +14,7 @@ function initializeCoreMod() {
             'transformer': function(method) {
                 var instructionNumber = method.instructions.size();
                 for (var i = 0; i < instructionNumber; ++i) {
-                	var instruction = instructions.get(i);
+                	var instruction = method.instructions.get(i);
                 	print("The current opcode is"+instruction.getOpcode())
                 }
 
