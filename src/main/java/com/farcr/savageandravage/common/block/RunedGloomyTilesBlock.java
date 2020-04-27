@@ -38,9 +38,15 @@ public class RunedGloomyTilesBlock extends Block {
 
     private void activate(BlockState state, World world, BlockPos pos, Entity entity) {
         if (!state.get(TRIGGERED)) {
-            //TODO make raiders tag check work
-            if (!(EntityTypeTags.RAIDERS.contains(entity.getType())) && entity.getType()!=EntityType.ARMOR_STAND) {
-                //TODO add creative mode check when this is done
+            Boolean isCreativeMode;
+            try{
+               isCreativeMode = ((PlayerEntity)entity).abilities.isCreativeMode;
+            }
+            catch (ClassCastException classCast){
+                isCreativeMode = false;
+            }
+            if (!(EntityTypeTags.RAIDERS.contains(entity.getType())) && entity.getType()!=EntityType.ARMOR_STAND && !isCreativeMode) {
+
                     if (entity instanceof LivingEntity) {
                         world.setBlockState(pos, state.with(TRIGGERED, Boolean.valueOf(true)));
                         if (entity instanceof PlayerEntity) {

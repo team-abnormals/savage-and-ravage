@@ -172,7 +172,7 @@ public class SREvents
 					}
 					if(!event.getWorld().isRemote) {
 						ServerWorld server = (ServerWorld) event.getWorld();
-						if (server.findRaid(blockPos) == null) { //TODO come back to this
+						if (server.findRaid(blockPos) == null) {
 							EffectInstance badOmenOnPlayer = event.getPlayer().getActivePotionEffect(Effects.BAD_OMEN);
 							int i = 1;
 							if (badOmenOnPlayer != null) {
