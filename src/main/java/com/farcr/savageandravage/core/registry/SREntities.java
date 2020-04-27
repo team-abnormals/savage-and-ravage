@@ -1,10 +1,7 @@
 package com.farcr.savageandravage.core.registry;
 
 import com.farcr.savageandravage.client.render.*;
-import com.farcr.savageandravage.common.entity.BurningBannerEntity;
-import com.farcr.savageandravage.common.entity.CreeperSporeCloudEntity;
-import com.farcr.savageandravage.common.entity.CreepieEntity;
-import com.farcr.savageandravage.common.entity.SkeletonVillagerEntity;
+import com.farcr.savageandravage.common.entity.*;
 import com.farcr.savageandravage.common.entity.block.SporeBombEntity;
 import com.farcr.savageandravage.core.SavageAndRavage;
 
@@ -30,6 +27,7 @@ public class SREntities {
     public static RegistryObject<EntityType<CreeperSporeCloudEntity>> CREEPER_SPORE_CLOUD = ENTITIES.register("creeper_spore_cloud", () -> EntityType.Builder.<CreeperSporeCloudEntity>create(CreeperSporeCloudEntity::new, EntityClassification.MISC).size(0.6F, 1.99F).build("savageandravage:creeper_spore_cloud"));
     public static RegistryObject<EntityType<SporeBombEntity>> SPORE_BOMB = ENTITIES.register("spore_bomb", () -> EntityType.Builder.<SporeBombEntity>create(SporeBombEntity::new, EntityClassification.MISC).immuneToFire().size(0.98F, 0.98F).build("savageandravage:spore_bomb"));
     public static RegistryObject<EntityType<BurningBannerEntity>> BURNING_BANNER = ENTITIES.register("burning_banner", () -> EntityType.Builder.<BurningBannerEntity>create(BurningBannerEntity::new, EntityClassification.MISC).immuneToFire().build("savageandravage:burning_banner"));
+    public static RegistryObject<EntityType<RunePrisonEntity>> RUNE_PRISON = ENTITIES.register("rune_prison", () -> EntityType.Builder.<RunePrisonEntity>create(RunePrisonEntity::new, EntityClassification.MISC).immuneToFire().size(1.35F, 0.7F).build("savageandravage:rune_prison"));
 
     @OnlyIn(Dist.CLIENT)
     public static void registerRendering() {
@@ -38,6 +36,7 @@ public class SREntities {
         RenderingRegistry.registerEntityRenderingHandler(CREEPER_SPORE_CLOUD.get(), NoModelRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(SPORE_BOMB.get(), SporeBombRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(BURNING_BANNER.get(), NoModelRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(RUNE_PRISON.get(), RunePrisonRenderer::new);
     }
     
     public static void addEntitySpawns() {

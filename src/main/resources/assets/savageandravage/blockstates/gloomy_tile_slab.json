@@ -2,6 +2,6 @@
     "variants": {
         "type=bottom": { "model": "savageandravage:block/gloomy_tile_slab" },
         "type=top": { "model": "savageandravage:block/gloomy_tile_slab_top" },
-        "type=double": { "model": "savageandravage:block/gloomy_tile_bricks" }
+        "type=double": { "model": "savageandravage:block/gloomy_tiles" }
     }
 }

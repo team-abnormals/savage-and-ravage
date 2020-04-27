@@ -37,12 +37,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.GameRules;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.apache.logging.log4j.core.jmx.Server;
 
 import java.util.Random;
 
@@ -158,31 +160,35 @@ public class SREvents
 							});
 						}
 					}
-					if(isFireCharge && !(event.getWorld().getBlockState(blockPos.offset(event.getFace())).isAir())){
+					if (isFireCharge && !(event.getWorld().getBlockState(blockPos.offset(event.getFace())).isAir())) {
 						event.getWorld().playSound(player, blockPos, SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.BLOCKS, 1.0F, (new Random().nextFloat() - new Random().nextFloat()) * 0.2F + 1.0F);
 						player.swingArm(event.getHand());
-						if(!(player.abilities.isCreativeMode)) {
+						if (!(player.abilities.isCreativeMode)) {
 							heldItemStack.shrink(1);
 						}
 					}
 					if (player instanceof ServerPlayerEntity) {
-						SRTriggers.BURN_BANNER.trigger((ServerPlayerEntity)player);
+						SRTriggers.BURN_BANNER.trigger((ServerPlayerEntity) player);
 					}
-					EffectInstance badOmenOnPlayer = event.getPlayer().getActivePotionEffect(Effects.BAD_OMEN);
-					int i = 1;
-					if (badOmenOnPlayer != null) {
-						i += badOmenOnPlayer.getAmplifier();
-						event.getPlayer().removeActivePotionEffect(Effects.BAD_OMEN);
-					} else {
-						--i;
+					if(!event.getWorld().isRemote) {
+						ServerWorld server = (ServerWorld) event.getWorld();
+						if (server.findRaid(blockPos) == null) { //TODO come back to this
+							EffectInstance badOmenOnPlayer = event.getPlayer().getActivePotionEffect(Effects.BAD_OMEN);
+							int i = 1;
+							if (badOmenOnPlayer != null) {
+								i += badOmenOnPlayer.getAmplifier();
+								event.getPlayer().removeActivePotionEffect(Effects.BAD_OMEN);
+							} else {
+								--i;
+							}
+							i = MathHelper.clamp(i, 0, 5);
+							EffectInstance effectinstance = new EffectInstance(Effects.BAD_OMEN, 120000, i, false, false, true);
+							if (!(event.getWorld().getGameRules().getBoolean(GameRules.DISABLE_RAIDS))) {
+								event.getPlayer().addPotionEffect(effectinstance);
+							}
+						}
+						event.getWorld().addEntity(new BurningBannerEntity(event.getWorld(), blockPos));
 					}
-
-					i = MathHelper.clamp(i, 0, 5);
-					EffectInstance effectinstance = new EffectInstance(Effects.BAD_OMEN, 120000, i, false, false, true);
-					if (!(event.getWorld().getGameRules().getBoolean(GameRules.DISABLE_RAIDS))) {
-						event.getPlayer().addPotionEffect(effectinstance);
-					}
-					event.getWorld().addEntity(new BurningBannerEntity(event.getWorld(),  blockPos));
 				}
 			}
 		}
