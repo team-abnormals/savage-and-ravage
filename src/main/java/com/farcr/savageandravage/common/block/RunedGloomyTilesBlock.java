@@ -46,7 +46,6 @@ public class RunedGloomyTilesBlock extends Block {
                 isCreativeMode = false;
             }
             if (!(EntityTypeTags.RAIDERS.contains(entity.getType())) && entity.getType()!=EntityType.ARMOR_STAND && !isCreativeMode) {
-
                     if (entity instanceof LivingEntity) {
                         world.setBlockState(pos, state.with(TRIGGERED, Boolean.valueOf(true)));
                         if (entity instanceof PlayerEntity) {
