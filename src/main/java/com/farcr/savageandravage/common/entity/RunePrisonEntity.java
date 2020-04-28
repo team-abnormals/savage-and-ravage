@@ -115,6 +115,7 @@ public class RunePrisonEntity extends Entity {
                 }
             }
             catch (NullPointerException bruhMoment) {
+
             }
             this.remove();
         }
