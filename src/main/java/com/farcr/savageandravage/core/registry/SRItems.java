@@ -11,9 +11,11 @@ import com.google.common.collect.Lists;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
 import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
+@Mod.EventBusSubscriber(modid = SavageAndRavage.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class SRItems {
 	public static final DeferredRegister<Item> ITEMS = new DeferredRegister<>(ForgeRegistries.ITEMS, SavageAndRavage.MODID);
 	public static final List<RegistryObject<Item>> SPAWN_EGGS = Lists.newArrayList();
@@ -24,7 +26,7 @@ public class SRItems {
 	public static RegistryObject<Item> GRIEFER_LEGGINGS = RegistryUtils.createItem("griefer_leggings", () -> new ArmorItem(SRArmorMaterial.GRIEFER, EquipmentSlotType.LEGS, new Item.Properties().group(ItemGroup.COMBAT)));
 	public static RegistryObject<Item> GRIEFER_BOOTS = RegistryUtils.createItem("griefer_boots", () -> new ArmorItem(SRArmorMaterial.GRIEFER, EquipmentSlotType.FEET, new Item.Properties().group(ItemGroup.COMBAT)));*/
 	
-	public static RegistryObject<Item> POULTRY_FARMING_HAT = RegistryUtils.createItem("poultry_farming_hat", () -> new Item(new Item.Properties().group(ItemGroup.TOOLS	)));
+	public static RegistryObject<Item> POULTRY_FARMING_HAT = RegistryUtils.createItem("poultry_farming_hat", () -> new Item(new Item.Properties().group(ItemGroup.TOOLS)));
 	
 	public static RegistryObject<Item> CREEPER_SPORES = RegistryUtils.createItem("creeper_spores", () -> new CreeperSporesItem(new Item.Properties().group(ItemGroup.MATERIALS)));
 
