@@ -6,6 +6,7 @@ import com.farcr.savageandravage.common.entity.CreeperSporeCloudEntity;
 import com.farcr.savageandravage.common.entity.CreepieEntity;
 import com.farcr.savageandravage.common.entity.SkeletonVillagerEntity;
 import com.farcr.savageandravage.common.entity.goals.ImprovedCrossbowGoal;
+import com.farcr.savageandravage.core.SavageAndRavage;
 import com.farcr.savageandravage.core.registry.SREntities;
 import com.farcr.savageandravage.core.registry.SRItems;
 
@@ -45,7 +46,6 @@ import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
-import com.farcr.savageandravage.core.SavageAndRavage;
 
 import java.util.Random;
 

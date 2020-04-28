@@ -26,8 +26,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 @Mod(value = SavageAndRavage.MODID)
-public class SavageAndRavage
-{
+public class SavageAndRavage {
     //private static final Logger LOGGER = LogManager.getLogger();
     public static final String MODID = "savageandravage";
 

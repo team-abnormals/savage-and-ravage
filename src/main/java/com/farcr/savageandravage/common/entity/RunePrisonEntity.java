@@ -1,5 +1,6 @@
 package com.farcr.savageandravage.common.entity;
 
+import com.farcr.savageandravage.common.block.RunedGloomyTilesBlock;
 import com.farcr.savageandravage.core.registry.SRBlocks;
 import com.farcr.savageandravage.core.registry.SREntities;
 import net.minecraft.entity.Entity;
@@ -109,11 +110,13 @@ public class RunePrisonEntity extends Entity {
         }
         if (getTicksTillRemove() == 0 || getBlockPos()==null) {
             try {
-                world.setBlockState(getBlockPos(), SRBlocks.GLOOMY_TILES.get().getDefaultState());
+                if(world.getBlockState(getBlockPos()).getBlock() instanceof RunedGloomyTilesBlock) {
+                    world.setBlockState(getBlockPos(), SRBlocks.GLOOMY_TILES.get().getDefaultState());
+                }
             }
             catch (NullPointerException bruhMoment) {
-
             }
+
             this.remove();
         }
     }
