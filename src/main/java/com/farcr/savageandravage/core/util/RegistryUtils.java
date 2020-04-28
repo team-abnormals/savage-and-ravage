@@ -16,17 +16,15 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.particles.BasicParticleType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.registry.Registry;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.RegistryObject;
 
 public class RegistryUtils {
-		
 	public static <I extends Item> RegistryObject<I> createItem(String name, Supplier<? extends I> supplier) {
 		RegistryObject<I> item = SRItems.ITEMS.register(name, supplier);
 		return item;
 	}
-	
+
 	public static BlockItem createSimpleItemBlock(Block block, ItemGroup itemGroup) {
         return (BlockItem) new BlockItem(block, new Item.Properties().group(itemGroup)).setRegistryName(block.getRegistryName());
     }

@@ -25,7 +25,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
-@Mod("savageandravage")
+@Mod(value = SavageAndRavage.MODID)
 public class SavageAndRavage
 {
     //private static final Logger LOGGER = LogManager.getLogger();
@@ -42,7 +42,6 @@ public class SavageAndRavage
         //SRBlocks.PAINTINGS.register(modEventBus);
 
         MinecraftForge.EVENT_BUS.register(this);
-        MinecraftForge.EVENT_BUS.register(SREvents.class);
         
         modEventBus.addListener(this::commonSetup);
     	DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {

@@ -43,11 +43,14 @@ import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.apache.logging.log4j.core.jmx.Server;
+import com.farcr.savageandravage.core.SavageAndRavage;
 
 import java.util.Random;
 
+
+@Mod.EventBusSubscriber(modid = SavageAndRavage.MODID)
 public class SREvents
 {
 	@SubscribeEvent
