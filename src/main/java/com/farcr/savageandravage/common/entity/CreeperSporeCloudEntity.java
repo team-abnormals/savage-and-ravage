@@ -36,15 +36,6 @@ public class CreeperSporeCloudEntity extends ThrowableEntity {
 
 	@Override
     protected void onImpact(RayTraceResult result) {
-    	if (result.getType() == RayTraceResult.Type.ENTITY) {
-            Entity entity = ((EntityRayTraceResult) result).getEntity();
-
-            if (this.getThrower() == entity && this.ticksExisted < 4) {
-                return;
-            }
-
-            entity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), (float) 2);
-    	}
     	 this.summonCreepies();
     	 this.world.setEntityState(this, (byte) 3);
          this.remove();
