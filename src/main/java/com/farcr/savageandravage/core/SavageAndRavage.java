@@ -72,6 +72,7 @@ public class SavageAndRavage {
     private void commonSetup(final FMLCommonSetupEvent event) {
         //SRData.registerBlockData();
         //SRFeatures.generateFeatures();
+    	SRBlocks.registerFlammables();
 		DispenserBlock.registerDispenseBehavior(SRItems.CREEPER_SPORES.get(), new ProjectileDispenseBehavior() {
 			@Override
 			protected IProjectile getProjectileEntity(World worldIn, IPosition position, ItemStack stackIn) {

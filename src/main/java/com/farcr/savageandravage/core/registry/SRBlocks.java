@@ -38,7 +38,17 @@ public class SRBlocks {
 	public static RegistryObject<Block> BLAST_PROOF_VERTICAL_SLAB   = RegistryUtils.createBlockCompat("quark", "blast_proof_vertical_slab", () -> new VerticalSlabBlock(BlockProperties.BLAST_PROOF_PLATES), ItemGroup.BUILDING_BLOCKS);
 
 	public static RegistryObject<Block> POTTED_CREEPIE               = RegistryUtils.createBlockNoItem("potted_creeper_spores", () -> new ImprovedFlowerPotBlock(SRItems.CREEPER_SPORES, Block.Properties.from(Blocks.FLOWER_POT)));
-	public static RegistryObject<Block> SPORE_BOMB 			        = RegistryUtils.createBlock("spore_bomb", () -> new SporeBombBlock(BlockProperties.SPORE_BOMB), ItemGroup.REDSTONE);
+	public static RegistryObject<Block> SPORE_BOMB 			        = RegistryUtils.createBlock("spore_bomb", () -> new SporeBombBlock(Block.Properties.from(Blocks.TNT)), ItemGroup.REDSTONE);
 	public static RegistryObject<Block> CREEPER_SPORE_SACK		    = RegistryUtils.createBlockCompat("quark", "creeper_spore_sack", () -> new Block(Block.Properties.create(Material.WOOL, MaterialColor.LIME_TERRACOTTA).hardnessAndResistance(0.5F).sound(SoundType.CLOTH)), ItemGroup.DECORATIONS);
 
+	
+	//Imported from Buzzier Bees.
+	public static void registerFlammable(Block block, int encouragement, int flammability) {
+		FireBlock fire = (FireBlock) Blocks.FIRE;
+		fire.setFireInfo(block, encouragement, flammability);
+	}
+	
+	public static void registerFlammables() {
+		registerFlammable(SRBlocks.SPORE_BOMB.get(), 15, 100);
+	}
 }

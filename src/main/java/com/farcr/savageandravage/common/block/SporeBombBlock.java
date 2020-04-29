@@ -9,8 +9,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.TNTBlock;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -19,11 +17,8 @@ import net.minecraft.world.World;
 
 public class SporeBombBlock extends TNTBlock
 {
-	  public static final BooleanProperty UNSTABLE = BlockStateProperties.UNSTABLE;
-
 	   public SporeBombBlock(Block.Properties properties) {
 	      super(properties);
-	      this.setDefaultState(this.getDefaultState().with(UNSTABLE, Boolean.valueOf(false)));
 	   }
 	   
 	   @Override
