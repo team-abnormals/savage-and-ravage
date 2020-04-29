@@ -25,9 +25,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
-@Mod("savageandravage")
-public class SavageAndRavage
-{
+@Mod(value = SavageAndRavage.MODID)
+public class SavageAndRavage {
     //private static final Logger LOGGER = LogManager.getLogger();
     public static final String MODID = "savageandravage";
 
@@ -42,7 +41,6 @@ public class SavageAndRavage
         //SRBlocks.PAINTINGS.register(modEventBus);
 
         MinecraftForge.EVENT_BUS.register(this);
-        MinecraftForge.EVENT_BUS.register(SREvents.class);
         
         modEventBus.addListener(this::commonSetup);
     	DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
@@ -74,6 +72,7 @@ public class SavageAndRavage
     private void commonSetup(final FMLCommonSetupEvent event) {
         //SRData.registerBlockData();
         //SRFeatures.generateFeatures();
+    	SRBlocks.registerFlammables();
 		DispenserBlock.registerDispenseBehavior(SRItems.CREEPER_SPORES.get(), new ProjectileDispenseBehavior() {
 			@Override
 			protected IProjectile getProjectileEntity(World worldIn, IPosition position, ItemStack stackIn) {

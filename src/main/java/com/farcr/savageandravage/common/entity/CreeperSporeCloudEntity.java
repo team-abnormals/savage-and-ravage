@@ -4,15 +4,12 @@ import com.farcr.savageandravage.core.registry.SREntities;
 import com.farcr.savageandravage.core.registry.SRParticles;
 
 import net.minecraft.entity.AreaEffectCloudEntity;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.ThrowableEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.potion.Effects;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -36,15 +33,6 @@ public class CreeperSporeCloudEntity extends ThrowableEntity {
 
 	@Override
     protected void onImpact(RayTraceResult result) {
-    	if (result.getType() == RayTraceResult.Type.ENTITY) {
-            Entity entity = ((EntityRayTraceResult) result).getEntity();
-
-            if (this.getThrower() == entity && this.ticksExisted < 4) {
-                return;
-            }
-
-            entity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), (float) 2);
-    	}
     	 this.summonCreepies();
     	 this.world.setEntityState(this, (byte) 3);
          this.remove();

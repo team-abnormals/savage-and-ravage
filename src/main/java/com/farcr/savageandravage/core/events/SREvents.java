@@ -1,12 +1,17 @@
 package com.farcr.savageandravage.core.events;
 
+import com.farcr.savageandravage.common.advancement.SRTriggers;
+import com.farcr.savageandravage.common.entity.BurningBannerEntity;
 import com.farcr.savageandravage.common.entity.CreeperSporeCloudEntity;
 import com.farcr.savageandravage.common.entity.CreepieEntity;
 import com.farcr.savageandravage.common.entity.SkeletonVillagerEntity;
 import com.farcr.savageandravage.common.entity.goals.ImprovedCrossbowGoal;
+import com.farcr.savageandravage.core.SavageAndRavage;
 import com.farcr.savageandravage.core.registry.SREntities;
 import com.farcr.savageandravage.core.registry.SRItems;
 
+import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.block.AbstractBannerBlock;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
@@ -15,24 +20,37 @@ import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.entity.monster.PillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.FireworkRocketItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.stats.Stats;
+import net.minecraft.tileentity.BannerTileEntity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.GameRules;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.Random;
+
+
+@Mod.EventBusSubscriber(modid = SavageAndRavage.MODID)
 public class SREvents
 {
 	@SubscribeEvent
@@ -84,6 +102,9 @@ public class SREvents
 			event.getAffectedBlocks().clear();
 			CreeperSporeCloudEntity spores = new CreeperSporeCloudEntity(SREntities.CREEPER_SPORE_CLOUD.get(), event.getWorld());
 			spores.size = (int) (creeper.getHealth() / 5);
+			if (creeper.isCharged()) {
+		      spores.size = (int) (creeper.getHealth() / 2);  //feedback, this needs.
+			}
 			spores.copyLocationAndAnglesFrom(creeper);
 			creeper.world.addEntity(spores);
 		}
@@ -107,22 +128,79 @@ public class SREvents
 	}
 
 	@SubscribeEvent
-	public static void potSRItem(PlayerInteractEvent.RightClickBlock event) {
-		BlockPos pos = event.getPos();
-		ItemStack item = event.getItemStack();
-		World world = event.getWorld();
+	public static void onInteractWithBlock(PlayerInteractEvent.RightClickBlock event) {
+		ItemStack heldItemStack = event.getItemStack();
+		Item heldItem = event.getItemStack().getItem();
 		PlayerEntity player = event.getPlayer();
-		ResourceLocation pot = new ResourceLocation(("savageandravage:potted_" + item.getItem().getRegistryName().getPath()));
-		if (world.getBlockState(pos).getBlock() == Blocks.FLOWER_POT && ForgeRegistries.BLOCKS.containsKey(pot)) {
-			world.setBlockState(pos, ForgeRegistries.BLOCKS.getValue(pot).getDefaultState());
+		BlockPos blockPos = event.getPos();
+		ResourceLocation pot = new ResourceLocation(("savageandravage:potted_" + heldItem.getRegistryName().getPath()));
+		if (event.getWorld().getBlockState(blockPos).getBlock() == Blocks.FLOWER_POT && ForgeRegistries.BLOCKS.containsKey(pot)) {
+			event.getWorld().setBlockState(blockPos, ForgeRegistries.BLOCKS.getValue(pot).getDefaultState());
 			event.getPlayer().swingArm(event.getHand());
 			player.addStat(Stats.POT_FLOWER);
-			if (!event.getPlayer().abilities.isCreativeMode) item.shrink(1);
+			if (!event.getPlayer().abilities.isCreativeMode) heldItemStack.shrink(1);
+		}
+		if (event.getWorld().getBlockState(blockPos).getBlock() instanceof AbstractBannerBlock && event.getWorld().getEntitiesWithinAABB(BurningBannerEntity.class, new AxisAlignedBB(blockPos)).isEmpty()) {
+			TileEntity te = event.getWorld().getTileEntity(blockPos);
+			Boolean isFlintAndSteel = heldItem instanceof FlintAndSteelItem;
+			Boolean isFireCharge = heldItem instanceof FireChargeItem;
+			if ((isFlintAndSteel || isFireCharge)) {
+				BannerTileEntity banner = (BannerTileEntity) te;
+				TranslationTextComponent bannerName;
+				try {
+					bannerName = (TranslationTextComponent) banner.getName();
+				} catch (ClassCastException cast) {
+					bannerName = null;
+				}
+				if (bannerName.getKey().contains("block.minecraft.ominous_banner")) {
+					/*if(event.getWorld().getBlockState(event.getPos().offset(event.getFace())).getBlock() instanceof FireBlock){
+					event.getWorld().removeBlock(event.getPos().offset(event.getFace()), false); TODO come back to this later
+				}*/
+					if (isFlintAndSteel) {
+						event.getWorld().playSound(player, blockPos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, new Random().nextFloat() * 0.4F + 0.8F);
+						player.swingArm(event.getHand());
+						if (player instanceof ServerPlayerEntity) {
+							CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayerEntity) player, blockPos, heldItemStack);
+							heldItemStack.damageItem(1, player, (p_219998_1_) -> {
+								p_219998_1_.sendBreakAnimation(event.getHand());
+							});
+						}
+					}
+					if (isFireCharge && !(event.getWorld().getBlockState(blockPos.offset(event.getFace())).isAir())) {
+						event.getWorld().playSound(player, blockPos, SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.BLOCKS, 1.0F, (new Random().nextFloat() - new Random().nextFloat()) * 0.2F + 1.0F);
+						player.swingArm(event.getHand());
+						if (!(player.abilities.isCreativeMode)) {
+							heldItemStack.shrink(1);
+						}
+					}
+					if (player instanceof ServerPlayerEntity) {
+						SRTriggers.BURN_BANNER.trigger((ServerPlayerEntity) player);
+					}
+					if(!event.getWorld().isRemote) {
+						ServerWorld server = (ServerWorld) event.getWorld();
+						if (server.findRaid(blockPos) == null) {
+							EffectInstance badOmenOnPlayer = event.getPlayer().getActivePotionEffect(Effects.BAD_OMEN);
+							int i = 1;
+							if (badOmenOnPlayer != null) {
+								i += badOmenOnPlayer.getAmplifier();
+								event.getPlayer().removeActivePotionEffect(Effects.BAD_OMEN);
+							} else {
+								--i;
+							}
+							i = MathHelper.clamp(i, 0, 5);
+							EffectInstance effectinstance = new EffectInstance(Effects.BAD_OMEN, 120000, i, false, false, true);
+							if (!(event.getWorld().getGameRules().getBoolean(GameRules.DISABLE_RAIDS))) {
+								event.getPlayer().addPotionEffect(effectinstance);
+							}
+						}
+						event.getWorld().addEntity(new BurningBannerEntity(event.getWorld(), blockPos));
+					}
+				}
+			}
 		}
 	}
 	
-	public static ItemStack createRocket()
-	{
+	public static ItemStack createRocket() {
 	    ItemStack rocket= new ItemStack(Items.FIREWORK_ROCKET);
         ItemStack star = new ItemStack(Items.FIREWORK_STAR);
         CompoundNBT compoundnbt = star.getOrCreateChildTag("Explosion");
