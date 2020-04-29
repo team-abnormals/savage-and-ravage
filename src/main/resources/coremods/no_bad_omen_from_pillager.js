@@ -2,7 +2,7 @@ var Opcodes = org.objectweb.asm.Opcodes;
 
 function initializeCoreMod() {
     return {
-        'patch-bad-omen-from-pillager': {
+        'no-bad-omen-from-pillager': {
             'target': {
                 'type': 'METHOD',
                 'class': 'net.minecraft.entity.monster.AbstractRaiderEntity',
@@ -18,13 +18,15 @@ function initializeCoreMod() {
                             var instruction1 = instruction2.getPrevious();
                             var instruction3 = instruction.getNext();
                             method.instructions.remove(instruction1);
-                            print("[SavageAndRavage/COREMOD] Removed instruction "+instruction1);
+                            print("[SavageAndRavage/COREMOD] Removed instruction"+instruction1);
                             method.instructions.remove(instruction2);
-                            print("[SavageAndRavage/COREMOD] Removed instruction "+instruction2);
+                            print("[SavageAndRavage/COREMOD] Removed instruction"+instruction2);
                             method.instructions.remove(instruction);
-                            print("[SavageAndRavage/COREMOD] Removed instruction "+instruction);
+                            print("[SavageAndRavage/COREMOD] Removed instruction"+instruction);
                             method.instructions.remove(instruction3);
-                            print("[SavageAndRavage/COREMOD] Removed instruction "+instruction3);
+                            print("[SavageAndRavage/COREMOD] Removed instruction"+instruction3);
+                            //if(instruction.getPrevious().getOpcode()==Opcodes.GETSTATIC){
+                            //else if((instruction.getPrevious().getOpcode()==Opcodes.ALOAD)){
                     }
                 }
                 return method;

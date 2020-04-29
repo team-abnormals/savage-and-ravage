@@ -1,5 +1,3 @@
 {
-  "no_bad_omen_from_pillager": "coremods/patch_bad_omen_from_pillager.js",
-  "no_fire_flint_and_steel": "coremods/patch_flint_steel_fire_placement.js",
-  "no_fire_fire_charge": "coremods/patch_fire_charge_fire_placement.js"
+  "no_bad_omen_from_pillager": "coremods/no_bad_omen_from_pillager.js"
 }
