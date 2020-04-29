@@ -48,7 +48,7 @@ public class FollowMobOwnerGoal extends Goal {
             return false;
         } else if (livingentity.isSpectator()) {
             return false;
-        } else if (this.ownedMob.getDistanceSq(livingentity) < (double) (this.minDist * this.minDist)) {
+        } else if (this.ownedMob.getDistanceSq(livingentity) <= (double)(this.minDist * this.minDist) || this.ownedMob.getDistanceSq(livingentity) >= (double)(this.maxDist * this.maxDist)) {
             return false;
         } else {
             this.owner = livingentity;
@@ -62,10 +62,13 @@ public class FollowMobOwnerGoal extends Goal {
     public boolean shouldContinueExecuting() {
         if (this.navigator.noPath()) {
             return false;
-
-        } else {
-            return !(this.ownedMob.getDistanceSq(this.owner) <= (double)(this.maxDist * this.maxDist));
+        } else if((this.ownedMob.getDistanceSq(this.owner) <= (double)(this.minDist * this.minDist)) || (this.ownedMob.getDistanceSq(this.owner) >= (double)(this.maxDist * this.maxDist))){
+            return false;
         }
+        else{
+            return true;
+        }
+
     }
 
     /**
