@@ -18,13 +18,13 @@ function initializeCoreMod() {
                             var instruction1 = instruction2.getPrevious();
                             var instruction3 = instruction.getNext();
                             method.instructions.remove(instruction1);
-                            print("[SavageAndRavage/COREMOD] Removed instruction"+instruction1);
+                            print("[SavageAndRavage/COREMOD] Removed instruction "+instruction1);
                             method.instructions.remove(instruction2);
-                            print("[SavageAndRavage/COREMOD] Removed instruction"+instruction2);
+                            print("[SavageAndRavage/COREMOD] Removed instruction "+instruction2);
                             method.instructions.remove(instruction);
-                            print("[SavageAndRavage/COREMOD] Removed instruction"+instruction);
+                            print("[SavageAndRavage/COREMOD] Removed instruction "+instruction);
                             method.instructions.remove(instruction3);
-                            print("[SavageAndRavage/COREMOD] Removed instruction"+instruction3);
+                            print("[SavageAndRavage/COREMOD] Removed instruction "+instruction3);
                             //if(instruction.getPrevious().getOpcode()==Opcodes.GETSTATIC){
                             //else if((instruction.getPrevious().getOpcode()==Opcodes.ALOAD)){
                     }
