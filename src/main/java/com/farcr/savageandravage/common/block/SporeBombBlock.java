@@ -25,7 +25,7 @@ public class SporeBombBlock extends TNTBlock
 	   public void catchFire(BlockState state, World world, BlockPos pos, @Nullable net.minecraft.util.Direction face, @Nullable LivingEntity igniter) {
 		 SporeBombEntity sporebomb = new SporeBombEntity(world, (double)pos.getX() + 0.5D, (double)pos.getY(), (double)pos.getZ() + 0.5D, igniter);
 		 world.addEntity(sporebomb);
-		 world.playSound((PlayerEntity)null, sporebomb.getPosX(), sporebomb.getPosY(), sporebomb.getPosZ(), SoundEvents.ENTITY_CREEPER_PRIMED, SoundCategory.BLOCKS, 1.0F, 1.0F);
+		 world.playSound((PlayerEntity)null, sporebomb.getPosX(), sporebomb.getPosY(), sporebomb.getPosZ(), SoundEvents.ENTITY_CREEPER_PRIMED, SoundCategory.BLOCKS, 1.0F, 0.5F);
 	   }
 	   
 	   @Override

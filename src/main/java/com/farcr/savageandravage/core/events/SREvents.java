@@ -30,6 +30,7 @@ import net.minecraft.potion.Effects;
 import net.minecraft.stats.Stats;
 import net.minecraft.tileentity.BannerTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
@@ -65,9 +66,10 @@ public class SREvents
      		    pillager.goalSelector.removeGoal(crossbowGoal);  
      		    pillager.goalSelector.addGoal(3, aiCrossBow);
            });
-			 if (event.getWorld().rand.nextInt(100) == 0)
+			 if (event.getWorld().rand.nextInt(10) == 0 && !event.getWorld().isRemote)
 			 {
 				 pillager.setItemStackToSlot(EquipmentSlotType.OFFHAND, createRocket());
+				 pillager.setActiveHand(Hand.OFF_HAND);
 				 pillager.setDropChance(EquipmentSlotType.OFFHAND, 2.0F);
 			 }
 		}

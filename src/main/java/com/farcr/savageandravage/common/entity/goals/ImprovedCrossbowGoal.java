@@ -10,8 +10,10 @@ import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.projectile.ProjectileHelper;
 import net.minecraft.item.CrossbowItem;
+import net.minecraft.item.FireworkRocketItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.util.Hand;
 public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & ICrossbowUser> extends Goal {
 	   private final T entity;
 	   private ImprovedCrossbowGoal.CrossbowState field_220749_b = ImprovedCrossbowGoal.CrossbowState.UNCHARGED;
@@ -112,6 +114,10 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 		               this.entity.stopActiveHand();
 		               this.field_220749_b = ImprovedCrossbowGoal.CrossbowState.CHARGED;
 		               this.field_220753_f = 20 + this.entity.getRNG().nextInt(20);
+		               if (entity.getHeldItemOffhand().getItem() instanceof FireworkRocketItem) 
+		               {
+		            	   entity.setActiveHand(Hand.OFF_HAND);
+		               }
 		               ((ICrossbowUser)this.entity).setCharging(false);
 		            }
 		         } else if (this.field_220749_b == ImprovedCrossbowGoal.CrossbowState.CHARGED) {

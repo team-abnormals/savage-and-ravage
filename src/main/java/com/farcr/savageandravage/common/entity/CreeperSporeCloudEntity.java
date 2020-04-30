@@ -55,7 +55,7 @@ public class CreeperSporeCloudEntity extends ThrowableEntity {
       for (int i = 0; i < size; ++i) 
       {
         CreepieEntity creepie = SREntities.CREEPIE.get().create(world);
-        creepie.setLocationAndAngles(this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ() + 0.0F, 0.0F, 0.0F);
+        creepie.setLocationAndAngles(aoe.getPosXRandom(0.1D), this.getPosY(), aoe.getPosZRandom(0.2D), 0.0F, 0.0F);
         boolean throwerIsInvisible;
         try{ //TODO see if these two checks are needed
             throwerIsInvisible = getThrower().isPotionActive(Effects.INVISIBILITY);
@@ -72,6 +72,7 @@ public class CreeperSporeCloudEntity extends ThrowableEntity {
             }
         }
         this.world.addEntity(creepie);
+        this.remove();
       }
     } 
     
