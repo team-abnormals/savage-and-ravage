@@ -7,6 +7,7 @@ import com.farcr.savageandravage.common.entity.CreepieEntity;
 import com.farcr.savageandravage.common.entity.SkeletonVillagerEntity;
 import com.farcr.savageandravage.common.entity.goals.ImprovedCrossbowGoal;
 import com.farcr.savageandravage.core.SavageAndRavage;
+import com.farcr.savageandravage.core.config.SRConfig;
 import com.farcr.savageandravage.core.registry.SREntities;
 import com.farcr.savageandravage.core.registry.SRItems;
 
@@ -66,7 +67,7 @@ public class SREvents
      		    pillager.goalSelector.removeGoal(crossbowGoal);  
      		    pillager.goalSelector.addGoal(3, aiCrossBow);
            });
-			 if (event.getWorld().rand.nextInt(10) == 0 && !event.getWorld().isRemote)
+			 if (event.getWorld().rand.nextInt(100) == 0 && !event.getWorld().isRemote)
 			 {
 				 pillager.setItemStackToSlot(EquipmentSlotType.OFFHAND, createRocket());
 				 pillager.setActiveHand(Hand.OFF_HAND);
@@ -101,14 +102,18 @@ public class SREvents
 		if (event.getExplosion().getExplosivePlacedBy() instanceof CreeperEntity && !(event.getExplosion().getExplosivePlacedBy() instanceof CreepieEntity))
 		{
 			CreeperEntity creeper = (CreeperEntity)event.getExplosion().getExplosivePlacedBy();
-			event.getAffectedBlocks().clear();
-			CreeperSporeCloudEntity spores = new CreeperSporeCloudEntity(SREntities.CREEPER_SPORE_CLOUD.get(), event.getWorld());
-			spores.size = (int) (creeper.getHealth() / 5);
-			if (creeper.isCharged()) {
-		      spores.size = (int) (creeper.getHealth() / 2);  //feedback, this needs.
+			if (SRConfig.CreeperNoDestroyBlocks) {
+			   event.getAffectedBlocks().clear();
 			}
-			spores.copyLocationAndAnglesFrom(creeper);
-			creeper.world.addEntity(spores);
+			CreeperSporeCloudEntity spores = new CreeperSporeCloudEntity(SREntities.CREEPER_SPORE_CLOUD.get(), event.getWorld());
+			if (SRConfig.CreepersSpawnCreepiesWhenBoom) {
+			spores.size = (int) (creeper.getHealth() / 5);
+			 if (creeper.isCharged()) {
+		       spores.size = (int) (creeper.getHealth() / 2);  //feedback, this needs.
+			 }
+			 spores.copyLocationAndAnglesFrom(creeper);
+			 creeper.world.addEntity(spores);
+			}
 		}
 	}
 
