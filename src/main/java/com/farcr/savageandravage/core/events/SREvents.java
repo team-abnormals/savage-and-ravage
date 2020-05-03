@@ -107,9 +107,9 @@ public class SREvents
 			}
 			CreeperSporeCloudEntity spores = new CreeperSporeCloudEntity(SREntities.CREEPER_SPORE_CLOUD.get(), event.getWorld());
 			if (SRConfig.CreepersSpawnCreepiesWhenBoom) {
-			spores.size = (int) (creeper.getHealth() / 5);
+			spores.cloudSize = (int) (creeper.getHealth() / 5);
 			 if (creeper.isCharged()) {
-		       spores.size = (int) (creeper.getHealth() / 2);  //feedback, this needs.
+		       spores.cloudSize = (int) (creeper.getHealth() / 2);  //feedback, this needs.
 			 }
 			 spores.copyLocationAndAnglesFrom(creeper);
 			 creeper.world.addEntity(spores);

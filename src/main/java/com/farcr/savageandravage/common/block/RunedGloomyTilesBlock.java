@@ -1,7 +1,6 @@
 package com.farcr.savageandravage.common.block;
 
 import com.farcr.savageandravage.common.entity.RunePrisonEntity;
-import com.farcr.savageandravage.core.registry.SREntities;
 import com.farcr.savageandravage.core.registry.SRSounds;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -10,18 +9,13 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.EvokerFangsEntity;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.event.world.NoteBlockEvent;
 
 public class RunedGloomyTilesBlock extends Block {
     public static final BooleanProperty TRIGGERED = BlockStateProperties.TRIGGERED;
