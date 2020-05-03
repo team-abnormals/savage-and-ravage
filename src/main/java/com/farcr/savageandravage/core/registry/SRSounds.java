@@ -3,7 +3,10 @@ package com.farcr.savageandravage.core.registry;
 import com.farcr.savageandravage.core.SavageAndRavage;
 import com.farcr.savageandravage.core.util.RegistryUtils;
 
+import net.minecraft.client.audio.Sound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -15,4 +18,5 @@ public class SRSounds
 	  public static RegistryObject<SoundEvent> CREEPIE_HURT = RegistryUtils.createSound("entity.creepie.hurt");
       public static RegistryObject<SoundEvent> CREEPIE_DEATH =  RegistryUtils.createSound("entity.creepie.death");
       public static RegistryObject<SoundEvent> CREEPIE_PRIMED =  RegistryUtils.createSound("entity.creepie.primed");
+      public static RegistryObject<SoundEvent> RUNES_ACTIVATED = RegistryUtils.createSound("block.runed_gloomy_tiles.activated");
 }

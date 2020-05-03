@@ -22,5 +22,12 @@
      "savageandravage:entity/creepie/creepie_fuse"
     ],
     "subtitle": "savageandravage:subtitles.creepie.fuse"
-   }
+   },
+  "block.runed_gloomy_tiles.activated": {
+    "category": "hostile",
+    "sounds": [
+      "minecraft:mob/evocation_illager/prepare_summon"
+    ],
+    "subtitle": "savageandravage:subtitles.runed_gloomy_tiles.activated"
+  }
 }

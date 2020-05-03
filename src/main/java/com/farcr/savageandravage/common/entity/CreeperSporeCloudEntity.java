@@ -16,7 +16,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 public class CreeperSporeCloudEntity extends ThrowableEntity {
 	
-	public int size = 1;
+	public int cloudSize = 1;
 	
     public CreeperSporeCloudEntity(EntityType<? extends CreeperSporeCloudEntity> type, World worldIn)
     {
@@ -46,13 +46,13 @@ public class CreeperSporeCloudEntity extends ThrowableEntity {
       for (int randoradius = 0; randoradius < world.rand.nextInt(); ++randoradius) {
         aoe.setRadius(randoradius);
       }
-      aoe.setRadius(size + 0.3F);
+      aoe.setRadius(cloudSize + 0.3F);
       aoe.setRadiusOnUse(-0.05F);
       aoe.setDuration(100);
       aoe.setRadiusPerTick(-aoe.getRadius() / (float) aoe.getDuration());
       this.world.addEntity(aoe); 
       //if (aoe.ticksExisted <= 50.0)  //TODO an attempt on making not the creepies spawn instantly, i will work on this later.
-      for (int i = 0; i < size; ++i) 
+      for (int i = 0; i < cloudSize; ++i)
       {
         CreepieEntity creepie = SREntities.CREEPIE.get().create(world);
         creepie.setLocationAndAngles(aoe.getPosXRandom(0.1D), this.getPosY(), aoe.getPosZRandom(0.2D), 0.0F, 0.0F);
@@ -78,7 +78,7 @@ public class CreeperSporeCloudEntity extends ThrowableEntity {
     
     public void writeAdditional(CompoundNBT compound) {
         super.writeAdditional(compound);
-        compound.putInt("Size", this.size);
+        compound.putInt("Size", this.cloudSize);
      }
     
     public void tick() 
@@ -99,7 +99,7 @@ public class CreeperSporeCloudEntity extends ThrowableEntity {
       super.readAdditional(compound);
        if (compound.contains("Size", 99)) 
        {
-           this.size = compound.getInt("Size");
+           this.cloudSize = compound.getInt("Size");
        }
      }
 

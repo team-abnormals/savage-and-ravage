@@ -23,9 +23,9 @@ public class CreeperSporesItem extends Item
 	      spores.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 0.99F, 1.0F);
 	      if (worldIn.rand.nextInt(50) == 0)
 	      {
-	    	  spores.size = 0;
+	    	  spores.cloudSize = 0;
 	      } else {
-	    	  spores.size =  1 + spores.world.rand.nextInt(3);
+	    	  spores.cloudSize =  1 + spores.world.rand.nextInt(3);
 	      }
 	      worldIn.addEntity(spores);
 

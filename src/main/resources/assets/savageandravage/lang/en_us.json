@@ -5,8 +5,8 @@
 	"block.savageandravage.gloomy_tile_slab": "Gloomy Tile Slab",
 	"block.savageandravage.gloomy_tile_wall": "Gloomy Tile Wall",
 	"block.savageandravage.gloomy_tile_vertical_slab": "Gloomy Tile Vertical Slab",
-	"block.savageandravage.chiseled_gloomy_tiles": "Chiseled Gloomy Tiles",
 	"block.savageandravage.runed_gloomy_tiles": "Runed Gloomy Tiles",
+	"entity.savageandravage.rune_prison": "Rune Prison",
 
 	"item.savageandravage.blast_proof_plating": "Blast-Proof Plating",
 	"block.savageandravage.blast_proof_plates": "Blast-Proof Plates",
@@ -30,6 +30,7 @@
     "savageandravage:subtitles.creepie.hurt": "Creepie hurts",
     "savageandravage:subtitles.creepie.death": "Creepie dies",
 	"savageandravage:subtitles.creepie.fuse": "Creepie hisses",
+	"savageandravage:subtitles.runed_gloomy_tiles.activated": "Runed Gloomy Tiles activate",
 
     "entity.savageandravage.skeleton_villager": "Skeleton Villager",
     "item.savageandravage.skeleton_villager_spawn_egg": "Skeleton Villager Spawn Egg",

@@ -20,7 +20,6 @@ public class SporeBombBlock extends TNTBlock
 	   public SporeBombBlock(Block.Properties properties) {
 	      super(properties);
 	   }
-	   
 	   @Override
 	   public void catchFire(BlockState state, World world, BlockPos pos, @Nullable net.minecraft.util.Direction face, @Nullable LivingEntity igniter) {
 		 SporeBombEntity sporebomb = new SporeBombEntity(world, (double)pos.getX() + 0.5D, (double)pos.getY(), (double)pos.getZ() + 0.5D, igniter);

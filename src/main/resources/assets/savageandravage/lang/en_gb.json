@@ -29,8 +29,9 @@
     "savageandravage:subtitles.creepie.hurt": "Creepie hurts",
     "savageandravage:subtitles.creepie.death": "Creepie dies",
 	"savageandravage:subtitles.creepie.fuse": "Creepie hisses",
+	"savageandravage:subtitles.runed_gloomy_tiles.activated": "Runed Gloomy Tiles activate",
 
-    "entity.savageandravage.skeleton_villager": "Skeleton Villager",
+	"entity.savageandravage.skeleton_villager": "Skeleton Villager",
     "item.savageandravage.skeleton_villager_spawn_egg": "Skeleton Villager Spawn Egg",
 	
 	"advancements.adventure.voluntary_exile.description": "Set fire to an Ominous Banner.\nMaybe consider staying away from villages for the time being..."
