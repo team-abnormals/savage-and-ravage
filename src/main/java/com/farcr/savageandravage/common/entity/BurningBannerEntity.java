@@ -3,31 +3,32 @@ package com.farcr.savageandravage.common.entity;
 import com.farcr.savageandravage.core.registry.SREntities;
 import net.minecraft.block.*;
 import net.minecraft.entity.*;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.FireChargeItem;
+import net.minecraft.item.FlintAndSteelItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.network.datasync.IDataSerializer;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.tileentity.BannerTileEntity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
-import javax.xml.crypto.Data;
 import java.util.Optional;
 
 public class BurningBannerEntity extends Entity {
     private Boolean blockDestroyed = false;
-    private Block currentBanner;
     private static final DataParameter<Integer> TICKS_TILL_REMOVE = EntityDataManager.createKey(BurningBannerEntity.class, DataSerializers.VARINT);
     private static final DataParameter<Optional<BlockPos>> BLOCK_POS = EntityDataManager.createKey(BurningBannerEntity.class, DataSerializers.OPTIONAL_BLOCK_POS);
 
@@ -38,18 +39,19 @@ public class BurningBannerEntity extends Entity {
     public BurningBannerEntity(World worldIn, BlockPos positionIn) {
         super(SREntities.BURNING_BANNER.get(), worldIn);
         this.setBannerPosition(positionIn);
-        currentBanner = world.getBlockState(getBannerPosition()).getBlock();
         setBoundingBoxAndOrPosition(true);
     }
 
-    private void setBoundingBoxAndOrPosition(boolean shouldSetPosition){
-        if(getBannerPosition()!=null) {
+    private void setBoundingBoxAndOrPosition(boolean shouldSetPosition) {
+        if (getBannerPosition() != null) {
+            AxisAlignedBB boundingBox = new AxisAlignedBB(0, 0, 0, 1, 1, 1);
             double xPos = getBannerPosition().getX();
             double yPos = getBannerPosition().getY();
             double zPos = getBannerPosition().getZ();
-            AxisAlignedBB boundingBox = new AxisAlignedBB(0, 0, 0, 1, 1, 1);
             if (world.getBlockState(getBannerPosition()).getBlock() instanceof BannerBlock) {
-                xPos += 0.5d; yPos += 0.2d; zPos += 0.5d;
+                xPos += 0.5d;
+                yPos += 0.2d;
+                zPos += 0.5d;
                 if (world.getBlockState(getBannerPosition()).get(BlockStateProperties.ROTATION_0_15) == 0 || world.getBlockState(getBannerPosition()).get(BlockStateProperties.ROTATION_0_15) == 8) {
                     boundingBox = new AxisAlignedBB(0, 0, 0, 0.8, 1.65, 0.4);
                 } else if (world.getBlockState(getBannerPosition()).get(BlockStateProperties.ROTATION_0_15) == 1 || world.getBlockState(getBannerPosition()).get(BlockStateProperties.ROTATION_0_15) == 9) {
@@ -72,25 +74,33 @@ public class BurningBannerEntity extends Entity {
                 switch (world.getBlockState(getBannerPosition()).get(BlockStateProperties.HORIZONTAL_FACING)) {
                     case NORTH:
                         boundingBox = new AxisAlignedBB(0, 0, 0, 0.9, 1.65, 0.3);
-                        xPos += 0.48d; yPos -= 0.76d; zPos += 0.84d;
+                        xPos += 0.48d;
+                        yPos -= 0.76d;
+                        zPos += 0.84d;
                         break;
                     case EAST:
                         boundingBox = new AxisAlignedBB(0, 0, 0, 0.3, 1.65, 0.9);
-                        xPos += 0.17d; yPos -= 0.76d; zPos += 0.5d;
+                        xPos += 0.17d;
+                        yPos -= 0.76d;
+                        zPos += 0.5d;
                         break;
                     case SOUTH:
                         boundingBox = new AxisAlignedBB(0, 0, 0, 0.9, 1.65, 0.3);
-                        xPos += 0.5d; yPos -= 0.76d; zPos += 0.17d;
+                        xPos += 0.5d;
+                        yPos -= 0.76d;
+                        zPos += 0.17d;
                         break;
                     case WEST:
                         boundingBox = new AxisAlignedBB(0, 0, 0, 0.3, 1.65, 0.9);
-                        xPos += 0.84d; yPos -= 0.76d; zPos += 0.48d;
+                        xPos += 0.84d;
+                        yPos -= 0.76d;
+                        zPos += 0.48d;
                         break;
                 }
             }
             this.setBoundingBox(boundingBox);
-            if(shouldSetPosition) {
-                this.setPosition(xPos, yPos, zPos);
+            if (shouldSetPosition) {
+                this.setPositionNew(xPos, yPos, zPos);
             }
         }
     }
@@ -103,6 +113,10 @@ public class BurningBannerEntity extends Entity {
     public void setPosition(double x, double y, double z) {
         setRawPosition(x,y,z);
         if (this.isAddedToWorld() && !this.world.isRemote && world instanceof ServerWorld) ((ServerWorld)this.world).chunkCheck(this); // Forge - Process chunk registration after moving.
+    }
+
+    public void setPositionNew(double x, double y, double z){
+        setRawPosition(x,y,z);
         setBoundingBoxAndOrPosition(false);
         double halfXSize = this.getBoundingBox().getXSize() / 2.0F;
         double YSize = this.getBoundingBox().getYSize();
@@ -116,9 +130,26 @@ public class BurningBannerEntity extends Entity {
 
     }
 
+    private boolean isOminousBanner(BlockPos positionIn) {
+        if(world.getBlockState(positionIn).getBlock() instanceof AbstractBannerBlock) {
+            TileEntity te = world.getTileEntity(positionIn);
+            BannerTileEntity banner = (BannerTileEntity) te;
+            TranslationTextComponent bannerName;
+            try {
+                bannerName = (TranslationTextComponent) banner.getName();
+            } catch (ClassCastException cast) {
+                bannerName = null;
+            }
+            return bannerName.getKey().contains("block.minecraft.ominous_banner");
+        }
+        else{
+            return false;
+        }
+    }
+
     public void tick() {
         setTicksTillRemove(getTicksTillRemove()-1);
-        if(getTicksTillRemove()>30) {
+        if(isOminousBanner(getBannerPosition())) {
             setBoundingBoxAndOrPosition(true);
         }
         if (blockDestroyed||getTicksTillRemove()<=0) {
@@ -142,9 +173,9 @@ public class BurningBannerEntity extends Entity {
                 }
             }
         }
-        if(!world.isRemote) {
+        else {
             try {
-                if (getTicksTillRemove() > 10 && world.getBlockState(getBannerPosition()).getBlock() != this.currentBanner) {
+                if (getTicksTillRemove() > 10 && !isOminousBanner(getBannerPosition())) {
                     this.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH, 2F, world.rand.nextFloat() * 0.4F + 0.8F);
                     this.blockDestroyed = true;
                 }
@@ -166,7 +197,7 @@ public class BurningBannerEntity extends Entity {
 
     @Override
     protected void registerData(){
-        this.dataManager.register(BLOCK_POS, null);
+        this.dataManager.register(BLOCK_POS, Optional.empty());
         this.dataManager.register(TICKS_TILL_REMOVE, 50);
     }
 
@@ -182,7 +213,7 @@ public class BurningBannerEntity extends Entity {
     @Override
     protected void readAdditional(CompoundNBT compound) {
         this.setTicksTillRemove(compound.getInt("TicksTillRemove"));
-        if(this.getBannerPosition() != null) {
+        if(compound.contains("BannerPosition", 10)) {
             this.setBannerPosition(NBTUtil.readBlockPos(compound.getCompound("BannerPosition")));
         }
     }
@@ -197,12 +228,7 @@ public class BurningBannerEntity extends Entity {
     
     @Nullable
     public BlockPos getBannerPosition() {
-        try {
-            return this.dataManager.get(BLOCK_POS).orElse(null);
-        }
-        catch(NullPointerException nullPointer){
-            return null;
-        }
+        return this.dataManager.get(BLOCK_POS).orElse(null);
     }
 
     private void setBannerPosition(@Nullable BlockPos positionIn){

@@ -40,7 +40,7 @@ public class SporeBombEntity extends TNTEntity
 	      this(SREntities.SPORE_BOMB.get(), worldIn);
 	      this.setPosition(x, y, z);
 	      double d0 = worldIn.rand.nextDouble() * (double)((float)Math.PI * 2F);
-	      this.setMotion(-Math.sin(d0) * 0.02D, (double)0.2F, -Math.cos(d0) * 0.02D);
+	      this.setMotion(-Math.sin(d0) * 0.02D, 0.2F, -Math.cos(d0) * 0.02D);
 	      this.setFuse(80);
 	      this.prevPosX = x;
 	      this.prevPosY = y;
@@ -71,7 +71,7 @@ public class SporeBombEntity extends TNTEntity
 	         this.remove();
 	         if (!this.world.isRemote) {
 	            this.spawnSporeCloud();
-	            this.world.playSound((PlayerEntity)null, this.getPosX(), this.getPosY(), this.getPosZ(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+	            this.world.playSound(null, this.getPosX(), this.getPosY(), this.getPosZ(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 1.0F, 1.0F);
 	         }
 	      } else {
 	         this.handleWaterMovement();

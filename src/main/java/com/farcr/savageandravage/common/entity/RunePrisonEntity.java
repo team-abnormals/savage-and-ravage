@@ -20,6 +20,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,14 +41,14 @@ public class RunePrisonEntity extends Entity {
 
     @Override
     protected void registerData() {
-        this.dataManager.register(BLOCK_POS, null);
+        this.dataManager.register(BLOCK_POS, Optional.empty());
         this.dataManager.register(TICKS_TILL_REMOVE, 25);
     }
 
     @Override
     protected void readAdditional(CompoundNBT compound) {
         this.setTicksTillRemove(compound.getInt("TicksTillRemove"));
-        if(this.getBlockPos() != null) {
+        if(compound.contains("GloomyTilePosition", 10)) {
             this.setBlockPos(NBTUtil.readBlockPos(compound.getCompound("GloomyTilePosition")));
         }
     }
@@ -70,12 +71,7 @@ public class RunePrisonEntity extends Entity {
 
     @Nullable
     public BlockPos getBlockPos() {
-        try {
-            return this.dataManager.get(BLOCK_POS).orElse(null);
-        }
-        catch(NullPointerException nullPointer){
-            return null;
-        }
+        return this.dataManager.get(BLOCK_POS).orElse(null);
     }
 
     private void setBlockPos(@Nullable BlockPos positionIn){
@@ -83,44 +79,41 @@ public class RunePrisonEntity extends Entity {
     }
 
     @Override
-    public void tick(){
+    public void tick() {
         super.tick();
-        if(world.isRemote && getTicksTillRemove()%5==0){
-            if(!isBackwardsFrameCycle){
+        if (world.isRemote && getTicksTillRemove() % 5 == 0) {
+            if (!isBackwardsFrameCycle) {
                 currentFrame++;
-                if(currentFrame==4){
+                if (currentFrame == 4) {
                     isBackwardsFrameCycle = true;
                 }
-            }
-            else{
+            } else {
                 currentFrame--;
-                if(currentFrame==0){
+                if (currentFrame == 0) {
                     isBackwardsFrameCycle = false;
                 }
             }
         }
-        setTicksTillRemove(getTicksTillRemove()-1);
+        setTicksTillRemove(getTicksTillRemove() - 1);
         List<LivingEntity> intersectingEntityList = this.world.getEntitiesWithinAABB(LivingEntity.class, this.getBoundingBox());
         if (!intersectingEntityList.isEmpty()) {
             for (LivingEntity livingentity : intersectingEntityList) {
-                if (livingentity.canBeHitWithPotion()&&!(EntityTypeTags.RAIDERS.contains(livingentity.getType()))) {
+                if (livingentity.canBeHitWithPotion() && !(EntityTypeTags.RAIDERS.contains(livingentity.getType()))) {
                     livingentity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 20, 1));
                 }
             }
         }
-        if (getTicksTillRemove() == 0 || getBlockPos()==null) {
+        if (getTicksTillRemove() == 0) {
             try {
-                if(world.getBlockState(getBlockPos()).getBlock() instanceof RunedGloomyTilesBlock) {
+                if (world.getBlockState(getBlockPos()).getBlock() instanceof RunedGloomyTilesBlock) {
                     world.setBlockState(getBlockPos(), SRBlocks.GLOOMY_TILES.get().getDefaultState());
                 }
-            }
-            catch (NullPointerException bruhMoment) {
+            } catch(NullPointerException bruhMoment){
 
             }
             this.remove();
         }
     }
-
     public int getCurrentFrame(){
         return this.currentFrame;
     }
