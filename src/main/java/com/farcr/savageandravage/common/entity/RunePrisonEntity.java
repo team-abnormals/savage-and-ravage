@@ -1,8 +1,14 @@
 package com.farcr.savageandravage.common.entity;
 
+import java.util.List;
+import java.util.Optional;
+
+import javax.annotation.Nullable;
+
 import com.farcr.savageandravage.common.block.RunedGloomyTilesBlock;
 import com.farcr.savageandravage.core.registry.SRBlocks;
 import com.farcr.savageandravage.core.registry.SREntities;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -18,11 +24,6 @@ import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
-
-import javax.annotation.Nullable;
-import javax.swing.text.html.Option;
-import java.util.List;
-import java.util.Optional;
 
 public class RunePrisonEntity extends Entity {
     private static final DataParameter<Integer> TICKS_TILL_REMOVE = EntityDataManager.createKey(BurningBannerEntity.class, DataSerializers.VARINT);
