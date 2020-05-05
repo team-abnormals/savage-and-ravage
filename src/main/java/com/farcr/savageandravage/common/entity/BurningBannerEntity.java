@@ -3,8 +3,6 @@ package com.farcr.savageandravage.common.entity;
 import com.farcr.savageandravage.core.registry.SREntities;
 import net.minecraft.block.*;
 import net.minecraft.entity.*;
-import net.minecraft.item.FireChargeItem;
-import net.minecraft.item.FlintAndSteelItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.IPacket;
