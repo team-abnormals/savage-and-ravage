@@ -3,13 +3,12 @@ package com.farcr.savageandravage.core.registry;
 import java.util.List;
 
 import com.farcr.savageandravage.common.item.CreeperSporesItem;
-import com.farcr.savageandravage.common.item.SRArmorMaterial;
 import com.farcr.savageandravage.core.SavageAndRavage;
 import com.farcr.savageandravage.core.util.RegistryUtils;
 import com.google.common.collect.Lists;
 
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.*;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;

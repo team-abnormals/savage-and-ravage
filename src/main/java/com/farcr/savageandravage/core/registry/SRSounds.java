@@ -3,10 +3,7 @@ package com.farcr.savageandravage.core.registry;
 import com.farcr.savageandravage.core.SavageAndRavage;
 import com.farcr.savageandravage.core.util.RegistryUtils;
 
-import net.minecraft.client.audio.Sound;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;

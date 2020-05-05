@@ -4,10 +4,11 @@ import com.farcr.savageandravage.common.entity.IOwnableMob;
 
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
+import net.minecraft.entity.player.PlayerEntity;
 
-public class ConditionalNearestAttackableTargetGoal extends NearestAttackableTargetGoal {
-    public ConditionalNearestAttackableTargetGoal(MobEntity goalOwnerIn, Class targetClassIn, boolean checkSight) {
-        super(goalOwnerIn, targetClassIn, checkSight);
+public class ConditionalNearestAttackableTargetGoal extends NearestAttackableTargetGoal<PlayerEntity> {
+    public ConditionalNearestAttackableTargetGoal(MobEntity goalOwnerIn, boolean checkSight) {
+        super(goalOwnerIn, PlayerEntity.class, checkSight);
     }
 
     /**

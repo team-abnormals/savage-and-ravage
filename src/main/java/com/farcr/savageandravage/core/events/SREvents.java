@@ -134,6 +134,7 @@ public class SREvents
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@SubscribeEvent
 	public static void onInteractWithBlock(PlayerInteractEvent.RightClickBlock event) {
 		ItemStack heldItemStack = event.getItemStack();

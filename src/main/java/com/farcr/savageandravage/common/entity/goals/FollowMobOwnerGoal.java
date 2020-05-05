@@ -1,37 +1,33 @@
 package com.farcr.savageandravage.common.entity.goals;
 
+import java.util.EnumSet;
+
 import com.farcr.savageandravage.common.entity.IOwnableMob;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.LeavesBlock;
+
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.pathfinding.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorldReader;
-
-import java.util.EnumSet;
+import net.minecraft.pathfinding.FlyingPathNavigator;
+import net.minecraft.pathfinding.GroundPathNavigator;
+import net.minecraft.pathfinding.PathNavigator;
+import net.minecraft.pathfinding.PathNodeType;
 
 public class FollowMobOwnerGoal extends Goal {
     private final MobEntity ownedMob;
     private LivingEntity owner;
-    private final IWorldReader world;
     private final double followSpeed;
     private final PathNavigator navigator;
     private int timeToRecalcPath;
     private final float minDist;
     private final float maxDist;
     private float oldWaterCost;
-    private final boolean canFly;
-
+    
     public FollowMobOwnerGoal(MobEntity entityIn, double followSpeed, float minimumDistance, float maximumDistance, boolean canFly) {
         this.ownedMob = entityIn;
-        this.world = entityIn.world;
         this.followSpeed = followSpeed;
         this.navigator = entityIn.getNavigator();
         this.minDist = minimumDistance;
         this.maxDist = maximumDistance;
-        this.canFly = canFly;
         this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
         if (!(entityIn.getNavigator() instanceof GroundPathNavigator) && !(entityIn.getNavigator() instanceof FlyingPathNavigator)) {
             throw new IllegalArgumentException("Unsupported mob type for FollowMobOwnerGoal");

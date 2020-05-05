@@ -80,7 +80,7 @@ public class CreepieEntity extends CreeperEntity implements IOwnableMob {
         this.targetSelector.addGoal(3, new MobOwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new MobOwnerHurtTargetGoal(this));
         this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(1, new ConditionalNearestAttackableTargetGoal(this, PlayerEntity.class, true));
+        this.targetSelector.addGoal(1, new ConditionalNearestAttackableTargetGoal(this, true));
     }
 
     @Override
