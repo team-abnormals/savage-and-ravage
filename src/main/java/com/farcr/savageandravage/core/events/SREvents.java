@@ -1,5 +1,7 @@
 package com.farcr.savageandravage.core.events;
 
+import java.util.Random;
+
 import com.farcr.savageandravage.common.advancement.SRTriggers;
 import com.farcr.savageandravage.common.entity.BurningBannerEntity;
 import com.farcr.savageandravage.common.entity.CreeperSporeCloudEntity;
@@ -15,6 +17,7 @@ import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.AbstractBannerBlock;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.ai.goal.RangedCrossbowAttackGoal;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
@@ -23,7 +26,12 @@ import net.minecraft.entity.monster.PillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.*;
+import net.minecraft.item.FireChargeItem;
+import net.minecraft.item.FireworkRocketItem;
+import net.minecraft.item.FlintAndSteelItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.potion.EffectInstance;
@@ -42,14 +50,13 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
-
-import java.util.Random;
 
 
 @Mod.EventBusSubscriber(modid = SavageAndRavage.MODID)
@@ -114,6 +121,26 @@ public class SREvents
 			 spores.copyLocationAndAnglesFrom(creeper);
 			 creeper.world.addEntity(spores);
 			}
+		}
+	}
+	
+	@SubscribeEvent
+	public static void handleBlastProof(LivingDamageEvent event){
+		LivingEntity entity = event.getEntityLiving();
+		float decrease = 0.0F;
+		boolean flag = false;
+		
+		Item head = entity.getItemStackFromSlot(EquipmentSlotType.HEAD).getItem();
+		Item chest = entity.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem();
+		Item legs = entity.getItemStackFromSlot(EquipmentSlotType.LEGS).getItem();
+		Item feet = entity.getItemStackFromSlot(EquipmentSlotType.FEET).getItem();
+		
+		if (event.getSource().isExplosion()) {
+			if (head == SRItems.GRIEFER_HELMET.get()) decrease += 0.25F; flag = true;
+			if (chest == SRItems.GRIEFER_CHESTPLATE.get()) decrease += 0.30F; flag = true;
+			if (legs == SRItems.GRIEFER_LEGGINGS.get()) decrease += 0.25F; flag = true;
+			if (feet == SRItems.GRIEFER_BOOTS.get()) decrease += 0.20F; flag = true;
+			if (flag) event.setAmount(event.getAmount() - (event.getAmount() * decrease));
 		}
 	}
 

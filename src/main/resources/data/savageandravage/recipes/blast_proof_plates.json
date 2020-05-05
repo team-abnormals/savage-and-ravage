@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "##",
+        "##"
+    ],
+    "key": {
+        "P": {
+            "item": "savageandravage:blast_proof_plating"
+        }
+    },
+    "result": {
+        "item": "savageandravage:blast_proof_plates",
+        "count": 4
+    }
+}

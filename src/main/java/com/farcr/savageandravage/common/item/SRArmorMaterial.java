@@ -1,68 +1,69 @@
 package com.farcr.savageandravage.common.item;
 
-import java.util.function.Supplier;
-
+import com.farcr.savageandravage.core.SavageAndRavage;
 import com.farcr.savageandravage.core.registry.SRItems;
 
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.IArmorMaterial;
+import net.minecraft.item.Item;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.LazyValue;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public enum SRArmorMaterial implements IArmorMaterial {
-	GRIEFER("griefer", 15, new int[]{2, 5, 6, 2}, 9, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0.0F, () -> {
-	      return Ingredient.fromItems(SRItems.BLAST_PROOF_PLATING.get());
-	});
-	
-	private static final int[] MAX_DAMAGE_ARRAY = new int[]{13, 15, 16, 11};
-	private final String name;
-	private final int maxDamageFactor;
-	private final int[] damageReductionAmountArray;
-	private final int enchantability;
-	private final SoundEvent soundEvent;
-	private final float toughness;
-	private final LazyValue<Ingredient> repairMaterial;
+    GRIEFER("griefer", 15, new int[]{2, 5, 6, 2}, 9, SRItems.BLAST_PROOF_PLATING.get(), SoundEvents.ITEM_ARMOR_EQUIP_IRON, 1.0f);
 
-	private SRArmorMaterial(String nameIn, int maxDamageFactorIn, int[] damageReductionAmountsIn, int enchantabilityIn, SoundEvent equipSoundIn, float p_i48533_8_, Supplier<Ingredient> repairMaterialSupplier) {
-		this.name = nameIn;
-		this.maxDamageFactor = maxDamageFactorIn;
-		this.damageReductionAmountArray = damageReductionAmountsIn;
-		this.enchantability = enchantabilityIn;
-		this.soundEvent = equipSoundIn;
-		this.toughness = p_i48533_8_;
-		this.repairMaterial = new LazyValue<>(repairMaterialSupplier);
-	}
+    private static final int[] MAX_DAMAGE_ARRAY = new int[]{13, 15, 16, 11};
+    private String name;
+    private SoundEvent equipSound;
+    private int durability, enchantability;
+    private int[] damageReductionAmounts;
+    private Item repairItem;
+    private float toughness;
 
-	public int getDurability(EquipmentSlotType slotIn) {
-		return MAX_DAMAGE_ARRAY[slotIn.getIndex()] * this.maxDamageFactor;
-	}
+    SRArmorMaterial(String name, int durability, int[] damageReductionAmounts, int enchantability, Item repairItem, SoundEvent equipSound, float toughness) {
+        this.name = name;
+        this.equipSound = equipSound;
+        this.durability = durability;
+        this.enchantability = enchantability;
+        this.repairItem = repairItem;
+        this.damageReductionAmounts = damageReductionAmounts;
+        this.toughness = toughness;
+    }
 
-	public int getDamageReductionAmount(EquipmentSlotType slotIn) {
-		return this.damageReductionAmountArray[slotIn.getIndex()];
-	}
+    @Override
+    public int getDamageReductionAmount(EquipmentSlotType slot) {
+        return this.damageReductionAmounts[slot.getIndex()];
+    }
 
-	public int getEnchantability() {
-		return this.enchantability;
-	}
+    @Override
+    public int getDurability(EquipmentSlotType slot) {
+        return (MAX_DAMAGE_ARRAY[slot.getIndex()] * this.durability) + 200;
+    }
 
-	public SoundEvent getSoundEvent() {
-		return this.soundEvent;
-	}
+    @Override
+    public int getEnchantability() {
+        return this.enchantability;
+    }
 
-	public Ingredient getRepairMaterial() {
-		return this.repairMaterial.getValue();
-	}
+    @Override
+    public SoundEvent getSoundEvent() {
+        return this.equipSound;
+    }
 
-	@OnlyIn(Dist.CLIENT)
-	public String getName() {
-		return this.name;
-	}
+    @Override
+    public Ingredient getRepairMaterial() {
+        return Ingredient.fromItems(this.repairItem);
+    }
 
-	public float getToughness() {
-		return this.toughness;
-	}
+    @Override
+    public String getName() {
+        return SavageAndRavage.MODID + ":" + this.name;
+    }
+
+    @Override
+    public float getToughness() {
+        return this.toughness;
+    }
 }
+
