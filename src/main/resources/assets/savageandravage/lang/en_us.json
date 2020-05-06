@@ -18,9 +18,6 @@
 	"item.savageandravage.griefer_leggings": "Griefer Leggings",
 	"item.savageandravage.griefer_boots": "Griefer Boots",
 	
-	"item.savageandravage.poultry_farming_hat": "Poultry Farming Hat",
-	
-	
 	"item.savageandravage.creeper_spores": "Creeper Spores",
 	"block.savageandravage.creeper_spore_sack": "Creeper Spore Sack",
 	"block.savageandravage.spore_bomb": "Spore Bomb",
@@ -34,6 +31,8 @@
 
     "entity.savageandravage.skeleton_villager": "Skeleton Villager",
     "item.savageandravage.skeleton_villager_spawn_egg": "Skeleton Villager Spawn Egg",
+    
+    "attribute.name.grieferArmor.explosiveDamageReduction": "Explosive Damage Reduction",
 	
 	"advancements.adventure.voluntary_exile.description": "Set fire to an Ominous Banner.\nMaybe consider staying away from villages for the time being..."
 }

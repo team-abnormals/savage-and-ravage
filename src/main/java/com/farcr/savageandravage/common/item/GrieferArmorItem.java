@@ -15,10 +15,12 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class GrieferArmorItem extends ArmorItem {
 	private EquipmentSlotType slot;
-	
-	public GrieferArmorItem(IArmorMaterial material, EquipmentSlotType slot, Properties properties) {
+	private String reduction;
+
+	public GrieferArmorItem(String reduction, IArmorMaterial material, EquipmentSlotType slot, Properties properties) {
 		super(material, slot, properties);
 		this.slot = slot;
+		this.reduction = reduction;
 	}
 	
 	@Override
@@ -33,4 +35,7 @@ public class GrieferArmorItem extends ArmorItem {
 		return (A) new GrieferArmorModel(1.0F, slot);
 	}
 	
+	public String getReductionString() {
+		return this.reduction;
+	}
 }
