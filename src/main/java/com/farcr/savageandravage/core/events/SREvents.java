@@ -1,5 +1,6 @@
 package com.farcr.savageandravage.core.events;
 
+import java.util.List;
 import java.util.Random;
 
 import com.farcr.savageandravage.common.advancement.SRTriggers;
@@ -8,6 +9,7 @@ import com.farcr.savageandravage.common.entity.CreeperSporeCloudEntity;
 import com.farcr.savageandravage.common.entity.CreepieEntity;
 import com.farcr.savageandravage.common.entity.SkeletonVillagerEntity;
 import com.farcr.savageandravage.common.entity.goals.ImprovedCrossbowGoal;
+import com.farcr.savageandravage.common.item.GrieferArmorItem;
 import com.farcr.savageandravage.core.SavageAndRavage;
 import com.farcr.savageandravage.core.config.SRConfig;
 import com.farcr.savageandravage.core.registry.SREntities;
@@ -46,12 +48,15 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -130,20 +135,74 @@ public class SREvents
 		float decrease = 0.0F;
 		boolean flag = false;
 		
-		Item head = entity.getItemStackFromSlot(EquipmentSlotType.HEAD).getItem();
-		Item chest = entity.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem();
-		Item legs = entity.getItemStackFromSlot(EquipmentSlotType.LEGS).getItem();
-		Item feet = entity.getItemStackFromSlot(EquipmentSlotType.FEET).getItem();
+		ItemStack head = entity.getItemStackFromSlot(EquipmentSlotType.HEAD);
+		ItemStack chest = entity.getItemStackFromSlot(EquipmentSlotType.CHEST);
+		ItemStack legs = entity.getItemStackFromSlot(EquipmentSlotType.LEGS);
+		ItemStack feet = entity.getItemStackFromSlot(EquipmentSlotType.FEET);
 		
 		if (event.getSource().isExplosion()) {
-			if (head == SRItems.GRIEFER_HELMET.get()) decrease += 0.25F; flag = true;
-			if (chest == SRItems.GRIEFER_CHESTPLATE.get()) decrease += 0.30F; flag = true;
-			if (legs == SRItems.GRIEFER_LEGGINGS.get()) decrease += 0.25F; flag = true;
-			if (feet == SRItems.GRIEFER_BOOTS.get()) decrease += 0.20F; flag = true;
+			if (head.getItem() == SRItems.GRIEFER_HELMET.get()) decrease += 0.25F; flag = true;
+			if (chest.getItem() == SRItems.GRIEFER_CHESTPLATE.get()) decrease += 0.30F; flag = true;
+			if (legs.getItem() == SRItems.GRIEFER_LEGGINGS.get()) decrease += 0.25F; flag = true;
+			if (feet.getItem() == SRItems.GRIEFER_BOOTS.get()) decrease += 0.20F; flag = true;
 			if (flag) event.setAmount(event.getAmount() - (event.getAmount() * decrease));
 		}
 	}
-
+	
+	@SubscribeEvent
+	public static void handleToolTip(ItemTooltipEvent event) {
+		List<ITextComponent> tooltip = event.getToolTip();
+		int index = 0;
+		Item item = event.getItemStack().getItem();
+		if (item instanceof GrieferArmorItem) {
+			GrieferArmorItem armor = (GrieferArmorItem)item;
+			for(int i = 0; i < tooltip.size(); i++) {
+			    ITextComponent component = tooltip.get(i);
+			    if(component instanceof TranslationTextComponent) {
+			    	if(((TranslationTextComponent) component).getKey().equals("attribute.modifier.plus.0")) index = i;
+			    }
+			}
+	    	tooltip.add(index + 1, new TranslationTextComponent("+" + armor.getReductionString() + "% ")
+	    			.appendSibling(new TranslationTextComponent("attribute.name.grieferArmor.explosiveDamageReduction"))
+	    			.applyTextStyle(TextFormatting.BLUE));
+		}
+		
+	}
+	
+//	@SubscribeEvent
+//	public static void handleBlastResistance(LivingDamageEvent event){
+//		LivingEntity entity = event.getEntityLiving();
+//		float decrease = 0.0F;
+//		boolean flag = false;
+//		
+//		ItemStack head = entity.getItemStackFromSlot(EquipmentSlotType.HEAD);
+//		ItemStack chest = entity.getItemStackFromSlot(EquipmentSlotType.CHEST);
+//		ItemStack legs = entity.getItemStackFromSlot(EquipmentSlotType.LEGS);
+//		ItemStack feet = entity.getItemStackFromSlot(EquipmentSlotType.FEET);
+//		
+//		double x = entity.getMotion().getX(); 
+//		double y = entity.getMotion().getY();
+//		double z = entity.getMotion().getZ();
+//		
+//		if (event.getSource().isExplosion()) {
+//			if (head.getItem() == SRItems.GRIEFER_HELMET.get() && EnchantmentHelper.getEnchantmentLevel(Enchantments.BLAST_PROTECTION, head) > 0) {
+//				decrease += 0.25F * (4 / EnchantmentHelper.getEnchantmentLevel(Enchantments.BLAST_PROTECTION, head)); flag = true; }
+//			if (chest.getItem() == SRItems.GRIEFER_CHESTPLATE.get() && EnchantmentHelper.getEnchantmentLevel(Enchantments.BLAST_PROTECTION, chest) > 0) {
+//				decrease += 0.30F * (4 / EnchantmentHelper.getEnchantmentLevel(Enchantments.BLAST_PROTECTION, chest)); flag = true; }
+//			if (legs.getItem() == SRItems.GRIEFER_LEGGINGS.get() && EnchantmentHelper.getEnchantmentLevel(Enchantments.BLAST_PROTECTION, legs) > 0) {
+//				decrease += 0.25F * (4 / EnchantmentHelper.getEnchantmentLevel(Enchantments.BLAST_PROTECTION, legs)); flag = true; }
+//			if (feet.getItem() == SRItems.GRIEFER_BOOTS.get() && EnchantmentHelper.getEnchantmentLevel(Enchantments.BLAST_PROTECTION, feet) > 0) {
+//				decrease += 0.20F * (4 / EnchantmentHelper.getEnchantmentLevel(Enchantments.BLAST_PROTECTION, feet)); flag = true; }
+//			if (flag) { 
+//				Vec3d vec =  new Vec3d(0.0D, 0.0D, 0.0D);
+//				entity.setMotion(vec); 
+//				System.out.println("made it");
+//			}
+//		}
+//	}
+	
+	
+	
 	@SubscribeEvent
 	public static void onInteractWithEntity(PlayerInteractEvent.EntityInteract event){
 		Item heldItem = event.getItemStack().getItem();

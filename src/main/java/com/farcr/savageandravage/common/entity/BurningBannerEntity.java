@@ -70,6 +70,7 @@ public class BurningBannerEntity extends Entity {
             }
             if (world.getBlockState(getBannerPosition()).getBlock() instanceof WallBannerBlock) {
                 switch (world.getBlockState(getBannerPosition()).get(BlockStateProperties.HORIZONTAL_FACING)) {
+                	default:
                     case NORTH:
                         boundingBox = new AxisAlignedBB(0, 0, 0, 0.9, 1.65, 0.3);
                         xPos += 0.48d;

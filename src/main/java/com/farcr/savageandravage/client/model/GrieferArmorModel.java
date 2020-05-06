@@ -75,12 +75,12 @@ public class GrieferArmorModel<T extends LivingEntity> extends BipedModel<T> {
     	
     	if (this.slot == EquipmentSlotType.CHEST) {
             this.chestplate1.render(matrixStack, buffer, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-            this.chestplate2.render(matrixStack, buffer, packedLightIn, packedOverlayIn, red, green, blue, alpha);
             this.shoulderpadleft.render(matrixStack, buffer, packedLightIn, packedOverlayIn, red, green, blue, alpha);
             this.shoulderpadright.render(matrixStack, buffer, packedLightIn, packedOverlayIn, red, green, blue, alpha);
     	}
     	
     	if (this.slot == EquipmentSlotType.LEGS) {
+            this.chestplate2.render(matrixStack, buffer, packedLightIn, packedOverlayIn, red, green, blue, alpha);
             this.leggingsleft.render(matrixStack, buffer, packedLightIn, packedOverlayIn, red, green, blue, alpha);
             this.leggingsright.render(matrixStack, buffer, packedLightIn, packedOverlayIn, red, green, blue, alpha);
     	}
