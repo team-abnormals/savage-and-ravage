@@ -59,7 +59,7 @@ public class GrieferArmorModel<T extends LivingEntity> extends BipedModel<T> {
         this.bootsright.addBox(-2.0F, 0.0F, -2.0F, 4, 12, 4, 0.5F);
         this.helmet1 = new ModelRenderer(this, 0, 0);
         this.helmet1.setRotationPoint(0.0F, 0.0F, 0.0F);
-        this.helmet1.addBox(-4.0F, -8.0F, -4.0F, 8, 9, 8, 0.5F);
+        this.helmet1.addBox(-4.0F, -8.0F, -4.0F, 8, 9, 8, 0.6F);
         this.shoulderpadleft = new ModelRenderer(this, 42, 20);
         this.shoulderpadleft.mirror = true;
         this.shoulderpadleft.setRotationPoint(5.0F, 1.0F, 0.0F);
