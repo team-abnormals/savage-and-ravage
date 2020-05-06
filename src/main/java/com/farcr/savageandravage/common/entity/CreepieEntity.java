@@ -141,7 +141,7 @@ public class CreepieEntity extends CreeperEntity implements IOwnableMob {
      * The age value may be negative or positive or zero. If it's negative, it get's incremented on each tick, if it's
      * positive, it get's decremented each tick. With a negative value the Entity is considered a child.
      */
-    private void setGrowingAge(int age) {
+    public void setGrowingAge(int age) {
         int i = this.growingAge;
         this.growingAge = age;
         if (i < 0 && age >= 0 || i >= 0 && age < 0) {
