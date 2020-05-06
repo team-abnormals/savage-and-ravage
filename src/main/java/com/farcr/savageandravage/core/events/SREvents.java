@@ -25,7 +25,6 @@ import net.minecraft.entity.ai.goal.RangedCrossbowAttackGoal;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.entity.monster.PillagerEntity;
-import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -221,6 +220,7 @@ public class SREvents
 			if (!event.getPlayer().abilities.isCreativeMode) {
 				event.getItemStack().shrink(1);
 			}
+			event.getPlayer().swingArm(event.getHand());
 			event.getWorld().addEntity(creepieEntity);
 		}
 		/**
