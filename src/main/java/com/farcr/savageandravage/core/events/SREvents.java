@@ -25,6 +25,7 @@ import net.minecraft.entity.ai.goal.RangedCrossbowAttackGoal;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.entity.monster.PillagerEntity;
+import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -36,6 +37,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.stats.Stats;
@@ -48,6 +50,7 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -56,10 +59,12 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -217,6 +222,45 @@ public class SREvents
 				event.getItemStack().shrink(1);
 			}
 			event.getWorld().addEntity(creepieEntity);
+		}
+		/**
+		 * @author Vazkii (Vasco Lavos) - adapted from poison potato code in Quark
+		 * */
+		if(target instanceof CreepieEntity && event.getItemStack().getItem() == Items.POISONOUS_POTATO && SRConfig.PoisonPotatoCompatEnabled && ModList.get().isLoaded("quark")) {
+			CreepieEntity creepie = (CreepieEntity)target;
+			if(!creepie.getPersistentData().getBoolean("savageandravage:poison_potato_applied")) {
+				if(!event.getWorld().isRemote) {
+					Vec3d pos = creepie.getPositionVec();
+					if(creepie.world.rand.nextDouble() < SRConfig.PoisonChance) {
+						creepie.playSound(SoundEvents.ENTITY_GENERIC_EAT, 0.5f, 0.25f);
+						creepie.world.addParticle(ParticleTypes.ENTITY_EFFECT, pos.x, pos.y, pos.z, 0.2, 0.8, 0);
+						creepie.getPersistentData().putBoolean("savageandravage:poison_potato_applied", true);
+						if (SRConfig.PoisonEffect)
+							creepie.addPotionEffect(new EffectInstance(Effects.POISON, 200));
+					} else {
+						creepie.playSound(SoundEvents.ENTITY_GENERIC_EAT, 0.5f, 0.5f + creepie.world.rand.nextFloat() / 2);
+						creepie.world.addParticle(ParticleTypes.SMOKE, pos.x, pos.y, pos.z, 0, 0.1, 0);
+					}
+
+					if (!event.getPlayer().isCreative())
+						event.getItemStack().shrink(1);
+
+				} else event.getPlayer().swingArm(event.getHand());
+
+			}
+		}
+	}
+
+	/**
+	 * @author Vazkii (Vasco Lavos) - adapted from poison potato code in Quark
+	 * */
+	@SubscribeEvent
+	public static void onEntityUpdate(LivingEvent.LivingUpdateEvent event) {
+		if(event.getEntity() instanceof CreepieEntity && SRConfig.PoisonPotatoCompatEnabled && ModList.get().isLoaded("quark")) {
+			CreepieEntity creepie = (CreepieEntity) event.getEntity();
+			if (creepie.getPersistentData().getBoolean("savageandravage:poison_potato_applied")){
+				creepie.setGrowingAge(-24000);
+			}
 		}
 	}
 

@@ -23,13 +23,18 @@ public class SRConfig
 	public static boolean CreepieGoBigWhenBoom;
 	public static boolean CreeperNoDestroyBlocks;
 	public static boolean CreepersSpawnCreepiesWhenBoom;
-	public static boolean QuarkPoisonPotatoCompat;
-	
+	public static boolean PoisonPotatoCompatEnabled;
+	public static boolean PoisonEffect;
+	public static double PoisonChance;
+
+
 	public static void bakeConfig() {
 		CreepieGoBigWhenBoom = COMMON.CreepieGoBigWhenBoom.get();
 		CreeperNoDestroyBlocks = COMMON.CreeperNoDestroyBlocks.get();
 		CreepersSpawnCreepiesWhenBoom = COMMON.CreepersSpawnCreepiesWhenBoom.get();
-		QuarkPoisonPotatoCompat = COMMON.QuarkPoisonPotatoCompat.get();
+		PoisonPotatoCompatEnabled = COMMON.PoisonPotatoCompatEnabled.get();
+		PoisonEffect = COMMON.PoisonEffect.get();
+		PoisonChance = COMMON.PoisonChance.get();
 	}
 
 	@SubscribeEvent
@@ -45,7 +50,9 @@ public class SRConfig
 		public final ForgeConfigSpec.BooleanValue CreepieGoBigWhenBoom;
 		public final ForgeConfigSpec.BooleanValue CreeperNoDestroyBlocks;
 		public final ForgeConfigSpec.BooleanValue CreepersSpawnCreepiesWhenBoom;
-		public final ForgeConfigSpec.BooleanValue QuarkPoisonPotatoCompat;
+		public final ForgeConfigSpec.BooleanValue PoisonPotatoCompatEnabled;
+		public final ForgeConfigSpec.BooleanValue PoisonEffect;
+		public final ForgeConfigSpec.DoubleValue PoisonChance;
 
 		public CommonConfig(ForgeConfigSpec.Builder builder) 
 		{
@@ -55,10 +62,20 @@ public class SRConfig
 			CreepersSpawnCreepiesWhenBoom = builder
 					.translation(SavageAndRavage.MODID + ".config.CreepersSpawnCreepiesWhenBoom")
 					.define("Creepies spawn after creeper explosions", true);
-			QuarkPoisonPotatoCompat = builder
+			builder.push("Quark Poisonous Potato Compat");
+			PoisonPotatoCompatEnabled = builder
 					.comment("If true, creepies can be fed a poisonous potato to stunt their growth when Quark is installed.")
 					.translation(SavageAndRavage.MODID + "config.QuarkPoisonPotatoCompat")
-					.define("Quark Poisonous Potato Compat",true);
+					.define("Compat enabled",true);
+			PoisonEffect = builder
+					.comment("If false, the feature will still work but not give creepies poison.")
+					.translation(SavageAndRavage.MODID + "config.PoisonEffect")
+					.define("Poison effect",true);
+			PoisonChance = builder
+					.comment("This affects the chance to stunt a creepie's growth when a poisonous potato is fed.")
+					.translation(SavageAndRavage.MODID + "config.PoisonChance")
+					.defineInRange("Poison chance",0.1,0,1);
+			builder.pop();
 			CreepieGoBigWhenBoom = builder
 					.comment("If true, creepies grow significantly larger when they explode.")
 					.translation(SavageAndRavage.MODID + ".config.CreepieGoBigWhenBoom")
