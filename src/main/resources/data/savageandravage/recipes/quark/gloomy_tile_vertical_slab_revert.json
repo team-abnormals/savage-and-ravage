@@ -2,12 +2,12 @@
     "type": "minecraft:crafting_shapeless",
     "ingredients": [
         {
-            "item": "savageandravage:creeper_spore_sack"
+            "item": "savageandravage:gloomy_tile_vertical_slab"
         }
     ],
     "result": {
-        "item": "savageandravage:creeper_spores",
-        "count": 9
+        "item": "savageandravage:gloomy_tile_slab",
+        "count": 1
     },
   "conditions": [
     {

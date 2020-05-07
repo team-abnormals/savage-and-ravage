@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "#",
+        "#",
+        "#"
+    ],
+    "key": {
+        "#": {
+            "item": "savageandravage:gloomy_tile_slab"
+        }
+    },
+    "result": {
+        "item": "savageandravage:gloomy_tile_vertical_slab",
+        "count": 3
+    },
+  "conditions": [
+    {
+      "type": "forge:and",
+      "values": [
+        {
+          "type": "forge:mod_loaded",
+          "modid": "quark"
+        }
+      ]
+    }
+  ]
+}
