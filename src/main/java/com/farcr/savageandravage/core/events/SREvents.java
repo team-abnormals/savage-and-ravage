@@ -18,6 +18,8 @@ import com.farcr.savageandravage.core.registry.SRItems;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.AbstractBannerBlock;
 import net.minecraft.block.Blocks;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
@@ -137,6 +139,7 @@ public class SREvents
 	public static void handleBlastProof(LivingDamageEvent event){
 		LivingEntity entity = event.getEntityLiving();
 		float decrease = 0.0F;
+		
 		boolean flag = false;
 		
 		ItemStack head = entity.getItemStackFromSlot(EquipmentSlotType.HEAD);
@@ -145,12 +148,40 @@ public class SREvents
 		ItemStack feet = entity.getItemStackFromSlot(EquipmentSlotType.FEET);
 		
 		if (event.getSource().isExplosion()) {
-			if (head.getItem() == SRItems.GRIEFER_HELMET.get()) decrease += 0.25F; flag = true;
-			if (chest.getItem() == SRItems.GRIEFER_CHESTPLATE.get()) decrease += 0.30F; flag = true;
-			if (legs.getItem() == SRItems.GRIEFER_LEGGINGS.get()) decrease += 0.25F; flag = true;
-			if (feet.getItem() == SRItems.GRIEFER_BOOTS.get()) decrease += 0.20F; flag = true;
-			if (flag) event.setAmount(event.getAmount() - (event.getAmount() * decrease));
+			if (head.getItem() == SRItems.GRIEFER_HELMET.get()) {
+				decrease += 0.25F; 
+				flag = true;
+				SREvents.blastProtect(head, event.getEntityLiving());
+
+			}
+			if (chest.getItem() == SRItems.GRIEFER_CHESTPLATE.get()) {
+				decrease += 0.30F; 
+				flag = true;
+				SREvents.blastProtect(chest, event.getEntityLiving());
+			}
+			if (legs.getItem() == SRItems.GRIEFER_LEGGINGS.get()) {
+				decrease += 0.25F; 
+				flag = true;
+				SREvents.blastProtect(legs, event.getEntityLiving());
+
+			}
+			if (feet.getItem() == SRItems.GRIEFER_BOOTS.get()) {
+				decrease += 0.20F; 
+				flag = true;
+				SREvents.blastProtect(feet, event.getEntityLiving());
+			}
+			if (flag) {
+				event.setAmount(event.getAmount() - (event.getAmount() * decrease));
+			}
 		}
+	}
+	
+	public static void blastProtect(ItemStack stack, LivingEntity entity) {
+		int damage = 22;
+		if (EnchantmentHelper.getEnchantmentLevel(Enchantments.BLAST_PROTECTION, stack) > 0) {
+			damage -= EnchantmentHelper.getEnchantmentLevel(Enchantments.BLAST_PROTECTION, stack) * 8;
+		}
+		stack.damageItem(damage, entity, (onBroken) -> { onBroken.sendBreakAnimation(stack.getEquipmentSlot());});
 	}
 	
 	@SubscribeEvent
@@ -171,41 +202,7 @@ public class SREvents
 	    			.applyTextStyle(TextFormatting.BLUE));
 		}
 		
-	}
-	
-//	@SubscribeEvent
-//	public static void handleBlastResistance(LivingDamageEvent event){
-//		LivingEntity entity = event.getEntityLiving();
-//		float decrease = 0.0F;
-//		boolean flag = false;
-//		
-//		ItemStack head = entity.getItemStackFromSlot(EquipmentSlotType.HEAD);
-//		ItemStack chest = entity.getItemStackFromSlot(EquipmentSlotType.CHEST);
-//		ItemStack legs = entity.getItemStackFromSlot(EquipmentSlotType.LEGS);
-//		ItemStack feet = entity.getItemStackFromSlot(EquipmentSlotType.FEET);
-//		
-//		double x = entity.getMotion().getX(); 
-//		double y = entity.getMotion().getY();
-//		double z = entity.getMotion().getZ();
-//		
-//		if (event.getSource().isExplosion()) {
-//			if (head.getItem() == SRItems.GRIEFER_HELMET.get() && EnchantmentHelper.getEnchantmentLevel(Enchantments.BLAST_PROTECTION, head) > 0) {
-//				decrease += 0.25F * (4 / EnchantmentHelper.getEnchantmentLevel(Enchantments.BLAST_PROTECTION, head)); flag = true; }
-//			if (chest.getItem() == SRItems.GRIEFER_CHESTPLATE.get() && EnchantmentHelper.getEnchantmentLevel(Enchantments.BLAST_PROTECTION, chest) > 0) {
-//				decrease += 0.30F * (4 / EnchantmentHelper.getEnchantmentLevel(Enchantments.BLAST_PROTECTION, chest)); flag = true; }
-//			if (legs.getItem() == SRItems.GRIEFER_LEGGINGS.get() && EnchantmentHelper.getEnchantmentLevel(Enchantments.BLAST_PROTECTION, legs) > 0) {
-//				decrease += 0.25F * (4 / EnchantmentHelper.getEnchantmentLevel(Enchantments.BLAST_PROTECTION, legs)); flag = true; }
-//			if (feet.getItem() == SRItems.GRIEFER_BOOTS.get() && EnchantmentHelper.getEnchantmentLevel(Enchantments.BLAST_PROTECTION, feet) > 0) {
-//				decrease += 0.20F * (4 / EnchantmentHelper.getEnchantmentLevel(Enchantments.BLAST_PROTECTION, feet)); flag = true; }
-//			if (flag) { 
-//				Vec3d vec =  new Vec3d(0.0D, 0.0D, 0.0D);
-//				entity.setMotion(vec); 
-//				System.out.println("made it");
-//			}
-//		}
-//	}
-	
-	
+	}	
 	
 	@SubscribeEvent
 	public static void onInteractWithEntity(PlayerInteractEvent.EntityInteract event){
