@@ -6,7 +6,9 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.ArmorStandEntity;
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.util.math.Rotations;
 
 /**
  * ModelGrieferArmor - MCVinnyq & Farcr
@@ -109,5 +111,27 @@ public class GrieferArmorModel<T extends LivingEntity> extends BipedModel<T> {
     	
     	this.chestplate1.copyModelAngles(this.bipedBody);
     	this.chestplate2.copyModelAngles(this.bipedBody);
+    	
+    	if (entity instanceof ArmorStandEntity) {
+    		ArmorStandEntity stand = (ArmorStandEntity) entity;
+    		
+    		this.copyStandAngles(stand, helmet1, stand.getHeadRotation());
+    		this.copyStandAngles(stand, helmet2, stand.getHeadRotation());
+    		this.copyStandAngles(stand, shoulderpadleft, stand.getLeftArmRotation());
+    		this.copyStandAngles(stand, shoulderpadright, stand.getRightArmRotation());
+    		this.copyStandAngles(stand, bootsleft, stand.getLeftLegRotation());
+    		this.copyStandAngles(stand, bootsright, stand.getRightLegRotation());
+    		this.copyStandAngles(stand, leggingsleft, stand.getLeftLegRotation());
+    		this.copyStandAngles(stand, leggingsright, stand.getRightLegRotation());
+    		this.copyStandAngles(stand, chestplate1, stand.getBodyRotation());
+    		this.copyStandAngles(stand, chestplate2, stand.getBodyRotation());
+    	}
+
+    }
+    
+    public void copyStandAngles(ArmorStandEntity stand, ModelRenderer model, Rotations rotation) {
+    	model.rotateAngleX = (float) Math.toRadians(rotation.getX());
+		model.rotateAngleY = (float) Math.toRadians(rotation.getY());
+		model.rotateAngleZ = (float) Math.toRadians(rotation.getZ());
     }
 }
