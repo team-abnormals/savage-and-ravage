@@ -19,6 +19,9 @@ import net.minecraft.util.SoundEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.RegistryObject;
 
+/**
+ * @author SmellyModder(Luke Tonon)
+ * */
 public class RegistryUtils {
 	public static <I extends Item> RegistryObject<I> createItem(String name, Supplier<? extends I> supplier) {
 		RegistryObject<I> item = SRItems.ITEMS.register(name, supplier);
