@@ -23,6 +23,7 @@ public class SRConfig
 	public static boolean CreepieGoBigWhenBoom;
 	public static boolean CreeperNoDestroyBlocks;
 	public static boolean CreepersSpawnCreepiesWhenBoom;
+	public static boolean CreepersSpawnSporesAfterDeathByBoom;
 	public static boolean PoisonPotatoCompatEnabled;
 	public static boolean PoisonEffect;
 	public static double PoisonChance;
@@ -32,6 +33,7 @@ public class SRConfig
 		CreepieGoBigWhenBoom = COMMON.CreepieGoBigWhenBoom.get();
 		CreeperNoDestroyBlocks = COMMON.CreeperNoDestroyBlocks.get();
 		CreepersSpawnCreepiesWhenBoom = COMMON.CreepersSpawnCreepiesWhenBoom.get();
+		CreepersSpawnSporesAfterDeathByBoom = COMMON.CreepersSpawnSporesAfterDeathByBoom.get();
 		PoisonPotatoCompatEnabled = COMMON.PoisonPotatoCompatEnabled.get();
 		PoisonEffect = COMMON.PoisonEffect.get();
 		PoisonChance = COMMON.PoisonChance.get();
@@ -50,6 +52,7 @@ public class SRConfig
 		public final ForgeConfigSpec.BooleanValue CreepieGoBigWhenBoom;
 		public final ForgeConfigSpec.BooleanValue CreeperNoDestroyBlocks;
 		public final ForgeConfigSpec.BooleanValue CreepersSpawnCreepiesWhenBoom;
+		public final ForgeConfigSpec.BooleanValue CreepersSpawnSporesAfterDeathByBoom;
 		public final ForgeConfigSpec.BooleanValue PoisonPotatoCompatEnabled;
 		public final ForgeConfigSpec.BooleanValue PoisonEffect;
 		public final ForgeConfigSpec.DoubleValue PoisonChance;
@@ -62,6 +65,9 @@ public class SRConfig
 			CreepersSpawnCreepiesWhenBoom = builder
 					.translation(SavageAndRavage.MODID + ".config.CreepersSpawnCreepiesWhenBoom")
 					.define("Creepies spawn after creeper explosions", true);
+			 CreepersSpawnSporesAfterDeathByBoom= builder
+					.translation(SavageAndRavage.MODID + ".config.CreepersSpawnCreepiesWhenBoom")
+					.define("Have Creepers drop Creeper Spores after they die from an explosion", true);
 			builder.push("Quark Poisonous Potato Compat");
 			PoisonPotatoCompatEnabled = builder
 					.comment("If true, creepies can be fed a poisonous potato to stunt their growth when Quark is installed.")
