@@ -12,6 +12,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -25,7 +26,16 @@ public class SRParticles
 	public static class RegisterParticleFactories {
 		@SubscribeEvent(priority = EventPriority.LOWEST)
 		public static void registerParticleTypes(ParticleFactoryRegisterEvent event) {
-			Minecraft.getInstance().particles.registerFactory(CREEPER_SPORES.get(), CreeperSporeParticle.Factory::new);
+	        if(checkForNonNullWithReflectionCauseForgeIsBaby(CREEPER_SPORES)) {
+	        	Minecraft.getInstance().particles.registerFactory(CREEPER_SPORES.get(), CreeperSporeParticle.Factory::new);
+	        }
 		}
+	}
+	
+	/*
+	 * @author SmellyModder(Luke Tonon)
+	 */
+	private static boolean checkForNonNullWithReflectionCauseForgeIsBaby(RegistryObject<BasicParticleType> registryObject) {
+	    return ObfuscationReflectionHelper.getPrivateValue(RegistryObject.class, registryObject, "value") != null;
 	}
 }
