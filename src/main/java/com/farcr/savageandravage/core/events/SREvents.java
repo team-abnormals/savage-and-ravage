@@ -1,6 +1,5 @@
 package com.farcr.savageandravage.core.events;
 
-import java.awt.print.Pageable;
 import java.util.Random;
 
 import com.farcr.savageandravage.common.EffectGrowing;
@@ -67,7 +66,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
-
 
 @Mod.EventBusSubscriber(modid = SavageAndRavage.MODID)
 public class SREvents
@@ -180,7 +178,7 @@ public class SREvents
 		if (EnchantmentHelper.getEnchantmentLevel(Enchantments.BLAST_PROTECTION, stack) > 0) {
 			damage -= EnchantmentHelper.getEnchantmentLevel(Enchantments.BLAST_PROTECTION, stack) * 8;
 		}
-		stack.damageItem(damage, entity, (onBroken) -> { onBroken.sendBreakAnimation(stack.getEquipmentSlot());});
+		stack.damageItem(damage, entity, (onBroken) -> { onBroken.sendBreakAnimation(EquipmentSlotType.CHEST);});
 	}
 	
 	@SubscribeEvent
