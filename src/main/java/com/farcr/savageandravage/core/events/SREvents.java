@@ -39,6 +39,7 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.stats.Stats;
@@ -322,7 +323,8 @@ public class SREvents
 				((CreepieEntity)event.getEntityLiving()).setGrowingAge(0);
 			}
 			else{
-				//event.getEntityLiving().addPotionEffect(new EffectInstance(Effects.INSTANT_HEALTH,1,3));
+				EffectInstance effectInstance = new EffectInstance(Effects.INSTANT_HEALTH,1,3);
+				effectInstance.getPotion().affectEntity(null, null, event.getEntityLiving(), effectInstance.getAmplifier(), 1.0D);
 				event.getEntityLiving().addPotionEffect(new EffectInstance(Effects.ABSORPTION, 2400, 0));
 			}
 		}
