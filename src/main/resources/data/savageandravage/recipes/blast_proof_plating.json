@@ -10,7 +10,16 @@
         {
             "item": "savageandravage:creeper_spores"
         },
+		{
+            "item": "savageandravage:creeper_spores"
+        },
+		{
+            "item": "savageandravage:creeper_spores"
+        },
         {
+            "item": "minecraft:gold_ingot"
+        },
+		{
             "item": "minecraft:gold_ingot"
         },
         {
@@ -19,6 +28,6 @@
     ],
     "result": {
         "item": "savageandravage:blast_proof_plating",
-        "count": 1
+        "count": 2
     }
 }
