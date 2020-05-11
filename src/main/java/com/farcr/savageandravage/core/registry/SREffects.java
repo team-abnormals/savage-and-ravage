@@ -2,10 +2,14 @@ package com.farcr.savageandravage.core.registry;
 
 import com.farcr.savageandravage.common.EffectGrowing;
 import com.farcr.savageandravage.core.SavageAndRavage;
+
 import net.minecraft.item.Items;
-import net.minecraft.potion.*;
+import net.minecraft.potion.Effect;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionBrewing;
+import net.minecraft.potion.Potions;
 import net.minecraftforge.fml.RegistryObject;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
