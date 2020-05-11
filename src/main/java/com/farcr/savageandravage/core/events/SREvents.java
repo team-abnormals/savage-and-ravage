@@ -1,7 +1,9 @@
 package com.farcr.savageandravage.core.events;
 
+import java.awt.print.Pageable;
 import java.util.Random;
 
+import com.farcr.savageandravage.common.EffectGrowing;
 import com.farcr.savageandravage.common.advancement.SRTriggers;
 import com.farcr.savageandravage.common.entity.BurningBannerEntity;
 import com.farcr.savageandravage.common.entity.CreeperSporeCloudEntity;
@@ -18,6 +20,7 @@ import net.minecraft.block.AbstractBannerBlock;
 import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
+import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
@@ -57,6 +60,7 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.living.PotionEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -309,7 +313,23 @@ public class SREvents
 			}
 		}
 	}
-	
+
+	@SubscribeEvent
+	public static void onPotionExpire(PotionEvent.PotionExpiryEvent event) {
+		if(event.getPotionEffect().getPotion() instanceof EffectGrowing){
+			if(event.getEntityLiving() instanceof AgeableEntity){
+				((AgeableEntity)event.getEntityLiving()).setGrowingAge(0);
+			}
+			else if(event.getEntityLiving() instanceof CreepieEntity){
+				((CreepieEntity)event.getEntityLiving()).setGrowingAge(0);
+			}
+			else{
+				//event.getEntityLiving().addPotionEffect(new EffectInstance(Effects.INSTANT_HEALTH,1,3));
+				event.getEntityLiving().addPotionEffect(new EffectInstance(Effects.ABSORPTION, 2400, 0));
+			}
+		}
+	}
+
 	public static ItemStack createRocket() {
 	    ItemStack rocket= new ItemStack(Items.FIREWORK_ROCKET);
         ItemStack star = new ItemStack(Items.FIREWORK_STAR);

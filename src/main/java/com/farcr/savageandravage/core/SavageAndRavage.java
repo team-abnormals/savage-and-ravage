@@ -3,11 +3,7 @@ package com.farcr.savageandravage.core;
 import com.farcr.savageandravage.common.entity.CreeperSporeCloudEntity;
 import com.farcr.savageandravage.common.item.SRSpawnEgg;
 import com.farcr.savageandravage.core.config.SRConfig;
-import com.farcr.savageandravage.core.registry.SRBlocks;
-import com.farcr.savageandravage.core.registry.SREntities;
-import com.farcr.savageandravage.core.registry.SRItems;
-import com.farcr.savageandravage.core.registry.SRParticles;
-import com.farcr.savageandravage.core.registry.SRSounds;
+import com.farcr.savageandravage.core.registry.*;
 
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.dispenser.IPosition;
@@ -44,7 +40,9 @@ public class SavageAndRavage {
         SREntities.ENTITIES.register(modEventBus);
         SRParticles.PARTICLES.register(modEventBus);
         SRSounds.SOUNDS.register(modEventBus);
-        //SRBlocks.PAINTINGS.register(modEventBus);
+        SREffects.EFFECTS.register(modEventBus);
+		SREffects.POTIONS.register(modEventBus);
+		//SRBlocks.PAINTINGS.register(modEventBus);
 
         MinecraftForge.EVENT_BUS.register(this);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, SRConfig.COMMON_SPEC); 
@@ -85,6 +83,7 @@ public class SavageAndRavage {
 				return new CreeperSporeCloudEntity(worldIn, position.getX(), position.getY(), position.getZ());
 			}
 		});
+		SREffects.registerBrewingRecipes();
 	}
     
     private void clientSetup(final FMLClientSetupEvent event) {
