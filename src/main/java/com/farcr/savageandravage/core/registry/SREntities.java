@@ -1,9 +1,18 @@
 package com.farcr.savageandravage.core.registry;
 
-import com.farcr.savageandravage.client.render.*;
-import com.farcr.savageandravage.common.entity.*;
+import com.farcr.savageandravage.client.render.CreepieRenderer;
+import com.farcr.savageandravage.client.render.NoModelRenderer;
+import com.farcr.savageandravage.client.render.RunePrisonRenderer;
+import com.farcr.savageandravage.client.render.SkeletonVillagerRenderer;
+import com.farcr.savageandravage.client.render.SporeBombRenderer;
+import com.farcr.savageandravage.common.entity.BurningBannerEntity;
+import com.farcr.savageandravage.common.entity.CreeperSporeCloudEntity;
+import com.farcr.savageandravage.common.entity.CreepieEntity;
+import com.farcr.savageandravage.common.entity.RunePrisonEntity;
+import com.farcr.savageandravage.common.entity.SkeletonVillagerEntity;
 import com.farcr.savageandravage.common.entity.block.SporeBombEntity;
 import com.farcr.savageandravage.core.SavageAndRavage;
+import com.teamabnormals.abnormals_core.core.utils.RegistryHelper;
 
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
@@ -21,14 +30,16 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 @Mod.EventBusSubscriber(modid = SavageAndRavage.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class SREntities {
-    public static final DeferredRegister<EntityType<?>> ENTITIES = new DeferredRegister<>(ForgeRegistries.ENTITIES, SavageAndRavage.MODID);
-    public static RegistryObject<EntityType<CreepieEntity>> CREEPIE = ENTITIES.register("creepie", () -> EntityType.Builder.create(CreepieEntity::new, EntityClassification.MONSTER).size(0.51F, 1.02F).build("savageandravage:creepie"));
-    public static RegistryObject<EntityType<SkeletonVillagerEntity>> SKELETON_VILLAGER = ENTITIES.register("skeleton_villager", () -> EntityType.Builder.create(SkeletonVillagerEntity::new, EntityClassification.MONSTER).size(0.6F, 1.99F).build("savageandravage:skeleton_villager"));
-    public static RegistryObject<EntityType<CreeperSporeCloudEntity>> CREEPER_SPORE_CLOUD = ENTITIES.register("creeper_spore_cloud", () -> EntityType.Builder.<CreeperSporeCloudEntity>create(CreeperSporeCloudEntity::new, EntityClassification.MISC).immuneToFire().size(0.25F, 0.25F).build("savageandravage:creeper_spore_cloud"));
-    public static RegistryObject<EntityType<SporeBombEntity>> SPORE_BOMB = ENTITIES.register("spore_bomb", () -> EntityType.Builder.<SporeBombEntity>create(SporeBombEntity::new, EntityClassification.MISC).immuneToFire().size(0.98F, 0.98F).build("savageandravage:spore_bomb"));
-    public static RegistryObject<EntityType<BurningBannerEntity>> BURNING_BANNER = ENTITIES.register("burning_banner", () -> EntityType.Builder.<BurningBannerEntity>create(BurningBannerEntity::new, EntityClassification.MISC).immuneToFire().build("savageandravage:burning_banner"));
-    public static RegistryObject<EntityType<RunePrisonEntity>> RUNE_PRISON = ENTITIES.register("rune_prison", () -> EntityType.Builder.<RunePrisonEntity>create(RunePrisonEntity::new, EntityClassification.MISC).immuneToFire().size(1.35F, 0.7F).build("savageandravage:rune_prison"));
-
+	public static final RegistryHelper HELPER = SavageAndRavage.REGISTRY_HELPER;
+	public static final DeferredRegister<EntityType<?>> ENTITIES = new DeferredRegister<>(ForgeRegistries.ENTITIES, SavageAndRavage.MODID);
+	
+    public static final RegistryObject<EntityType<CreepieEntity>> CREEPIE 						= HELPER.createLivingEntity("creepie", CreepieEntity::new, EntityClassification.MONSTER, 0.51F, 1.02F);
+    public static final RegistryObject<EntityType<SkeletonVillagerEntity>> SKELETON_VILLAGER 	= HELPER.createLivingEntity("skeleton_villager", SkeletonVillagerEntity::new, EntityClassification.MONSTER, 0.6F, 1.99F);
+    public static final RegistryObject<EntityType<CreeperSporeCloudEntity>> CREEPER_SPORE_CLOUD = ENTITIES.register("creeper_spore_cloud", () -> EntityType.Builder.<CreeperSporeCloudEntity>create(CreeperSporeCloudEntity::new, EntityClassification.MISC).immuneToFire().size(0.25F, 0.25F).build("savageandravage:creeper_spore_cloud"));
+    public static final RegistryObject<EntityType<SporeBombEntity>> SPORE_BOMB 					= ENTITIES.register("spore_bomb", () -> EntityType.Builder.<SporeBombEntity>create(SporeBombEntity::new, EntityClassification.MISC).immuneToFire().size(0.98F, 0.98F).build("savageandravage:spore_bomb"));
+    public static final RegistryObject<EntityType<BurningBannerEntity>> BURNING_BANNER 			= ENTITIES.register("burning_banner", () -> EntityType.Builder.<BurningBannerEntity>create(BurningBannerEntity::new, EntityClassification.MISC).immuneToFire().build("savageandravage:burning_banner"));
+    public static final RegistryObject<EntityType<RunePrisonEntity>> RUNE_PRISON 				= ENTITIES.register("rune_prison", () -> EntityType.Builder.<RunePrisonEntity>create(RunePrisonEntity::new, EntityClassification.MISC).immuneToFire().size(1.35F, 0.7F).build("savageandravage:rune_prison"));
+    
     @OnlyIn(Dist.CLIENT)
     public static void registerRendering() {
         RenderingRegistry.registerEntityRenderingHandler(CREEPIE.get(), CreepieRenderer::new);

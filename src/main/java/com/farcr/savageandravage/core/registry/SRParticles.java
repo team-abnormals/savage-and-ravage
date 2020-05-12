@@ -2,7 +2,6 @@ package com.farcr.savageandravage.core.registry;
 
 import com.farcr.savageandravage.common.particles.CreeperSporeParticle;
 import com.farcr.savageandravage.core.SavageAndRavage;
-import com.farcr.savageandravage.core.util.RegistryUtils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.particles.BasicParticleType;
@@ -20,7 +19,7 @@ public class SRParticles
 {
 	public static final DeferredRegister<ParticleType<?>> PARTICLES = new DeferredRegister<>(ForgeRegistries.PARTICLE_TYPES, SavageAndRavage.MODID);
 	
-	public static final RegistryObject<BasicParticleType> CREEPER_SPORES = RegistryUtils.createParticle("creeper_spores", true);
+	public static final RegistryObject<BasicParticleType> CREEPER_SPORES = createParticle("creeper_spores", true);
 	
 	@EventBusSubscriber(modid = SavageAndRavage.MODID, bus = EventBusSubscriber.Bus.MOD)
 	public static class RegisterParticleFactories {
@@ -37,5 +36,10 @@ public class SRParticles
 	 */
 	private static boolean checkForNonNullWithReflectionCauseForgeIsBaby(RegistryObject<BasicParticleType> registryObject) {
 	    return ObfuscationReflectionHelper.getPrivateValue(RegistryObject.class, registryObject, "value") != null;
+	}
+	
+	public static RegistryObject<BasicParticleType> createParticle(String name, boolean alwaysShow) {
+		RegistryObject<BasicParticleType> particleType = SRParticles.PARTICLES.register(name, () -> new BasicParticleType(alwaysShow));
+		return particleType;
 	}
 }

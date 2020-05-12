@@ -1,6 +1,7 @@
 package com.farcr.savageandravage.common.advancement;
 
 import com.farcr.savageandravage.core.SavageAndRavage;
+import com.teamabnormals.abnormals_core.common.advancement.EmptyTrigger;
 
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.util.ResourceLocation;
