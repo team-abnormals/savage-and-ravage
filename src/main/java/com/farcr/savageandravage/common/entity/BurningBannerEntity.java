@@ -130,18 +130,22 @@ public class BurningBannerEntity extends Entity {
     }
 
     private boolean isOminousBanner(BlockPos positionIn) {
-        if(world.getBlockState(positionIn).getBlock() instanceof AbstractBannerBlock) {
-            TileEntity te = world.getTileEntity(positionIn);
-            BannerTileEntity banner = (BannerTileEntity) te;
-            TranslationTextComponent bannerName;
-            try {
-                bannerName = (TranslationTextComponent) banner.getName();
-            } catch (ClassCastException cast) {
-                bannerName = null;
+        try {
+            if (world.getBlockState(positionIn).getBlock() instanceof AbstractBannerBlock) {
+                TileEntity te = world.getTileEntity(positionIn);
+                BannerTileEntity banner = (BannerTileEntity) te;
+                TranslationTextComponent bannerName;
+                try {
+                    bannerName = (TranslationTextComponent) banner.getName();
+                } catch (ClassCastException cast) {
+                    bannerName = null;
+                }
+                return bannerName.getKey().contains("block.minecraft.ominous_banner");
+            } else {
+                return false;
             }
-            return bannerName.getKey().contains("block.minecraft.ominous_banner");
         }
-        else{
+        catch (NullPointerException whyTheFuckDoesThisHappenAnyway) {
             return false;
         }
     }
