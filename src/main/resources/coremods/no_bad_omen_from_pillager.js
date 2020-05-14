@@ -10,7 +10,7 @@ function initializeCoreMod() {
                 'methodDesc': '(Lnet/minecraft/util/DamageSource;)V'
             },
             'transformer': function(method) {
-                print("[SavageAndRavage/COREMOD] Patching onDeath() in AbstractRaiderEntity");
+                print("[SavageAndRavage/COREMOD] Patching AbstractRaiderEntity#onDeath");
                 for (var i = 0; i < method.instructions.size(); ++i) {
                 	var instruction = method.instructions.get(i);
                     if(instruction.getOpcode()==Opcodes.INVOKEVIRTUAL && instruction.getNext().getOpcode()==Opcodes.POP){
@@ -18,15 +18,13 @@ function initializeCoreMod() {
                             var instruction1 = instruction2.getPrevious();
                             var instruction3 = instruction.getNext();
                             method.instructions.remove(instruction1);
-                            print("[SavageAndRavage/COREMOD] Removed instruction "+instruction1);
+                            //print("[SavageAndRavage/COREMOD] Removed instruction "+instruction1);
                             method.instructions.remove(instruction2);
-                            print("[SavageAndRavage/COREMOD] Removed instruction "+instruction2);
+                            //print("[SavageAndRavage/COREMOD] Removed instruction "+instruction2);
                             method.instructions.remove(instruction);
-                            print("[SavageAndRavage/COREMOD] Removed instruction "+instruction);
+                            //print("[SavageAndRavage/COREMOD] Removed instruction "+instruction);
                             method.instructions.remove(instruction3);
-                            print("[SavageAndRavage/COREMOD] Removed instruction "+instruction3);
-                            //if(instruction.getPrevious().getOpcode()==Opcodes.GETSTATIC){
-                            //else if((instruction.getPrevious().getOpcode()==Opcodes.ALOAD)){
+                            //print("[SavageAndRavage/COREMOD] Removed instruction "+instruction3);
                     }
                 }
                 return method;
