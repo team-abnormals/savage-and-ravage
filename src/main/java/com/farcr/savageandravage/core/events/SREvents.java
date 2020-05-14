@@ -2,12 +2,9 @@ package com.farcr.savageandravage.core.events;
 
 import java.util.Random;
 
-import com.farcr.savageandravage.common.EffectGrowing;
+import com.farcr.savageandravage.common.EffectGrowth;
 import com.farcr.savageandravage.common.advancement.SRTriggers;
-import com.farcr.savageandravage.common.entity.BurningBannerEntity;
-import com.farcr.savageandravage.common.entity.CreeperSporeCloudEntity;
-import com.farcr.savageandravage.common.entity.CreepieEntity;
-import com.farcr.savageandravage.common.entity.SkeletonVillagerEntity;
+import com.farcr.savageandravage.common.entity.*;
 import com.farcr.savageandravage.common.entity.goals.ImprovedCrossbowGoal;
 import com.farcr.savageandravage.core.SavageAndRavage;
 import com.farcr.savageandravage.core.config.SRConfig;
@@ -22,11 +19,15 @@ import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.ai.goal.RangedCrossbowAttackGoal;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.entity.monster.PillagerEntity;
+import net.minecraft.entity.monster.ShulkerEntity;
+import net.minecraft.entity.passive.GolemEntity;
+import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -41,6 +42,7 @@ import net.minecraft.nbt.ListNBT;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
+import net.minecraft.potion.Potion;
 import net.minecraft.stats.Stats;
 import net.minecraft.tileentity.BannerTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -56,10 +58,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
-import net.minecraftforge.event.entity.living.LivingDropsEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.living.PotionEvent;
+import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -68,13 +67,10 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 
 @Mod.EventBusSubscriber(modid = SavageAndRavage.MODID)
-public class SREvents
-{
+public class SREvents {
 	@SubscribeEvent
-	public static void onLivingSpawned(EntityJoinWorldEvent event) 
-	{
-		if (event.getEntity() instanceof PillagerEntity) 
-		{
+	public static void onLivingSpawned(EntityJoinWorldEvent event) {
+		if (event.getEntity() instanceof PillagerEntity) {
 			PillagerEntity pillager = (PillagerEntity)event.getEntity();
 			ImprovedCrossbowGoal<PillagerEntity> aiCrossBow = new ImprovedCrossbowGoal<PillagerEntity>(pillager, 1.0D, 8.0F, 5.0D);
 			 pillager.goalSelector.goals.stream().map(it -> it.inner).filter(it -> it instanceof RangedCrossbowAttackGoal<?>)
@@ -82,35 +78,38 @@ public class SREvents
      		    pillager.goalSelector.removeGoal(crossbowGoal);  
      		    pillager.goalSelector.addGoal(3, aiCrossBow);
            });
-			 if (event.getWorld().rand.nextInt(100) == 0 && !event.getWorld().isRemote)
-			 {
+			 if (event.getWorld().rand.nextInt(100) == 0 && !event.getWorld().isRemote) {
 				 pillager.setItemStackToSlot(EquipmentSlotType.OFFHAND, createRocket());
 				 pillager.setActiveHand(Hand.OFF_HAND);
 				 pillager.setDropChance(EquipmentSlotType.OFFHAND, 2.0F);
 			 }
 		}
 		
-		if (event.getEntity() instanceof AbstractVillagerEntity)  
-		{
+		if (event.getEntity() instanceof AbstractVillagerEntity) {
 		   AbstractVillagerEntity villager = (AbstractVillagerEntity)event.getEntity();
 		   villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, SkeletonVillagerEntity.class, 15.0F, 0.5D, 0.5D));
 		}
 	}
 	
 	@SubscribeEvent
-	public static void onLivingDrops(LivingDropsEvent event) 
-	{
-	   if (event.getEntity() instanceof CreeperEntity && !(event.getEntity() instanceof CreepieEntity))
-	   {
-	    CreeperEntity creeper = (CreeperEntity)event.getEntity();
-	    if (event.getSource().isExplosion() && SRConfig.CreepersSpawnSporesAfterDeathByBoom) 
-	    {
-	     creeper.entityDropItem(new ItemStack(SRItems.CREEPER_SPORES.get(), 1 + creeper.world.rand.nextInt(5)));
-	    }
+	public static void onLivingDrops(LivingDropsEvent event) {
+	   if (event.getEntity() instanceof CreeperEntity && !(event.getEntity() instanceof CreepieEntity)) {
+	   	CreeperEntity creeper = (CreeperEntity)event.getEntity();
+	   	if (event.getSource().isExplosion() && SRConfig.CreepersSpawnSporesAfterDeathByBoom) {
+			creeper.entityDropItem(new ItemStack(SRItems.CREEPER_SPORES.get(), 1 + creeper.world.rand.nextInt(5)));
+		}
 	   }
-	 }
-	
-	
+	}
+
+	@SubscribeEvent
+	public static void onLivingSetAttackTarget(LivingSetAttackTargetEvent event) {
+		if(event.getEntityLiving() instanceof GolemEntity && !(event.getEntityLiving() instanceof ShulkerEntity) && event.getTarget() instanceof IOwnableMob){
+			if(((IOwnableMob)event.getTarget()).getOwner()!=null&&((MobEntity)event.getTarget()).getAttackTarget()!=event.getEntityLiving()){
+				((GolemEntity)event.getEntityLiving()).setAttackTarget(null);
+			}
+		}
+	}
+
 	@SubscribeEvent
 	public static void onExplosion(ExplosionEvent.Detonate event)
 	{
@@ -122,10 +121,7 @@ public class SREvents
 			}
 			CreeperSporeCloudEntity spores = new CreeperSporeCloudEntity(SREntities.CREEPER_SPORE_CLOUD.get(), event.getWorld());
 			if (SRConfig.CreepersSpawnCreepiesWhenBoom) {
-			spores.cloudSize = (int) (creeper.getHealth() / 5);
-			 if (creeper.isCharged()) {
-		       spores.cloudSize = (int) (creeper.getHealth() / 2);  //feedback, this needs.
-			 }
+			 spores.cloudSize = (creeper.isCharged() ? (int) (creeper.getHealth() / 2) : (int) (creeper.getHealth() / 5)); 
 			 spores.copyLocationAndAnglesFrom(creeper);
 			 creeper.world.addEntity(spores);
 			}
@@ -314,14 +310,32 @@ public class SREvents
 
 	@SubscribeEvent
 	public static void onPotionExpire(PotionEvent.PotionExpiryEvent event) {
-		if(event.getPotionEffect().getPotion() instanceof EffectGrowing){
+		if(event.getPotionEffect().getPotion() instanceof EffectGrowth){
 			if(event.getEntityLiving() instanceof AgeableEntity){
 				((AgeableEntity)event.getEntityLiving()).setGrowingAge(0);
+				for(int i=0; i<10; i++) {
+					double d0 = (double) (1 >> 16 & 255) / 255.0D;
+					double d1 = (double) (1 >> 8 & 255) / 255.0D;
+					double d2 = (double) (1 >> 0 & 255) / 255.0D;
+					event.getEntityLiving().world.addParticle(ParticleTypes.HAPPY_VILLAGER, event.getEntityLiving().getPosXRandom(0.5D), event.getEntityLiving().getPosYRandom(), event.getEntityLiving().getPosZRandom(0.5D), 1, 1, 1);
+				}
 			}
 			else if(event.getEntityLiving() instanceof CreepieEntity){
 				((CreepieEntity)event.getEntityLiving()).setGrowingAge(0);
+				for(int i=0; i<10; i++) {
+					double d0 = (double) (1 >> 16 & 255) / 255.0D;
+					double d1 = (double) (1 >> 8 & 255) / 255.0D;
+					double d2 = (double) (1 >> 0 & 255) / 255.0D;
+					event.getEntityLiving().world.addParticle(ParticleTypes.HAPPY_VILLAGER, event.getEntityLiving().getPosXRandom(0.5D), event.getEntityLiving().getPosYRandom(), event.getEntityLiving().getPosZRandom(0.5D), 1, 1, 1);
+				}
 			}
 			else{
+				for(int i=0; i<10; i++) {
+					double d0 = (double) (1 >> 16 & 255) / 255.0D;
+					double d1 = (double) (1 >> 8 & 255) / 255.0D;
+					double d2 = (double) (1 >> 0 & 255) / 255.0D;
+					event.getEntityLiving().world.addParticle(ParticleTypes.SMOKE, event.getEntityLiving().getPosXRandom(0.5D), event.getEntityLiving().getPosYRandom(), event.getEntityLiving().getPosZRandom(0.5D), 1, 1, 1);
+				}
 				EffectInstance effectInstance = new EffectInstance(Effects.INSTANT_HEALTH,1,3);
 				effectInstance.getPotion().affectEntity(null, null, event.getEntityLiving(), effectInstance.getAmplifier(), 1.0D);
 				event.getEntityLiving().addPotionEffect(new EffectInstance(Effects.ABSORPTION, 2400, 0));
@@ -333,7 +347,7 @@ public class SREvents
 	    ItemStack rocket= new ItemStack(Items.FIREWORK_ROCKET);
         ItemStack star = new ItemStack(Items.FIREWORK_STAR);
         CompoundNBT compoundnbt = star.getOrCreateChildTag("Explosion");
-        compoundnbt.putInt("Type", FireworkRocketItem.Shape.BURST.func_196071_a());
+        compoundnbt.putInt("Type", FireworkRocketItem.Shape.BURST.getIndex());
         CompoundNBT compoundnbt1 = rocket.getOrCreateChildTag("Fireworks");
         ListNBT listnbt = new ListNBT();
         CompoundNBT compoundnbt2 = star.getChildTag("Explosion");

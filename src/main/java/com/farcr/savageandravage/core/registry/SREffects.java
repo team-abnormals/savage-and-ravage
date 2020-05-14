@@ -1,6 +1,6 @@
 package com.farcr.savageandravage.core.registry;
 
-import com.farcr.savageandravage.common.EffectGrowing;
+import com.farcr.savageandravage.common.EffectGrowth;
 import com.farcr.savageandravage.core.SavageAndRavage;
 
 import net.minecraft.item.Items;
@@ -19,7 +19,7 @@ public class SREffects {
     public static final DeferredRegister<Potion> POTIONS = new DeferredRegister<>(ForgeRegistries.POTION_TYPES, SavageAndRavage.MODID);
     //Same for this, potion types???
 
-    public static RegistryObject<Effect> GROWING = EFFECTS.register("growth", EffectGrowing::new);
+    public static RegistryObject<Effect> GROWING = EFFECTS.register("growth", EffectGrowth::new);
 
     public static final RegistryObject<Potion> GROWING_NORMAL  = POTIONS.register("growing", () -> new Potion(new EffectInstance(GROWING.get(), 600)));
     public static final RegistryObject<Potion> GROWING_SHORT   = POTIONS.register("growing_short", () -> new Potion(new EffectInstance(GROWING.get(), 300)));
