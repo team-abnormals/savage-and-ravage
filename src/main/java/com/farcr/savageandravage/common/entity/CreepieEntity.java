@@ -102,6 +102,16 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob {
         return this.getAttackTarget() == null ? 3 : 3 + (int)(this.getHealth() - 1.0F);
     }
 
+    @Override
+    protected boolean isDespawnPeaceful() {
+        return this.getOwner()==null;
+    }
+
+    @Override
+    public boolean isPreventingPlayerRest(PlayerEntity playerIn) {
+        return this.getOwner()==null;
+    }
+
     public boolean onLivingFall(float distance, float damageMultiplier) {
         boolean flag = super.onLivingFall(distance, damageMultiplier);
         this.timeSinceIgnited = (int)((float)this.timeSinceIgnited + distance * 1.5F);
