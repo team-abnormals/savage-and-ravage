@@ -1,9 +1,9 @@
 {
 	"block.savageandravage.gloomy_tiles": "Gloomy Tiles",
-	"block.savageandravage.chiseled_gloomy_tiles": "Chiseled Gloomy Tiles",
 	"block.savageandravage.gloomy_tile_stairs": "Gloomy Tile Stairs",
 	"block.savageandravage.gloomy_tile_slab": "Gloomy Tile Slab",
 	"block.savageandravage.gloomy_tile_wall": "Gloomy Tile Wall",
+	"block.savageandravage.chiseled_gloomy_tiles": "Chiseled Gloomy Tiles",
 	"block.savageandravage.gloomy_tile_vertical_slab": "Gloomy Tile Vertical Slab",
 	"block.savageandravage.runed_gloomy_tiles": "Runed Gloomy Tiles",
 	"entity.savageandravage.rune_prison": "Rune Prison",
@@ -39,6 +39,8 @@
 	"item.minecraft.splash_potion.effect.growing_short": "Splash Potion of Growing",
 	"item.minecraft.lingering_potion.effect.growing": "Lingering Potion of Growing",
 	"item.minecraft.lingering_potion.effect.growing_short": "Lingering Potion of Growing",
+	"item.minecraft.tipped_arrow.effect.growing": "Arrow of Growing",
+	"item.minecraft.tipped_arrow.effect.growing_short": "Arrow of Growing",
 
 	"attribute.name.grieferArmor.explosiveDamageReduction": "Explosive Damage Reduction",
 	

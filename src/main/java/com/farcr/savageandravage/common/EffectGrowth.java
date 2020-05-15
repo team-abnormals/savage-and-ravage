@@ -6,6 +6,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectType;
+import net.minecraft.world.server.ServerWorld;
 
 public class EffectGrowth extends Effect {
 
@@ -15,20 +16,15 @@ public class EffectGrowth extends Effect {
 
     @Override
     public void performEffect(LivingEntity entity, int amplifier) {
-        Boolean flag = false;
-        if((entity instanceof AgeableEntity)){
-            if(((AgeableEntity)entity).isChild()) {
-                flag = true;
-            }
+        boolean canGrow = false;
+        if((entity instanceof AgeableEntity) && entity.isChild()){
+            canGrow = true;
         }
         else if(entity instanceof CreepieEntity){
-            flag = true;
+            canGrow = true;
         }
-        if(flag){
-            double d0 = (double) (1 >> 16 & 255) / 255.0D;
-            double d1 = (double) (1 >> 8 & 255) / 255.0D;
-            double d2 = (double) (1 >> 0 & 255) / 255.0D;
-            entity.world.addParticle(ParticleTypes.HAPPY_VILLAGER, entity.getPosXRandom(0.5D), entity.getPosYRandom(), entity.getPosZRandom(0.5D), 1, 1, 1);
+        if(canGrow && entity.getRNG().nextInt(3)==0){
+            if(entity.isServerWorld()) ((ServerWorld) entity.world).spawnParticle(ParticleTypes.HAPPY_VILLAGER, entity.getPosXRandom(0.3D), entity.getPosYRandom(), entity.getPosZRandom(0.3D), 1, 0.3D, 0.3D, 0.3D, 1.0D);
         }
     }
 
