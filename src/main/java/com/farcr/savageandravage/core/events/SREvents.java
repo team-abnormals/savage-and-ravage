@@ -314,28 +314,28 @@ public class SREvents {
 			if(event.getEntityLiving() instanceof AgeableEntity){
 				((AgeableEntity)event.getEntityLiving()).setGrowingAge(0);
 				for(int i=0; i<10; i++) {
-					double d0 = (double) (1 >> 16 & 255) / 255.0D;
-					double d1 = (double) (1 >> 8 & 255) / 255.0D;
-					double d2 = (double) (1 >> 0 & 255) / 255.0D;
-					event.getEntityLiving().world.addParticle(ParticleTypes.HAPPY_VILLAGER, event.getEntityLiving().getPosXRandom(0.5D), event.getEntityLiving().getPosYRandom(), event.getEntityLiving().getPosZRandom(0.5D), 1, 1, 1);
-				}
+		          double d0 = (double) (1 >> 16 & 255) / 255.0D;
+		          double d1 = (double) (1 >> 8 & 255) / 255.0D;
+		          double d2 = (double) (1 >> 0 & 255) / 255.0D;
+				  ((ServerWorld)event.getEntityLiving().world).spawnParticle(ParticleTypes.HAPPY_VILLAGER, event.getEntityLiving().getPosXRandom(0.5D), event.getEntityLiving().getPosYRandom(), event.getEntityLiving().getPosZRandom(0.5D), 1, 1.0D, 1.0D, 1.0D, 1.0D);
+			   }
 			}
 			else if(event.getEntityLiving() instanceof CreepieEntity){
 				((CreepieEntity)event.getEntityLiving()).setGrowingAge(0);
 				for(int i=0; i<10; i++) {
-					double d0 = (double) (1 >> 16 & 255) / 255.0D;
-					double d1 = (double) (1 >> 8 & 255) / 255.0D;
-					double d2 = (double) (1 >> 0 & 255) / 255.0D;
-					event.getEntityLiving().world.addParticle(ParticleTypes.HAPPY_VILLAGER, event.getEntityLiving().getPosXRandom(0.5D), event.getEntityLiving().getPosYRandom(), event.getEntityLiving().getPosZRandom(0.5D), 1, 1, 1);
-				}
+		           double d0 = (double) (1 >> 16 & 255) / 255.0D;
+		           double d1 = (double) (1 >> 8 & 255) / 255.0D;
+		           double d2 = (double) (1 >> 0 & 255) / 255.0D;
+				  ((ServerWorld)event.getEntityLiving().world).spawnParticle(ParticleTypes.HAPPY_VILLAGER, event.getEntityLiving().getPosXRandom(0.5D), event.getEntityLiving().getPosYRandom(), event.getEntityLiving().getPosZRandom(0.5D), 1, 1.0D, 1.0D, 1.0D, 1.0D);
+			   }
 			}
 			else{
 				for(int i=0; i<10; i++) {
-					double d0 = (double) (1 >> 16 & 255) / 255.0D;
-					double d1 = (double) (1 >> 8 & 255) / 255.0D;
-					double d2 = (double) (1 >> 0 & 255) / 255.0D;
-					event.getEntityLiving().world.addParticle(ParticleTypes.SMOKE, event.getEntityLiving().getPosXRandom(0.5D), event.getEntityLiving().getPosYRandom(), event.getEntityLiving().getPosZRandom(0.5D), 1, 1, 1);
-				}
+		           double d0 = (double) (1 >> 16 & 255) / 255.0D;
+		           double d1 = (double) (1 >> 8 & 255) / 255.0D;
+		           double d2 = (double) (1 >> 0 & 255) / 255.0D;
+				   ((ServerWorld)event.getEntityLiving().world).spawnParticle(ParticleTypes.SMOKE, event.getEntityLiving().getPosXRandom(0.5D), event.getEntityLiving().getPosYRandom(), event.getEntityLiving().getPosZRandom(0.5D), 1, 1.0D, 1.0D, 1.0D, 1.0D);
+			   }
 				EffectInstance effectInstance = new EffectInstance(Effects.INSTANT_HEALTH,1,3);
 				effectInstance.getPotion().affectEntity(null, null, event.getEntityLiving(), effectInstance.getAmplifier(), 1.0D);
 				event.getEntityLiving().addPotionEffect(new EffectInstance(Effects.ABSORPTION, 2400, 0));
