@@ -22,10 +22,10 @@ public class SREffects {
     public static RegistryObject<Effect> GROWING = EFFECTS.register("growth", EffectGrowth::new);
 
     public static final RegistryObject<Potion> GROWING_NORMAL  = POTIONS.register("growing", () -> new Potion(new EffectInstance(GROWING.get(), 600)));
-    public static final RegistryObject<Potion> GROWING_SHORT   = POTIONS.register("growing_short", () -> new Potion(new EffectInstance(GROWING.get(), 300)));
+    public static final RegistryObject<Potion> GROWING_LONG   = POTIONS.register("growing_long", () -> new Potion(new EffectInstance(GROWING.get(), 1800)));
 
     public static void registerBrewingRecipes(){
         PotionBrewing.addMix(Potions.AWKWARD, Items.GOLDEN_APPLE, GROWING_NORMAL.get());
-        PotionBrewing.addMix(GROWING_NORMAL.get(), Items.REDSTONE, GROWING_SHORT.get());
+        PotionBrewing.addMix(GROWING_NORMAL.get(), Items.REDSTONE, GROWING_LONG.get());
     }
 }
