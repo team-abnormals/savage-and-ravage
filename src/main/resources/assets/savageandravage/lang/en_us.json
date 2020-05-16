@@ -34,11 +34,11 @@
 
 	"effect.savageandravage.growth": "Growth",
 	"item.minecraft.potion.effect.growing": "Potion of Growing",
-	"item.minecraft.potion.effect.growing_short": "Potion of Growing",
+	"item.minecraft.potion.effect.growing_long": "Potion of Growing",
 	"item.minecraft.splash_potion.effect.growing": "Splash Potion of Growing",
 	"item.minecraft.splash_potion.effect.growing_long": "Splash Potion of Growing",
 	"item.minecraft.lingering_potion.effect.growing": "Lingering Potion of Growing",
-	"item.minecraft.lingering_potion.effect.growingk_long": "Lingering Potion of Growing",
+	"item.minecraft.lingering_potion.effect.growing_long": "Lingering Potion of Growing",
 	"item.minecraft.tipped_arrow.effect.growing": "Arrow of Growing",
 	"item.minecraft.tipped_arrow.effect.growing_long": "Arrow of Growing",
 
