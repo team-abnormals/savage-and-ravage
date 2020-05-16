@@ -1,11 +1,11 @@
 package com.farcr.savageandravage.client.render;
 
-import com.farcr.savageandravage.client.SRRenderTypes;
 import com.farcr.savageandravage.client.model.RunePrisonModel;
 import com.farcr.savageandravage.common.entity.RunePrisonEntity;
 import com.farcr.savageandravage.core.SavageAndRavage;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.teamabnormals.abnormals_core.client.ACRenderTypes;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -34,7 +34,7 @@ public class RunePrisonRenderer extends EntityRenderer<RunePrisonEntity> {
         matrixStackIn.push();
         matrixStackIn.translate(0.15F, -0.7F, 0.15F);
         this.model.setRotationAngles(entityIn, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
-        IVertexBuilder ivertexbuilder = bufferIn.getBuffer(SRRenderTypes.getEmissiveEntity(getEntityTexture(entityIn)));
+        IVertexBuilder ivertexbuilder = bufferIn.getBuffer(ACRenderTypes.getEmissiveTransluscentEntity(getEntityTexture(entityIn),false));
         this.model.render(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
         matrixStackIn.pop();
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);

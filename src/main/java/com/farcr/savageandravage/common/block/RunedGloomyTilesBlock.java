@@ -47,7 +47,7 @@ public class RunedGloomyTilesBlock extends Block {
                         EvokerFangsEntity evokerFangs = EntityType.EVOKER_FANGS.create(world);
                         evokerFangs.setLocationAndAngles(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 0.0F, 0.0F);
                         world.addEntity(evokerFangs);
-                        RunePrisonEntity runePrison = new RunePrisonEntity(world, pos);
+                        RunePrisonEntity runePrison = new RunePrisonEntity(world, pos, 25);
                         runePrison.setLocationAndAngles(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 0.0F, 0.0F);
                         world.addEntity(runePrison);
                     }

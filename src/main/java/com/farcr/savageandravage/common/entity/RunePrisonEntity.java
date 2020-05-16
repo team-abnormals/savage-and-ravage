@@ -35,15 +35,16 @@ public class RunePrisonEntity extends Entity {
         super(type, worldIn);
     }
 
-    public RunePrisonEntity(World worldIn, BlockPos positionIn){
+    public RunePrisonEntity(World worldIn, BlockPos positionIn, int ticksTillRemove){
         super(SREntities.RUNE_PRISON.get(),  worldIn);
         this.setBlockPos(positionIn);
+        this.setTicksTillRemove(ticksTillRemove);
     }
 
     @Override
     protected void registerData() {
         this.dataManager.register(BLOCK_POS, Optional.empty());
-        this.dataManager.register(TICKS_TILL_REMOVE, 25);
+        this.dataManager.register(TICKS_TILL_REMOVE, 0);
     }
 
     @Override
@@ -95,12 +96,14 @@ public class RunePrisonEntity extends Entity {
                 }
             }
         }
-        setTicksTillRemove(getTicksTillRemove() - 1);
+        if(getTicksTillRemove()>0) {
+            setTicksTillRemove(getTicksTillRemove() - 1);
+        }
         List<LivingEntity> intersectingEntityList = this.world.getEntitiesWithinAABB(LivingEntity.class, this.getBoundingBox());
         if (!intersectingEntityList.isEmpty()) {
             for (LivingEntity livingentity : intersectingEntityList) {
                 if (livingentity.canBeHitWithPotion() && !(EntityTypeTags.RAIDERS.contains(livingentity.getType()))) {
-                    livingentity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 20, 1));
+                    livingentity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 20, 2));
                 }
             }
         }
