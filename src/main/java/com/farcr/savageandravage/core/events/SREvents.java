@@ -320,7 +320,7 @@ public class SREvents {
 				SlimeEntity slime = (SlimeEntity)affected;
 				int size = slime.getSlimeSize();
 				if(shouldSetChild ? size > 1 : size < 3){
-					slime.setSlimeSize(size + (shouldSetChild ? (size < 4 ? -1:-2) : (size < 3 ? 1:2)), false);
+					//slime.setSlimeSize(size + (shouldSetChild ? (size < 4 ? -1:-2) : (size < 3 ? 1:2)), false);
 				}
 				else{
 					canChange = false;
