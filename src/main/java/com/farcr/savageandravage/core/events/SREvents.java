@@ -2,6 +2,7 @@ package com.farcr.savageandravage.core.events;
 
 import java.util.Random;
 
+import com.farcr.savageandravage.common.EffectBaby;
 import com.farcr.savageandravage.common.EffectGrowth;
 import com.farcr.savageandravage.common.advancement.SRTriggers;
 import com.farcr.savageandravage.common.entity.*;
@@ -16,16 +17,11 @@ import net.minecraft.block.AbstractBannerBlock;
 import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.AgeableEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.ai.goal.RangedCrossbowAttackGoal;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
-import net.minecraft.entity.monster.CreeperEntity;
-import net.minecraft.entity.monster.PillagerEntity;
-import net.minecraft.entity.monster.ShulkerEntity;
+import net.minecraft.entity.monster.*;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -39,6 +35,7 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.stats.Stats;
@@ -308,31 +305,65 @@ public class SREvents {
 
 	@SubscribeEvent
 	public static void onPotionExpire(PotionEvent.PotionExpiryEvent event) {
-		if(event.getPotionEffect().getPotion() instanceof EffectGrowth){
-			LivingEntity affected = event.getEntityLiving();
-			boolean canGrow = false;
-			if(affected instanceof AgeableEntity && affected.isChild()){
-				((AgeableEntity) affected).setGrowingAge(0);
-				canGrow = true;
+		LivingEntity affected = event.getEntityLiving();
+		int growingAgeValue = 0;
+		int slimeModifier = 1;
+		boolean shouldSetChild = false;
+		if(event.getPotionEffect().getPotion() instanceof EffectBaby){
+			growingAgeValue = -24000;
+			slimeModifier = -1;
+			shouldSetChild = true;
+		}
+		if(event.getPotionEffect().getPotion() instanceof EffectGrowth || shouldSetChild) {
+			boolean canChange = true;
+			if(affected instanceof SlimeEntity){
+				SlimeEntity slime = (SlimeEntity)affected;
+				int size = slime.getSlimeSize();
+				if(shouldSetChild ? size > 1 : size < 3){
+					slime.setSlimeSize(size + (shouldSetChild ? (size < 4 ? -1:-2) : (size < 3 ? 1:2)), false);
+				}
+				else{
+					canChange = false;
+				}
 			}
-			else if(affected instanceof CreepieEntity){
-				((CreepieEntity)affected).setGrowingAge(0);
-		    	canGrow = true;
+			else if(shouldSetChild ? !affected.isChild() : affected.isChild()){
+				if(affected instanceof AgeableEntity) ((AgeableEntity)affected).setGrowingAge(growingAgeValue);
+				else if(shouldSetChild && affected instanceof CreeperEntity) convertCreeper((CreeperEntity)affected);
+				else if(!shouldSetChild && affected instanceof CreepieEntity) ((CreepieEntity)affected).setGrowingAge(growingAgeValue);
+				else if(affected instanceof ZombieEntity) ((ZombieEntity)affected).setChild(shouldSetChild);
+				else canChange = false;
 			}
 			else{
-				EffectInstance effectInstance = new EffectInstance(Effects.INSTANT_HEALTH,1,3);
+				canChange = false;
+				EffectInstance effectInstance;
+				if(!shouldSetChild) affected.addPotionEffect(new EffectInstance(Effects.ABSORPTION, 2400, 0));
+				if(affected.isEntityUndead()) shouldSetChild = !shouldSetChild;
+				effectInstance = new EffectInstance(shouldSetChild ? Effects.INSTANT_DAMAGE : Effects.INSTANT_HEALTH,1,3);
 				effectInstance.getPotion().affectEntity(null, null, affected, effectInstance.getAmplifier(), 1.0D);
-				affected.addPotionEffect(new EffectInstance(Effects.ABSORPTION, 2400, 0));
 			}
-			if(canGrow){
-				if(affected.isServerWorld()) ((ServerWorld) affected.world).spawnParticle(ParticleTypes.HAPPY_VILLAGER, affected.getPosXRandom(0.3D), affected.getPosYRandom()-0.1D, affected.getPosZRandom(0.3D), 40, 0.3D, 0.6D, 0.3D, 1.0D);
-			}
-			else{
-				if(affected.isServerWorld()) ((ServerWorld) affected.world).spawnParticle(ParticleTypes.LARGE_SMOKE, affected.getPosXRandom(0.3D), affected.getPosYRandom()-0.1D, affected.getPosZRandom(0.3D), 20, 0.3D, 0.6D, 0.3D, 0.01D);
-			}
+			if(affected.isServerWorld()) ((ServerWorld) affected.world).spawnParticle(canChange ? (shouldSetChild ? ParticleTypes.TOTEM_OF_UNDYING : ParticleTypes.HAPPY_VILLAGER) : ParticleTypes.LARGE_SMOKE, affected.getPosXRandom(0.3D), affected.getPosYRandom() - 0.1D, affected.getPosZRandom(0.3D), canChange ? 40 : 20, 0.3D, 0.6D, 0.3D, canChange ? 0.2D : 0.01D);
 		}
 	}
 
+	public static void convertCreeper(CreeperEntity creeper){
+		CreepieEntity creepie = SREntities.CREEPIE.get().create(creeper.world);
+		creepie.copyLocationAndAnglesFrom(creeper.getEntity());
+		creepie.onInitialSpawn(creeper.world, creeper.world.getDifficultyForLocation(new BlockPos(creepie)), SpawnReason.CONVERSION, null, (CompoundNBT)null);
+		creeper.remove();
+		creepie.setNoAI(creeper.isAIDisabled());
+		if (creeper.hasCustomName()) {
+			creepie.setCustomName(creeper.getCustomName());
+			creepie.setCustomNameVisible(creeper.isCustomNameVisible());
+		}
+
+		if (creeper.isNoDespawnRequired()) {
+			creepie.enablePersistence();
+		}
+
+		creepie.setInvulnerable(creeper.isInvulnerable());
+		creeper.world.addEntity(creepie);
+	}
+	
 	public static ItemStack createRocket() {
 	    ItemStack rocket= new ItemStack(Items.FIREWORK_ROCKET);
         ItemStack star = new ItemStack(Items.FIREWORK_STAR);

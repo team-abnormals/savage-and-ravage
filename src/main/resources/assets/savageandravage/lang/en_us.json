@@ -42,6 +42,15 @@
 	"item.minecraft.lingering_potion.effect.growing_long": "Lingering Potion of Growing",
 	"item.minecraft.tipped_arrow.effect.growing": "Arrow of Growing",
 	"item.minecraft.tipped_arrow.effect.growing_long": "Arrow of Growing",
+	"effect.savageandravage.baby": "Baby",
+	"item.minecraft.potion.effect.baby": "Potion of Baby",
+	"item.minecraft.potion.effect.baby_long": "Potion of Baby",
+	"item.minecraft.splash_potion.effect.baby": "Splash Potion of Baby",
+	"item.minecraft.splash_potion.effect.baby_long": "Splash Potion of Baby",
+	"item.minecraft.lingering_potion.effect.baby": "Lingering Potion of Baby",
+	"item.minecraft.lingering_potion.effect.baby_long": "Lingering Potion of Baby",
+	"item.minecraft.tipped_arrow.effect.baby": "Arrow of Baby",
+	"item.minecraft.tipped_arrow.effect.baby_long": "Arrow of Baby",
 
 	"attribute.name.grieferArmor.explosiveDamageReduction": "Explosive Damage Reduction",
 	

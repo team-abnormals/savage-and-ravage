@@ -436,6 +436,11 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob {
         return this.getGrowingAge() < 0;
     }
 
+    @Override
+    public boolean isChild(){
+        return true;
+    }
+
     public boolean canBeLeashedTo(PlayerEntity player) {
         return !this.getLeashed();
     }
