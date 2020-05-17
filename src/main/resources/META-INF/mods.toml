@@ -17,13 +17,20 @@ A mod that improves and expands on illagers through new structures, enemies and 
 [[dependencies.savageandravage]] 
     modId="forge"
     mandatory=true
-    versionRange="[31,)"
+    versionRange="[31.1.49,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.savageandravage]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.15.2]"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.savageandravage]]
     modId="abnormals_core"
     mandatory=true
-    versionRange="[1.0.0,)"
+    versionRange="[1.0.4,)"
     ordering="AFTER"
     side="BOTH"

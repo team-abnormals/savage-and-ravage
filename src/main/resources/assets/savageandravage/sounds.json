@@ -26,7 +26,8 @@
   "block.runed_gloomy_tiles.activated": {
     "category": "hostile",
     "sounds": [
-      "minecraft:mob/evocation_illager/prepare_summon"
+      "minecraft:mob/evocation_illager/prepare_attack1",
+      "minecraft:mob/evocation_illager/prepare_attack2"
     ],
     "subtitle": "savageandravage:subtitles.runed_gloomy_tiles.activated"
   }
