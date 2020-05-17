@@ -1,5 +1,7 @@
 package com.farcr.savageandravage.core.events;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Random;
 
 import com.farcr.savageandravage.common.EffectBaby;
@@ -59,6 +61,7 @@ import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 
 @Mod.EventBusSubscriber(modid = SavageAndRavage.MODID)
@@ -304,7 +307,7 @@ public class SREvents {
 	}
 
 	@SubscribeEvent
-	public static void onPotionExpire(PotionEvent.PotionExpiryEvent event) {
+	public static void onPotionExpire(PotionEvent.PotionExpiryEvent event) throws InvocationTargetException, IllegalAccessException {
 		LivingEntity affected = event.getEntityLiving();
 		int growingAgeValue = 0;
 		int slimeModifier = 1;
@@ -320,7 +323,8 @@ public class SREvents {
 				SlimeEntity slime = (SlimeEntity)affected;
 				int size = slime.getSlimeSize();
 				if(shouldSetChild ? size > 1 : size < 3){
-					//slime.setSlimeSize(size + (shouldSetChild ? (size < 4 ? -1:-2) : (size < 3 ? 1:2)), false);
+					Method setSize = ObfuscationReflectionHelper.findMethod(SlimeEntity.class,"func_70799_a",int.class,boolean.class);
+					setSize.invoke(slime,(size + (shouldSetChild ? (size < 4 ? -1:-2) : (size < 3 ? 1:2))), false);
 				}
 				else{
 					canChange = false;
