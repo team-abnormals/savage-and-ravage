@@ -70,6 +70,7 @@ public class SkeletonVillagerEntity extends AbstractSkeletonEntity implements IC
           SkeletonVillagerEntity.this.setAggroed(true);
        }
     };
+    
     public CreatureAttribute getCreatureAttribute() {
         return CreatureAttribute.UNDEAD;
      }

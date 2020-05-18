@@ -55,7 +55,6 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 	      if (this.entity.isHandActive()) {
 	         this.entity.resetActiveHand();
 	         ((ICrossbowUser)this.entity).setCharging(false);
-	         CrossbowItem.setCharged(this.entity.getActiveItemStack(), false);
 	      }
 
 	   }
