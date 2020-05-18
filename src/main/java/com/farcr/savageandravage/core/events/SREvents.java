@@ -309,42 +309,37 @@ public class SREvents {
 	@SubscribeEvent
 	public static void onPotionExpire(PotionEvent.PotionExpiryEvent event) throws InvocationTargetException, IllegalAccessException {
 		LivingEntity affected = event.getEntityLiving();
-		int growingAgeValue = 0;
-		int slimeModifier = 1;
+		//Values initialised for what they should be if the potion is growth
 		boolean shouldSetChild = false;
+		int growingAgeValue = 0;
 		if(event.getPotionEffect().getPotion() instanceof EffectBaby){
-			growingAgeValue = -24000;
-			slimeModifier = -1;
 			shouldSetChild = true;
+			growingAgeValue = -24000;
 		}
 		if(event.getPotionEffect().getPotion() instanceof EffectGrowth || shouldSetChild) {
-			boolean canChange = true;
+			boolean canChange = false;
 			if(affected instanceof SlimeEntity){
 				SlimeEntity slime = (SlimeEntity)affected;
 				int size = slime.getSlimeSize();
 				if(shouldSetChild ? size > 1 : size < 3){
+					canChange = true;
 					Method setSize = ObfuscationReflectionHelper.findMethod(SlimeEntity.class,"func_70799_a",int.class,boolean.class);
 					setSize.invoke(slime,(size + (shouldSetChild ? (size < 4 ? -1:-2) : (size < 3 ? 1:2))), false);
 				}
-				else{
-					canChange = false;
-				}
 			}
 			else if(shouldSetChild ? !affected.isChild() : affected.isChild()){
+				canChange = true;
 				if(affected instanceof AgeableEntity) ((AgeableEntity)affected).setGrowingAge(growingAgeValue);
 				else if(shouldSetChild && affected instanceof CreeperEntity) convertCreeper((CreeperEntity)affected);
 				else if(!shouldSetChild && affected instanceof CreepieEntity) ((CreepieEntity)affected).setGrowingAge(growingAgeValue);
 				else if(affected instanceof ZombieEntity) ((ZombieEntity)affected).setChild(shouldSetChild);
 				else canChange = false;
 			}
-			else{
-				canChange = false;
-				EffectInstance effectInstance;
-				if(!shouldSetChild) affected.addPotionEffect(new EffectInstance(Effects.ABSORPTION, 2400, 0));
-				if(affected.isEntityUndead()) shouldSetChild = !shouldSetChild;
-				effectInstance = new EffectInstance(shouldSetChild ? Effects.INSTANT_DAMAGE : Effects.INSTANT_HEALTH,1,3);
-				effectInstance.getPotion().affectEntity(null, null, affected, effectInstance.getAmplifier(), 1.0D);
-			}
+			EffectInstance effectInstance;
+			if(!shouldSetChild) affected.addPotionEffect(new EffectInstance(Effects.ABSORPTION, 2400, 0));
+			if(affected.isEntityUndead()) shouldSetChild = !shouldSetChild;
+			effectInstance = new EffectInstance(shouldSetChild ? Effects.INSTANT_DAMAGE : Effects.INSTANT_HEALTH,1,1);
+			effectInstance.getPotion().affectEntity(null, null, affected, effectInstance.getAmplifier(), 1.0D);
 			if(affected.isServerWorld()) ((ServerWorld) affected.world).spawnParticle(canChange ? (shouldSetChild ? ParticleTypes.TOTEM_OF_UNDYING : ParticleTypes.HAPPY_VILLAGER) : ParticleTypes.LARGE_SMOKE, affected.getPosXRandom(0.3D), affected.getPosYRandom() - 0.1D, affected.getPosZRandom(0.3D), canChange ? 40 : 20, 0.3D, 0.6D, 0.3D, canChange ? 0.2D : 0.01D);
 		}
 	}
