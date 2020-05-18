@@ -2,6 +2,7 @@ package com.farcr.savageandravage.core.events;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Random;
 
 import com.farcr.savageandravage.common.EffectBaby;
@@ -327,6 +328,7 @@ public class SREvents {
 					setSize.invoke(slime,(size + (shouldSetChild ? (size < 4 ? -1:-2) : (size < 3 ? 1:2))), false);
 				}
 			}
+			else if (checkBooflo(affected,shouldSetChild)) canChange = true;
 			else if(shouldSetChild ? !affected.isChild() : affected.isChild()){
 				canChange = true;
 				if(affected instanceof AgeableEntity) ((AgeableEntity)affected).setGrowingAge(growingAgeValue);
@@ -335,15 +337,25 @@ public class SREvents {
 				else if(affected instanceof ZombieEntity) ((ZombieEntity)affected).setChild(shouldSetChild);
 				else canChange = false;
 			}
-			EffectInstance effectInstance;
-			if(!shouldSetChild) affected.addPotionEffect(new EffectInstance(Effects.ABSORPTION, 2400, 0));
-			if(affected.isEntityUndead()) shouldSetChild = !shouldSetChild;
-			effectInstance = new EffectInstance(shouldSetChild ? Effects.INSTANT_DAMAGE : Effects.INSTANT_HEALTH,1,1);
-			effectInstance.getPotion().affectEntity(null, null, affected, effectInstance.getAmplifier(), 1.0D);
+			if(!canChange) {
+				EffectInstance effectInstance;
+				if (!shouldSetChild) affected.addPotionEffect(new EffectInstance(Effects.ABSORPTION, 2400, 0));
+				if (affected.isEntityUndead()) shouldSetChild = !shouldSetChild;
+				effectInstance = new EffectInstance(shouldSetChild ? Effects.INSTANT_DAMAGE : Effects.INSTANT_HEALTH, 1, 1);
+				effectInstance.getPotion().affectEntity(null, null, affected, effectInstance.getAmplifier(), 1.0D);
+			}
 			if(affected.isServerWorld()) ((ServerWorld) affected.world).spawnParticle(canChange ? (shouldSetChild ? ParticleTypes.TOTEM_OF_UNDYING : ParticleTypes.HAPPY_VILLAGER) : ParticleTypes.LARGE_SMOKE, affected.getPosXRandom(0.3D), affected.getPosYRandom() - 0.1D, affected.getPosZRandom(0.3D), canChange ? 40 : 20, 0.3D, 0.6D, 0.3D, canChange ? 0.2D : 0.01D);
 		}
 	}
 
+	public static boolean checkBooflo(LivingEntity affected, boolean isBabyPotion){
+		if(ModList.get().isLoaded("endergetic")) {
+			return ((!isBabyPotion && affected.getType() == ForgeRegistries.ENTITIES.getValue(new ResourceLocation("endergetic:booflo_baby")) ||
+			affected.getType() == ForgeRegistries.ENTITIES.getValue(new ResourceLocation("endergetic:booflo_adolescent")) ||
+			(isBabyPotion && affected.getType() == ForgeRegistries.ENTITIES.getValue(new ResourceLocation("endergetic:booflo_adolescent")))));
+		}
+		return false;
+	}
 	public static void convertCreeper(CreeperEntity creeper){
 		CreepieEntity creepie = SREntities.CREEPIE.get().create(creeper.world);
 		creepie.copyLocationAndAnglesFrom(creeper.getEntity());

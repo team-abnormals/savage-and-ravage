@@ -1,6 +1,7 @@
 package com.farcr.savageandravage.common;
 
 import com.farcr.savageandravage.common.entity.CreepieEntity;
+import com.farcr.savageandravage.core.events.SREvents;
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.monster.SlimeEntity;
@@ -13,19 +14,16 @@ import net.minecraft.world.server.ServerWorld;
 public class EffectGrowth extends Effect {
 
     public EffectGrowth() {
-        super(EffectType.BENEFICIAL, 16768259);
+        super(EffectType.BENEFICIAL, 4184944);
     }
 
     @Override
     public void performEffect(LivingEntity entity, int amplifier) {
         boolean canGrow = false;
-        //TODO add case for booflo
-        if(entity instanceof SlimeEntity && ((SlimeEntity)entity).getSlimeSize()<3){
-           canGrow = true;
-        }
+        if(entity instanceof SlimeEntity && ((SlimeEntity)entity).getSlimeSize()<3) canGrow = true;
+        else if (SREvents.checkBooflo(entity,false)) canGrow = true;
         else if(entity.isChild()){
-            canGrow = true;
-            if(!(entity instanceof AgeableEntity || entity instanceof CreepieEntity || entity instanceof ZombieEntity)) canGrow = false;
+            if(entity instanceof AgeableEntity || entity instanceof CreepieEntity || entity instanceof ZombieEntity) canGrow = true;
         }
         if(canGrow && entity.getRNG().nextInt(3)==0){
             if(entity.isServerWorld()) ((ServerWorld) entity.world).spawnParticle(ParticleTypes.HAPPY_VILLAGER, entity.getPosXRandom(0.3D), entity.getPosYRandom(), entity.getPosZRandom(0.3D), 1, 0.3D, 0.3D, 0.3D, 1.0D);
