@@ -1,6 +1,6 @@
 package com.farcr.savageandravage.core.registry;
 
-import com.farcr.savageandravage.common.EffectBaby;
+import com.farcr.savageandravage.common.EffectShrinking;
 import com.farcr.savageandravage.common.EffectGrowth;
 import com.farcr.savageandravage.core.SavageAndRavage;
 
@@ -21,7 +21,7 @@ public class SREffects {
     //Same for this, potion types???
 
     public static final RegistryObject<Effect> GROWING = EFFECTS.register("growth", EffectGrowth::new);
-    public static final RegistryObject<Effect> SHRINKING = EFFECTS.register("shrinking", EffectBaby::new);
+    public static final RegistryObject<Effect> SHRINKING = EFFECTS.register("shrinking", EffectShrinking::new);
 
     public static final RegistryObject<Potion> GROWING_NORMAL  = POTIONS.register("growing", () -> new Potion(new EffectInstance(GROWING.get(), 600)));
     public static final RegistryObject<Potion> GROWING_LONG   = POTIONS.register("growing_long", () -> new Potion(new EffectInstance(GROWING.get(), 1800)));

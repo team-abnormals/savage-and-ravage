@@ -11,10 +11,10 @@ import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectType;
 import net.minecraft.world.server.ServerWorld;
 
-public class EffectBaby extends Effect {
+public class EffectShrinking extends Effect {
 
-    public EffectBaby() {
-        super(EffectType.NEUTRAL, 10400767/*12380152*/);
+    public EffectShrinking() {
+        super(EffectType.NEUTRAL, 10400767);
     }
 
     @Override

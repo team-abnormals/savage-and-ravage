@@ -2,10 +2,9 @@ package com.farcr.savageandravage.core.events;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.Random;
 
-import com.farcr.savageandravage.common.EffectBaby;
+import com.farcr.savageandravage.common.EffectShrinking;
 import com.farcr.savageandravage.common.EffectGrowth;
 import com.farcr.savageandravage.common.advancement.SRTriggers;
 import com.farcr.savageandravage.common.entity.*;
@@ -38,7 +37,6 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.stats.Stats;
@@ -313,7 +311,7 @@ public class SREvents {
 		//Values initialised for what they should be if the potion is growth
 		boolean shouldSetChild = false;
 		int growingAgeValue = 0;
-		if(event.getPotionEffect().getPotion() instanceof EffectBaby){
+		if(event.getPotionEffect().getPotion() instanceof EffectShrinking){
 			shouldSetChild = true;
 			growingAgeValue = -24000;
 		}
@@ -352,7 +350,7 @@ public class SREvents {
 		if(ModList.get().isLoaded("endergetic")) {
 			return ((!isBabyPotion && affected.getType() == ForgeRegistries.ENTITIES.getValue(new ResourceLocation("endergetic:booflo_baby")) ||
 			affected.getType() == ForgeRegistries.ENTITIES.getValue(new ResourceLocation("endergetic:booflo_adolescent")) ||
-			(isBabyPotion && affected.getType() == ForgeRegistries.ENTITIES.getValue(new ResourceLocation("endergetic:booflo_adolescent")))));
+			(isBabyPotion && affected.getType() == ForgeRegistries.ENTITIES.getValue(new ResourceLocation("endergetic:booflo")))));
 		}
 		return false;
 	}
