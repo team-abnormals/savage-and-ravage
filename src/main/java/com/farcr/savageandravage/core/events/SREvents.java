@@ -63,13 +63,15 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 
+//TODO work out how to suppress these fucking useless null warnings, @SuppressWarnings doesn't seem to work everywhere
+
 @Mod.EventBusSubscriber(modid = SavageAndRavage.MODID)
 public class SREvents {
 	@SubscribeEvent
 	public static void onLivingSpawned(EntityJoinWorldEvent event) {
 		if (event.getEntity() instanceof PillagerEntity) {
 			PillagerEntity pillager = (PillagerEntity)event.getEntity();
-			ImprovedCrossbowGoal<PillagerEntity> aiCrossBow = new ImprovedCrossbowGoal<PillagerEntity>(pillager, 1.0D, 8.0F, 5.0D);
+			ImprovedCrossbowGoal<PillagerEntity> aiCrossBow = new ImprovedCrossbowGoal<>(pillager, 1.0D, 8.0F, 5.0D);
 			 pillager.goalSelector.goals.stream().map(it -> it.inner).filter(it -> it instanceof RangedCrossbowAttackGoal<?>)
               .findFirst().ifPresent(crossbowGoal -> {
      		    pillager.goalSelector.removeGoal(crossbowGoal);  
@@ -90,10 +92,16 @@ public class SREvents {
 	
 	@SubscribeEvent
 	public static void onLivingDrops(LivingDropsEvent event) {
-	   if (event.getEntity() instanceof CreeperEntity && !(event.getEntity() instanceof CreepieEntity)) {
+	   if (event.getEntity() instanceof CreeperEntity) {
 	   	CreeperEntity creeper = (CreeperEntity)event.getEntity();
 	   	if (event.getSource().isExplosion() && SRConfig.CreepersSpawnSporesAfterDeathByBoom) {
 			creeper.entityDropItem(new ItemStack(SRItems.CREEPER_SPORES.get(), 1 + creeper.world.rand.nextInt(5)));
+		}
+	   }
+	   else if(event.getEntity() instanceof PillagerEntity) {
+		PillagerEntity pillager = (PillagerEntity) event.getEntity();
+	   	if(pillager.isServerWorld() && ((ServerWorld)pillager.getEntityWorld()).findRaid(pillager.getPosition())!=null) {
+	   		pillager.entityDropItem(new ItemStack(Items.EMERALD, pillager.world.rand.nextInt(2)));
 		}
 	   }
 	}
@@ -190,37 +198,38 @@ public class SREvents {
 			event.getPlayer().swingArm(event.getHand());
 			event.getWorld().addEntity(creepieEntity);
 		}
-		/**
-		 * @author Vazkii (Vasco Lavos) - adapted from poison potato code in Quark
-		 * */
 		if(target instanceof CreepieEntity && event.getItemStack().getItem() == Items.POISONOUS_POTATO && SRConfig.PoisonPotatoCompatEnabled && ModList.get().isLoaded("quark")) {
-			CreepieEntity creepie = (CreepieEntity)target;
-			if(!creepie.getPersistentData().getBoolean("savageandravage:poison_potato_applied")) {
-				if(!event.getWorld().isRemote) {
-					Vec3d pos = creepie.getPositionVec();
-					if(creepie.world.rand.nextDouble() < SRConfig.PoisonChance) {
-						creepie.playSound(SoundEvents.ENTITY_GENERIC_EAT, 0.5f, 0.25f);
-						creepie.world.addParticle(ParticleTypes.ENTITY_EFFECT, pos.x, pos.y, pos.z, 0.2, 0.8, 0);
-						creepie.getPersistentData().putBoolean("savageandravage:poison_potato_applied", true);
-						if (SRConfig.PoisonEffect)
-							creepie.addPotionEffect(new EffectInstance(Effects.POISON, 200));
-					} else {
-						creepie.playSound(SoundEvents.ENTITY_GENERIC_EAT, 0.5f, 0.5f + creepie.world.rand.nextFloat() / 2);
-						creepie.world.addParticle(ParticleTypes.SMOKE, pos.x, pos.y, pos.z, 0, 0.1, 0);
-					}
-
-					if (!event.getPlayer().isCreative())
-						event.getItemStack().shrink(1);
-
-				} else event.getPlayer().swingArm(event.getHand());
-
-			}
+			poisonCreepie(event);
 		}
 	}
 
 	/**
 	 * @author Vazkii (Vasco Lavos) - adapted from poison potato code in Quark
 	 * */
+	public static void poisonCreepie(PlayerInteractEvent.EntityInteract event){
+		CreepieEntity creepie = (CreepieEntity)event.getTarget();
+		if(!creepie.getPersistentData().getBoolean("savageandravage:poison_potato_applied")) {
+			if(!event.getWorld().isRemote) {
+				Vec3d pos = creepie.getPositionVec();
+				if(creepie.world.rand.nextDouble() < SRConfig.PoisonChance) {
+					creepie.playSound(SoundEvents.ENTITY_GENERIC_EAT, 0.5f, 0.25f);
+					creepie.world.addParticle(ParticleTypes.ENTITY_EFFECT, pos.x, pos.y, pos.z, 0.2, 0.8, 0);
+					creepie.getPersistentData().putBoolean("savageandravage:poison_potato_applied", true);
+					if (SRConfig.PoisonEffect)
+						creepie.addPotionEffect(new EffectInstance(Effects.POISON, 200));
+				} else {
+					creepie.playSound(SoundEvents.ENTITY_GENERIC_EAT, 0.5f, 0.5f + creepie.world.rand.nextFloat() / 2);
+					creepie.world.addParticle(ParticleTypes.SMOKE, pos.x, pos.y, pos.z, 0, 0.1, 0);
+				}
+
+				if (!event.getPlayer().isCreative())
+					event.getItemStack().shrink(1);
+
+			} else event.getPlayer().swingArm(event.getHand());
+
+		}
+	}
+
 	@SubscribeEvent
 	public static void onEntityUpdate(LivingEvent.LivingUpdateEvent event) {
 		if(event.getEntity() instanceof CreepieEntity && SRConfig.PoisonPotatoCompatEnabled && ModList.get().isLoaded("quark")) {
@@ -238,6 +247,7 @@ public class SREvents {
 		Item heldItem = event.getItemStack().getItem();
 		PlayerEntity player = event.getPlayer();
 		BlockPos blockPos = event.getPos();
+		@SuppressWarnings("null")
 		ResourceLocation pot = new ResourceLocation(("savageandravage:potted_" + heldItem.getRegistryName().getPath()));
 		if (event.getWorld().getBlockState(blockPos).getBlock() == Blocks.FLOWER_POT && ForgeRegistries.BLOCKS.containsKey(pot)) {
 			event.getWorld().setBlockState(blockPos, ForgeRegistries.BLOCKS.getValue(pot).getDefaultState());
@@ -247,8 +257,8 @@ public class SREvents {
 		}
 		if (event.getWorld().getBlockState(blockPos).getBlock() instanceof AbstractBannerBlock && event.getWorld().getEntitiesWithinAABB(BurningBannerEntity.class, new AxisAlignedBB(blockPos)).isEmpty()) {
 			TileEntity te = event.getWorld().getTileEntity(blockPos);
-			Boolean isFlintAndSteel = heldItem instanceof FlintAndSteelItem;
-			Boolean isFireCharge = heldItem instanceof FireChargeItem;
+			boolean isFlintAndSteel = heldItem instanceof FlintAndSteelItem;
+			boolean isFireCharge = heldItem instanceof FireChargeItem;
 			if ((isFlintAndSteel || isFireCharge)) {
 				BannerTileEntity banner = (BannerTileEntity) te;
 				TranslationTextComponent bannerName;
@@ -323,11 +333,11 @@ public class SREvents {
 				if(shouldSetChild ? size > 1 : size < 3){
 					canChange = true;
 					Method setSize = ObfuscationReflectionHelper.findMethod(SlimeEntity.class,"func_70799_a",int.class,boolean.class);
-					setSize.invoke(slime,(size + (shouldSetChild ? (size < 4 ? -1:-2) : (size < 3 ? 1:2))), false);
+					setSize.invoke(slime,(size + (shouldSetChild ? (size < 4 ? -1:-2) : (size < 2 ? 1:2))), false);
 				}
 			}
 			else if (checkBooflo(affected,shouldSetChild)) canChange = true;
-			else if(shouldSetChild ? !affected.isChild() : affected.isChild()){
+			else if(shouldSetChild != affected.isChild()){
 				canChange = true;
 				if(affected instanceof AgeableEntity) ((AgeableEntity)affected).setGrowingAge(growingAgeValue);
 				else if(shouldSetChild && affected instanceof CreeperEntity) convertCreeper((CreeperEntity)affected);
@@ -358,7 +368,7 @@ public class SREvents {
 	public static void convertCreeper(CreeperEntity creeper){
 		CreepieEntity creepie = SREntities.CREEPIE.get().create(creeper.world);
 		creepie.copyLocationAndAnglesFrom(creeper.getEntity());
-		creepie.onInitialSpawn(creeper.world, creeper.world.getDifficultyForLocation(new BlockPos(creepie)), SpawnReason.CONVERSION, null, (CompoundNBT)null);
+		creepie.onInitialSpawn(creeper.world, creeper.world.getDifficultyForLocation(new BlockPos(creepie)), SpawnReason.CONVERSION, null, null);
 		creeper.remove();
 		creepie.setNoAI(creeper.isAIDisabled());
 		if (creeper.hasCustomName()) {
