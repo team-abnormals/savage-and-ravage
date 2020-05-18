@@ -498,7 +498,6 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob {
         this.world.setEntityState(this, (byte)16);
     }
 
-
     private void finishConversion(ServerWorld world) {
         CreeperEntity creeperEntity = EntityType.CREEPER.create(this.world);
         creeperEntity.copyLocationAndAnglesFrom(this.getEntity());
@@ -514,8 +513,16 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob {
         if (this.isNoDespawnRequired()) {
             creeperEntity.enablePersistence();
         }
+        if(this.getLeashed()) {
+            creeperEntity.setLeashHolder(this.getLeashHolder(), true);
+            this.clearLeashed(true, false);
+        }
 
+        if(this.getRidingEntity() != null) {
+            creeperEntity.startRiding(this.getRidingEntity());
+        }
         creeperEntity.setInvulnerable(this.isInvulnerable());
+        creeperEntity.setHealth(creeperEntity.getMaxHealth());
         this.world.addEntity(creeperEntity);
         this.world.playEvent((PlayerEntity)null, 1026, new BlockPos(this), 0);
     }

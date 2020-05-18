@@ -354,6 +354,7 @@ public class SREvents {
 		}
 		return false;
 	}
+
 	public static void convertCreeper(CreeperEntity creeper){
 		CreepieEntity creepie = SREntities.CREEPIE.get().create(creeper.world);
 		creepie.copyLocationAndAnglesFrom(creeper.getEntity());
@@ -368,8 +369,16 @@ public class SREvents {
 		if (creeper.isNoDespawnRequired()) {
 			creepie.enablePersistence();
 		}
+		if(creeper.getLeashed()) {
+			creepie.setLeashHolder(creeper.getLeashHolder(), true);
+			creeper.clearLeashed(true, false);
+		}
 
+		if(creeper.getRidingEntity() != null) {
+			creepie.startRiding(creeper.getRidingEntity());
+		}
 		creepie.setInvulnerable(creeper.isInvulnerable());
+		creeper.setHealth(creeper.getMaxHealth());
 		creeper.world.addEntity(creepie);
 	}
 	
