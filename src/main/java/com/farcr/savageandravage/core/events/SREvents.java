@@ -74,7 +74,7 @@ public class SREvents {
 			ImprovedCrossbowGoal<PillagerEntity> aiCrossBow = new ImprovedCrossbowGoal<>(pillager, 1.0D, 8.0F, 5.0D);
 			 pillager.goalSelector.goals.stream().map(it -> it.inner).filter(it -> it instanceof RangedCrossbowAttackGoal<?>)
               .findFirst().ifPresent(crossbowGoal -> {
-     		    pillager.goalSelector.removeGoal(crossbowGoal);  
+     		    pillager.goalSelector.removeGoal(crossbowGoal);
      		    pillager.goalSelector.addGoal(3, aiCrossBow);
            });
 			 if (event.getWorld().rand.nextInt(100) == 0 && !event.getWorld().isRemote) {
@@ -83,13 +83,13 @@ public class SREvents {
 				 pillager.setDropChance(EquipmentSlotType.OFFHAND, 2.0F);
 			 }
 		}
-		
+
 		if (event.getEntity() instanceof AbstractVillagerEntity) {
 		   AbstractVillagerEntity villager = (AbstractVillagerEntity)event.getEntity();
 		   villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, SkeletonVillagerEntity.class, 15.0F, 0.5D, 0.5D));
 		}
 	}
-	
+
 	@SubscribeEvent
 	public static void onLivingDrops(LivingDropsEvent event) {
 	   if (event.getEntity() instanceof CreeperEntity) {
@@ -126,45 +126,45 @@ public class SREvents {
 			}
 			CreeperSporeCloudEntity spores = new CreeperSporeCloudEntity(SREntities.CREEPER_SPORE_CLOUD.get(), event.getWorld());
 			if (SRConfig.CreepersSpawnCreepiesWhenBoom) {
-			 spores.cloudSize = (creeper.isCharged() ? (int) (creeper.getHealth() / 2) : (int) (creeper.getHealth() / 5)); 
+			 spores.cloudSize = (creeper.isCharged() ? (int) (creeper.getHealth() / 2) : (int) (creeper.getHealth() / 5));
 			 spores.copyLocationAndAnglesFrom(creeper);
 			 creeper.world.addEntity(spores);
 			}
 		}
 	}
-	
+
 	@SubscribeEvent
 	public static void handleBlastProof(LivingDamageEvent event){
 		LivingEntity entity = event.getEntityLiving();
 		float decrease = 0.0F;
-		
+
 		boolean flag = false;
-		
+
 		ItemStack head = entity.getItemStackFromSlot(EquipmentSlotType.HEAD);
 		ItemStack chest = entity.getItemStackFromSlot(EquipmentSlotType.CHEST);
 		ItemStack legs = entity.getItemStackFromSlot(EquipmentSlotType.LEGS);
 		ItemStack feet = entity.getItemStackFromSlot(EquipmentSlotType.FEET);
-		
+
 		if (event.getSource().isExplosion()) {
 			if (head.getItem() == SRItems.GRIEFER_HELMET.get()) {
-				decrease += 0.25F; 
+				decrease += 0.25F;
 				flag = true;
 				SREvents.blastProtect(head, event.getEntityLiving());
 
 			}
 			if (chest.getItem() == SRItems.GRIEFER_CHESTPLATE.get()) {
-				decrease += 0.30F; 
+				decrease += 0.30F;
 				flag = true;
 				SREvents.blastProtect(chest, event.getEntityLiving());
 			}
 			if (legs.getItem() == SRItems.GRIEFER_LEGGINGS.get()) {
-				decrease += 0.25F; 
+				decrease += 0.25F;
 				flag = true;
 				SREvents.blastProtect(legs, event.getEntityLiving());
 
 			}
 			if (feet.getItem() == SRItems.GRIEFER_BOOTS.get()) {
-				decrease += 0.20F; 
+				decrease += 0.20F;
 				flag = true;
 				SREvents.blastProtect(feet, event.getEntityLiving());
 			}
@@ -173,7 +173,7 @@ public class SREvents {
 			}
 		}
 	}
-	
+
 	public static void blastProtect(ItemStack stack, LivingEntity entity) {
 		int damage = 22;
 		if (EnchantmentHelper.getEnchantmentLevel(Enchantments.BLAST_PROTECTION, stack) > 0) {
@@ -181,7 +181,7 @@ public class SREvents {
 		}
 		stack.damageItem(damage, entity, (onBroken) -> { onBroken.sendBreakAnimation(EquipmentSlotType.CHEST);});
 	}
-	
+
 	@SubscribeEvent
 	public static void onInteractWithEntity(PlayerInteractEvent.EntityInteract event){
 		Item heldItem = event.getItemStack().getItem();
@@ -203,30 +203,27 @@ public class SREvents {
 		}
 	}
 
-	/**
-	 * @author Vazkii (Vasco Lavos) - adapted from poison potato code in Quark
-	 * */
+	//Compatibility with Quark's potato poisoning
+	public static String poisonTag = "savageandravage:poisoned_by_potato";
+
 	public static void poisonCreepie(PlayerInteractEvent.EntityInteract event){
 		CreepieEntity creepie = (CreepieEntity)event.getTarget();
-		if(!creepie.getPersistentData().getBoolean("savageandravage:poison_potato_applied")) {
-			if(!event.getWorld().isRemote) {
-				Vec3d pos = creepie.getPositionVec();
-				if(creepie.world.rand.nextDouble() < SRConfig.PoisonChance) {
-					creepie.playSound(SoundEvents.ENTITY_GENERIC_EAT, 0.5f, 0.25f);
-					creepie.world.addParticle(ParticleTypes.ENTITY_EFFECT, pos.x, pos.y, pos.z, 0.2, 0.8, 0);
-					creepie.getPersistentData().putBoolean("savageandravage:poison_potato_applied", true);
-					if (SRConfig.PoisonEffect)
-						creepie.addPotionEffect(new EffectInstance(Effects.POISON, 200));
+		if(!creepie.getPersistentData().getBoolean(poisonTag) && !event.getWorld().isRemote) {
+			//Vec3d pos = creepie.getPositionVec();
+			event.getPlayer().swingArm(event.getHand());
+			if(creepie.world.rand.nextDouble() < SRConfig.PoisonChance) {
+				creepie.playSound(SoundEvents.ENTITY_GENERIC_EAT, 0.5f, 0.25f);
+				//TODO reactivate this if fixed in Quark
+				//if(((LivingEntity)target).isServerWorld()) ((ServerWorld)target.world).spawnParticle(ParticleTypes.ENTITY_EFFECT, pos.x, pos.y, pos.z, 5, 0, 1.0, 0, 0.8);
+				creepie.getPersistentData().putBoolean(poisonTag, true);
+				if(SRConfig.PoisonEffect) {
+					creepie.addPotionEffect(new EffectInstance(Effects.POISON, 200));
 				} else {
 					creepie.playSound(SoundEvents.ENTITY_GENERIC_EAT, 0.5f, 0.5f + creepie.world.rand.nextFloat() / 2);
-					creepie.world.addParticle(ParticleTypes.SMOKE, pos.x, pos.y, pos.z, 0, 0.1, 0);
+					//if(((LivingEntity)target).isServerWorld()) ((ServerWorld)target.world).spawnParticle(ParticleTypes.SMOKE, pos.x, pos.y, pos.z, 5, 0, 1.0, 0, 0.1);
 				}
-
-				if (!event.getPlayer().isCreative())
-					event.getItemStack().shrink(1);
-
-			} else event.getPlayer().swingArm(event.getHand());
-
+				if (!event.getPlayer().isCreative()) event.getItemStack().shrink(1);
+			}
 		}
 	}
 
@@ -234,9 +231,7 @@ public class SREvents {
 	public static void onEntityUpdate(LivingEvent.LivingUpdateEvent event) {
 		if(event.getEntity() instanceof CreepieEntity && SRConfig.PoisonPotatoCompatEnabled && ModList.get().isLoaded("quark")) {
 			CreepieEntity creepie = (CreepieEntity) event.getEntity();
-			if (creepie.getPersistentData().getBoolean("savageandravage:poison_potato_applied")){
-				creepie.setGrowingAge(-24000);
-			}
+			if(creepie.getPersistentData().getBoolean(poisonTag)) creepie.setGrowingAge(-24000);
 		}
 	}
 
