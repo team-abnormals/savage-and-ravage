@@ -339,7 +339,7 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob {
         if (itemstack.getItem() == Items.BONE_MEAL) {
             if (this.isNotCreeper()) {
                 this.consumeItemFromStack(player, itemstack);
-                player.func_226292_a_(hand, true); //this makes the player's hand swing
+                player.swing(hand, true); //this makes the player's hand swing
                 this.ageUp((int)((float)(-this.getGrowingAge() / 20) * 0.1F), true);
                 return true;
             }

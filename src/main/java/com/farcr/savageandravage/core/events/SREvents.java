@@ -98,10 +98,19 @@ public class SREvents {
 			creeper.entityDropItem(new ItemStack(SRItems.CREEPER_SPORES.get(), 1 + creeper.world.rand.nextInt(5)));
 		}
 	   }
-	   else if(event.getEntity() instanceof PillagerEntity) {
+	   //kinda messy rn will clean it up later, maybe use switch cases instead of this?
+	   else if (event.getEntity() instanceof PillagerEntity) {
 		PillagerEntity pillager = (PillagerEntity) event.getEntity();
-	   	if(pillager.isServerWorld() && ((ServerWorld)pillager.getEntityWorld()).findRaid(pillager.getPosition())!=null) {
+	   	if (pillager.isServerWorld() && ((ServerWorld)pillager.getEntityWorld()).findRaid(pillager.getPosition()) != null) {
 	   		pillager.entityDropItem(new ItemStack(Items.EMERALD, pillager.world.rand.nextInt(2)));
+	   		if (pillager.world.rand.nextDouble() < 0.05D) 
+	   		{
+	   			pillager.entityDropItem(new ItemStack(Items.EMERALD, 4 + pillager.world.rand.nextInt(1)));
+	   		}
+	   		if (pillager.world.rand.nextDouble() < 0.12D) 
+	   		{
+	   			pillager.entityDropItem(new ItemStack(Items.EMERALD, 2 + pillager.world.rand.nextInt(1)));
+	   		}
 		}
 	   }
 	}
