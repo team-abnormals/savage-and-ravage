@@ -17,8 +17,8 @@ public class SRSounds {
     public static final RegistryObject<SoundEvent> CREEPIE_BEGIN_CONVERSION =  createSound("entity.creepie.convert");
     public static final RegistryObject<SoundEvent> CREEPIE_GROW =  createSound("entity.creepie.grow");
     public static final RegistryObject<SoundEvent> RUNES_ACTIVATED = createSound("block.runed_gloomy_tiles.activated");
-    public static final RegistryObject<SoundEvent> GROWTH_MODIFICATION_SUCCESS = createSound("entity.generic.growth_modification_success");
-    public static final RegistryObject<SoundEvent> GROWTH_MODIFICATION_FAILURE = createSound("entity.generic.growth_modification_failure");
+    public static final RegistryObject<SoundEvent> GROWTH_MODIFICATION_SUCCESS = createSound("entity.generic.growth_success");
+    public static final RegistryObject<SoundEvent> GROWTH_MODIFICATION_FAILURE = createSound("entity.generic.growth_failure");
 
     public static RegistryObject<SoundEvent> createSound(String name) {
   		return SRSounds.SOUNDS.register(name, () -> new SoundEvent(new ResourceLocation(SavageAndRavage.MODID, name)));

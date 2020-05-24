@@ -46,18 +46,18 @@
     ],
     "subtitle": "savageandravage:subtitles.runed_gloomy_tiles.activated"
   },
-  "entity.generic.growth_modification_success": {
+  "entity.generic.growth_success": {
     "category": "neutral",
     "sounds": [
       "mob/zombie/unfect"
     ],
-    "subtitle": "savageandravage:subtitles.entity.generic.growth_modification_success"
+    "subtitle": "savageandravage:subtitles.generic.growth_success"
   },
-  "entity.generic.growth_modification_failure": {
+  "entity.generic.growth_failure": {
     "category": "neutral",
     "sounds": [
       "mob/zombie/infect"
     ],
-    "subtitle": "savageandravage:subtitles.entity.generic.growth_modification_failure"
+    "subtitle": "savageandravage:subtitles.generic.growth_failure"
   }
 }
