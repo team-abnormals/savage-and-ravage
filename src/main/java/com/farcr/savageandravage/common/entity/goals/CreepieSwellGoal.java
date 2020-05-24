@@ -55,6 +55,7 @@ public class CreepieSwellGoal extends Goal {
         else {
             this.swellingCreepie.setCreeperState(1);
             this.swellingCreepie.getNavigator().tryMoveToEntityLiving(creepieAttackTarget,0.8D);
+            //TODO work out why this is necessary so we can solve the problem with performant
         }
     }
 }

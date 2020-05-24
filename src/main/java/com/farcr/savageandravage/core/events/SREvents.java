@@ -14,6 +14,7 @@ import com.farcr.savageandravage.core.config.SRConfig;
 import com.farcr.savageandravage.core.registry.SREntities;
 import com.farcr.savageandravage.core.registry.SRItems;
 
+import com.farcr.savageandravage.core.registry.SRSounds;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.AbstractBannerBlock;
 import net.minecraft.block.Blocks;
@@ -356,7 +357,10 @@ public class SREvents {
 				effectInstance = new EffectInstance(shouldSetChild ? Effects.INSTANT_DAMAGE : Effects.INSTANT_HEALTH, 1, 1);
 				effectInstance.getPotion().affectEntity(null, null, affected, effectInstance.getAmplifier(), 1.0D);
 			}
-			if(affected.isServerWorld()) ((ServerWorld) affected.world).spawnParticle(canChange ? (shouldSetChild ? ParticleTypes.TOTEM_OF_UNDYING : ParticleTypes.HAPPY_VILLAGER) : ParticleTypes.LARGE_SMOKE, affected.getPosXRandom(0.3D), affected.getPosYRandom() - 0.1D, affected.getPosZRandom(0.3D), canChange ? 40 : 20, 0.3D, 0.6D, 0.3D, canChange ? 0.2D : 0.01D);
+			if(affected.isServerWorld()){
+				((ServerWorld) affected.world).spawnParticle(canChange ? (shouldSetChild ? ParticleTypes.TOTEM_OF_UNDYING : ParticleTypes.HAPPY_VILLAGER) : ParticleTypes.LARGE_SMOKE, affected.getPosXRandom(0.3D), affected.getPosYRandom() - 0.1D, affected.getPosZRandom(0.3D), canChange ? 40 : 20, 0.3D, 0.6D, 0.3D, canChange ? 0.2D : 0.01D);
+				affected.playSound(canChange? SRSounds.GROWTH_MODIFICATION_SUCCESS.get() : SRSounds.GROWTH_MODIFICATION_FAILURE.get(),1.0F,1.0F);
+			}
 		}
 	}
 

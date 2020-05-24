@@ -28,9 +28,13 @@
     "savageandravage:subtitles.creepie.hurt": "Creepie hurts",
     "savageandravage:subtitles.creepie.death": "Creepie dies",
 	"savageandravage:subtitles.creepie.fuse": "Creepie hisses",
+	"savageandravage:subtitles.creepie.convert": "Creepie starts converting",
+	"savageandravage:subtitles.creepie.grow": "Creepie grows into Creeper",
 	"savageandravage:subtitles.runed_gloomy_tiles.activated": "Runed Gloomy Tiles activate",
+	"savageandravage:subtitles.entity.generic.growth_modification_success": "Growth modification succeeds",
+	"savageandravage:subtitles.entity.generic.growth_modification_failure": "Growth modification fails",
 
-    "entity.savageandravage.skeleton_villager": "Skeleton Villager",
+	"entity.savageandravage.skeleton_villager": "Skeleton Villager",
     "item.savageandravage.skeleton_villager_spawn_egg": "Skeleton Villager Spawn Egg",
 
 	"effect.savageandravage.growth": "Growth",

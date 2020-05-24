@@ -14,6 +14,7 @@ import com.farcr.savageandravage.common.entity.goals.MobOwnerHurtTargetGoal;
 import com.farcr.savageandravage.core.registry.SRParticles;
 import com.farcr.savageandravage.core.registry.SRSounds;
 
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.ai.goal.HurtByTargetGoal;
@@ -495,13 +496,14 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob {
     private void startConverting( int conversionTimeIn) {
         this.conversionTime = conversionTimeIn;
         this.getDataManager().set(CONVERTING, true);
-        this.world.setEntityState(this, (byte)16);
+        if(this.isServerWorld()) this.playSound(SRSounds.CREEPIE_BEGIN_CONVERSION.get(),1.0F,1.0F);
+        //this.world.setEntityState(this, (byte)16);
     }
 
     private void finishConversion(ServerWorld world) {
         CreeperEntity creeperEntity = EntityType.CREEPER.create(this.world);
         creeperEntity.copyLocationAndAnglesFrom(this.getEntity());
-        creeperEntity.onInitialSpawn(this.world, this.world.getDifficultyForLocation(new BlockPos(creeperEntity)), SpawnReason.CONVERSION, null, (CompoundNBT)null);
+        creeperEntity.onInitialSpawn(this.world, this.world.getDifficultyForLocation(new BlockPos(creeperEntity)), SpawnReason.CONVERSION, null, null);
         this.dead = true;
         this.remove();
         creeperEntity.setNoAI(this.isAIDisabled());
@@ -524,13 +526,13 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob {
         creeperEntity.setInvulnerable(this.isInvulnerable());
         creeperEntity.setHealth(creeperEntity.getMaxHealth());
         this.world.addEntity(creeperEntity);
-        this.world.playEvent((PlayerEntity)null, 1026, new BlockPos(this), 0);
+        if(this.isServerWorld()) this.playSound(SRSounds.CREEPIE_GROW.get(),1.0F,1.0F);
     }
 
 
     /**
      * Handler for {@link World#setEntityState} - creates the sound for when the creepie starts converting
-     */
+     *//*
     @OnlyIn(Dist.CLIENT)
     public void handleStatusUpdate(byte id) {
         if (id == 16) {
@@ -541,7 +543,7 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob {
         } else {
             super.handleStatusUpdate(id);
         }
-    }
+    }*/
 
     public Team getTeam() {
         if (this.getOwnerId()!=null) {
