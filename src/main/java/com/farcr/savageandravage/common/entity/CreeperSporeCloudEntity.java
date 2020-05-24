@@ -1,5 +1,7 @@
 package com.farcr.savageandravage.common.entity;
 
+import java.util.List;
+
 import com.farcr.savageandravage.core.registry.SREntities;
 import com.farcr.savageandravage.core.registry.SRParticles;
 
@@ -13,14 +15,11 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.Effects;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
-
-import java.util.List;
 
 public class CreeperSporeCloudEntity extends ThrowableEntity {
 	
@@ -96,7 +95,8 @@ public class CreeperSporeCloudEntity extends ThrowableEntity {
         this.setTicksTillRemove(compound.getInt("TicksTillRemove"));
     }
     
-    public void tick() {
+    @SuppressWarnings("deprecation")
+	public void tick() {
     	super.tick();
     	this.world.addParticle(SRParticles.CREEPER_SPORES.get(), this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ() - 0.0D, 0.0D, 0.0D, 0.0D);
         if(shouldSpawnCreepies) {
