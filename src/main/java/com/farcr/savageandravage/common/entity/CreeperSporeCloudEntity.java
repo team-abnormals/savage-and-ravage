@@ -83,16 +83,16 @@ public class CreeperSporeCloudEntity extends ThrowableEntity {
     public void writeAdditional(CompoundNBT compound) {
         super.writeAdditional(compound);
         compound.putInt("TicksTillRemove",this.getTicksTillRemove());
-        //compound.putInt("Size", this.cloudSize);
+        compound.putInt("CloudSize", this.cloudSize);
     }
 
     @Override
     public void readAdditional(CompoundNBT compound) {
         super.readAdditional(compound);
-       /*if (compound.contains("Size", 99))
+       if (compound.contains("CloudSize", 99))
        {
-           this.cloudSize = compound.getInt("Size");
-       }*/
+           this.cloudSize = compound.getInt("CloudSize");
+       }
         this.setTicksTillRemove(compound.getInt("TicksTillRemove"));
     }
     
