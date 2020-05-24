@@ -15,14 +15,15 @@ public class CreeperSporesItem extends Item
 		super(properties);
 	}
 
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) 
-	{
+	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
 	      ItemStack itemstack = playerIn.getHeldItem(handIn);
 	      worldIn.playSound((PlayerEntity)null, playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ(), SoundEvents.ENTITY_EGG_THROW, SoundCategory.PLAYERS, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
-	      CreeperSporeCloudEntity spores = new CreeperSporeCloudEntity(worldIn, playerIn);
-	      spores.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 0.99F, 1.0F);
-	      spores.cloudSize = worldIn.rand.nextInt(50) == 0 ? 0 : 1 + spores.world.rand.nextInt(3);
-	      worldIn.addEntity(spores);
+	      if(!worldIn.isRemote) {
+			  CreeperSporeCloudEntity spores = new CreeperSporeCloudEntity(worldIn, playerIn);
+			  spores.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 0.99F, 1.0F);
+			  spores.cloudSize = worldIn.rand.nextInt(50) == 0 ? 0 : 1 + spores.world.rand.nextInt(3);
+			  worldIn.addEntity(spores);
+		  }
 
 	      playerIn.addStat(Stats.ITEM_USED.get(this));
 	      if (!playerIn.abilities.isCreativeMode) {

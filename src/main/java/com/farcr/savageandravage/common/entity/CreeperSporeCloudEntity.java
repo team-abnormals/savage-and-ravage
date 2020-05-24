@@ -9,17 +9,27 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.ThrowableEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.Effects;
+import net.minecraft.util.Direction;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
+import java.util.List;
+
 public class CreeperSporeCloudEntity extends ThrowableEntity {
 	
 	public int cloudSize = 1;
-	
-    public CreeperSporeCloudEntity(EntityType<? extends CreeperSporeCloudEntity> type, World worldIn)
-    {
+	private boolean shouldSpawnCreepies = false;
+    private static final DataParameter<Integer> TICKS_TILL_REMOVE = EntityDataManager.createKey(BurningBannerEntity.class, DataSerializers.VARINT);
+	private AreaEffectCloudEntity aoe;
+
+    public CreeperSporeCloudEntity(EntityType<? extends CreeperSporeCloudEntity> type, World worldIn) {
         super(type, worldIn);
     }
 
@@ -31,80 +41,105 @@ public class CreeperSporeCloudEntity extends ThrowableEntity {
         super(SREntities.CREEPER_SPORE_CLOUD.get(), x, y, z, worldIn);
     }
 
+
+    @Override
+    public void registerData(){
+        this.dataManager.register(TICKS_TILL_REMOVE, 1);
+    }
+
+    public int getTicksTillRemove() {
+        return this.dataManager.get(TICKS_TILL_REMOVE);
+    }
+
+    public void setTicksTillRemove(int tickCount) {
+        this.dataManager.set(TICKS_TILL_REMOVE, tickCount);
+    }
+
 	@Override
     protected void onImpact(RayTraceResult result) {
     	 this.summonCreepies();
     	 this.world.setEntityState(this, (byte) 3);
-         this.remove();
     }
     
     public void summonCreepies() {
-        AreaEffectCloudEntity aoe = new AreaEffectCloudEntity(world, this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ());
-        aoe.setOwner(this.getThrower());
-        aoe.setParticleData(SRParticles.CREEPER_SPORES.get());
-        for (int randoradius = 0; randoradius < world.rand.nextInt(); ++randoradius) {
-            aoe.setRadius(randoradius);
+        if (aoe == null) {
+            aoe = new AreaEffectCloudEntity(world, this.getPositionVec().getX(), this.getRenderBoundingBox().maxY-0.2, this.getPositionVec().getZ());
+            aoe.setOwner(this.getThrower());
+            aoe.setParticleData(SRParticles.CREEPER_SPORES.get());
+            for (int randoradius = 0; randoradius < world.rand.nextInt(); ++randoradius) {
+                aoe.setRadius(randoradius);
+            }
+            aoe.setRadius(cloudSize + 0.3F);
+            aoe.setRadiusOnUse(-0.05F);
+            aoe.setDuration(100);
+            aoe.setRadiusPerTick(-aoe.getRadius() / (float) aoe.getDuration());
+            this.world.addEntity(aoe);
+            shouldSpawnCreepies = true;
+            this.setTicksTillRemove(cloudSize * 20);
         }
-        aoe.setRadius(cloudSize + 0.3F);
-         aoe.setRadiusOnUse(-0.05F);
-         aoe.setDuration(100);
-         aoe.setRadiusPerTick(-aoe.getRadius() / (float) aoe.getDuration());
-         this.world.addEntity(aoe);
-         //if (aoe.ticksExisted <= 50.0)  //TODO an attempt on making not the creepies spawn instantly, i will work on this later.
-         for (int i = 0; i < cloudSize; ++i) {
-             CreepieEntity creepie = SREntities.CREEPIE.get().create(world);
-             creepie.setLocationAndAngles(aoe.getPosXRandom(0.1D), this.getPosY(), aoe.getPosZRandom(0.2D), 0.0F, 0.0F);
-             boolean throwerIsInvisible;
-             try { //TODO see if these two checks are needed
-                throwerIsInvisible = getThrower().isPotionActive(Effects.INVISIBILITY);
-             }
-             catch(NullPointerException nullPointer){
-                 throwerIsInvisible = false;
-                //swallowed because it doesn't matter if the thrower has no effect
-             }
-             if(!throwerIsInvisible) {
-                 try {
-                    creepie.setOwnerId(getThrower().getUniqueID());
-                 }
-                 catch (NullPointerException nullPointer) {
-                     creepie.setOwnerId(null);
-                 }
-             }
-            this.world.addEntity(creepie);
-            this.remove();
-         }
     }
-    
+
+    @Override
     public void writeAdditional(CompoundNBT compound) {
         super.writeAdditional(compound);
-        compound.putInt("Size", this.cloudSize);
-     }
+        compound.putInt("TicksTillRemove",this.getTicksTillRemove());
+        //compound.putInt("Size", this.cloudSize);
+    }
+
+    @Override
+    public void readAdditional(CompoundNBT compound) {
+        super.readAdditional(compound);
+       /*if (compound.contains("Size", 99))
+       {
+           this.cloudSize = compound.getInt("Size");
+       }*/
+        this.setTicksTillRemove(compound.getInt("TicksTillRemove"));
+    }
     
-    public void tick() 
-    {
+    public void tick() {
     	super.tick();
     	this.world.addParticle(SRParticles.CREEPER_SPORES.get(), this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ() - 0.0D, 0.0D, 0.0D, 0.0D);
+        if(shouldSpawnCreepies) {
+            this.setVelocity(0,0,0);
+            this.setTicksTillRemove(this.getTicksTillRemove()-1);
+            if(this.getTicksTillRemove() % 20 == 0) {
+                double xPos = aoe.getPosXRandom(0.1D);
+                double zPos = aoe.getPosZRandom(0.2D);
+                BlockPos pos = new BlockPos(xPos, this.getPosY(), zPos);
+                List<AxisAlignedBB> blockShapes = world.getBlockState(pos).getShape(world,pos).toBoundingBoxList();
+                boolean flag = true;
+                for(AxisAlignedBB box : blockShapes) {
+                    if(box.intersects(aoe.getBoundingBox())&&world.getBlockState(pos).getBlock().causesSuffocation(world.getBlockState(pos),world,pos)) flag = false;
+                }
+                if(flag) {
+                    CreepieEntity creepie = SREntities.CREEPIE.get().create(world);
+                    creepie.setLocationAndAngles(xPos, aoe.getPosY(), zPos, 0.0F, 0.0F);
+                    boolean throwerIsInvisible;
+                    try { //TODO see if these two checks are needed
+                        throwerIsInvisible = getThrower().isPotionActive(Effects.INVISIBILITY);
+                    } catch (NullPointerException nullPointer) {
+                        throwerIsInvisible = false;
+                        //swallowed because it doesn't matter if the thrower has no effect
+                    }
+                    if (!throwerIsInvisible) {
+                        try {
+                            creepie.setOwnerId(getThrower().getUniqueID());
+                        } catch (NullPointerException nullPointer) {
+                            creepie.setOwnerId(null);
+                        }
+                    }
+                    this.world.addEntity(creepie);
+                }
+            }
+            if(!aoe.isAlive()){
+                this.remove();
+            }
+        }
     }
     
     @Override
-    public IPacket<?> createSpawnPacket()
-    {
+    public IPacket<?> createSpawnPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
-    
-    public void readAdditional(CompoundNBT compound) 
-    {
-      super.readAdditional(compound);
-       if (compound.contains("Size", 99)) 
-       {
-           this.cloudSize = compound.getInt("Size");
-       }
-     }
-
-    @Override
-    protected void registerData() 
-    {
-        
-    }
 }
