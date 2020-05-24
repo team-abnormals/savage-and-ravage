@@ -14,10 +14,10 @@ public class NoModelRenderer extends EntityRenderer<Entity> {
         super(renderManager);
     }
     
-    @Override
+    /*@Override
     public boolean shouldRender(Entity livingEntityIn, ClippingHelperImpl camera, double camX, double camY, double camZ) {
 		return false;
-    }
+    }*/
 
     @Nullable
     @Override
