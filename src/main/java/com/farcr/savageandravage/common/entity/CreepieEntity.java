@@ -14,7 +14,6 @@ import com.farcr.savageandravage.common.entity.goals.MobOwnerHurtTargetGoal;
 import com.farcr.savageandravage.core.registry.SRParticles;
 import com.farcr.savageandravage.core.registry.SRSounds;
 
-import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.ai.goal.HurtByTargetGoal;
@@ -184,6 +183,11 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob {
         if (compound.contains("ConversionTime", 99) && compound.getInt("ConversionTime") > -1) {
             this.startConverting(compound.getInt("ConversionTime"));
         }
+    }
+
+    @Override
+    protected float getStandingEyeHeight(Pose poseIn, EntitySize sizeIn){
+        return sizeIn.height * 0.76F;
     }
 
     /**
@@ -528,22 +532,6 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob {
         this.world.addEntity(creeperEntity);
         if(this.isServerWorld()) this.playSound(SRSounds.CREEPIE_GROW.get(),1.0F,1.0F);
     }
-
-
-    /**
-     * Handler for {@link World#setEntityState} - creates the sound for when the creepie starts converting
-     *//*
-    @OnlyIn(Dist.CLIENT)
-    public void handleStatusUpdate(byte id) {
-        if (id == 16) {
-            if (!this.isSilent()) {
-                this.world.playSound(this.getPosX(), this.getPosYEye(), this.getPosZ(), SoundEvents.ENTITY_ZOMBIE_VILLAGER_CURE, this.getSoundCategory(), 0.5F + this.rand.nextFloat(), this.rand.nextFloat() * 0.7F + 0.3F, false);
-            }
-
-        } else {
-            super.handleStatusUpdate(id);
-        }
-    }*/
 
     public Team getTeam() {
         if (this.getOwnerId()!=null) {

@@ -38,6 +38,7 @@ import net.minecraft.entity.monster.ShulkerEntity;
 import net.minecraft.entity.monster.SlimeEntity;
 import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.passive.GolemEntity;
+import net.minecraft.entity.passive.ParrotEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -65,6 +66,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
@@ -79,7 +81,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 
-//TODO work out how to suppress these fucking useless null warnings, @SuppressWarnings doesn't seem to work everywhere
+//TODO work out how to suppress these useless null warnings, @SuppressWarnings doesn't seem to work everywhere
 
 @Mod.EventBusSubscriber(modid = SavageAndRavage.MODID)
 public class SREvents {
@@ -359,7 +361,7 @@ public class SREvents {
 			else if (checkBooflo(affected,shouldSetChild)) canChange = true;
 			else if(shouldSetChild != affected.isChild()){
 				canChange = true;
-				if(affected instanceof AgeableEntity) ((AgeableEntity)affected).setGrowingAge(growingAgeValue);
+				if(affected instanceof AgeableEntity && !(affected instanceof ParrotEntity)) ((AgeableEntity)affected).setGrowingAge(growingAgeValue);
 				else if(shouldSetChild && affected instanceof CreeperEntity) convertCreeper((CreeperEntity)affected);
 				else if(!shouldSetChild && affected instanceof CreepieEntity) ((CreepieEntity)affected).setGrowingAge(growingAgeValue);
 				else if(affected instanceof ZombieEntity) ((ZombieEntity)affected).setChild(shouldSetChild);
