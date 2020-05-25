@@ -12,9 +12,9 @@ import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectType;
 import net.minecraft.world.server.ServerWorld;
 
-public class EffectGrowth extends Effect {
+public class GrowingEffect extends Effect {
 
-    public EffectGrowth() {
+    public GrowingEffect() {
         super(EffectType.BENEFICIAL, 4184944);
     }
 

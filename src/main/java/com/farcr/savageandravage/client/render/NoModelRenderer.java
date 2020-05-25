@@ -2,7 +2,6 @@ package com.farcr.savageandravage.client.render;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.client.renderer.culling.ClippingHelperImpl;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.entity.Entity;

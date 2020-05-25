@@ -3,12 +3,17 @@ package com.farcr.savageandravage.common.block;
 import javax.annotation.Nullable;
 
 import com.farcr.savageandravage.common.entity.block.SporeBombEntity;
+import com.teamabnormals.abnormals_core.core.utils.ItemStackUtils;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.TNTBlock;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -44,4 +49,16 @@ public class SporeBombBlock extends TNTBlock
 		    worldIn.removeBlock(pos, false);
 		  }
     }
+	   
+	   @Override
+		public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
+			if(ItemStackUtils.isInGroup(this.asItem(), group)) {
+				int targetIndex = ItemStackUtils.findIndexOfItem(Items.TNT, items);
+				if(targetIndex != -1) {
+					items.add(targetIndex + 1, new ItemStack(this));
+				} else {
+					super.fillItemGroup(group, items);
+				}
+			}
+		}
 }
