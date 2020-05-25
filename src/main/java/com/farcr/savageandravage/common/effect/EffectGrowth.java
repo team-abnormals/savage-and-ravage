@@ -1,7 +1,8 @@
-package com.farcr.savageandravage.common;
+package com.farcr.savageandravage.common.effect;
 
 import com.farcr.savageandravage.common.entity.CreepieEntity;
 import com.farcr.savageandravage.core.events.SREvents;
+import com.farcr.savageandravage.core.registry.SREntities;
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.monster.SlimeEntity;
@@ -22,6 +23,7 @@ public class EffectGrowth extends Effect {
     public void performEffect(LivingEntity entity, int amplifier) {
         boolean canGrow = false;
         if(entity instanceof SlimeEntity && ((SlimeEntity)entity).getSlimeSize()<3) canGrow = true;
+        //else if(SREvents.checkAndOrGrowJellyfish(entity,false,false)) canGrow = true;
         else if(SREvents.checkBooflo(entity,false)) canGrow = true;
         else if(entity.isChild()){
             if((entity instanceof AgeableEntity && !(entity instanceof ParrotEntity)) || entity instanceof CreepieEntity || entity instanceof ZombieEntity) canGrow = true;

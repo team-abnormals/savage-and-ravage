@@ -1,4 +1,4 @@
-package com.farcr.savageandravage.common;
+package com.farcr.savageandravage.common.effect;
 
 import com.farcr.savageandravage.core.events.SREvents;
 import net.minecraft.entity.AgeableEntity;
@@ -22,6 +22,7 @@ public class EffectShrinking extends Effect {
     public void performEffect(LivingEntity entity, int amplifier) {
         boolean canBaby = false;
         if(entity instanceof SlimeEntity && ((SlimeEntity)entity).getSlimeSize()>1) canBaby = true;
+        //else if(SREvents.checkAndOrGrowJellyfish(entity,true,false)) canBaby = true;
         else if(SREvents.checkBooflo(entity,true)) canBaby = true;
         else if(!entity.isChild()) {
             if((entity instanceof AgeableEntity && !(entity instanceof ParrotEntity)) || entity instanceof CreeperEntity || entity instanceof ZombieEntity) canBaby = true;

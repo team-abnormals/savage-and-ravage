@@ -4,8 +4,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Random;
 
-import com.farcr.savageandravage.common.EffectGrowth;
-import com.farcr.savageandravage.common.EffectShrinking;
+import com.farcr.savageandravage.common.effect.EffectGrowth;
+import com.farcr.savageandravage.common.effect.EffectShrinking;
 import com.farcr.savageandravage.common.advancement.SRTriggers;
 import com.farcr.savageandravage.common.entity.BurningBannerEntity;
 import com.farcr.savageandravage.common.entity.CreeperSporeCloudEntity;
@@ -50,6 +50,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
@@ -66,7 +67,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
@@ -358,7 +358,8 @@ public class SREvents {
 					setSize.invoke(slime,(size + (shouldSetChild ? (size < 4 ? -1:-2) : (size < 2 ? 1:2))), false);
 				}
 			}
-			else if (checkBooflo(affected,shouldSetChild)) canChange = true;
+			//else if(checkAndOrGrowJellyfish(affected,shouldSetChild,true)) canChange = true;
+			else if(checkBooflo(affected,shouldSetChild)) canChange = true;
 			else if(shouldSetChild != affected.isChild()){
 				canChange = true;
 				if(affected instanceof AgeableEntity && !(affected instanceof ParrotEntity)) ((AgeableEntity)affected).setGrowingAge(growingAgeValue);
@@ -389,6 +390,26 @@ public class SREvents {
 		}
 		return false;
 	}
+
+	//TODO come back to this when jellyfish are complete and try to fix lag problem
+	/*public static boolean checkAndOrGrowJellyfish(LivingEntity affected, boolean isShrinkPotion, boolean shouldChangeSize){
+		if(ModList.get().isLoaded("upgrade_aquatic") && affected.getType() == ForgeRegistries.ENTITIES.getValue(new ResourceLocation("upgrade_aquatic:box_jellyfish"))
+		|| affected.getType() == ForgeRegistries.ENTITIES.getValue(new ResourceLocation("upgrade_aquatic:cassiopea_jellyfish"))) {
+			try{
+				Method sizeSetter = ObfuscationReflectionHelper.findMethod(affected.getClass(),"setSize",float.class,boolean.class);
+				Method sizeGetter = ObfuscationReflectionHelper.findMethod(affected.getClass(),"getSize");
+				float size = (float) sizeGetter.invoke(affected);
+				if(!isShrinkPotion || size >= 2.0F){
+					if(shouldChangeSize) sizeSetter.invoke(affected,isShrinkPotion ? size - 1.0F : size + 1.0F ,false);
+					return true;
+				}
+			}
+			catch(IllegalAccessException | InvocationTargetException no){
+
+			}
+		}
+		return false;
+	}*/
 
 	public static void convertCreeper(CreeperEntity creeper){
 		CreepieEntity creepie = SREntities.CREEPIE.get().create(creeper.world);
