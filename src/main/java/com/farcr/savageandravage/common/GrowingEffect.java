@@ -26,6 +26,7 @@ public class GrowingEffect extends Effect {
         else if(entity.isChild()){
             if((entity instanceof AgeableEntity && !(entity instanceof ParrotEntity)) || entity instanceof CreepieEntity || entity instanceof ZombieEntity) canGrow = true;
         }
+        
         if(canGrow && entity.getRNG().nextInt(3)==0){
             if(entity.isServerWorld()) ((ServerWorld) entity.world).spawnParticle(ParticleTypes.HAPPY_VILLAGER, entity.getPosXRandom(0.3D), entity.getPosYRandom(), entity.getPosZRandom(0.3D), 1, 0.3D, 0.3D, 0.3D, 1.0D);
         }
