@@ -4,9 +4,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Random;
 
-import com.farcr.savageandravage.common.GrowingEffect;
-import com.farcr.savageandravage.common.ShrinkingEffect;
 import com.farcr.savageandravage.common.advancement.SRTriggers;
+import com.farcr.savageandravage.common.effect.GrowingEffect;
+import com.farcr.savageandravage.common.effect.ShrinkingEffect;
 import com.farcr.savageandravage.common.entity.BurningBannerEntity;
 import com.farcr.savageandravage.common.entity.CreeperSporeCloudEntity;
 import com.farcr.savageandravage.common.entity.CreepieEntity;

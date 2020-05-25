@@ -1,4 +1,4 @@
-package com.farcr.savageandravage.common;
+package com.farcr.savageandravage.common.effect;
 
 import com.farcr.savageandravage.core.events.SREvents;
 import net.minecraft.entity.AgeableEntity;

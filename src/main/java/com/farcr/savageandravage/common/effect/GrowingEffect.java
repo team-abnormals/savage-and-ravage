@@ -1,4 +1,4 @@
-package com.farcr.savageandravage.common;
+package com.farcr.savageandravage.common.effect;
 
 import com.farcr.savageandravage.common.entity.CreepieEntity;
 import com.farcr.savageandravage.core.events.SREvents;

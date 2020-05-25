@@ -1,7 +1,7 @@
 package com.farcr.savageandravage.core.registry;
 
-import com.farcr.savageandravage.common.ShrinkingEffect;
-import com.farcr.savageandravage.common.GrowingEffect;
+import com.farcr.savageandravage.common.effect.GrowingEffect;
+import com.farcr.savageandravage.common.effect.ShrinkingEffect;
 import com.farcr.savageandravage.core.SavageAndRavage;
 
 import net.minecraft.item.Items;
