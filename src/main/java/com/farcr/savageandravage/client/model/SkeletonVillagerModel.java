@@ -103,22 +103,11 @@ public class SkeletonVillagerModel extends SegmentedModel<SkeletonVillagerEntity
 	   }  else {
 		   boolean flag = entityIn.isAggressive();
 		   // hacky but gives me time to work on the real monsters.
-		   if (flag) 
-		   {
-		     this.RightClosedArm.showModel = false;
-		     this.LeftClosedArm.showModel = false;
-		     this.MiddleClosedArm.showModel = false;
-		     this.LeftArm.showModel = true;
-	  	     this.RightArm.showModel = true;
-		   } 
-		   if (!flag) 
-		   {
-		  	     this.RightClosedArm.showModel = true;
-		  	     this.LeftClosedArm.showModel = true;
-		  	     this.MiddleClosedArm.showModel = true;
-		  	     this.LeftArm.showModel = false;
-		  	     this.RightArm.showModel = false;
-		    }
+		     this.RightClosedArm.showModel = !flag;
+		     this.LeftClosedArm.showModel = !flag;
+		     this.MiddleClosedArm.showModel = !flag;
+		     this.LeftArm.showModel = flag;
+	  	     this.RightArm.showModel = flag;
 	   this.Head.rotateAngleY = netHeadYaw * ((float)Math.PI / 180F);
 	   this.Head.rotateAngleX = headPitch * ((float)Math.PI / 180F);
 	   this.RightLeg.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
