@@ -15,7 +15,7 @@ import net.minecraft.world.server.ServerWorld;
 public class GrowingEffect extends Effect {
 
     public GrowingEffect() {
-        super(EffectType.BENEFICIAL, 4184944);
+        super(EffectType.BENEFICIAL, 8247444);
     }
 
     @Override
