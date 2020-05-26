@@ -96,7 +96,7 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob {
     }
 
     /**
-     * The maximum height from where the entity is alowed to jump (used in pathfinder)
+     * The maximum height from where the entity is allowed to jump (used in pathfinder)
      */
     public int getMaxFallHeight() {
         return this.getAttackTarget() == null ? 3 : 3 + (int)(this.getHealth() - 1.0F);
@@ -187,7 +187,7 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob {
 
     @Override
     protected float getStandingEyeHeight(Pose poseIn, EntitySize sizeIn){
-        return sizeIn.height * 0.76F;
+        return sizeIn.height * 0.50F;
     }
 
     /**

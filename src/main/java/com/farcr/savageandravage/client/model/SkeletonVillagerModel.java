@@ -100,25 +100,13 @@ public class SkeletonVillagerModel extends SegmentedModel<SkeletonVillagerEntity
 	     this.LeftLeg.rotateAngleX = -1.4137167F;
 	     this.LeftLeg.rotateAngleY = (-(float)Math.PI / 10F);
 	     this.LeftLeg.rotateAngleZ = -0.07853982F;
-	   }  else {
-		   boolean flag = entityIn.isAggressive();
-		   // hacky but gives me time to work on the real monsters.
-		   if (flag) 
-		   {
-		     this.RightClosedArm.showModel = false;
-		     this.LeftClosedArm.showModel = false;
-		     this.MiddleClosedArm.showModel = false;
-		     this.LeftArm.showModel = true;
-	  	     this.RightArm.showModel = true;
-		   } 
-		   if (!flag) 
-		   {
-		  	     this.RightClosedArm.showModel = true;
-		  	     this.LeftClosedArm.showModel = true;
-		  	     this.MiddleClosedArm.showModel = true;
-		  	     this.LeftArm.showModel = false;
-		  	     this.RightArm.showModel = false;
-		    }
+	   } else {
+	   boolean flag = entityIn.isAggressive();
+	   this.RightClosedArm.showModel = !flag;
+	   this.LeftClosedArm.showModel = !flag;
+	   this.MiddleClosedArm.showModel = !flag;
+	   this.LeftArm.showModel = flag;
+	   this.RightArm.showModel = flag;
 	   this.Head.rotateAngleY = netHeadYaw * ((float)Math.PI / 180F);
 	   this.Head.rotateAngleX = headPitch * ((float)Math.PI / 180F);
 	   this.RightLeg.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
@@ -140,10 +128,30 @@ public class SkeletonVillagerModel extends SegmentedModel<SkeletonVillagerEntity
        this.LeftArm.rotateAngleY = 0.0F;
        this.LeftArm.rotateAngleZ = 0.0F;
        if (entityIn.isAggressive() && (itemstack.isEmpty() || !(itemstack.getItem() instanceof ShootableItem))) {
-           this.LeftArm.rotateAngleX -= f * 2.2F - f1 * 0.4F;
-           this.LeftArm.rotateAngleZ -= f * 1.0 - f1 * 1.0F;
-           this.RightArm.rotateAngleX -= f * 2.2F - f1 * 0.4F;
-           this.RightArm.rotateAngleZ -= f * 1.0 - f1 * 1.0F;
+               HandSide handside = entityIn.getPrimaryHand();
+               ModelRenderer modelrenderer = this.getArmForSide(handside);
+               float f2 = this.swingProgress;
+               this.Body.rotateAngleY = MathHelper.sin(MathHelper.sqrt(f1) * ((float)Math.PI * 2F)) * 0.2F;
+               if (handside == HandSide.LEFT) {
+                  this.Body.rotateAngleY *= -1.0F;
+               }
+
+               this.RightArm.rotationPointZ = MathHelper.sin(this.Body.rotateAngleY) * 5.0F;
+               this.RightArm.rotationPointX = -MathHelper.cos(this.Body.rotateAngleY) * 5.0F;
+               this.LeftArm.rotationPointZ = -MathHelper.sin(this.Body.rotateAngleY) * 5.0F;
+               this.LeftArm.rotationPointX = MathHelper.cos(this.Body.rotateAngleY) * 5.0F;
+               this.RightArm.rotateAngleY += this.Body.rotateAngleY;
+               this.LeftArm.rotateAngleY += this.Body.rotateAngleY;
+               this.LeftArm.rotateAngleX += this.Body.rotateAngleY;
+               f1 = 1.0F - this.swingProgress;
+               f1 = f1 * f1;
+               f1 = f1 * f1;
+               f1 = 1.0F - f1;
+               float f3 = MathHelper.sin(this.swingProgress * (float)Math.PI) * -(this.Head.rotateAngleX - 0.7F) * 0.75F;
+               modelrenderer.rotateAngleX = (float)((double)modelrenderer.rotateAngleX - ((double)f2 * 1.2D + (double)f3));
+               modelrenderer.rotateAngleY += this.Body.rotateAngleY * 2.0F;
+               modelrenderer.rotateAngleZ += MathHelper.sin(this.swingProgress * (float)Math.PI) * -0.4F;
+            }
        }
        if (itemstack.getItem() instanceof CrossbowItem) 
        {
@@ -183,7 +191,6 @@ public class SkeletonVillagerModel extends SegmentedModel<SkeletonVillagerEntity
           }
        }
        }
-	   }
 	}
 	
 	@Override

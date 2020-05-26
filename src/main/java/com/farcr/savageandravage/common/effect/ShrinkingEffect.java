@@ -1,4 +1,4 @@
-package com.farcr.savageandravage.common;
+package com.farcr.savageandravage.common.effect;
 
 import com.farcr.savageandravage.core.events.SREvents;
 import net.minecraft.entity.AgeableEntity;
@@ -12,9 +12,9 @@ import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectType;
 import net.minecraft.world.server.ServerWorld;
 
-public class EffectShrinking extends Effect {
+public class ShrinkingEffect extends Effect {
 
-    public EffectShrinking() {
+    public ShrinkingEffect() {
         super(EffectType.NEUTRAL, 10400767);
     }
 

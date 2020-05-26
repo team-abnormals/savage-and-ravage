@@ -1,4 +1,4 @@
-package com.farcr.savageandravage.common;
+package com.farcr.savageandravage.common.effect;
 
 import com.farcr.savageandravage.common.entity.CreepieEntity;
 import com.farcr.savageandravage.core.events.SREvents;
@@ -12,10 +12,10 @@ import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectType;
 import net.minecraft.world.server.ServerWorld;
 
-public class EffectGrowth extends Effect {
+public class GrowingEffect extends Effect {
 
-    public EffectGrowth() {
-        super(EffectType.BENEFICIAL, 4184944);
+    public GrowingEffect() {
+        super(EffectType.BENEFICIAL, 8247444);
     }
 
     @Override
@@ -26,6 +26,7 @@ public class EffectGrowth extends Effect {
         else if(entity.isChild()){
             if((entity instanceof AgeableEntity && !(entity instanceof ParrotEntity)) || entity instanceof CreepieEntity || entity instanceof ZombieEntity) canGrow = true;
         }
+        
         if(canGrow && entity.getRNG().nextInt(3)==0){
             if(entity.isServerWorld()) ((ServerWorld) entity.world).spawnParticle(ParticleTypes.HAPPY_VILLAGER, entity.getPosXRandom(0.3D), entity.getPosYRandom(), entity.getPosZRandom(0.3D), 1, 0.3D, 0.3D, 0.3D, 1.0D);
         }

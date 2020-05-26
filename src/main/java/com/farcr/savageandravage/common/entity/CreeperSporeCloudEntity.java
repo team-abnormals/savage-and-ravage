@@ -62,19 +62,16 @@ public class CreeperSporeCloudEntity extends ThrowableEntity {
     
     public void summonCreepies() {
         if (aoe == null) {
-            aoe = new AreaEffectCloudEntity(world, this.getPositionVec().getX(), this.getRenderBoundingBox().maxY-0.2, this.getPositionVec().getZ());
+            aoe = new AreaEffectCloudEntity(world, this.getPositionVec().getX(), this.getBoundingBox().maxY-0.2, this.getPositionVec().getZ());
             aoe.setOwner(this.getThrower());
             aoe.setParticleData(SRParticles.CREEPER_SPORES.get());
-            for (int randoradius = 0; randoradius < world.rand.nextInt(); ++randoradius) {
-                aoe.setRadius(randoradius);
-            }
             aoe.setRadius(cloudSize + 0.3F);
             aoe.setRadiusOnUse(-0.05F);
-            aoe.setDuration(100);
+            aoe.setDuration((cloudSize * 20) + 40);
             aoe.setRadiusPerTick(-aoe.getRadius() / (float) aoe.getDuration());
             this.world.addEntity(aoe);
             shouldSpawnCreepies = true;
-            this.setTicksTillRemove(cloudSize * 20);
+            this.setTicksTillRemove((cloudSize * 20) + 40);
         }
     }
 
@@ -100,10 +97,10 @@ public class CreeperSporeCloudEntity extends ThrowableEntity {
     	super.tick();
     	this.world.addParticle(SRParticles.CREEPER_SPORES.get(), this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ() - 0.0D, 0.0D, 0.0D, 0.0D);
         if(shouldSpawnCreepies) {
-            this.setVelocity(0,0,0);
+            this.setMotion(0,0,0);
             this.setTicksTillRemove(this.getTicksTillRemove()-1);
             if(this.getTicksTillRemove() % 20 == 0) {
-                double xPos = aoe.getPosXRandom(0.1D);
+                    double xPos = aoe.getPosXRandom(0.1D);
                 double zPos = aoe.getPosZRandom(0.2D);
                 BlockPos pos = new BlockPos(xPos, this.getPosY(), zPos);
                 List<AxisAlignedBB> blockShapes = world.getBlockState(pos).getShape(world,pos).toBoundingBoxList();

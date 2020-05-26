@@ -4,9 +4,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Random;
 
-import com.farcr.savageandravage.common.EffectGrowth;
-import com.farcr.savageandravage.common.EffectShrinking;
 import com.farcr.savageandravage.common.advancement.SRTriggers;
+import com.farcr.savageandravage.common.effect.GrowingEffect;
+import com.farcr.savageandravage.common.effect.ShrinkingEffect;
 import com.farcr.savageandravage.common.entity.BurningBannerEntity;
 import com.farcr.savageandravage.common.entity.CreeperSporeCloudEntity;
 import com.farcr.savageandravage.common.entity.CreepieEntity;
@@ -17,8 +17,8 @@ import com.farcr.savageandravage.core.SavageAndRavage;
 import com.farcr.savageandravage.core.config.SRConfig;
 import com.farcr.savageandravage.core.registry.SREntities;
 import com.farcr.savageandravage.core.registry.SRItems;
-
 import com.farcr.savageandravage.core.registry.SRSounds;
+
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.AbstractBannerBlock;
 import net.minecraft.block.Blocks;
@@ -66,7 +66,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
@@ -80,8 +79,6 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.ForgeRegistries;
-
-//TODO work out how to suppress these useless null warnings, @SuppressWarnings doesn't seem to work everywhere
 
 @Mod.EventBusSubscriber(modid = SavageAndRavage.MODID)
 public class SREvents {
@@ -269,7 +266,6 @@ public class SREvents {
 		Item heldItem = event.getItemStack().getItem();
 		PlayerEntity player = event.getPlayer();
 		BlockPos blockPos = event.getPos();
-		@SuppressWarnings("null")
 		ResourceLocation pot = new ResourceLocation(("savageandravage:potted_" + heldItem.getRegistryName().getPath()));
 		if (event.getWorld().getBlockState(blockPos).getBlock() == Blocks.FLOWER_POT && ForgeRegistries.BLOCKS.containsKey(pot)) {
 			event.getWorld().setBlockState(blockPos, ForgeRegistries.BLOCKS.getValue(pot).getDefaultState());
@@ -343,11 +339,11 @@ public class SREvents {
 		//Values initialised for what they should be if the potion is growth
 		boolean shouldSetChild = false;
 		int growingAgeValue = 0;
-		if(event.getPotionEffect().getPotion() instanceof EffectShrinking){
+		if(event.getPotionEffect().getPotion() instanceof ShrinkingEffect){
 			shouldSetChild = true;
 			growingAgeValue = -24000;
 		}
-		if(event.getPotionEffect().getPotion() instanceof EffectGrowth || shouldSetChild) {
+		if(event.getPotionEffect().getPotion() instanceof GrowingEffect || shouldSetChild) {
 			boolean canChange = false;
 			if(affected instanceof SlimeEntity){
 				SlimeEntity slime = (SlimeEntity)affected;
