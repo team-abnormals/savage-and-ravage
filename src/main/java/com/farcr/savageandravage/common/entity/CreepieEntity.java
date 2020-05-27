@@ -447,7 +447,7 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob {
     }
 
     public boolean canBeLeashedTo(PlayerEntity player) {
-        return !this.getLeashed();
+        return (!this.getLeashed() && this.getOwnerId() != null);
     }
 
 
