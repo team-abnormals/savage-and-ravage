@@ -53,7 +53,7 @@ public class SkeletonVillagerModel extends SegmentedModel<SkeletonVillagerEntity
         this.RightClosedArm = new ModelRenderer(this, 32, 0);
         this.RightClosedArm.setRotationPoint(0.0F, 0.0F, 0.0F);
         this.RightClosedArm.addBox(-7.0F, -2.0F, -1.0F, 3, 8, 3, 0.0F);
-        this.Nose = new ModelRenderer(this, 24, 0);
+        this.Nose = new ModelRenderer(this, 24,  0);
         this.Nose.setRotationPoint(0.0F, -3.0F, -4.0F);
         this.Nose.addBox(-1.0F, 0.0F, -2.0F, 2, 4, 2, 0.0F);
         this.RightArm = new ModelRenderer(this, 40, 19);

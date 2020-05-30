@@ -1,11 +1,13 @@
 package com.farcr.savageandravage.client.model;
 
 import com.farcr.savageandravage.common.entity.GrieferEntity;
+import com.google.common.collect.ImmutableList;
 
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorItem;
+import net.minecraft.util.math.MathHelper;
 
 //should convert this to endimated model later
 public class GrieferModel extends BipedModel<GrieferEntity>
@@ -15,6 +17,7 @@ public class GrieferModel extends BipedModel<GrieferEntity>
     public ModelRenderer tnt;
     public ModelRenderer pouch;
     public ModelRenderer shoulderPad;
+    public float kickingTime;
 
     public GrieferModel(float f) {
     	super(f);
@@ -51,6 +54,7 @@ public class GrieferModel extends BipedModel<GrieferEntity>
         this.bipedLeftArm = new ModelRenderer(this, 16, 18);
         this.bipedLeftArm.setRotationPoint(5.0F, 2.0F, 0.0F);
         this.bipedLeftArm.addBox(-1.0F, -2.0F, -2.0F, 4, 12, 4, 0.0F);
+        this.bipedLeftArm.mirror = true;
         this.bipedBody2Layer = new ModelRenderer(this, 36, 18);
         this.bipedBody2Layer.setRotationPoint(0.0F, 0.0F, 0.0F);
         this.bipedBody2Layer.addBox(-4.0F, 0.0F, -3.0F, 8, 12, 6, 0.03F);
@@ -59,14 +63,28 @@ public class GrieferModel extends BipedModel<GrieferEntity>
         this.bipedBody.addChild(this.pouch);
         this.bipedRightArm.addChild(this.shoulderPad);
     }
+    
+    protected Iterable<ModelRenderer> getBodyParts() {
+        return ImmutableList.of(this.bipedBody, this.bipedRightArm, this.bipedLeftArm, this.bipedRightLeg, this.bipedLeftLeg, this.bipedBody2Layer);
+     }
 
 	@Override
 	public void setRotationAngles(GrieferEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netbipedbipedHeadYaw, float bipedbipedHeadPitch){
 		super.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netbipedbipedHeadYaw, bipedbipedHeadPitch);
 		this.bipedHeadwear.showModel = false;
 		boolean flag = entityIn.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() instanceof ArmorItem;
-		this.shoulderPad.showModel = flag;
+		this.shoulderPad.showModel = !flag;
+        if (entityIn.isKicking())
+        {
+        	 float f1 = MathHelper.clamp(this.kickingTime,  0.0F, 25.0F);
+        	 this.bipedRightLeg.rotateAngleX = MathHelper.lerp(f1 / 10.0F, -1.40F, 1.05F);
+        }
 	}
+	
+    public void setLivingAnimations(GrieferEntity entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
+        this.kickingTime = (float)entityIn.getKickTicks();
+        super.setLivingAnimations(entityIn, limbSwing, limbSwingAmount, partialTick);
+     }
 
 	public void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) {
 		modelRenderer.rotateAngleX = x;

@@ -10,6 +10,7 @@ import com.farcr.savageandravage.common.effect.ShrinkingEffect;
 import com.farcr.savageandravage.common.entity.BurningBannerEntity;
 import com.farcr.savageandravage.common.entity.CreeperSporeCloudEntity;
 import com.farcr.savageandravage.common.entity.CreepieEntity;
+import com.farcr.savageandravage.common.entity.GrieferEntity;
 import com.farcr.savageandravage.common.entity.IOwnableMob;
 import com.farcr.savageandravage.common.entity.SkeletonVillagerEntity;
 import com.farcr.savageandravage.common.entity.goals.ImprovedCrossbowGoal;
@@ -101,7 +102,8 @@ public class SREvents {
 
 		if (event.getEntity() instanceof AbstractVillagerEntity) {
 		   AbstractVillagerEntity villager = (AbstractVillagerEntity)event.getEntity();
-		   villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, SkeletonVillagerEntity.class, 15.0F, 0.5D, 0.5D));
+		   villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, SkeletonVillagerEntity.class, 15.0F, 1.0D, 1.0D));
+		   villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, GrieferEntity.class, 15.0F, 1.0D, 1.0D));
 		}
 	}
 
