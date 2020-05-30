@@ -32,18 +32,18 @@ public class GrieferRenderer extends BipedRenderer<GrieferEntity, GrieferModel> 
     }
 	
     private void setModelVisibilities(GrieferEntity entityIn) {
-        GrieferModel guardmodel = this.getEntityModel();
+        GrieferModel griefermodel = this.getEntityModel();
            ItemStack itemstack = entityIn.getHeldItemMainhand();
            ItemStack itemstack1 = entityIn.getHeldItemOffhand();
-           guardmodel.setVisible(true);
+           griefermodel.setVisible(true);
            BipedModel.ArmPose bipedmodel$armpose = this.getArmPose(entityIn, itemstack, itemstack1, Hand.MAIN_HAND);
            BipedModel.ArmPose bipedmodel$armpose1 = this.getArmPose(entityIn, itemstack, itemstack1, Hand.OFF_HAND);
            if (entityIn.getPrimaryHand() == HandSide.RIGHT) {
-              guardmodel.rightArmPose = bipedmodel$armpose;
-              guardmodel.leftArmPose = bipedmodel$armpose1;
+              griefermodel.rightArmPose = bipedmodel$armpose;
+              griefermodel.leftArmPose = bipedmodel$armpose1;
            } else {
-              guardmodel.rightArmPose = bipedmodel$armpose1;
-              guardmodel.leftArmPose = bipedmodel$armpose;
+              griefermodel.rightArmPose = bipedmodel$armpose1;
+              griefermodel.leftArmPose = bipedmodel$armpose;
            }
      }
 	
