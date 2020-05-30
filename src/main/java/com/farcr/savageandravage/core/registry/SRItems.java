@@ -23,6 +23,7 @@ public class SRItems {
 	public static final RegistryObject<Item> GRIEFER_LEGGINGS 		= HELPER.createItem("griefer_leggings", () -> new GrieferArmorItem("25", SRArmorMaterial.GRIEFER, EquipmentSlotType.LEGS, new Item.Properties().group(ItemGroup.COMBAT)));
 	public static final RegistryObject<Item> GRIEFER_BOOTS 			= HELPER.createItem("griefer_boots", () -> new GrieferArmorItem("20", SRArmorMaterial.GRIEFER, EquipmentSlotType.FEET, new Item.Properties().group(ItemGroup.COMBAT)));
 	
-	public static final RegistryObject<Item> SKELETON_VILLAGER_SPAWN_EGG = HELPER.createSpawnEggItem("skeleton_villager", () -> SREntities.SKELETON_VILLAGER.get(), 11447986, 9407641);
+	public static final RegistryObject<Item> SKELETON_VILLAGER_SPAWN_EGG = HELPER.createSpawnEggItem("skeleton_villager", SREntities.SKELETON_VILLAGER::get, 11447986, 9407641);
+	public static final RegistryObject<Item> GRIEFER_SPAWN_EGG = HELPER.createSpawnEggItem("griefer", SREntities.GRIEFER::get, 8296024, 16037892);
 
 }

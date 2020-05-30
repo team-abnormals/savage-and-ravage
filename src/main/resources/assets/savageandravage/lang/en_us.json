@@ -35,7 +35,9 @@
 	"savageandravage:subtitles.generic.growth_failure": "Growth fails",
 
 	"entity.savageandravage.skeleton_villager": "Skeleton Villager",
+	"entity.savageandravage.griefer": "Griefer",
     "item.savageandravage.skeleton_villager_spawn_egg": "Skeleton Villager Spawn Egg",
+	"item.savageandravage.griefer_spawn_egg": "Griefer Spawn Egg",
 
 	"effect.savageandravage.growth": "Growing",
 	"item.minecraft.potion.effect.growing": "Potion of Growth",
