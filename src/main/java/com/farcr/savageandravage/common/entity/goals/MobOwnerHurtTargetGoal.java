@@ -26,13 +26,13 @@ public class MobOwnerHurtTargetGoal extends TargetGoal {
      */
     public boolean shouldExecute() {
         if (this.defendingEntity.getOwnerId()!=null) {
-            LivingEntity livingentity = this.defendingEntity.getOwner();
-            if (livingentity == null) {
+            LivingEntity owner = this.defendingEntity.getOwner();
+            if (owner == null) {
                 return false;
             } else {
-                this.attacker = livingentity.getLastAttackedEntity();
-                int i = livingentity.getLastAttackedEntityTime();
-                return i != this.timestamp && this.isSuitableTarget(this.attacker, EntityPredicate.DEFAULT) && this.defendingEntity.shouldAttackEntity(this.attacker, livingentity);
+                this.attacker = owner instanceof MobEntity ? ((MobEntity)owner).getAttackTarget() : owner.getLastAttackedEntity();
+                int i = owner.getLastAttackedEntityTime();
+                return /*i != this.timestamp &&*/ this.isSuitableTarget(this.attacker, EntityPredicate.DEFAULT) && this.defendingEntity.shouldAttackEntity(this.attacker, owner);
             }
         } else {
             return false;

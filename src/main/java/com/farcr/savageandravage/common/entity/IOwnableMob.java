@@ -5,6 +5,7 @@ import java.util.UUID;
 import javax.annotation.Nullable;
 
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.nbt.CompoundNBT;
 
 public interface IOwnableMob {
@@ -12,6 +13,4 @@ public interface IOwnableMob {
     UUID getOwnerId();
     void setOwnerId(@Nullable UUID uuid);
     boolean shouldAttackEntity(LivingEntity target, LivingEntity owner);
-    void writeAdditional(CompoundNBT compound);
-    void readAdditional(CompoundNBT compound);
 }

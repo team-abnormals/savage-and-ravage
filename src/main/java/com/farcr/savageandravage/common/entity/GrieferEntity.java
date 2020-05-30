@@ -92,17 +92,18 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 	} 
 
 	@Override
-	   public void attackEntityWithRangedAttack(LivingEntity target, float distanceFactor) {
-	      CreeperSporeCloudEntity snowballentity = new CreeperSporeCloudEntity(this.world, this);
-	      this.swingArm(getActiveHand());
-	      double d0 = target.getPosYEye() - (double)1.1F;
-	      double d1 = target.getPosX() - this.getPosX();
-	      double d2 = d0 - snowballentity.getPosY();
-	      double d3 = target.getPosZ() - this.getPosZ();
-	      float f = MathHelper.sqrt(d1 * d1 + d3 * d3) * 0.2F;
-	      snowballentity.shoot(d1, d2 + (double)f, d3, 1.6F, 12.0F);
-	      this.playSound(SoundEvents.ENTITY_SNOW_GOLEM_SHOOT, 1.0F, 1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
-	      this.world.addEntity(snowballentity);
-	   }
+	public void attackEntityWithRangedAttack(LivingEntity target, float distanceFactor) {
+		CreeperSporeCloudEntity creeperSpores = new CreeperSporeCloudEntity(this.world, this);
+		this.swingArm(getActiveHand());
+		double d0 = target.getPosYEye() - (double)1.1F;
+		double d1 = target.getPosX() - this.getPosX();
+		double d2 = d0 - creeperSpores.getPosY();
+		double d3 = target.getPosZ() - this.getPosZ();
+		float f = MathHelper.sqrt(d1 * d1 + d3 * d3) * 0.2F;
+		creeperSpores.shoot(d1, d2 + (double)f, d3, 1.6F, 12.0F);
+		creeperSpores.cloudSize = creeperSpores.world.rand.nextInt(50) == 0 ? 0 : 1 + creeperSpores.world.rand.nextInt(3);
+		this.playSound(SoundEvents.ENTITY_SNOW_GOLEM_SHOOT, 1.0F, 1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
+		this.world.addEntity(creeperSpores);
+	}
 
 }
