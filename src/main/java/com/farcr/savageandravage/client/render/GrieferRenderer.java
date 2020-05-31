@@ -1,5 +1,6 @@
 package com.farcr.savageandravage.client.render;
 
+import com.farcr.savageandravage.client.model.GrieferEntityArmorModel;
 import com.farcr.savageandravage.client.model.GrieferModel;
 import com.farcr.savageandravage.common.entity.GrieferEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -20,10 +21,9 @@ import net.minecraft.util.ResourceLocation;
 public class GrieferRenderer extends BipedRenderer<GrieferEntity, GrieferModel> {
 	private static final ResourceLocation GRIEFER_TEXTURE = new ResourceLocation("savageandravage:textures/entity/griefer.png");
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public GrieferRenderer(EntityRendererManager renderManagerIn) {
 		super(renderManagerIn, new GrieferModel(0), 0.5f);
-		this.addLayer(new BipedArmorLayer(this, new BipedModel(0.5F), new BipedModel(1.0F)));
+		this.addLayer(new BipedArmorLayer<GrieferEntity, GrieferModel, GrieferEntityArmorModel>(this, new GrieferEntityArmorModel(0.5F), new GrieferEntityArmorModel(1.0F)));
 	}
 	
     public void render(GrieferEntity entity, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {

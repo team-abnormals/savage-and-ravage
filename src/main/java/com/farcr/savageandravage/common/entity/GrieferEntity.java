@@ -13,6 +13,7 @@ import net.minecraft.entity.ILivingEntityData;
 import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.HurtByTargetGoal;
@@ -58,7 +59,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 	   super.registerGoals();
 	   this.goalSelector.addGoal(0, new SwimGoal(this));
 	   this.goalSelector.addGoal(2, new AbstractRaiderEntity.FindTargetGoal(this, 10.0F));
-	   this.goalSelector.addGoal(3, new GrieferEntity.GrieferAttackWithSporesGoal(this, 1.0D, 100, 8.0F));
+	   this.goalSelector.addGoal(3, new GrieferEntity.GrieferAttackWithSporesGoal(this, 1.0D, 100));
 	   this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.0D, true) {
 		   @Override
 		   public boolean shouldExecute() {
@@ -72,6 +73,15 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 	   this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
 	   this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillagerEntity.class, false));
 	   this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, IronGolemEntity.class, true));
+	}
+	
+	protected void registerAttributes() 
+	{
+	  super.registerAttributes();
+      this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue((double)0.35F);
+	  this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(25.0D);
+	  this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(5.0D);
+	   this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(32.0D);
 	}
 	
 	@Override
@@ -114,11 +124,11 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
       if (this.kickTicks > 0) {
             ++this.kickTicks;
             LivingEntity attacker = this.getAttackTarget();
-            if (this.kickTicks <= 10 && attacker != null && this.isKicking()) 
+            if (this.kickTicks == 10 && attacker != null && this.isKicking()) 
             {
         	  this.attackEntityAsMob(attacker);
         	  double distance = this.getDistance(attacker);
-        	  attacker.knockBack(attacker, 5.0F, distance, distance);
+        	  attacker.knockBack(attacker, 6.0F, distance, distance);
             }
         }
 	    super.livingTick();
@@ -145,7 +155,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 	
 	public void kick() {
 		this.setKicking(true);
-		this.kickTicks = 8;
+		this.kickTicks = 9;
 	}
 	
     public boolean isKicking() 
@@ -215,7 +225,6 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 		 this.playSound(SoundEvents.ENTITY_EGG_THROW, 1.0F, 1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
 		 this.world.addEntity(creeperSpores);
 		 this.creeperSporeStacks--;
-		 this.getMoveHelper().strafe(0, 0.1F);
 		}
 	}
 	
@@ -223,42 +232,36 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
     public static class GrieferAttackWithSporesGoal extends Goal 
     {
       private final GrieferEntity griefer;
-      private LivingEntity attackTarget;
       private int rangedAttackTime = -1;
       private final double entityMoveSpeed;
-      private int seeTime;
       private final int attackIntervalMin;
       private final int maxRangedAttackTime;
       private final float attackRadius;
-      private final float maxAttackDistance;
+      private boolean strafingClockwise;
+      private boolean strafingBackwards;
+      private int seeTime;
 
-      public GrieferAttackWithSporesGoal(GrieferEntity attacker, double movespeed, int maxAttackTime, float maxAttackDistanceIn) {
-         this(attacker, movespeed, maxAttackTime, maxAttackTime, maxAttackDistanceIn);
+      public GrieferAttackWithSporesGoal(GrieferEntity attacker, double movespeed, int maxAttackTime) {
+         this(attacker, movespeed, maxAttackTime, maxAttackTime);
       }
 
-      public GrieferAttackWithSporesGoal(GrieferEntity attacker, double movespeed, int p_i1650_4_, int maxAttackTime, float maxAttackDistanceIn) {
-       if (!(attacker instanceof LivingEntity)) {
-          throw new IllegalArgumentException("Im stuff.");
-       } else {
+      public GrieferAttackWithSporesGoal(GrieferEntity attacker, double movespeed, int p_i1650_4_, int maxAttackTime) {
           this.griefer = attacker;
           this.entityMoveSpeed = movespeed;
           this.attackIntervalMin = p_i1650_4_;
           this.maxRangedAttackTime = maxAttackTime;
-          this.attackRadius = maxAttackDistanceIn;
-          this.maxAttackDistance = maxAttackDistanceIn * maxAttackDistanceIn;
+          this.attackRadius = (float)15.0D;
           this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
-        }
        }
 
       public boolean shouldExecute() 
       {
-       LivingEntity livingentity = this.griefer.getAttackTarget();
-       if (livingentity != null && livingentity.isAlive() && this.griefer.getHeldItemMainhand().getItem() instanceof CreeperSporesItem) {
-         this.attackTarget = livingentity;
-         return true;
-        } else {
+        LivingEntity livingentity = this.griefer.getAttackTarget();
+        if (livingentity != null && livingentity.isAlive() && this.griefer.getHeldItemMainhand().getItem() instanceof CreeperSporesItem) {
+          return true;
+         } else {
           return false;
-       }
+        }
       }
 
      public boolean shouldContinueExecuting() 
@@ -268,49 +271,62 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 
      public void resetTask() 
      {
-      this.attackTarget = null;
-      this.seeTime = 0;
-      this.rangedAttackTime = -1;
-      this.griefer.setKicking(false);
+	   this.griefer.setAggroed(false);
+	   this.griefer.setAttackTarget((LivingEntity)null);
+       this.rangedAttackTime = -1;
+       this.griefer.setKicking(false);
      }
 
 
      public void tick() {
-       double d0 = this.griefer.getDistanceSq(this.attackTarget.getPosX(), this.attackTarget.getPosY(), this.attackTarget.getPosZ());
-       boolean flag = this.griefer.getEntitySenses().canSee(this.attackTarget);
-       if (flag) {
-          ++this.seeTime;
-       } else {
-          this.seeTime = 0;
-       } 
-      
-      if (this.attackTarget.getDistance(griefer) <= 3.0D) {
-     	 griefer.kick();
-      }
-      
-      if (this.attackTarget.getDistance(griefer) >= 3.0D) {
-      	 griefer.setKicking(false);
-       }
+       LivingEntity attackTarget = griefer.getAttackTarget();
+       if (attackTarget != null) {
+        double d0 = this.griefer.getDistance(attackTarget);
+        boolean flag = this.griefer.getEntitySenses().canSee(attackTarget);
+        if (flag) {
+        	++this.seeTime;
+        } else {
+        	--this.seeTime;
+        }
+        if ((double)this.griefer.getRNG().nextFloat() < 0.3D) {
+          this.strafingClockwise = !this.strafingClockwise;
+        }
 
-      if (!(d0 > (double)this.maxAttackDistance) && this.seeTime >= 5) {
+        if ((double)this.griefer.getRNG().nextFloat() < 0.3D) {
+          this.strafingBackwards = !this.strafingBackwards;
+        }
+        if (attackTarget.getDistance(griefer) <= 3.0D) {
+     	  griefer.kick();
+     	  griefer.faceEntity(attackTarget, 30.0F, 30.0F);
+        }
+      
+        if (attackTarget.getDistance(griefer) >= 3.0D) {
+      	  griefer.setKicking(false);
+        }
+
+        if (!(d0 > 15.0D)) {
          this.griefer.getNavigator().clearPath();
-      } else {
-         this.griefer.getNavigator().tryMoveToEntityLiving(this.attackTarget, this.entityMoveSpeed);
-      }
-
-      this.griefer.getLookController().setLookPositionWithEntity(this.attackTarget, 30.0F, 30.0F);
-      if (--this.rangedAttackTime == 0) {
-         if (!flag) {
-            return;
+         } else {
+          this.griefer.getNavigator().tryMoveToEntityLiving(attackTarget, this.entityMoveSpeed);
          }
-         float f = MathHelper.sqrt(d0) / this.attackRadius;
-         float lvt_5_1_ = MathHelper.clamp(f, 0.1F, 1.0F);
-         this.griefer.attackEntityWithRangedAttack(this.attackTarget, lvt_5_1_);
-         this.rangedAttackTime = MathHelper.floor(f * (float)(this.maxRangedAttackTime - this.attackIntervalMin) + (float)this.attackIntervalMin);
-      } else if (this.rangedAttackTime < 0) {
-         float f2 = MathHelper.sqrt(d0) / this.attackRadius;
-         this.rangedAttackTime = MathHelper.floor(f2 * (float)(this.maxRangedAttackTime - this.attackIntervalMin) + (float)this.attackIntervalMin);
-      }
-   }
+
+         this.griefer.getLookController().setLookPositionWithEntity(attackTarget, 30.0F, 30.0F);
+         griefer.faceEntity(attackTarget, 30.0F, 30.0F);
+         if (--this.rangedAttackTime == 0 || this.seeTime == 2) {
+           if (!flag) {
+            return;
+          }
+           float f = MathHelper.sqrt(d0) / this.attackRadius;
+           float lvt_5_1_ = MathHelper.clamp(f, 0.1F, 1.0F);
+           this.griefer.attackEntityWithRangedAttack(attackTarget, lvt_5_1_);
+  		   this.griefer.getMoveHelper().strafe(this.strafingBackwards ? -0.5F : 0.5F, this.strafingClockwise ? 0.5F : -0.5F);
+           this.rangedAttackTime = MathHelper.floor(f * (float)(this.maxRangedAttackTime - this.attackIntervalMin) + (float)this.attackIntervalMin);
+          } else if (this.rangedAttackTime < 0) 
+          {
+           float f2 = MathHelper.sqrt(d0) / this.attackRadius;
+           this.rangedAttackTime = MathHelper.floor(f2 * (float)(this.maxRangedAttackTime - this.attackIntervalMin) + (float)this.attackIntervalMin);
+       }
+    }
+  }
  }
 }

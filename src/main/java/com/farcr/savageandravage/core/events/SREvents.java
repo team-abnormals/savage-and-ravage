@@ -135,7 +135,7 @@ public class SREvents {
 	@SubscribeEvent
 	public static void onLivingSetAttackTarget(LivingSetAttackTargetEvent event) {
 		if(event.getEntityLiving() instanceof GolemEntity && !(event.getEntityLiving() instanceof ShulkerEntity) && event.getTarget() instanceof IOwnableMob){
-			if(((IOwnableMob)event.getTarget()).getOwner()!=null&&((MobEntity)event.getTarget()).getAttackTarget()!=event.getEntityLiving()){
+			if(((IOwnableMob)event.getTarget()).getOwner() instanceof PlayerEntity &&((MobEntity)event.getTarget()).getAttackTarget()!=event.getEntityLiving()){
 				((GolemEntity)event.getEntityLiving()).setAttackTarget(null);
 			}
 		}

@@ -100,7 +100,7 @@ public class CreeperSporeCloudEntity extends ThrowableEntity {
             this.setMotion(0,0,0);
             this.setTicksTillRemove(this.getTicksTillRemove()-1);
             if(this.getTicksTillRemove() % 20 == 0) {
-                    double xPos = aoe.getPosXRandom(0.1D);
+                double xPos = aoe.getPosXRandom(0.1D);
                 double zPos = aoe.getPosZRandom(0.2D);
                 BlockPos pos = new BlockPos(xPos, this.getPosY(), zPos);
                 List<AxisAlignedBB> blockShapes = world.getBlockState(pos).getShape(world,pos).toBoundingBoxList();

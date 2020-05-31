@@ -40,7 +40,7 @@ public class GrieferModel extends BipedModel<GrieferEntity>
         this.tnt.setRotationPoint(0.3F, 6.0F, -5.7F);
         this.tnt.addBox(0.0F, 0.0F, 0.0F, 4, 4, 3, 0.0F);
         this.pouch = new ModelRenderer(this, 46, 36);
-        this.pouch.setRotationPoint(-2.9F, 1.7F, 3.3F);
+        this.pouch.setRotationPoint(-2.9F, 1.7F, 3.0F);
         this.pouch.addBox(0.0F, -0.9F, 0.0F, 6, 6, 3, 0.0F);
         this.shoulderPad = new ModelRenderer(this, 11, 51);
         this.shoulderPad.setRotationPoint(0.0F, 0.0F, 0.0F);
