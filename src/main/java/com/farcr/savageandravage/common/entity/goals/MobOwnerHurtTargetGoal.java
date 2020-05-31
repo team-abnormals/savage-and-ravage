@@ -9,10 +9,11 @@ import net.minecraft.entity.ai.goal.TargetGoal;
 
 import java.util.EnumSet;
 
+@SuppressWarnings("unused")
 public class MobOwnerHurtTargetGoal extends TargetGoal {
     private final IOwnableMob defendingEntity;
     private LivingEntity attacker;
-    private int timestamp;
+	private int timestamp;
 
     public MobOwnerHurtTargetGoal(MobEntity theEntitydefendingEntityIn) {
         super(theEntitydefendingEntityIn, false);
