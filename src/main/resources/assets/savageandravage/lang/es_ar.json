@@ -14,10 +14,10 @@
 	"block.savageandravage.blast_proof_slab": "Baldosa a prueba de explosiones",
 	"block.savageandravage.blast_proof_stairs": "Escaleras a prueba de explosiones",
 	"block.savageandravage.blast_proof_vertical_slab": "Baldosa vertical a prueba de explosiones",
-	"item.savageandravage.griefer_helmet": "Casco de vándalo",
-	"item.savageandravage.griefer_chestplate": "Pechera de vándalo",
-	"item.savageandravage.griefer_leggings": "Pantalones de vándalo",
-	"item.savageandravage.griefer_boots": "Botas de vándalo",
+	"item.savageandravage.griefer_helmet": "Casco de alborotador",
+	"item.savageandravage.griefer_chestplate": "Pechera de alborotador",
+	"item.savageandravage.griefer_leggings": "Pantalones de alborotador",
+	"item.savageandravage.griefer_boots": "Botas de alborotador",
 	
 	"item.savageandravage.creeper_spores": "Esporas de creeper",
 	"block.savageandravage.creeper_spore_sack": "Saco de esporas de creeper",
@@ -35,9 +35,9 @@
 	"savageandravage:subtitles.generic.growth_failure": "Desarrollo fallido",
 
 	"entity.savageandravage.skeleton_villager": "Aldeano esqueleto",
-	"entity.savageandravage.griefer": "Vándalo",
+	"entity.savageandravage.griefer": "Alborotador",
     "item.savageandravage.skeleton_villager_spawn_egg": "Generar aldeano esqueleto",
-	"item.savageandravage.griefer_spawn_egg": "Generar vándalo",
+	"item.savageandravage.griefer_spawn_egg": "Generar alborotador",
 
 	"effect.savageandravage.growth": "Desarrollo",
 	"item.minecraft.potion.effect.growing": "Poción de crecimiento",
