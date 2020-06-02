@@ -20,6 +20,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class GrieferRenderer extends BipedRenderer<GrieferEntity, GrieferModel> {
 	private static final ResourceLocation GRIEFER_TEXTURE = new ResourceLocation("savageandravage:textures/entity/griefer.png");
+	private static final ResourceLocation APESHIT_MODE_TEXTURE = new ResourceLocation("savageandravage:textures/entity/griefer_melee.png");
 
 	public GrieferRenderer(EntityRendererManager renderManagerIn) {
 		super(renderManagerIn, new GrieferModel(0), 0.5f);
@@ -82,6 +83,6 @@ public class GrieferRenderer extends BipedRenderer<GrieferEntity, GrieferModel> 
 	
     public ResourceLocation getEntityTexture(GrieferEntity entity) 
     {
-	  return GRIEFER_TEXTURE;
+	  return entity.isApeshit() ? APESHIT_MODE_TEXTURE : GRIEFER_TEXTURE;
 	}
 }

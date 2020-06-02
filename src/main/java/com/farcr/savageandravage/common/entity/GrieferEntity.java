@@ -59,6 +59,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 	   super.registerGoals();
 	   this.goalSelector.addGoal(0, new SwimGoal(this));
 	   this.goalSelector.addGoal(2, new AbstractRaiderEntity.FindTargetGoal(this, 10.0F));
+	   this.goalSelector.addGoal(2, new GrieferEntity.MeleePhaseGoal(this, 1.0D, true));
 	   this.goalSelector.addGoal(3, new GrieferEntity.GrieferAttackWithSporesGoal(this, 1.0D, 100));
 	   this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.0D, true) {
 		   @Override
@@ -139,6 +140,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 	{
 		super.readAdditional(compound);
 		this.kickTicks = compound.getInt("KickTicks");
+		
 	}
 	
 	@Override
@@ -153,9 +155,13 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 		return this.kickTicks;
 	}
 	
-	public void kick() {
-		this.setKicking(true);
-		this.kickTicks = 9;
+	public void kick(double distance, LivingEntity entity) {
+		if (this.getDistance(entity) <= distance) {
+		 this.setKicking(true);
+		 this.kickTicks = 9;
+		} else {
+			this.setKicking(false);
+		}
 	}
 	
     public boolean isKicking() 
@@ -224,10 +230,32 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 		 creeperSpores.cloudSize = creeperSpores.world.rand.nextInt(50) == 0 ? 0 : 1 + creeperSpores.world.rand.nextInt(3);
 		 this.playSound(SoundEvents.ENTITY_EGG_THROW, 1.0F, 1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
 		 this.world.addEntity(creeperSpores);
+         this.faceEntity(target, 30.0F, 30.0F);
 		 this.creeperSporeStacks--;
 		}
 	}
 	
+	//just a copy of melee attack goal for now.
+	public static class MeleePhaseGoal extends MeleeAttackGoal 
+	{
+		private final GrieferEntity griefer;
+		
+		public MeleePhaseGoal(GrieferEntity griefer, double speedIn, boolean useLongMemory) {
+			super(griefer, speedIn, useLongMemory);
+			this.griefer = griefer;
+		}
+		
+		public boolean shouldExecute()
+		{
+			return griefer.creeperSporeStacks <= 0 && super.shouldExecute();
+		}
+		
+		public void startExecuting()
+		{
+			griefer.becomeApeshit(true);
+			super.startExecuting();
+		}
+	}
 
     public static class GrieferAttackWithSporesGoal extends Goal 
     {
@@ -257,11 +285,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
       public boolean shouldExecute() 
       {
         LivingEntity livingentity = this.griefer.getAttackTarget();
-        if (livingentity != null && livingentity.isAlive() && this.griefer.getHeldItemMainhand().getItem() instanceof CreeperSporesItem) {
-          return true;
-         } else {
-          return false;
-        }
+        return livingentity != null && livingentity.isAlive() && this.griefer.getHeldItemMainhand().getItem() instanceof CreeperSporesItem && this.griefer.creeperSporeStacks > 0; 
       }
 
      public boolean shouldContinueExecuting() 
@@ -277,33 +301,25 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
        this.griefer.setKicking(false);
      }
 
-
      public void tick() {
        LivingEntity attackTarget = griefer.getAttackTarget();
        if (attackTarget != null) {
         double d0 = this.griefer.getDistance(attackTarget);
         boolean flag = this.griefer.getEntitySenses().canSee(attackTarget);
+        this.griefer.setAggroed(true);
         if (flag) {
         	++this.seeTime;
         } else {
         	--this.seeTime;
         }
-        if ((double)this.griefer.getRNG().nextFloat() < 0.3D) {
+        if (this.griefer.getRNG().nextDouble() < 0.3D) {
           this.strafingClockwise = !this.strafingClockwise;
         }
 
-        if ((double)this.griefer.getRNG().nextFloat() < 0.3D) {
+        if (this.griefer.getRNG().nextDouble() < 0.3D) {
           this.strafingBackwards = !this.strafingBackwards;
         }
-        if (attackTarget.getDistance(griefer) <= 3.0D) {
-     	  griefer.kick();
-     	  griefer.faceEntity(attackTarget, 30.0F, 30.0F);
-        }
-      
-        if (attackTarget.getDistance(griefer) >= 3.0D) {
-      	  griefer.setKicking(false);
-        }
-
+        griefer.kick(3.0D, attackTarget);
         if (!(d0 > 15.0D)) {
          this.griefer.getNavigator().clearPath();
          } else {
@@ -311,15 +327,14 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
          }
 
          this.griefer.getLookController().setLookPositionWithEntity(attackTarget, 30.0F, 30.0F);
-         griefer.faceEntity(attackTarget, 30.0F, 30.0F);
-         if (--this.rangedAttackTime == 0 || this.seeTime == 2) {
+         if (--this.rangedAttackTime == 0 || this.seeTime == 3) {
            if (!flag) {
             return;
           }
            float f = MathHelper.sqrt(d0) / this.attackRadius;
            float lvt_5_1_ = MathHelper.clamp(f, 0.1F, 1.0F);
            this.griefer.attackEntityWithRangedAttack(attackTarget, lvt_5_1_);
-  		   this.griefer.getMoveHelper().strafe(this.strafingBackwards ? -0.5F : 0.5F, this.strafingClockwise ? 0.5F : -0.5F);
+  		   this.griefer.getMoveHelper().strafe((float) (this.strafingBackwards ? -this.entityMoveSpeed : this.entityMoveSpeed), (float) (this.strafingClockwise ? this.entityMoveSpeed : -this.entityMoveSpeed));
            this.rangedAttackTime = MathHelper.floor(f * (float)(this.maxRangedAttackTime - this.attackIntervalMin) + (float)this.attackIntervalMin);
           } else if (this.rangedAttackTime < 0) 
           {
