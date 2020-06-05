@@ -71,13 +71,21 @@ public class GrieferModel extends BipedModel<GrieferEntity>
 	@Override
 	public void setRotationAngles(GrieferEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netbipedbipedHeadYaw, float bipedbipedHeadPitch){
 		super.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netbipedbipedHeadYaw, bipedbipedHeadPitch);
-		this.bipedHeadwear.showModel = false;
 		boolean flag = entityIn.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() instanceof ArmorItem;
 		this.shoulderPad.showModel = !flag;
         if (entityIn.isKicking())
         {
         	 float f1 = MathHelper.clamp(this.kickingTime,  0.0F, 25.0F);
         	 this.bipedRightLeg.rotateAngleX = MathHelper.lerp(f1 / 10.0F, -1.40F, 1.05F);
+        }
+        if (entityIn.func_213656_en()) //party rockers in the hou
+        {
+            this.bipedHead.rotateAngleX = MathHelper.cos(ageInTicks * 0.6662F) * 0.05F;
+            this.bipedLeftArm.rotationPointZ = 0.0F;
+            this.bipedLeftArm.rotationPointX = 5.0F;
+            this.bipedLeftArm.rotateAngleX = MathHelper.cos(ageInTicks * 0.7000F) * 0.05F;
+            this.bipedLeftArm.rotateAngleZ = -2.3561945F;
+            this.bipedLeftArm.rotateAngleY = 0.0F;
         }
 	}
 	
