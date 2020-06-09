@@ -9,7 +9,6 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.util.math.MathHelper;
 
-//should convert this to endimated model later
 public class GrieferModel extends BipedModel<GrieferEntity>
 {
     public ModelRenderer bipedBody2Layer;
@@ -27,9 +26,9 @@ public class GrieferModel extends BipedModel<GrieferEntity>
         this.bipedBody.setRotationPoint(0.0F, 0.0F, 0.0F);
         this.bipedBody.addBox(-4.0F, 0.0F, -3.0F, 8, 12, 6, 0.0F);
         this.bipedRightLeg = new ModelRenderer(this, 0, 18);
+        this.bipedRightLeg.mirror = true;
         this.bipedRightLeg.setRotationPoint(-2.0F, 12.0F, 0.0F);
         this.bipedRightLeg.addBox(-2.0F, 0.0F, -2.0F, 4, 12, 4, 0.0F);
-        this.bipedRightLeg.mirror = true;
         this.bipedRightArm = new ModelRenderer(this, 16, 34);
         this.bipedRightArm.setRotationPoint(-5.0F, 2.0F, 0.0F);
         this.bipedRightArm.addBox(-3.0F, -2.0F, -2.0F, 4, 12, 4, 0.0F);
@@ -37,7 +36,7 @@ public class GrieferModel extends BipedModel<GrieferEntity>
         this.lenose.setRotationPoint(0.0F, -2.0F, 0.0F);
         this.lenose.addBox(-1.0F, -1.0F, -6.0F, 2, 4, 2, 0.0F);
         this.tnt = new ModelRenderer(this, 50, 45);
-        this.tnt.setRotationPoint(0.3F, 6.0F, -5.7F);
+        this.tnt.setRotationPoint(-0.0F, 6.0F, -6.00F);
         this.tnt.addBox(0.0F, 0.0F, 0.0F, 4, 4, 3, 0.0F);
         this.pouch = new ModelRenderer(this, 46, 36);
         this.pouch.setRotationPoint(-2.9F, 1.7F, 3.0F);
@@ -52,9 +51,9 @@ public class GrieferModel extends BipedModel<GrieferEntity>
         this.bipedLeftLeg.setRotationPoint(2.0F, 12.0F, 0.0F);
         this.bipedLeftLeg.addBox(-2.0F, 0.0F, -2.0F, 4, 12, 4, 0.0F);
         this.bipedLeftArm = new ModelRenderer(this, 16, 18);
+        this.bipedLeftArm.mirror = true;
         this.bipedLeftArm.setRotationPoint(5.0F, 2.0F, 0.0F);
         this.bipedLeftArm.addBox(-1.0F, -2.0F, -2.0F, 4, 12, 4, 0.0F);
-        this.bipedLeftArm.mirror = true;
         this.bipedBody2Layer = new ModelRenderer(this, 36, 18);
         this.bipedBody2Layer.setRotationPoint(0.0F, 0.0F, 0.0F);
         this.bipedBody2Layer.addBox(-4.0F, 0.0F, -3.0F, 8, 12, 6, 0.03F);
@@ -72,6 +71,7 @@ public class GrieferModel extends BipedModel<GrieferEntity>
 	public void setRotationAngles(GrieferEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netbipedbipedHeadYaw, float bipedbipedHeadPitch){
 		super.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netbipedbipedHeadYaw, bipedbipedHeadPitch);
 		boolean flag = entityIn.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() instanceof ArmorItem;
+		this.bipedBody2Layer.copyModelAngles(this.bipedBody);
 		this.shoulderPad.showModel = !flag;
         if (entityIn.isKicking())
         {
