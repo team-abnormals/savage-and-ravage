@@ -88,12 +88,12 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob {
         this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, OcelotEntity.class, 6.0F, 1.0D, 1.2D));
         this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, CatEntity.class, 6.0F, 1.0D, 1.2D));
         this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0D, false));
-        this.goalSelector.addGoal(4, new FollowMobOwnerGoal(this, 1.0D, 2.0F, 20.0F, false));
+        this.goalSelector.addGoal(2, new FollowMobOwnerGoal(this, 1.0D, 2.0F, 20.0F, false));
         this.goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 0.8D));
         this.goalSelector.addGoal(6, new LookAtGoal(this, PlayerEntity.class, 8.0F));
         this.goalSelector.addGoal(6, new LookRandomlyGoal(this));
         this.targetSelector.addGoal(3, new MobOwnerHurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new MobOwnerHurtTargetGoal(this));
+        this.targetSelector.addGoal(3, new MobOwnerHurtTargetGoal(this));
         this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(1, new ConditionalNearestAttackableTargetGoal(this, true));
     }
