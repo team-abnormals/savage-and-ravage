@@ -2,7 +2,7 @@ package com.farcr.savageandravage.client.render;
 
 import com.farcr.savageandravage.client.model.CreepieModel;
 import com.farcr.savageandravage.common.entity.CreepieEntity;
-import com.farcr.savageandravage.core.config.SRConfig;
+import com.farcr.savageandravage.core.registry.other.SRConfig;
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.client.renderer.entity.EntityRendererManager;

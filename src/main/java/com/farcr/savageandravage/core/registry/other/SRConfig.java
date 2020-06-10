@@ -1,4 +1,4 @@
-package com.farcr.savageandravage.core.config;
+package com.farcr.savageandravage.core.registry.other;
 
 import org.apache.commons.lang3.tuple.Pair;
 

@@ -1,4 +1,4 @@
-package com.farcr.savageandravage.core.events;
+package com.farcr.savageandravage.core.registry.other;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 @EventBusSubscriber(modid = SavageAndRavage.MODID, value = Dist.CLIENT)
-public class ClientEvents {
+public class SRClientEvents {
 	
 	@SubscribeEvent
 	public static void handleToolTip(ItemTooltipEvent event) {

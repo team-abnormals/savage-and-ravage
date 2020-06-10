@@ -4,7 +4,7 @@ import com.farcr.savageandravage.common.block.ImprovedFlowerPotBlock;
 import com.farcr.savageandravage.common.block.RunedGloomyTilesBlock;
 import com.farcr.savageandravage.common.block.SporeBombBlock;
 import com.farcr.savageandravage.core.SavageAndRavage;
-import com.farcr.savageandravage.core.util.BlockProperties;
+import com.farcr.savageandravage.core.registry.other.SRProperties;
 import com.teamabnormals.abnormals_core.common.blocks.AbnormalsStairsBlock;
 import com.teamabnormals.abnormals_core.common.blocks.VerticalSlabBlock;
 import com.teamabnormals.abnormals_core.core.utils.DataUtils;
@@ -26,17 +26,17 @@ public class SRBlocks {
 	public static final RegistryHelper HELPER = SavageAndRavage.REGISTRY_HELPER;
 
 	public static final RegistryObject<Block> GLOOMY_TILES				= HELPER.createBlock("gloomy_tiles", () -> new Block(Block.Properties.from(Blocks.PURPUR_BLOCK)), ItemGroup.BUILDING_BLOCKS);
-	public static final RegistryObject<Block> CHISELED_GLOOMY_TILES		= HELPER.createBlock("chiseled_gloomy_tiles", () -> new Block(BlockProperties.GLOOMY_TILES), ItemGroup.BUILDING_BLOCKS);
-	public static final RegistryObject<Block> GLOOMY_TILE_STAIRS		= HELPER.createBlock("gloomy_tile_stairs", () -> new AbnormalsStairsBlock(GLOOMY_TILES.get().getDefaultState(), BlockProperties.GLOOMY_TILES), ItemGroup.BUILDING_BLOCKS);
-	public static final RegistryObject<Block> GLOOMY_TILE_WALL			= HELPER.createBlock("gloomy_tile_wall", () -> new WallBlock(BlockProperties.GLOOMY_TILES), ItemGroup.DECORATIONS);
-	public static final RegistryObject<Block> GLOOMY_TILE_SLAB			= HELPER.createBlock("gloomy_tile_slab", () -> new SlabBlock(BlockProperties.GLOOMY_TILES), ItemGroup.BUILDING_BLOCKS);
-	public static final RegistryObject<Block> GLOOMY_TILE_VERTICAL_SLAB	= HELPER.createCompatBlock("quark", "gloomy_tile_vertical_slab", () -> new VerticalSlabBlock(BlockProperties.GLOOMY_TILES), ItemGroup.BUILDING_BLOCKS);
-	public static final RegistryObject<Block> RUNED_GLOOMY_TILES		= HELPER.createBlock("runed_gloomy_tiles", () -> new RunedGloomyTilesBlock(BlockProperties.GLOOMY_TILES), ItemGroup.BUILDING_BLOCKS);
+	public static final RegistryObject<Block> CHISELED_GLOOMY_TILES		= HELPER.createBlock("chiseled_gloomy_tiles", () -> new Block(SRProperties.GLOOMY_TILES), ItemGroup.BUILDING_BLOCKS);
+	public static final RegistryObject<Block> GLOOMY_TILE_STAIRS		= HELPER.createBlock("gloomy_tile_stairs", () -> new AbnormalsStairsBlock(GLOOMY_TILES.get().getDefaultState(), SRProperties.GLOOMY_TILES), ItemGroup.BUILDING_BLOCKS);
+	public static final RegistryObject<Block> GLOOMY_TILE_WALL			= HELPER.createBlock("gloomy_tile_wall", () -> new WallBlock(SRProperties.GLOOMY_TILES), ItemGroup.DECORATIONS);
+	public static final RegistryObject<Block> GLOOMY_TILE_SLAB			= HELPER.createBlock("gloomy_tile_slab", () -> new SlabBlock(SRProperties.GLOOMY_TILES), ItemGroup.BUILDING_BLOCKS);
+	public static final RegistryObject<Block> GLOOMY_TILE_VERTICAL_SLAB	= HELPER.createCompatBlock("quark", "gloomy_tile_vertical_slab", () -> new VerticalSlabBlock(SRProperties.GLOOMY_TILES), ItemGroup.BUILDING_BLOCKS);
+	public static final RegistryObject<Block> RUNED_GLOOMY_TILES		= HELPER.createBlock("runed_gloomy_tiles", () -> new RunedGloomyTilesBlock(SRProperties.GLOOMY_TILES), ItemGroup.BUILDING_BLOCKS);
 
-	public static final RegistryObject<Block> BLAST_PROOF_PLATES		= HELPER.createBlock("blast_proof_plates", () -> new Block(BlockProperties.BLAST_PROOF_PLATES), ItemGroup.BUILDING_BLOCKS);
-	public static final RegistryObject<Block> BLAST_PROOF_STAIRS		= HELPER.createBlock("blast_proof_stairs", () -> new AbnormalsStairsBlock(BLAST_PROOF_PLATES.get().getDefaultState(), BlockProperties.BLAST_PROOF_PLATES), ItemGroup.BUILDING_BLOCKS);
-	public static final RegistryObject<Block> BLAST_PROOF_SLAB			= HELPER.createBlock("blast_proof_slab", () -> new SlabBlock(BlockProperties.BLAST_PROOF_PLATES), ItemGroup.BUILDING_BLOCKS);
-	public static final RegistryObject<Block> BLAST_PROOF_VERTICAL_SLAB	= HELPER.createCompatBlock("quark", "blast_proof_vertical_slab", () -> new VerticalSlabBlock(BlockProperties.BLAST_PROOF_PLATES), ItemGroup.BUILDING_BLOCKS);
+	public static final RegistryObject<Block> BLAST_PROOF_PLATES		= HELPER.createBlock("blast_proof_plates", () -> new Block(SRProperties.BLAST_PROOF_PLATES), ItemGroup.BUILDING_BLOCKS);
+	public static final RegistryObject<Block> BLAST_PROOF_STAIRS		= HELPER.createBlock("blast_proof_stairs", () -> new AbnormalsStairsBlock(BLAST_PROOF_PLATES.get().getDefaultState(), SRProperties.BLAST_PROOF_PLATES), ItemGroup.BUILDING_BLOCKS);
+	public static final RegistryObject<Block> BLAST_PROOF_SLAB			= HELPER.createBlock("blast_proof_slab", () -> new SlabBlock(SRProperties.BLAST_PROOF_PLATES), ItemGroup.BUILDING_BLOCKS);
+	public static final RegistryObject<Block> BLAST_PROOF_VERTICAL_SLAB	= HELPER.createCompatBlock("quark", "blast_proof_vertical_slab", () -> new VerticalSlabBlock(SRProperties.BLAST_PROOF_PLATES), ItemGroup.BUILDING_BLOCKS);
 
 	public static final RegistryObject<Block> POTTED_CREEPIE			= HELPER.createBlockNoItem("potted_creeper_spores", () -> new ImprovedFlowerPotBlock(SRItems.CREEPER_SPORES, Block.Properties.from(Blocks.FLOWER_POT)));
 	public static final RegistryObject<Block> SPORE_BOMB 				= HELPER.createBlock("spore_bomb", () -> new SporeBombBlock(Block.Properties.from(Blocks.TNT)), ItemGroup.REDSTONE);

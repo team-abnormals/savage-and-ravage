@@ -1,7 +1,8 @@
 package com.farcr.savageandravage.common.effect;
 
 import com.farcr.savageandravage.common.entity.CreepieEntity;
-import com.farcr.savageandravage.core.events.SREvents;
+import com.farcr.savageandravage.core.registry.other.SREvents;
+
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.monster.SlimeEntity;
