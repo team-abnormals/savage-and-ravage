@@ -130,7 +130,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
         if (this.kickTicks == 10 && attacker != null && this.isKicking()) 
         {
           this.attackEntityAsMob(attacker);
-          attacker.knockBack(this, 1.9F, MathHelper.sin(this.rotationYaw * ((float)Math.PI / 180F)), (-MathHelper.cos(this.rotationYaw * ((float)Math.PI / 180F))));
+          attacker.knockBack(this, 1.0F, MathHelper.sin(this.rotationYaw * ((float)Math.PI / 180F)), (-MathHelper.cos(this.rotationYaw * ((float)Math.PI / 180F))));
           if (this.kickTicks < 10) {
         	  this.setKicking(false);
           }
@@ -394,7 +394,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
          if (this.griefer.getRNG().nextDouble() < 0.3D) {
            this.strafingBackwards = !this.strafingBackwards;
          }
-         griefer.kick(3.0D, attackTarget);
+         griefer.kick(2.5D, attackTarget);
          if (!(d0 > 15.0D)) {
           this.griefer.getNavigator().clearPath();
           } else {
