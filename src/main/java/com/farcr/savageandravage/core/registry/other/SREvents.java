@@ -242,41 +242,6 @@ public class SREvents {
 			event.getPlayer().swingArm(event.getHand());
 			event.getWorld().addEntity(creepieEntity);
 		}
-		if(target instanceof CreepieEntity && event.getItemStack().getItem() == Items.POISONOUS_POTATO && SRConfig.PoisonPotatoCompatEnabled && ModList.get().isLoaded("quark")) {
-			poisonCreepie(event);
-		}
-	}
-
-	//Compatibility with Quark's potato poisoning
-	public static String poisonTag = "savageandravage:poisoned_by_potato";
-
-	public static void poisonCreepie(PlayerInteractEvent.EntityInteract event){
-		CreepieEntity creepie = (CreepieEntity)event.getTarget();
-		if(!creepie.getPersistentData().getBoolean(poisonTag) && !event.getWorld().isRemote) {
-			//Vec3d pos = creepie.getPositionVec();
-			event.getPlayer().swingArm(event.getHand());
-			if(creepie.world.rand.nextDouble() < SRConfig.PoisonChance) {
-				creepie.playSound(SoundEvents.ENTITY_GENERIC_EAT, 0.5f, 0.25f);
-				//TODO reactivate this if fixed in Quark
-				//if(((LivingEntity)target).isServerWorld()) ((ServerWorld)target.world).spawnParticle(ParticleTypes.ENTITY_EFFECT, pos.x, pos.y, pos.z, 5, 0, 1.0, 0, 0.8);
-				creepie.getPersistentData().putBoolean(poisonTag, true);
-				if(SRConfig.PoisonEffect) {
-					creepie.addPotionEffect(new EffectInstance(Effects.POISON, 200));
-				} else {
-					creepie.playSound(SoundEvents.ENTITY_GENERIC_EAT, 0.5f, 0.5f + creepie.world.rand.nextFloat() / 2);
-					//if(((LivingEntity)target).isServerWorld()) ((ServerWorld)target.world).spawnParticle(ParticleTypes.SMOKE, pos.x, pos.y, pos.z, 5, 0, 1.0, 0, 0.1);
-				}
-				if (!event.getPlayer().isCreative()) event.getItemStack().shrink(1);
-			}
-		}
-	}
-
-	@SubscribeEvent
-	public static void onEntityUpdate(LivingEvent.LivingUpdateEvent event) {
-		if(event.getEntity() instanceof CreepieEntity && SRConfig.PoisonPotatoCompatEnabled && ModList.get().isLoaded("quark")) {
-			CreepieEntity creepie = (CreepieEntity) event.getEntity();
-			if(creepie.getPersistentData().getBoolean(poisonTag)) creepie.setGrowingAge(-24000);
-		}
 	}
 
 	@SuppressWarnings("deprecation")

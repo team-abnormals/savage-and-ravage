@@ -14,9 +14,9 @@ public class MobOwnerHurtByTargetGoal extends TargetGoal {
     private LivingEntity attacker;
     private int timestamp;
 
-    public MobOwnerHurtByTargetGoal(MobEntity theDefendingdefendingEntityIn) {
-        super(theDefendingdefendingEntityIn, false);
-        this.defendingEntity = (IOwnableMob)theDefendingdefendingEntityIn;
+    public MobOwnerHurtByTargetGoal(MobEntity defendingEntityIn) {
+        super(defendingEntityIn, false);
+        this.defendingEntity = (IOwnableMob)defendingEntityIn;
         this.setMutexFlags(EnumSet.of(Goal.Flag.TARGET));
     }
 

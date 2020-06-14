@@ -14,6 +14,7 @@ import com.farcr.savageandravage.common.entity.goals.MobOwnerHurtTargetGoal;
 import com.farcr.savageandravage.core.registry.SRParticles;
 import com.farcr.savageandravage.core.registry.SRSounds;
 
+import com.teamabnormals.abnormals_core.core.library.api.IAgeableEntity;
 import net.minecraft.entity.AreaEffectCloudEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntitySize;
@@ -61,7 +62,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
 
-public class CreepieEntity extends MonsterEntity implements IOwnableMob {
+public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeableEntity {
     private static final DataParameter<Integer> STATE = EntityDataManager.createKey(CreepieEntity.class, DataSerializers.VARINT);
     private static final DataParameter<Boolean> IGNITED = EntityDataManager.createKey(CreepieEntity.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Optional<UUID>> OWNER_UUID = EntityDataManager.createKey(CreepieEntity.class, DataSerializers.OPTIONAL_UNIQUE_ID);
@@ -88,12 +89,12 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob {
         this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, OcelotEntity.class, 6.0F, 1.0D, 1.2D));
         this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, CatEntity.class, 6.0F, 1.0D, 1.2D));
         this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0D, false));
-        this.goalSelector.addGoal(2, new FollowMobOwnerGoal(this, 1.0D, 2.0F, 20.0F, false));
+        this.goalSelector.addGoal(3, new FollowMobOwnerGoal(this, 1.0D, 2.0F, 20.0F, false));
         this.goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 0.8D));
         this.goalSelector.addGoal(6, new LookAtGoal(this, PlayerEntity.class, 8.0F));
         this.goalSelector.addGoal(6, new LookRandomlyGoal(this));
-        this.targetSelector.addGoal(3, new MobOwnerHurtByTargetGoal(this));
-        this.targetSelector.addGoal(3, new MobOwnerHurtTargetGoal(this));
+        this.targetSelector.addGoal(2, new MobOwnerHurtByTargetGoal(this));
+        this.targetSelector.addGoal(2, new MobOwnerHurtTargetGoal(this));
         this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(1, new ConditionalNearestAttackableTargetGoal(this, true));
     }
@@ -213,7 +214,7 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob {
      * positive, it get's decremented each tick. Don't confuse this with EntityLiving.getAge. With a negative value the
      * Entity is considered a child.
      */
-    private int getGrowingAge() {
+    public int getGrowingAge() {
         if (this.world.isRemote) {
             return this.growingAge < 0 ? -1 : 1;
         } else {

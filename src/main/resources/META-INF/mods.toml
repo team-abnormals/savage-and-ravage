@@ -31,6 +31,6 @@ A mod that improves and expands on illagers through new structures, enemies and 
 [[dependencies.savageandravage]]
     modId="abnormals_core"
     mandatory=true
-    versionRange="[1.0.4,)"
+    versionRange="[1.0.6,)"
     ordering="AFTER"
     side="BOTH"

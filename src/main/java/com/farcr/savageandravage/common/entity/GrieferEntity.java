@@ -109,7 +109,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 
 	
 	@Override
-	public void func_213660_a(int p_213660_1_, boolean p_213660_2_) 
+	public void applyWaveBonus(int p_213660_1_, boolean p_213660_2_)
 	{
 		// TODO Auto-generated method stub
 	}
