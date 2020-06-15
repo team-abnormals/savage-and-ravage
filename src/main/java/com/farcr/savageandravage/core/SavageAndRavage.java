@@ -62,6 +62,7 @@ public class SavageAndRavage {
     	DeferredWorkQueue.runLater(() -> {
     		SRBlocks.registerFlammables();
     		SRDispenserBehaviors.registerDispenserBehaviors();
+    		REGISTRY_HELPER.processSpawnEggDispenseBehaviors();
     		SREffects.registerBrewingRecipes();
     	});
 	}

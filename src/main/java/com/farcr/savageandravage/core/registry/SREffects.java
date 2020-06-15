@@ -16,9 +16,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class SREffects {
     public static final DeferredRegister<Effect> EFFECTS = new DeferredRegister<>(ForgeRegistries.POTIONS, SavageAndRavage.MODID);
-    //ForgeRegistries.POTIONS is badly named, MCP moment.
     public static final DeferredRegister<Potion> POTIONS = new DeferredRegister<>(ForgeRegistries.POTION_TYPES, SavageAndRavage.MODID);
-    //Same for this, potion types???
 
     public static final RegistryObject<Effect> GROWING = EFFECTS.register("growth", GrowingEffect::new);
     public static final RegistryObject<Effect> SHRINKING = EFFECTS.register("shrinking", ShrinkingEffect::new);
