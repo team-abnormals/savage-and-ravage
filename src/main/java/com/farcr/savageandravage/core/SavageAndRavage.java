@@ -64,11 +64,11 @@ public class SavageAndRavage {
     		SRDispenserBehaviors.registerDispenserBehaviors();
     		REGISTRY_HELPER.processSpawnEggDispenseBehaviors();
     		SREffects.registerBrewingRecipes();
+    		SREntities.addEntitySpawns();
     	});
 	}
     
     private void clientSetup(final FMLClientSetupEvent event) {
-    	SREntities.registerRendering();
-    	SREntities.addEntitySpawns();
+		SREntities.registerRendering();
     }
 }
