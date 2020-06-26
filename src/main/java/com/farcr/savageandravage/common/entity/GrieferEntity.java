@@ -38,6 +38,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
@@ -112,6 +113,10 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 	public void applyWaveBonus(int p_213660_1_, boolean p_213660_2_)
 	{
 		// TODO Auto-generated method stub
+	}
+	
+	public ItemStack getPickedResult(RayTraceResult target) {
+		return new ItemStack(SRItems.GRIEFER_SPAWN_EGG.get());
 	}
 
 	//Just the pillagers ymca sound for now

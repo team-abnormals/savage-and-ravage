@@ -5,6 +5,7 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 import com.farcr.savageandravage.common.entity.goals.ImprovedCrossbowGoal;
+import com.farcr.savageandravage.core.registry.SRItems;
 import com.google.common.collect.Maps;
 
 import net.minecraft.client.renderer.Quaternion;
@@ -50,6 +51,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IWorld;
@@ -138,6 +140,10 @@ public class SkeletonVillagerEntity extends AbstractSkeletonEntity implements IC
 	public void setCharging(boolean trueorfalse) 
 	{
 	  this.dataManager.set(DATA_CHARGING_STATE, trueorfalse);
+	}
+	
+	public ItemStack getPickedResult(RayTraceResult target) {
+		return new ItemStack(SRItems.SKELETON_VILLAGER_SPAWN_EGG.get());
 	}
 	
 	@Nullable

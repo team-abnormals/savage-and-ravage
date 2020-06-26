@@ -13,8 +13,8 @@ import com.farcr.savageandravage.common.entity.goals.MobOwnerHurtByTargetGoal;
 import com.farcr.savageandravage.common.entity.goals.MobOwnerHurtTargetGoal;
 import com.farcr.savageandravage.core.registry.SRParticles;
 import com.farcr.savageandravage.core.registry.SRSounds;
-
 import com.teamabnormals.abnormals_core.core.library.api.IAgeableEntity;
+
 import net.minecraft.entity.AreaEffectCloudEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntitySize;
@@ -53,6 +53,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IWorld;
@@ -165,6 +166,10 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
         compound.putByte("ExplosionRadius", (byte)this.explosionRadius);
         compound.putBoolean("ignited", this.hasIgnited());
     }
+    
+    public ItemStack getPickedResult(RayTraceResult target) {
+		return new ItemStack(Items.CREEPER_SPAWN_EGG);
+	}
 
     /*/**
      * (abstract) Protected helper method to read subclass entity data from NBT.
