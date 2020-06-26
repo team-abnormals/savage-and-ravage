@@ -17,7 +17,7 @@ A mod that improves and expands on illagers through new structures, enemies and 
 [[dependencies.savageandravage]] 
     modId="forge"
     mandatory=true
-    versionRange="[31.1.49,)"
+    versionRange="[31.1.46,)"
     ordering="NONE"
     side="BOTH"
 
