@@ -4,10 +4,7 @@ import java.util.EnumSet;
 
 import com.farcr.savageandravage.common.entity.SkeletonVillagerEntity;
 
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.ICrossbowUser;
-import net.minecraft.entity.IRangedAttackMob;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.PillagerEntity;
@@ -16,7 +13,11 @@ import net.minecraft.item.CrossbowItem;
 import net.minecraft.item.FireworkRocketItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.Hand;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+
 public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & ICrossbowUser> extends Goal {
 	   private final T entity;
 	   private ImprovedCrossbowGoal.CrossbowState field_220749_b = ImprovedCrossbowGoal.CrossbowState.UNCHARGED;
@@ -79,24 +80,24 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 		            --this.field_220752_e;
 		         }
 		         
-		         
-		         
 		         double d1 = livingentity.getDistance(entity);	         
 		         //makes the entity that has this goal backup if the attack target is whatever number blockstillbackup is, infront of them.
 		         if (d1 <= blockstillbackup  && !(entity.getAttackTarget() instanceof AbstractVillagerEntity)) {
-		            if (entity instanceof PillagerEntity) 
-		            {
-		              this.entity.getMoveHelper().strafe(((PillagerEntity)entity).isCharging() ? -0.5F : -3.0F, 0); 
+		            if (entity instanceof PillagerEntity) {
+		            	//stupid problems require stupid solutions
+						EntityDataManager dataManager = ObfuscationReflectionHelper.getPrivateValue(Entity.class, entity,"field_70180_af");
+						DataParameter<Boolean> dataChargingState = ObfuscationReflectionHelper.getPrivateValue(PillagerEntity.class, (PillagerEntity) entity,"field_213676_b");
+						boolean isCharging = dataManager.get(dataChargingState);
+		              this.entity.getMoveHelper().strafe(isCharging ? -0.5F : -3.0F, 0);
 		            } else if (entity instanceof SkeletonVillagerEntity) {
-		              this.entity.getMoveHelper().strafe(((SkeletonVillagerEntity)entity).isCharging() ? -0.5F : -3.0F, 0); 
+		              this.entity.getMoveHelper().strafe(((SkeletonVillagerEntity)entity).isCharging() ? -0.5F : -3.0F, 0);
 		            }
 		            this.entity.faceEntity(livingentity, 30.0F, 30.0F);
 		         }
 
 		         double d0 = this.entity.getDistanceSq(livingentity);
 		         boolean flag2 = (d0 > (double)this.field_220751_d || this.field_220752_e < 5) && this.field_220753_f == 0;
-		         if (flag2)
-		         {
+		         if (flag2) {
 		          this.entity.getNavigator().tryMoveToEntityLiving(livingentity, this.func_220747_j() ? this.field_220750_c : this.field_220750_c * 0.5D);
 		         } else {
 		            this.entity.getNavigator().clearPath();
@@ -109,8 +110,7 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 		               this.field_220749_b = ImprovedCrossbowGoal.CrossbowState.CHARGING;
 		               ((ICrossbowUser)this.entity).setCharging(true);
 		            }
-		         } else if (this.field_220749_b == ImprovedCrossbowGoal.CrossbowState.CHARGING) 
-		         {
+		         } else if (this.field_220749_b == ImprovedCrossbowGoal.CrossbowState.CHARGING) {
 		            if (!this.entity.isHandActive()) {
 		               this.field_220749_b = ImprovedCrossbowGoal.CrossbowState.UNCHARGED;
 		            }
@@ -121,8 +121,7 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 		               this.entity.stopActiveHand();
 		               this.field_220749_b = ImprovedCrossbowGoal.CrossbowState.CHARGED;
 		               this.field_220753_f = 20 + this.entity.getRNG().nextInt(20);
-		               if (entity.getHeldItemOffhand().getItem() instanceof FireworkRocketItem) 
-		               {
+		               if (entity.getHeldItemOffhand().getItem() instanceof FireworkRocketItem) {
 		            	   entity.setActiveHand(Hand.OFF_HAND);
 		               }
 		               ((ICrossbowUser)this.entity).setCharging(false);
