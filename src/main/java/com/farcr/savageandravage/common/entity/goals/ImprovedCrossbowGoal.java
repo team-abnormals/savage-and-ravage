@@ -4,7 +4,10 @@ import java.util.EnumSet;
 
 import com.farcr.savageandravage.common.entity.SkeletonVillagerEntity;
 
-import net.minecraft.entity.*;
+import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.ICrossbowUser;
+import net.minecraft.entity.IRangedAttackMob;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.PillagerEntity;
