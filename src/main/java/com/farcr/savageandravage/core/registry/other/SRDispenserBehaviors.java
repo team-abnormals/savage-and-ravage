@@ -10,9 +10,9 @@ import net.minecraft.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.dispenser.IPosition;
 import net.minecraft.dispenser.ProjectileDispenseBehavior;
-import net.minecraft.entity.IProjectile;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
@@ -25,7 +25,7 @@ public class SRDispenserBehaviors {
 		
 		DispenserBlock.registerDispenseBehavior(SRItems.CREEPER_SPORES.get(), new ProjectileDispenseBehavior() {
 			@Override
-			protected IProjectile getProjectileEntity(World worldIn, IPosition position, ItemStack stackIn) {
+			protected ProjectileEntity getProjectileEntity(World worldIn, IPosition position, ItemStack stackIn) {
 				return new CreeperSporeCloudEntity(worldIn, position.getX(), position.getY(), position.getZ());
 			}
 		});

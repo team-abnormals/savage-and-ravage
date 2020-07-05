@@ -40,7 +40,7 @@ public class RunedGloomyTilesBlock extends Block {
             catch (ClassCastException classCast){
                 isCreativeMode = false;
             }
-            if (!(EntityTypeTags.RAIDERS.contains(entity.getType())) && entity.getType()!=EntityType.ARMOR_STAND && !isCreativeMode) {
+            if (!(EntityTypeTags.RAIDERS.func_230235_a_(entity.getType())) && entity.getType()!=EntityType.ARMOR_STAND && !isCreativeMode) {
                     if (entity instanceof LivingEntity) {
                         world.setBlockState(pos, state.with(TRIGGERED, Boolean.valueOf(true)));
                         world.playSound((PlayerEntity)null, pos, SRSounds.RUNES_ACTIVATED.get(), SoundCategory.HOSTILE, 1.0F, 1.0F);

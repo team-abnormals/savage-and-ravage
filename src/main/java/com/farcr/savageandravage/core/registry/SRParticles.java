@@ -17,7 +17,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class SRParticles 
 {
-	public static final DeferredRegister<ParticleType<?>> PARTICLES = new DeferredRegister<>(ForgeRegistries.PARTICLE_TYPES, SavageAndRavage.MODID);
+	public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, SavageAndRavage.MODID);
 	
 	public static final RegistryObject<BasicParticleType> CREEPER_SPORES = createParticle("creeper_spores", true);
 	

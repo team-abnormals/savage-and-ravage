@@ -373,7 +373,7 @@ public class SREvents {
 	public static void convertCreeper(CreeperEntity creeper){
 		CreepieEntity creepie = SREntities.CREEPIE.get().create(creeper.world);
 		creepie.copyLocationAndAnglesFrom(creeper.getEntity());
-		creepie.onInitialSpawn(creeper.world, creeper.world.getDifficultyForLocation(new BlockPos(creepie)), SpawnReason.CONVERSION, null, null);
+		creepie.onInitialSpawn(creeper.world, creeper.world.getDifficultyForLocation(new BlockPos(creepie.getPositionVec())), SpawnReason.CONVERSION, null, null);
 		creeper.remove();
 		creepie.setNoAI(creeper.isAIDisabled());
 		if (creeper.hasCustomName()) {

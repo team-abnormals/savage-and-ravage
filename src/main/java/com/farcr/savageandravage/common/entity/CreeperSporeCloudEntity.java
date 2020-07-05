@@ -63,7 +63,8 @@ public class CreeperSporeCloudEntity extends ThrowableEntity {
     public void summonCreepies() {
         if (aoe == null) {
             aoe = new AreaEffectCloudEntity(world, this.getPositionVec().getX(), this.getBoundingBox().maxY-0.2, this.getPositionVec().getZ());
-            aoe.setOwner(this.getThrower());
+            // TODO: func_234616_v_ = new getOwner -> returns Entity instead of LivingEntity
+            aoe.setOwner(this.getOwner());
             aoe.setParticleData(SRParticles.CREEPER_SPORES.get());
             aoe.setRadius(cloudSize + 0.3F);
             aoe.setRadiusOnUse(-0.05F);
@@ -95,7 +96,7 @@ public class CreeperSporeCloudEntity extends ThrowableEntity {
     @SuppressWarnings("deprecation")
 	public void tick() {
     	super.tick();
-    	this.world.addParticle(SRParticles.CREEPER_SPORES.get(), this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ() - 0.0D, 0.0D, 0.0D, 0.0D);
+    	this.world.addParticle(SRParticles.CREEPER_SPORES.get(), this.getPosX(), this.getPosY(), this.getPosZ() - 0.0D, 0.0D, 0.0D, 0.0D);
         if(shouldSpawnCreepies) {
             this.setMotion(0,0,0);
             this.setTicksTillRemove(this.getTicksTillRemove()-1);

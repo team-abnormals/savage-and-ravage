@@ -5,16 +5,16 @@ import net.minecraft.client.particle.IParticleFactory;
 import net.minecraft.client.particle.IParticleRenderType;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SpriteTexturedParticle;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particles.BasicParticleType;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
 
 public class CreeperSporeParticle extends SpriteTexturedParticle
 {
 	 private final IAnimatedSprite field_217583_C;
 
-	   public CreeperSporeParticle(World p_i51015_1_, double p_i51015_2_, double p_i51015_4_, double p_i51015_6_, double p_i51015_8_, double p_i51015_10_, double p_i51015_12_, IAnimatedSprite p_i51015_14_) {
+	   public CreeperSporeParticle(ClientWorld p_i51015_1_, double p_i51015_2_, double p_i51015_4_, double p_i51015_6_, double p_i51015_8_, double p_i51015_10_, double p_i51015_12_, IAnimatedSprite p_i51015_14_) {
 	      super(p_i51015_1_, p_i51015_2_, p_i51015_4_, p_i51015_6_, 0.0D, 0.0D, 0.0D);
 	      this.field_217583_C = p_i51015_14_;
 	      this.motionX *= (double)0.1F;
@@ -79,7 +79,7 @@ public class CreeperSporeParticle extends SpriteTexturedParticle
 		         this.spriteSet = p_i50629_1_;
 		      }
 
-		      public Particle makeParticle(BasicParticleType typeIn, World worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+		      public Particle makeParticle(BasicParticleType typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
 		         Particle particle = new CreeperSporeParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, this.spriteSet);
 		         return particle;
 		      }
