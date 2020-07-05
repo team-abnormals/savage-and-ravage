@@ -93,7 +93,7 @@ dependencies {
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft 'net.minecraftforge:forge:1.16.1-32.0.47'
-    implementation fg.deobf("curse.maven:abnormals-core:2980113")
+    implementation fg.deobf("curse.maven:abnormals-core:2989106")
 
     // You may put jars on which you depend on in ./libs or you may define them like so..
     // compile "some.group:artifact:version:classifier"
