@@ -12,6 +12,7 @@ import com.farcr.savageandravage.core.registry.SREntities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.IPacket;
@@ -81,6 +82,7 @@ public class RunePrisonEntity extends Entity {
     }
 
     @Override
+    @SuppressWarnings("null")
     public void tick() {
         super.tick();
         if (world.isRemote && getTicksTillRemove() % 5 == 0) {
@@ -101,9 +103,16 @@ public class RunePrisonEntity extends Entity {
         }
         List<LivingEntity> intersectingEntityList = this.world.getEntitiesWithinAABB(LivingEntity.class, this.getBoundingBox());
         if (!intersectingEntityList.isEmpty()) {
-            for (LivingEntity livingentity : intersectingEntityList) {
-                if (livingentity.canBeHitWithPotion() && !(EntityTypeTags.RAIDERS.func_230235_a_(livingentity.getType()))) {
-                    livingentity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 20, 2));
+            for (LivingEntity livingEntity : intersectingEntityList) {
+                boolean isCreativeMode;
+                try{
+                    isCreativeMode = ((PlayerEntity)livingEntity).abilities.isCreativeMode;
+                }
+                catch (ClassCastException classCast){
+                    isCreativeMode = false;
+                }
+                if (livingEntity.canBeHitWithPotion() && !(EntityTypeTags.RAIDERS.func_230235_a_(livingEntity.getType())) && !isCreativeMode) {
+                    livingEntity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 20, 2));
                 }
             }
         }
@@ -113,7 +122,7 @@ public class RunePrisonEntity extends Entity {
                     world.setBlockState(getBlockPos(), SRBlocks.GLOOMY_TILES.get().getDefaultState());
                 }
             } catch(NullPointerException bruhMoment){
-
+                //this is supposed to be empty, IntelliJ
             }
             this.remove();
         }

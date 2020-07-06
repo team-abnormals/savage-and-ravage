@@ -23,6 +23,7 @@ public class RunedGloomyTilesBlock extends Block {
     public RunedGloomyTilesBlock(Properties blockProperties) {
         super(blockProperties);
         this.setDefaultState(this.stateContainer.getBaseState().with(TRIGGERED, Boolean.valueOf(false)));
+        //TODO check if boxing here is unnecessary
     }
 
     @Override
@@ -31,9 +32,10 @@ public class RunedGloomyTilesBlock extends Block {
         activate(worldIn.getBlockState(pos), worldIn, pos, entityIn);
     }
 
+    @SuppressWarnings("null")
     private void activate(BlockState state, World world, BlockPos pos, Entity entity) {
         if (!state.get(TRIGGERED)) {
-            Boolean isCreativeMode;
+            boolean isCreativeMode;
             try{
                isCreativeMode = ((PlayerEntity)entity).abilities.isCreativeMode;
             }
@@ -42,8 +44,8 @@ public class RunedGloomyTilesBlock extends Block {
             }
             if (!(EntityTypeTags.RAIDERS.func_230235_a_(entity.getType())) && entity.getType()!=EntityType.ARMOR_STAND && !isCreativeMode) {
                     if (entity instanceof LivingEntity) {
-                        world.setBlockState(pos, state.with(TRIGGERED, Boolean.valueOf(true)));
-                        world.playSound((PlayerEntity)null, pos, SRSounds.RUNES_ACTIVATED.get(), SoundCategory.HOSTILE, 1.0F, 1.0F);
+                        world.setBlockState(pos, state.with(TRIGGERED, Boolean.valueOf(true))); //TODO check this as well
+                        world.playSound(null, pos, SRSounds.RUNES_ACTIVATED.get(), SoundCategory.HOSTILE, 1.0F, 1.0F);
                         EvokerFangsEntity evokerFangs = EntityType.EVOKER_FANGS.create(world);
                         evokerFangs.setLocationAndAngles(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 0.0F, 0.0F);
                         world.addEntity(evokerFangs);
