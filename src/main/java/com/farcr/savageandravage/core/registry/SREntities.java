@@ -21,6 +21,7 @@ import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.entity.monster.MonsterEntity;
+import net.minecraft.entity.monster.SkeletonEntity;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.api.distmarker.Dist;
@@ -79,6 +80,7 @@ public class SREntities {
     	{
     		GlobalEntityTypeAttributes.put(CREEPIE.get(), CreepieEntity.func_234200_m_().func_233813_a_());
     		GlobalEntityTypeAttributes.put(GRIEFER.get(), GrieferEntity.func_234296_eI_().func_233813_a_());
+    		GlobalEntityTypeAttributes.put(SKELETON_VILLAGER.get(), SkeletonEntity.func_234275_m_().func_233813_a_());
     	}
     }
 }
