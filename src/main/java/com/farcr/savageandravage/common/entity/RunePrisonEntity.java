@@ -102,7 +102,7 @@ public class RunePrisonEntity extends Entity {
         List<LivingEntity> intersectingEntityList = this.world.getEntitiesWithinAABB(LivingEntity.class, this.getBoundingBox());
         if (!intersectingEntityList.isEmpty()) {
             for (LivingEntity livingentity : intersectingEntityList) {
-                if (livingentity.canBeHitWithPotion() && !(EntityTypeTags.RAIDERS.contains(livingentity.getType()))) {
+                if (livingentity.canBeHitWithPotion() && !(EntityTypeTags.RAIDERS.func_230235_a_(livingentity.getType()))) {
                     livingentity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 20, 2));
                 }
             }

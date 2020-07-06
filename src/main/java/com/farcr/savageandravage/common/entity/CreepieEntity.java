@@ -22,8 +22,9 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ILivingEntityData;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.Pose;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.ai.goal.HurtByTargetGoal;
 import net.minecraft.entity.ai.goal.LookAtGoal;
@@ -47,6 +48,7 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.server.management.PreYggdrasilConverter;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundEvent;
@@ -99,12 +101,18 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
         this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(1, new ConditionalNearestAttackableTargetGoal(this, true));
     }
-
-    @Override
-    protected void registerAttributes(){
-        super.registerAttributes();
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(5.0);
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.35D);
+    
+    // field_233821_d_ = movement speed
+    // field_233818_a_ = health
+    // field_233823_f_ = attack damage
+    // field_233819_b_ = follow range
+    // field_233826_i_ = armor
+ 	
+    public static AttributeModifierMap.MutableAttribute func_234200_m_() 
+    {
+ 	 return MonsterEntity.func_233666_p_().
+ 			 func_233815_a_(Attributes.field_233818_a_, 5.0).
+ 			 func_233815_a_(Attributes.field_233821_d_, 0.35D);
     }
 
     /**
@@ -116,12 +124,12 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
 
     @Override
     protected boolean isDespawnPeaceful() {
-        return this.getOwner()==null;
+        return this.getOwner() == null;
     }
 
     @Override
-    public boolean isPreventingPlayerRest(PlayerEntity playerIn) {
-        return this.getOwner()==null;
+    public boolean func_230292_f_(PlayerEntity playerIn) {
+        return this.getOwner() == null;
     }
 
     public boolean onLivingFall(float distance, float damageMultiplier) {
@@ -177,16 +185,16 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
     @Override
     public void readAdditional(CompoundNBT compound) {
         super.readAdditional(compound);
-        String s;
+        UUID s;
         if (compound.contains("OwnerUUID", 8)) {
-            s = compound.getString("OwnerUUID");
+            s = compound.getUniqueId("OwnerUUID");
         } else {
             String s1 = compound.getString("Owner");
             s = PreYggdrasilConverter.convertMobOwnerIfNeeded(this.getServer(), s1);
         }
-        if (!s.isEmpty()) {
+        if (s != null) {
             try {
-                this.setOwnerId(UUID.fromString(s));
+                this.setOwnerId(s);
             } catch (Throwable var4) {
                 this.setOwnerId(null);
             }
@@ -363,14 +371,14 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
     }
 
     @Override
-    public boolean processInteract(PlayerEntity player, Hand hand) {
+    public ActionResultType func_230254_b_(PlayerEntity player, Hand hand) {
         ItemStack itemstack = player.getHeldItem(hand);
         if (itemstack.getItem() == Items.BONE_MEAL) {
             if (this.isNotCreeper()) {
                 this.consumeItemFromStack(player, itemstack);
                 player.swing(hand, true); //this makes the player's hand swing
                 this.ageUp((int)((float)(-this.getGrowingAge() / 20) * 0.1F), true);
-                return true;
+                return ActionResultType.SUCCESS;
             }
         }
         if (itemstack.getItem() == Items.FLINT_AND_STEEL) {
@@ -382,9 +390,9 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
                 });
             }
 
-            return true;
+            return ActionResultType.SUCCESS;
         } else {
-            return super.processInteract(player, hand);
+        	return ActionResultType.FAIL;
         }
     }
 
@@ -530,7 +538,7 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
     private void finishConversion(ServerWorld world) {
         CreeperEntity creeperEntity = EntityType.CREEPER.create(this.world);
         creeperEntity.copyLocationAndAnglesFrom(this.getEntity());
-        creeperEntity.onInitialSpawn(this.world, this.world.getDifficultyForLocation(new BlockPos(creeperEntity)), SpawnReason.CONVERSION, null, null);
+        creeperEntity.onInitialSpawn(this.world, this.world.getDifficultyForLocation(creeperEntity.func_233580_cy_()), SpawnReason.CONVERSION, null, null);
         this.dead = true;
         this.remove();
         creeperEntity.setNoAI(this.isAIDisabled());

@@ -44,7 +44,7 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 	   }
 
 	   private boolean func_220745_g() {
-	      return this.entity.isHolding(Items.CROSSBOW);
+	      return this.entity.getHeldItemMainhand().getItem() instanceof CrossbowItem;
 	   }
 
 	   public boolean shouldContinueExecuting() {

@@ -13,8 +13,9 @@ import net.minecraft.entity.ILivingEntityData;
 import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.HurtByTargetGoal;
 import net.minecraft.entity.ai.goal.LookAtGoal;
@@ -25,6 +26,7 @@ import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.AbstractIllagerEntity;
 import net.minecraft.entity.monster.AbstractRaiderEntity;
+import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -78,14 +80,18 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 	   this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, IronGolemEntity.class, true)); 
 	}
 	
-	protected void registerAttributes() 
+	/*protected void registerAttributes() 
 	{
 	  super.registerAttributes();
       this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue((double)0.35F);
 	  this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(25.0D);
 	  this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(2.5D);
 	  this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(32.0D);
-	}
+	}*/
+	
+    public static AttributeModifierMap.MutableAttribute func_234296_eI_() {
+	    return MonsterEntity.func_234295_eP_().func_233815_a_(Attributes.field_233821_d_, (double)0.35F).func_233815_a_(Attributes.field_233818_a_, 25.0D).func_233815_a_(Attributes.field_233823_f_, 5.0D).func_233815_a_(Attributes.field_233819_b_, 32.0D);
+    }
 	
 	@Override
 	protected void registerData() 
@@ -108,13 +114,6 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 	   return SoundEvents.ENTITY_PILLAGER_HURT;
 	}
 
-	
-	@Override
-	public void applyWaveBonus(int p_213660_1_, boolean p_213660_2_)
-	{
-		// TODO Auto-generated method stub
-	}
-	
 	public ItemStack getPickedResult(RayTraceResult target) {
 		return new ItemStack(SRItems.GRIEFER_SPAWN_EGG.get());
 	}
@@ -135,7 +134,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
         if (this.kickTicks == 10 && attacker != null && this.isKicking()) 
         {
           this.attackEntityAsMob(attacker);
-          attacker.knockBack(this, 1.0F, MathHelper.sin(this.rotationYaw * ((float)Math.PI / 180F)), (-MathHelper.cos(this.rotationYaw * ((float)Math.PI / 180F))));
+          attacker.func_233627_a_(1.0F, MathHelper.sin(this.rotationYaw * ((float)Math.PI / 180F)), (-MathHelper.cos(this.rotationYaw * ((float)Math.PI / 180F))));
           if (this.kickTicks < 10) {
         	  this.setKicking(false);
           }
@@ -298,9 +297,9 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 		{
 		  double d0 = this.getAttackReachSqr(enemy);
 		  int i = griefer.world.rand.nextInt(3);
-		  if (distToEnemySqr <= d0 && this.attackTick <= 0) 
+		  if (distToEnemySqr <= d0 && this.field_234037_i_ <= 0) 
 		  {
-		    this.attackTick = 60;
+		    this.field_234037_i_ = 60;
 		    switch (i) 
 		    {
 		     case 0: 
@@ -317,7 +316,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 		    } //if this breaks anything tell me
 		     this.griefer.faceEntity(enemy, 30.0F, 30.0F);
 			 this.griefer.attackEntityAsMob(enemy);
-			 enemy.knockBack(enemy, 1.5F, (double)MathHelper.sin(griefer.rotationYaw * ((float)Math.PI / 180F)), (double)(-MathHelper.cos(griefer.rotationYaw * ((float)Math.PI / 180F))));
+			 enemy.func_233627_a_(1.5F, (double)MathHelper.sin(griefer.rotationYaw * ((float)Math.PI / 180F)), (double)(-MathHelper.cos(griefer.rotationYaw * ((float)Math.PI / 180F))));
 		    }
 		  } 
 	}
@@ -425,4 +424,9 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
       }
     }
   }
+
+	@Override
+	public void func_213660_a(int arg0, boolean arg1) {
+	   //i dont know.
+	}
 }

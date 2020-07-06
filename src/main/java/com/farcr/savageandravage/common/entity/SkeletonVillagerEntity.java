@@ -12,12 +12,9 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.CreatureAttribute;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ICrossbowUser;
 import net.minecraft.entity.ILivingEntityData;
-import net.minecraft.entity.IProjectile;
-import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
@@ -35,6 +32,7 @@ import net.minecraft.entity.monster.SpiderEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileHelper;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.CrossbowItem;
@@ -48,16 +46,12 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
-public class SkeletonVillagerEntity extends AbstractSkeletonEntity implements ICrossbowUser, IRangedAttackMob 
+public class SkeletonVillagerEntity extends AbstractSkeletonEntity implements ICrossbowUser 
 {
     private static final DataParameter<Boolean> DATA_CHARGING_STATE = EntityDataManager.createKey(SkeletonVillagerEntity.class, DataSerializers.BOOLEAN);
     private final ImprovedCrossbowGoal<SkeletonVillagerEntity> aiCrossBow = new ImprovedCrossbowGoal<SkeletonVillagerEntity>(this, 1.0D, 8.0F, 5.0D);
@@ -209,34 +203,15 @@ public class SkeletonVillagerEntity extends AbstractSkeletonEntity implements IC
 	public boolean isCharging() 
 	{
 	  return this.dataManager.get(DATA_CHARGING_STATE);
-	} 
-
-	public void shoot(LivingEntity target, ItemStack p_213670_2_, IProjectile projectile, float projectileAngle) 
-	{
-	  Entity entity = (Entity)projectile;
-	  double d0 = target.getPosX() - this.getPosX();
-	  double d1 = target.getPosZ() - this.getPosZ();
-	  double d2 = (double)MathHelper.sqrt(d0 * d0 + d1 * d1);
-	  double d3 = target.getPosYHeight(0.3333333333333333D) - entity.getPosY() + d2 * (double)0.2F;
-	  Vector3f vector3f = this.aim(new Vec3d(d0, d3, d1), projectileAngle);
-	  projectile.shoot((double)vector3f.getX(), (double)vector3f.getY(), (double)vector3f.getZ(), 1.6F, (float)(14 - this.world.getDifficulty().getId() * 4));
-	  this.playSound(SoundEvents.ITEM_CROSSBOW_SHOOT, 1.0F, 1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
 	}
 
-    private Vector3f aim(Vec3d p_213673_1_, float p_213673_2_) 
-    {
-	 Vec3d vec3d = p_213673_1_.normalize();
-	 Vec3d vec3d1 = vec3d.crossProduct(new Vec3d(0.0D, 1.0D, 0.0D));
-	  if (vec3d1.lengthSquared() <= 1.0E-7D) 
-	  {
-       vec3d1 = vec3d.crossProduct(this.getUpVector(1.0F));
-	  }
-	 Quaternion quaternion = new Quaternion(new Vector3f(vec3d1), 90.0F, true);
-	 Vector3f vector3f = new Vector3f(vec3d);
-     vector3f.transform(quaternion);
-	 Quaternion quaternion1 = new Quaternion(vector3f, p_213673_2_, true);
-	 Vector3f vector3f1 = new Vector3f(vec3d);
-	 vector3f1.transform(quaternion1);
-	 return vector3f1;
-   }
+	@Override
+	public void func_230283_U__() {
+		this.func_230283_U__();
+	}
+
+	@Override
+	public void func_230284_a_(LivingEntity arg0, ItemStack arg1, ProjectileEntity arg2, float arg3) {
+		this.func_230284_a_(arg0, arg1, arg2, arg3);
+	} 
 }

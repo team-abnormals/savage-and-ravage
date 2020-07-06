@@ -19,6 +19,7 @@ import com.teamabnormals.abnormals_core.core.utils.RegistryHelper;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.Heightmap;
@@ -26,6 +27,9 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -64,6 +68,17 @@ public class SREntities {
     public static void addSpawns(Biome biome) {
     	if (BiomeDictionary.hasType(biome, Type.OVERWORLD) && biome.getCategory() != Biome.Category.MUSHROOM && biome.getCategory() != Biome.Category.NONE) {
     		biome.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(SKELETON_VILLAGER.get(), 5, 5, 5)); //Rationalisation for this is that it used to be a pillager patrol
+    	}
+    }
+    
+    @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
+    public static class mojangWhy
+    {
+    	@SubscribeEvent(priority = EventPriority.LOWEST)
+        public static void imstuff(final RegistryEvent.Register<EntityType<?>> event) 
+    	{
+    		GlobalEntityTypeAttributes.put(CREEPIE.get(), CreepieEntity.func_234200_m_().func_233813_a_());
+    		GlobalEntityTypeAttributes.put(GRIEFER.get(), GrieferEntity.func_234296_eI_().func_233813_a_());
     	}
     }
 }

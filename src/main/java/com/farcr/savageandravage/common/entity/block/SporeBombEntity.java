@@ -73,7 +73,7 @@ public class SporeBombEntity extends TNTEntity
 	            this.world.playSound(null, this.getPosX(), this.getPosY(), this.getPosZ(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 1.0F, 1.0F);
 	         }
 	      } else {
-	         this.handleWaterMovement();
+	    	 this.func_233566_aG_();
 	         if (this.world.isRemote) {
 	            this.world.addParticle(ParticleTypes.SMOKE, this.getPosX(), this.getPosY() + 0.5D, this.getPosZ(), 0.0D, 0.0D, 0.0D);
 	         }

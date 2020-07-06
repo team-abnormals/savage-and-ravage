@@ -64,7 +64,7 @@ public class CreeperSporeCloudEntity extends ThrowableEntity {
         if (aoe == null) {
             aoe = new AreaEffectCloudEntity(world, this.getPositionVec().getX(), this.getBoundingBox().maxY-0.2, this.getPositionVec().getZ());
             // TODO: func_234616_v_ = new getOwner -> returns Entity instead of LivingEntity
-            aoe.setOwner(this.getOwner());
+            aoe.setOwner((LivingEntity) this.func_234616_v_());
             aoe.setParticleData(SRParticles.CREEPER_SPORES.get());
             aoe.setRadius(cloudSize + 0.3F);
             aoe.setRadiusOnUse(-0.05F);
@@ -107,21 +107,21 @@ public class CreeperSporeCloudEntity extends ThrowableEntity {
                 List<AxisAlignedBB> blockShapes = world.getBlockState(pos).getShape(world,pos).toBoundingBoxList();
                 boolean flag = true;
                 for(AxisAlignedBB box : blockShapes) {
-                    if(box.intersects(aoe.getBoundingBox())&&world.getBlockState(pos).getBlock().causesSuffocation(world.getBlockState(pos),world,pos)) flag = false;
+                    if(box.intersects(aoe.getBoundingBox())&&world.getBlockState(pos).isSuffocating(world, pos));
                 }
                 if(flag) {
                     CreepieEntity creepie = SREntities.CREEPIE.get().create(world);
                     creepie.setLocationAndAngles(xPos, aoe.getPosY(), zPos, 0.0F, 0.0F);
                     boolean throwerIsInvisible;
                     try { //TODO see if these two checks are needed
-                        throwerIsInvisible = getThrower().isPotionActive(Effects.INVISIBILITY);
+                        throwerIsInvisible = ((LivingEntity) this.func_234616_v_()).isPotionActive(Effects.INVISIBILITY);
                     } catch (NullPointerException nullPointer) {
                         throwerIsInvisible = false;
                         //swallowed because it doesn't matter if the thrower has no effect
                     }
                     if (!throwerIsInvisible) {
                         try {
-                            creepie.setOwnerId(getThrower().getUniqueID());
+                            creepie.setOwnerId(((LivingEntity) this.func_234616_v_()).getUniqueID());
                         } catch (NullPointerException nullPointer) {
                             creepie.setOwnerId(null);
                         }
