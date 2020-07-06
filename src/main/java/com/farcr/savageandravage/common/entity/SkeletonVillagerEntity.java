@@ -176,14 +176,8 @@ public class SkeletonVillagerEntity extends AbstractSkeletonEntity implements IC
 
 	@Override
 	public void attackEntityWithRangedAttack(LivingEntity target, float distanceFactor) 
-	{
-	  Hand hand = ProjectileHelper.getHandWith(this, Items.CROSSBOW);
-	  ItemStack itemstack = this.getHeldItem(hand);
-	  if (itemstack.getItem() instanceof CrossbowItem)
-	  {
-	   CrossbowItem.fireProjectiles(this.world, this, hand, itemstack, 1.6F, (float)(14 - this.world.getDifficulty().getId() * 4));
-	  }
-	  this.idleTime = 0;
+	{ 
+	  this.func_234281_b_(this, 1.6F);
 	}
 	
 	public void readAdditional(CompoundNBT compound) 
@@ -206,12 +200,14 @@ public class SkeletonVillagerEntity extends AbstractSkeletonEntity implements IC
 	}
 
 	@Override
-	public void func_230283_U__() {
-		this.func_230283_U__();
+	public void func_230283_U__()
+	{
+      this.idleTime = 0;
 	}
 
 	@Override
-	public void func_230284_a_(LivingEntity arg0, ItemStack arg1, ProjectileEntity arg2, float arg3) {
-		this.func_230284_a_(arg0, arg1, arg2, arg3);
-	} 
+	public void func_230284_a_(LivingEntity p_230284_1_, ItemStack p_230284_2_, ProjectileEntity p_230284_3_, float p_230284_4_) 
+	{
+	  this.func_234279_a_(this, p_230284_1_, p_230284_3_, p_230284_4_, 1.6F);
+	}
 }
