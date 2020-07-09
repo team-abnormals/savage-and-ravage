@@ -110,8 +110,8 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
     public static AttributeModifierMap.MutableAttribute func_234200_m_() 
     {
  	 return MonsterEntity.func_233666_p_().
- 			 func_233815_a_(Attributes.field_233818_a_, 5.0).
- 			 func_233815_a_(Attributes.field_233821_d_, 0.35D);
+ 			 func_233815_a_(Attributes.MAX_HEALTH, 5.0).
+ 			 func_233815_a_(Attributes.MOVEMENT_SPEED, 0.35D);
     }
 
     /**

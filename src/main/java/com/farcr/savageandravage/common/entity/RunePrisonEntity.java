@@ -111,7 +111,7 @@ public class RunePrisonEntity extends Entity {
                 catch (ClassCastException classCast){
                     isCreativeMode = false;
                 }
-                if (livingEntity.canBeHitWithPotion() && !(EntityTypeTags.RAIDERS.func_230235_a_(livingEntity.getType())) && !isCreativeMode) {
+                if (livingEntity.canBeHitWithPotion() && !(EntityTypeTags.RAIDERS.contains(livingEntity.getType())) && !isCreativeMode) {
                     livingEntity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 20, 2));
                 }
             }

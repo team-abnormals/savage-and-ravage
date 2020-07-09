@@ -6,9 +6,7 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ArmorStandEntity;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.util.math.Rotations;
 
 /**
  * ModelGrieferArmor - MCVinnyq & Farcr
@@ -71,11 +69,18 @@ public class GrieferArmorModel<T extends LivingEntity> extends BipedModel<T> {
     @Override
     public void render(MatrixStack matrixStack, IVertexBuilder buffer, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
     	if (this.slot == EquipmentSlotType.HEAD) {
+        	this.helmet1.copyModelAngles(this.bipedHead);
+        	this.helmet2.copyModelAngles(this.bipedHead);
+        	
             this.helmet1.render(matrixStack, buffer, packedLightIn, packedOverlayIn, red, green, blue, alpha);
             this.helmet2.render(matrixStack, buffer, packedLightIn, packedOverlayIn, red, green, blue, alpha);
     	}
     	
     	if (this.slot == EquipmentSlotType.CHEST) {
+        	this.chestplate1.copyModelAngles(this.bipedBody);
+        	this.shoulderpadleft.copyModelAngles(this.bipedLeftArm);
+        	this.shoulderpadright.copyModelAngles(this.bipedRightArm);
+        	
             this.chestplate1.render(matrixStack, buffer, packedLightIn, packedOverlayIn, red, green, blue, alpha);
             this.shoulderpadleft.render(matrixStack, buffer, packedLightIn, packedOverlayIn, red, green, blue, alpha);
             this.shoulderpadright.render(matrixStack, buffer, packedLightIn, packedOverlayIn, red, green, blue, alpha);
@@ -84,61 +89,29 @@ public class GrieferArmorModel<T extends LivingEntity> extends BipedModel<T> {
     	if (this.slot == EquipmentSlotType.LEGS) {
             matrixStack.push();
         	matrixStack.scale(1.01F, 1.0F, 1.01F);
+        	
+        	this.chestplate2.copyModelAngles(this.bipedBody);
+        	this.leggingsleft.copyModelAngles(this.bipedLeftLeg);
+        	this.leggingsright.copyModelAngles(this.bipedRightLeg);
+        	
             this.chestplate2.render(matrixStack, buffer, packedLightIn, packedOverlayIn, red, green, blue, alpha);
         	this.leggingsleft.render(matrixStack, buffer, packedLightIn, packedOverlayIn, red, green, blue, alpha);
             this.leggingsright.render(matrixStack, buffer, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-            matrixStack.pop();
             
+            matrixStack.pop();
     	}
 
 		if (this.slot == EquipmentSlotType.FEET) {
 			matrixStack.push();
 			matrixStack.scale(1.01F, 1.0F, 1.01F);
+			
+	    	this.bootsleft.copyModelAngles(this.bipedLeftLeg);
+	    	this.bootsright.copyModelAngles(this.bipedRightLeg);
+	    	
 	        this.bootsleft.render(matrixStack, buffer, packedLightIn, packedOverlayIn, red, green, blue, alpha);
 	        this.bootsright.render(matrixStack, buffer, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+	        
 	        matrixStack.pop();
 		}
-    }
-    
-    @Override
-    public void setRotationAngles(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-    	super.setRotationAngles(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-    	
-    	this.helmet1.copyModelAngles(this.bipedHead);
-    	this.helmet2.copyModelAngles(this.bipedHead);
-    	
-    	this.shoulderpadleft.copyModelAngles(this.bipedLeftArm);
-    	this.shoulderpadright.copyModelAngles(this.bipedRightArm);
-    	
-    	this.bootsleft.copyModelAngles(this.bipedLeftLeg);
-    	this.bootsright.copyModelAngles(this.bipedRightLeg);
-    	
-    	this.leggingsleft.copyModelAngles(this.bipedLeftLeg);
-    	this.leggingsright.copyModelAngles(this.bipedRightLeg);
-    	
-    	this.chestplate1.copyModelAngles(this.bipedBody);
-    	this.chestplate2.copyModelAngles(this.bipedBody);
-    	
-    	if (entity instanceof ArmorStandEntity) {
-    		ArmorStandEntity stand = (ArmorStandEntity) entity;
-    		
-    		this.copyStandAngles(stand, helmet1, stand.getHeadRotation());
-    		this.copyStandAngles(stand, helmet2, stand.getHeadRotation());
-    		this.copyStandAngles(stand, shoulderpadleft, stand.getLeftArmRotation());
-    		this.copyStandAngles(stand, shoulderpadright, stand.getRightArmRotation());
-    		this.copyStandAngles(stand, bootsleft, stand.getLeftLegRotation());
-    		this.copyStandAngles(stand, bootsright, stand.getRightLegRotation());
-    		this.copyStandAngles(stand, leggingsleft, stand.getLeftLegRotation());
-    		this.copyStandAngles(stand, leggingsright, stand.getRightLegRotation());
-    		this.copyStandAngles(stand, chestplate1, stand.getBodyRotation());
-    		this.copyStandAngles(stand, chestplate2, stand.getBodyRotation());
-    	}
-
-    }
-    
-    public void copyStandAngles(ArmorStandEntity stand, ModelRenderer model, Rotations rotation) {
-    	model.rotateAngleX = (float) Math.toRadians(rotation.getX());
-		model.rotateAngleY = (float) Math.toRadians(rotation.getY());
-		model.rotateAngleZ = (float) Math.toRadians(rotation.getZ());
     }
 }

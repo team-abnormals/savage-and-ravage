@@ -18,19 +18,19 @@ public class SREffects {
     public static final DeferredRegister<Effect> EFFECTS = DeferredRegister.create(ForgeRegistries.POTIONS, SavageAndRavage.MODID);
     public static final DeferredRegister<Potion> POTIONS = DeferredRegister.create(ForgeRegistries.POTION_TYPES, SavageAndRavage.MODID);
 
-    public static final RegistryObject<Effect> GROWING = EFFECTS.register("growth", GrowingEffect::new);
+    public static final RegistryObject<Effect> GROWING = EFFECTS.register("growing", GrowingEffect::new);
     public static final RegistryObject<Effect> SHRINKING = EFFECTS.register("shrinking", ShrinkingEffect::new);
 
-    public static final RegistryObject<Potion> GROWING_NORMAL  = POTIONS.register("growing", () -> new Potion(new EffectInstance(GROWING.get(), 600)));
-    public static final RegistryObject<Potion> GROWING_LONG   = POTIONS.register("growing_long", () -> new Potion(new EffectInstance(GROWING.get(), 1800)));
+    public static final RegistryObject<Potion> GROWTH_NORMAL  = POTIONS.register("growth", () -> new Potion(new EffectInstance(GROWING.get(), 600)));
+    public static final RegistryObject<Potion> GROWTH_LONG   = POTIONS.register("growth_long", () -> new Potion(new EffectInstance(GROWING.get(), 1800)));
     public static final RegistryObject<Potion> YOUTH_NORMAL  = POTIONS.register("youth", () -> new Potion(new EffectInstance(SHRINKING.get(), 600)));
     public static final RegistryObject<Potion> YOUTH_LONG   = POTIONS.register("youth_long", () -> new Potion(new EffectInstance(SHRINKING.get(), 1800)));
 
     public static void registerBrewingRecipes(){
-        PotionBrewing.addMix(Potions.AWKWARD, Items.GOLDEN_APPLE, GROWING_NORMAL.get());
-        PotionBrewing.addMix(GROWING_NORMAL.get(), Items.REDSTONE, GROWING_LONG.get());
-        PotionBrewing.addMix(GROWING_NORMAL.get(), Items.FERMENTED_SPIDER_EYE, YOUTH_NORMAL.get());
-        PotionBrewing.addMix(GROWING_LONG.get(), Items.FERMENTED_SPIDER_EYE, YOUTH_LONG.get());
+        PotionBrewing.addMix(Potions.AWKWARD, Items.GOLDEN_APPLE, GROWTH_NORMAL.get());
+        PotionBrewing.addMix(GROWTH_NORMAL.get(), Items.REDSTONE, GROWTH_LONG.get());
+        PotionBrewing.addMix(GROWTH_NORMAL.get(), Items.FERMENTED_SPIDER_EYE, YOUTH_NORMAL.get());
+        PotionBrewing.addMix(GROWTH_LONG.get(), Items.FERMENTED_SPIDER_EYE, YOUTH_LONG.get());
         PotionBrewing.addMix(YOUTH_NORMAL.get(), Items.REDSTONE, YOUTH_LONG.get());
     }
 }

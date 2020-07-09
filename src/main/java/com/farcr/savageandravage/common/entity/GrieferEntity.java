@@ -90,7 +90,11 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 	}*/
 	
     public static AttributeModifierMap.MutableAttribute func_234296_eI_() {
-	    return MonsterEntity.func_234295_eP_().func_233815_a_(Attributes.field_233821_d_, (double)0.35F).func_233815_a_(Attributes.field_233818_a_, 25.0D).func_233815_a_(Attributes.field_233823_f_, 5.0D).func_233815_a_(Attributes.field_233819_b_, 32.0D);
+	    return MonsterEntity.func_234295_eP_()
+	    		.func_233815_a_(Attributes.MOVEMENT_SPEED, (double)0.35F)
+	    		.func_233815_a_(Attributes.MAX_HEALTH, 25.0D)
+	    		.func_233815_a_(Attributes.ATTACK_DAMAGE, 5.0D)
+	    		.func_233815_a_(Attributes.FOLLOW_RANGE, 32.0D);
     }
 	
 	@Override
@@ -134,7 +138,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
         if (this.kickTicks == 10 && attacker != null && this.isKicking()) 
         {
           this.attackEntityAsMob(attacker);
-          attacker.func_233627_a_(1.0F, MathHelper.sin(this.rotationYaw * ((float)Math.PI / 180F)), (-MathHelper.cos(this.rotationYaw * ((float)Math.PI / 180F))));
+          attacker.applyKnockback(1.0F, MathHelper.sin(this.rotationYaw * ((float)Math.PI / 180F)), (-MathHelper.cos(this.rotationYaw * ((float)Math.PI / 180F))));
           if (this.kickTicks < 10) {
         	  this.setKicking(false);
           }
@@ -316,7 +320,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 		    } //if this breaks anything tell me
 		     this.griefer.faceEntity(enemy, 30.0F, 30.0F);
 			 this.griefer.attackEntityAsMob(enemy);
-			 enemy.func_233627_a_(1.5F, (double)MathHelper.sin(griefer.rotationYaw * ((float)Math.PI / 180F)), (double)(-MathHelper.cos(griefer.rotationYaw * ((float)Math.PI / 180F))));
+			 enemy.applyKnockback(1.5F, (double)MathHelper.sin(griefer.rotationYaw * ((float)Math.PI / 180F)), (double)(-MathHelper.cos(griefer.rotationYaw * ((float)Math.PI / 180F))));
 		    }
 		  } 
 	}
