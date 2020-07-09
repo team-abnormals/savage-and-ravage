@@ -51,7 +51,7 @@ public class GrieferArmorModel<T extends LivingEntity> extends BipedModel<T> {
     	this.entity = entity;
     	
         this.textureWidth = 128;
-        this.textureHeight = 128;
+        this.textureHeight = 64;
         
         this.helmet1 = new ModelRenderer(this, 0, 0);
         this.helmet1.setRotationPoint(0.0F, 0.0F, 0.0F);
@@ -96,7 +96,7 @@ public class GrieferArmorModel<T extends LivingEntity> extends BipedModel<T> {
         this.shoulderpadright.setRotationPoint(-5.0F, 1.0F, 0.0F);
         this.shoulderpadright.addBox(-4.0F, -2.0F, -3.0F, 5, 6, 6, 0.3F);
         
-        this.piglin_helmet1 = new ModelRenderer(this, 0, 71);
+        this.piglin_helmet1 = new ModelRenderer(this, 64, 0);
         this.piglin_helmet1.setRotationPoint(0.0F, 0.0F, 0.0F);
         this.piglin_helmet1.addBox(-5.0F, -8.5F, -4.0F, 10.0F, 9.0F, 8.0F, 0.6F, false);
 
@@ -104,19 +104,19 @@ public class GrieferArmorModel<T extends LivingEntity> extends BipedModel<T> {
         this.piglin_helmet2.setRotationPoint(0.0F, 0.0F, 0.0F);
         this.piglin_helmet2.addBox(-1.0F, -12.5F, -6.1F, 2.0F, 8.0F, 12.0F, 0.125F, false);
 
-        this.piglin_helmet3 = new ModelRenderer(this, 0, 91);
+        this.piglin_helmet3 = new ModelRenderer(this, 64, 20);
         this.piglin_helmet3.setRotationPoint(0.0F, 0.0F, 0.0F);
         this.piglin_helmet3.addBox(-2.0F, -4.2F, -5.7F, 4.0F, 4.0F, 1.0F, 0.35F, false);
 
-        this.piglin_helmet4 = new ModelRenderer(this, 0, 96);
+        this.piglin_helmet4 = new ModelRenderer(this, 64, 25);
         this.piglin_helmet4.setRotationPoint(0.0F, 0.0F, 0.0F);
         this.piglin_helmet4.addBox(2.5F, -2F, -5.9F, 1.0F, 2.0F, 1.0F, 0.15F, false);
 
-        this.piglin_helmet5 = new ModelRenderer(this, 0, 96);
+        this.piglin_helmet5 = new ModelRenderer(this, 64, 25);
         this.piglin_helmet5.setRotationPoint(0.0F, 0.0F, 0.0F);
         this.piglin_helmet5.addBox(-3.5F, -2F, -5.9F, 1.0F, 2.0F, 1.0F, 0.15F, false);
 
-        this.illager_helmet1 = new ModelRenderer(this, 96, 69);
+        this.illager_helmet1 = new ModelRenderer(this, 64, 28);
         this.illager_helmet1.setRotationPoint(0.0F, 0.0F, 0.0F);
         this.illager_helmet1.addBox(-4.0F, -10.0F, -4.0F, 8.0F, 11.0F, 8.0F, 0.6F, false);
 
@@ -124,7 +124,7 @@ public class GrieferArmorModel<T extends LivingEntity> extends BipedModel<T> {
         this.illager_helmet2.setRotationPoint(0.0F, 0.0F, 0.0F);
         this.illager_helmet2.addBox(-1.0F, -13.0F, -6.1F, 2.0F, 8.0F, 12.0F, 0.125F, false);
 
-        this.illager_helmet3 = new ModelRenderer(this, 96, 71);
+        this.illager_helmet3 = new ModelRenderer(this, 64, 30);
         this.illager_helmet3.setRotationPoint(0.0F, 0.0F, 0.0F);
         this.illager_helmet3.addBox(-1.0F, -3.0F, -6.1F, 2.0F, 4.0F, 2.0F, 0.125F, false);
     }
