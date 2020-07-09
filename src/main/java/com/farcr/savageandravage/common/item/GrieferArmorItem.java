@@ -39,7 +39,7 @@ public class GrieferArmorItem extends ArmorItem {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public <A extends BipedModel<?>> A getArmorModel(LivingEntity entityLiving, ItemStack stack, EquipmentSlotType armorSlot, A _default) {
-		return (A) new GrieferArmorModel(1.0F, slot);
+		return (A) new GrieferArmorModel(1.0F, slot, entityLiving);
 	}
 	
 	public String getReductionString() {
