@@ -107,8 +107,8 @@ public class SkeletonVillagerModel extends BipedModel<SkeletonVillagerEntity> {
 	   }
 	}
 	
-	@Override
-	public void setLivingAnimations(SkeletonVillagerEntity entityIn, float limbSwing, float limbSwingAmount, float partialTick) 
+    @Override
+    public void setLivingAnimations(SkeletonVillagerEntity entityIn, float limbSwing, float limbSwingAmount, float partialTick) 
 	{
       ItemStack itemstack = entityIn.getHeldItemMainhand();
       UseAction useaction = itemstack.getUseAction();
@@ -142,29 +142,29 @@ public class SkeletonVillagerModel extends BipedModel<SkeletonVillagerEntity> {
       }
       if (entityIn.getPrimaryHand() == HandSide.LEFT) 
       {
-          switch(useaction) 
-          {
-            case BLOCK:
-            this.leftArmPose = BipedModel.ArmPose.BLOCK;
-            break;
-            case CROSSBOW:
-            this.leftArmPose = BipedModel.ArmPose.CROSSBOW_HOLD;
-            if (entityIn.isCharging()) 
-            {
-          	 this.leftArmPose = BipedModel.ArmPose.CROSSBOW_CHARGE;
-            }
-            break;
-            case BOW:
-            this.leftArmPose = BipedModel.ArmPose.BOW_AND_ARROW;
-            break;
-  		    default:
-  		    this.leftArmPose = BipedModel.ArmPose.EMPTY;
-  		    if (!itemstack.isEmpty()) 
-  		    {
+       switch(useaction) 
+       {
+         case BLOCK:
+         this.leftArmPose = BipedModel.ArmPose.BLOCK;
+         break;
+         case CROSSBOW:
+         this.leftArmPose = BipedModel.ArmPose.CROSSBOW_HOLD;
+         if (entityIn.isCharging()) 
+         {
+          this.leftArmPose = BipedModel.ArmPose.CROSSBOW_CHARGE;
+         }
+         break;
+         case BOW:
+         this.leftArmPose = BipedModel.ArmPose.BOW_AND_ARROW;
+         break;
+  		 default:
+  		 this.leftArmPose = BipedModel.ArmPose.EMPTY;
+  		 if (!itemstack.isEmpty()) 
+  		 {
   		      this.leftArmPose = BipedModel.ArmPose.ITEM;
-  		    }
-  	        break;
-          }
+  		 }
+  	     break;
+       }
       }
 	  super.setLivingAnimations(entityIn, limbSwing, limbSwingAmount, partialTick);
 	}
