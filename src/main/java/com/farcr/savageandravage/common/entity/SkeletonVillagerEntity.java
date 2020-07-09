@@ -165,6 +165,7 @@ public class SkeletonVillagerEntity extends AbstractSkeletonEntity implements IC
 	    EnchantmentHelper.setEnchantments(map, itemstack);
 	   }
 	   this.setItemStackToSlot(EquipmentSlotType.MAINHAND, itemstack);
+	   super.setEquipmentBasedOnDifficulty(difficulty);
 	}
 	 
     protected void registerData()
