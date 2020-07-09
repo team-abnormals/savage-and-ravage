@@ -2,6 +2,7 @@ package com.farcr.savageandravage.client.render;
 
 import javax.annotation.Nullable;
 
+import com.farcr.savageandravage.client.model.SkeletonVillagerArmorModel;
 import com.farcr.savageandravage.client.model.SkeletonVillagerModel;
 import com.farcr.savageandravage.common.entity.SkeletonVillagerEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -9,6 +10,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.client.renderer.entity.layers.BipedArmorLayer;
 import net.minecraft.client.renderer.entity.layers.HeldItemLayer;
 import net.minecraft.util.ResourceLocation;
 
@@ -18,14 +20,15 @@ public class SkeletonVillagerRenderer extends MobRenderer<SkeletonVillagerEntity
 
     public SkeletonVillagerRenderer(EntityRendererManager manager) 
     {
-        super(manager, new SkeletonVillagerModel(), 0.5f);
+        super(manager, new SkeletonVillagerModel(0.0F), 0.5f);
+        this.addLayer(new BipedArmorLayer(this, new SkeletonVillagerArmorModel(0.5F), new SkeletonVillagerArmorModel(1.0F)));
         this.addLayer(new HeldItemLayer<SkeletonVillagerEntity, SkeletonVillagerModel>(this) {
         public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, SkeletonVillagerEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
             if (entitylivingbaseIn.isAggressive()) {
                super.render(matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch);
             }
          }
-      });
+        });
    }
 
     @Nullable
