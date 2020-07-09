@@ -59,6 +59,8 @@
 	"item.minecraft.tipped_arrow.effect.youth_long": "Arrow of Youth",
 
 	"attribute.name.grieferArmor.explosiveDamageReduction": "Explosive Damage Reduction",
+	"advancements.story.griefer_armor.title": "Dynamite with a Laser Beam",
+	"advancements.story.griefer_armor.description": "Get a full suit of Griefer armor",
 	
 	"advancements.adventure.voluntary_exile.description": "Set fire to an Ominous Banner.\nMaybe consider staying away from villages for the time being..."
 }
