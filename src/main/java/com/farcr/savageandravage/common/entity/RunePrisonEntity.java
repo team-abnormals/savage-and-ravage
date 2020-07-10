@@ -82,7 +82,6 @@ public class RunePrisonEntity extends Entity {
     }
 
     @Override
-    @SuppressWarnings("null")
     public void tick() {
         super.tick();
         if (world.isRemote && getTicksTillRemove() % 5 == 0) {
