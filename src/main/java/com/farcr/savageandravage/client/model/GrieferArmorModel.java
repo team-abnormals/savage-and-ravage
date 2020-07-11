@@ -199,7 +199,7 @@ public class GrieferArmorModel<T extends LivingEntity> extends BipedModel<T> {
 
 		if (this.slot == EquipmentSlotType.FEET) {
 			matrixStack.push();
-			matrixStack.scale(1.01F, 1.0F, 1.01F);
+			matrixStack.scale(1.05F, 1.0F, 1.05F);
 			
 	    	this.bootsleft.copyModelAngles(this.bipedLeftLeg);
 	    	this.bootsright.copyModelAngles(this.bipedRightLeg);
