@@ -7,11 +7,14 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.AbstractIllagerEntity;
 import net.minecraft.entity.monster.ZombieVillagerEntity;
 import net.minecraft.entity.monster.ZombifiedPiglinEntity;
 import net.minecraft.entity.monster.piglin.PiglinEntity;
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.registries.ForgeRegistries;
 
 /**
  * ModelGrieferArmor - MCVinnyq & Farcr
@@ -131,8 +134,16 @@ public class GrieferArmorModel<T extends LivingEntity> extends BipedModel<T> {
 
     @Override
     public void render(MatrixStack matrixStack, IVertexBuilder buffer, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
-    	boolean illager = this.entity instanceof AbstractIllagerEntity || this.entity instanceof SkeletonVillagerEntity || this.entity instanceof ZombieVillagerEntity;
-    	boolean piglin = this.entity instanceof PiglinEntity || this.entity instanceof ZombifiedPiglinEntity;
+    	boolean illager = 
+    			this.entity instanceof AbstractIllagerEntity || 
+    			this.entity instanceof SkeletonVillagerEntity || 
+    			this.entity instanceof ZombieVillagerEntity || 
+    			this.entity instanceof AbstractVillagerEntity || 
+    			this.entity.getType() == ForgeRegistries.ENTITIES.getValue(new ResourceLocation("guardvillagers:guard"));
+    	
+    	boolean piglin = 
+    			this.entity instanceof PiglinEntity || 
+    			this.entity instanceof ZombifiedPiglinEntity;
     	
     	if (this.slot == EquipmentSlotType.HEAD) {
     		if (piglin) {
