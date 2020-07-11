@@ -14,6 +14,7 @@ import com.farcr.savageandravage.common.entity.GrieferEntity;
 import com.farcr.savageandravage.common.entity.IOwnableMob;
 import com.farcr.savageandravage.common.entity.SkeletonVillagerEntity;
 import com.farcr.savageandravage.common.entity.goals.ImprovedCrossbowGoal;
+import com.farcr.savageandravage.common.item.GrieferArmorItem;
 import com.farcr.savageandravage.core.SavageAndRavage;
 import com.farcr.savageandravage.core.registry.SREntities;
 import com.farcr.savageandravage.core.registry.SRItems;
@@ -180,49 +181,23 @@ public class SREvents {
 	public static void handleBlastProof(LivingDamageEvent event){
 		LivingEntity entity = event.getEntityLiving();
 		float decrease = 0.0F;
-
 		boolean flag = false;
 
-		ItemStack head = entity.getItemStackFromSlot(EquipmentSlotType.HEAD);
-		ItemStack chest = entity.getItemStackFromSlot(EquipmentSlotType.CHEST);
-		ItemStack legs = entity.getItemStackFromSlot(EquipmentSlotType.LEGS);
-		ItemStack feet = entity.getItemStackFromSlot(EquipmentSlotType.FEET);
-
 		if (event.getSource().isExplosion()) {
-			if (head.getItem() == SRItems.GRIEFER_HELMET.get()) {
-				decrease += 0.25F;
-				flag = true;
-				SREvents.blastProtect(head, event.getEntityLiving());
-
+			for(EquipmentSlotType slot : EquipmentSlotType.values()) {
+				if (slot.getSlotType() == EquipmentSlotType.Group.ARMOR) {
+					ItemStack stack = entity.getItemStackFromSlot(slot);
+					if (stack.getItem() instanceof GrieferArmorItem) {
+						flag = true;
+						int damage = 22;
+						decrease += ((GrieferArmorItem)stack.getItem()).getReductionAmount();
+						if (EnchantmentHelper.getEnchantmentLevel(Enchantments.BLAST_PROTECTION, stack) > 0) damage -= EnchantmentHelper.getEnchantmentLevel(Enchantments.BLAST_PROTECTION, stack) * 8;
+						stack.damageItem(damage, entity, (onBroken) -> { onBroken.sendBreakAnimation(EquipmentSlotType.CHEST);});
+					}
+				}
 			}
-			if (chest.getItem() == SRItems.GRIEFER_CHESTPLATE.get()) {
-				decrease += 0.30F;
-				flag = true;
-				SREvents.blastProtect(chest, event.getEntityLiving());
-			}
-			if (legs.getItem() == SRItems.GRIEFER_LEGGINGS.get()) {
-				decrease += 0.25F;
-				flag = true;
-				SREvents.blastProtect(legs, event.getEntityLiving());
-
-			}
-			if (feet.getItem() == SRItems.GRIEFER_BOOTS.get()) {
-				decrease += 0.20F;
-				flag = true;
-				SREvents.blastProtect(feet, event.getEntityLiving());
-			}
-			if (flag) {
-				event.setAmount(event.getAmount() - (event.getAmount() * decrease));
-			}
+			if (flag) event.setAmount(event.getAmount() - (event.getAmount() * decrease));
 		}
-	}
-
-	public static void blastProtect(ItemStack stack, LivingEntity entity) {
-		int damage = 22;
-		if (EnchantmentHelper.getEnchantmentLevel(Enchantments.BLAST_PROTECTION, stack) > 0) {
-			damage -= EnchantmentHelper.getEnchantmentLevel(Enchantments.BLAST_PROTECTION, stack) * 8;
-		}
-		stack.damageItem(damage, entity, (onBroken) -> { onBroken.sendBreakAnimation(EquipmentSlotType.CHEST);});
 	}
 
 	@SubscribeEvent

@@ -22,9 +22,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class GrieferArmorItem extends ArmorItem {
 	private EquipmentSlotType slot;
-	private String reduction;
+	private int reduction;
 
-	public GrieferArmorItem(String reduction, IArmorMaterial material, EquipmentSlotType slot, Properties properties) {
+	public GrieferArmorItem(int reduction, IArmorMaterial material, EquipmentSlotType slot, Properties properties) {
 		super(material, slot, properties);
 		this.slot = slot;
 		this.reduction = reduction;
@@ -43,7 +43,11 @@ public class GrieferArmorItem extends ArmorItem {
 	}
 	
 	public String getReductionString() {
-		return this.reduction;
+		return String.valueOf(this.reduction);
+	}
+	
+	public float getReductionAmount() {
+		return this.reduction * 0.01F;
 	}
 	
 	@Override
