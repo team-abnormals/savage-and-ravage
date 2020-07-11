@@ -11,7 +11,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 
 public enum SRArmorMaterial implements IArmorMaterial {
-    GRIEFER("griefer", 15, new int[]{2, 5, 6, 2}, 9, SRItems.BLAST_PROOF_PLATING.get(), SoundEvents.ITEM_ARMOR_EQUIP_IRON, 1.0f);
+    GRIEFER("griefer", 15, new int[]{2, 5, 6, 2}, 15, SRItems.BLAST_PROOF_PLATING.get(), SoundEvents.ITEM_ARMOR_EQUIP_IRON, 1.0f);
 
     private static final int[] MAX_DAMAGE_ARRAY = new int[]{13, 15, 16, 11};
     private String name;
