@@ -106,7 +106,7 @@ public class CreeperSporeCloudEntity extends ThrowableEntity {
                 List<AxisAlignedBB> blockShapes = world.getBlockState(pos).getShape(world,pos).toBoundingBoxList();
                 boolean flag = true;
                 for(AxisAlignedBB box : blockShapes) {
-                    if(box.intersects(aoe.getBoundingBox())&&world.getBlockState(pos).isSuffocating(world, pos));
+                    if(box.intersects(aoe.getBoundingBox()) && world.getBlockState(pos).isSuffocating(world, pos)) flag = false;
                 }
                 if(flag) {
                     CreepieEntity creepie = SREntities.CREEPIE.get().create(world);

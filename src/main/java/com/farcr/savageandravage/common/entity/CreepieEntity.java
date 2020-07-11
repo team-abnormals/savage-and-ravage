@@ -536,7 +536,7 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
 
     private void finishConversion(ServerWorld world) {
         CreeperEntity creeperEntity = EntityType.CREEPER.create(this.world);
-        creeperEntity.copyLocationAndAnglesFrom(this.getEntity());
+        creeperEntity.copyLocationAndAnglesFrom(this);
         creeperEntity.onInitialSpawn(this.world, this.world.getDifficultyForLocation(creeperEntity.func_233580_cy_()), SpawnReason.CONVERSION, null, null);
         this.dead = true;
         this.remove();
@@ -597,6 +597,4 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
     {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
-
-
 }
