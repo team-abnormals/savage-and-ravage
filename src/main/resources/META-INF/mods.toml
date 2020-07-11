@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[31,)"
+loaderVersion="[32,)"
 issueTrackerURL="http://https://github.com/Farcr/SavageAndRavage/issues"
 
 [[mods]] #mandatory
@@ -17,7 +17,7 @@ A mod that improves and expands on illagers through new structures, enemies and 
 [[dependencies.savageandravage]] 
     modId="forge"
     mandatory=true
-    versionRange="[31.1.46,)"
+    versionRange="[32.0.62,)"
     ordering="NONE"
     side="BOTH"
 
@@ -31,6 +31,6 @@ A mod that improves and expands on illagers through new structures, enemies and 
 [[dependencies.savageandravage]]
     modId="abnormals_core"
     mandatory=true
-    versionRange="[1.0.6,)"
+    versionRange="[2.0.0,)"
     ordering="AFTER"
     side="BOTH"
