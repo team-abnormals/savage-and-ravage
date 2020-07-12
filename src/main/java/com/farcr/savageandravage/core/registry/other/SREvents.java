@@ -13,6 +13,7 @@ import com.farcr.savageandravage.common.entity.CreepieEntity;
 import com.farcr.savageandravage.common.entity.GrieferEntity;
 import com.farcr.savageandravage.common.entity.IOwnableMob;
 import com.farcr.savageandravage.common.entity.SkeletonVillagerEntity;
+import com.farcr.savageandravage.common.entity.goals.AvoidGrieferOwnedCreepiesGoal;
 import com.farcr.savageandravage.common.entity.goals.ImprovedCrossbowGoal;
 import com.farcr.savageandravage.common.item.GrieferArmorItem;
 import com.farcr.savageandravage.core.SavageAndRavage;
@@ -114,8 +115,9 @@ public class SREvents {
 
 		if (event.getEntity() instanceof AbstractVillagerEntity) {
 		   AbstractVillagerEntity villager = (AbstractVillagerEntity)event.getEntity();
-		   villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, SkeletonVillagerEntity.class, 15.0F, 1.0D, 1.0D));
-		   villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, GrieferEntity.class, 15.0F, 0.7D, 0.7D));
+		   villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, SkeletonVillagerEntity.class, 8.0F, 0.6D, 0.6D));
+		   villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, GrieferEntity.class, 8.0F, 0.8D, 0.8D));
+		   villager.goalSelector.addGoal(1, new AvoidGrieferOwnedCreepiesGoal<>(villager, CreepieEntity.class, 8.0F, 0.8D, 0.8D)); 
 		}
 	}
 

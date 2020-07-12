@@ -67,7 +67,7 @@ public class SkeletonVillagerModel extends BipedModel<SkeletonVillagerEntity> {
         this.bipedHeadwear.showModel = false;
     }
 
-	@Override
+    @Override
     protected Iterable<ModelRenderer> getBodyParts() 
 	{
       return ImmutableList.of(this.bipedBody, this.bipedRightArm, this.bipedLeftArm, this.bipedRightLeg, this.bipedLeftLeg, this.MiddleClosedArm);
@@ -109,7 +109,7 @@ public class SkeletonVillagerModel extends BipedModel<SkeletonVillagerEntity> {
 	
     @Override
     public void setLivingAnimations(SkeletonVillagerEntity entityIn, float limbSwing, float limbSwingAmount, float partialTick) 
-	{
+    {
       ItemStack itemstack = entityIn.getHeldItemMainhand();
       UseAction useaction = itemstack.getUseAction();
       this.rightArmPose = BipedModel.ArmPose.EMPTY;
@@ -166,15 +166,83 @@ public class SkeletonVillagerModel extends BipedModel<SkeletonVillagerEntity> {
   	     break;
        }
       }
-	  super.setLivingAnimations(entityIn, limbSwing, limbSwingAmount, partialTick);
-	}
-
-    protected ModelRenderer getArmForSide(HandSide side) 
+      super.setLivingAnimations(entityIn, limbSwing, limbSwingAmount, partialTick);
+    }
+    
+    @Override
+    protected void func_241654_b_(SkeletonVillagerEntity p_241654_1_) 
     {
-	  return side == HandSide.LEFT ? this.bipedLeftArm : this.bipedRightArm;
-	}
-
-
+     switch(this.rightArmPose) 
+     {
+      case EMPTY:
+        this.bipedRightArm.rotateAngleY = 0.0F;
+        break;
+      case BLOCK:
+        this.bipedRightArm.rotateAngleX = this.bipedRightArm.rotateAngleX * 0.5F - 0.9424779F;
+        this.bipedRightArm.rotateAngleY = (-(float)Math.PI / 6F);
+        break;
+      case ITEM:
+        this.bipedRightArm.rotateAngleX = this.bipedRightArm.rotateAngleX * 0.5F - ((float)Math.PI / 10F);
+        this.bipedRightArm.rotateAngleY = 0.0F;
+        break;
+      case THROW_SPEAR:
+        this.bipedRightArm.rotateAngleX = this.bipedRightArm.rotateAngleX * 0.5F - (float)Math.PI;
+        this.bipedRightArm.rotateAngleY = 0.0F;
+        break;
+      case BOW_AND_ARROW:
+        this.bipedRightArm.rotateAngleY = -0.1F + this.bipedHead.rotateAngleY;
+        this.bipedLeftArm.rotateAngleY = 0.1F + this.bipedHead.rotateAngleY + 0.4F;
+        this.bipedRightArm.rotateAngleX = (-(float)Math.PI / 2F) + this.bipedHead.rotateAngleX;
+        this.bipedLeftArm.rotateAngleX = (-(float)Math.PI / 2F) + this.bipedHead.rotateAngleX;
+        break;
+      case CROSSBOW_CHARGE:
+        ModelHelper.func_239102_a_(this.bipedRightArm, this.bipedLeftArm, p_241654_1_, true);
+        break;
+      case CROSSBOW_HOLD:
+        this.bipedRightArm.rotateAngleY = -0.6F;
+        this.bipedLeftArm.rotateAngleY = 0.3F;
+        this.bipedRightArm.rotateAngleX = -1.5F + this.bipedHead.rotateAngleX;
+        this.bipedLeftArm.rotateAngleX = (-(float)Math.PI / 2F) + this.bipedHead.rotateAngleX + 0.1F;
+     }
+    }
+    
+    @Override
+    protected void func_241655_c_(SkeletonVillagerEntity p_241655_1_) 
+    {
+     switch(this.leftArmPose) 
+     {
+       case EMPTY:
+         this.bipedLeftArm.rotateAngleY = 0.0F;
+         break;
+       case BLOCK:
+         this.bipedLeftArm.rotateAngleX = this.bipedLeftArm.rotateAngleX * 0.5F - 0.9424779F;
+         this.bipedLeftArm.rotateAngleY = ((float)Math.PI / 6F);
+         break;
+       case ITEM:
+         this.bipedLeftArm.rotateAngleX = this.bipedLeftArm.rotateAngleX * 0.5F - ((float)Math.PI / 10F);
+         this.bipedLeftArm.rotateAngleY = 0.0F;
+         break;
+       case THROW_SPEAR:
+         this.bipedLeftArm.rotateAngleX = this.bipedLeftArm.rotateAngleX * 0.5F - (float)Math.PI;
+         this.bipedLeftArm.rotateAngleY = 0.0F;
+         break;
+       case BOW_AND_ARROW:
+         this.bipedRightArm.rotateAngleY = -0.1F + this.bipedHead.rotateAngleY - 0.4F;
+         this.bipedLeftArm.rotateAngleY = 0.1F + this.bipedHead.rotateAngleY;
+         this.bipedRightArm.rotateAngleX = (-(float)Math.PI / 2F) + this.bipedHead.rotateAngleX;
+         this.bipedLeftArm.rotateAngleX = (-(float)Math.PI / 2F) + this.bipedHead.rotateAngleX;
+         break;
+       case CROSSBOW_CHARGE:
+         ModelHelper.func_239102_a_(this.bipedRightArm, this.bipedLeftArm, p_241655_1_, false);
+         break;
+       case CROSSBOW_HOLD:
+         this.bipedRightArm.rotateAngleY = -0.6F;
+         this.bipedLeftArm.rotateAngleY = 0.3F;
+         this.bipedRightArm.rotateAngleX = -1.5F + this.bipedHead.rotateAngleX;
+         this.bipedLeftArm.rotateAngleX = (-(float)Math.PI / 2F) + this.bipedHead.rotateAngleX + 0.1F;
+      }
+    }
+    
 	@Override
 	public void translateHand(HandSide sideIn, MatrixStack matrixStackIn) 
 	{
