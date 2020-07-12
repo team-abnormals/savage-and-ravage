@@ -31,23 +31,23 @@
 	"savageandravage:subtitles.creepie.convert": "Creepie transformándose",
 	"savageandravage:subtitles.creepie.grow": "Creepie creciendo en un creeper",
 	"savageandravage:subtitles.runed_gloomy_tiles.activated": "Azulejos lúgubres rúnicos activados",
-	"savageandravage:subtitles.generic.growth_success": "Desarrollo exitoso",
-	"savageandravage:subtitles.generic.growth_failure": "Desarrollo fallido",
+	"savageandravage:subtitles.generic.growth_success": "Crecimiento exitoso",
+	"savageandravage:subtitles.generic.growth_failure": "Crecimiento fallido",
 
 	"entity.savageandravage.skeleton_villager": "Aldeano esqueleto",
 	"entity.savageandravage.griefer": "Alborotador",
     "item.savageandravage.skeleton_villager_spawn_egg": "Generar aldeano esqueleto",
 	"item.savageandravage.griefer_spawn_egg": "Generar alborotador",
 
-	"effect.savageandravage.growth": "Desarrollo",
-	"item.minecraft.potion.effect.growing": "Poción de crecimiento",
-	"item.minecraft.potion.effect.growing_long": "Poción de crecimiento",
-	"item.minecraft.splash_potion.effect.growing": "Poción arrojadiza de crecimiento",
-	"item.minecraft.splash_potion.effect.growing_long": "Poción arrojadiza de crecimiento",
-	"item.minecraft.lingering_potion.effect.growing": "Poción persistente de crecimiento",
-	"item.minecraft.lingering_potion.effect.growing_long": "Poción persistente de crecimiento",
-	"item.minecraft.tipped_arrow.effect.growing": "Flecha de crecimiento",
-	"item.minecraft.tipped_arrow.effect.growing_long": "Flecha de crecimiento",
+	"effect.savageandravage.growing": "Aumento",
+	"item.minecraft.potion.effect.growth": "Poción de crecimiento",
+	"item.minecraft.potion.effect.growth_long": "Poción de crecimiento",
+	"item.minecraft.splash_potion.effect.growth": "Poción arrojadiza de crecimiento",
+	"item.minecraft.splash_potion.effect.growth_long": "Poción arrojadiza de crecimiento",
+	"item.minecraft.lingering_potion.effect.growth": "Poción persistente de crecimiento",
+	"item.minecraft.lingering_potion.effect.growth_long": "Poción persistente de crecimiento",
+	"item.minecraft.tipped_arrow.effect.growth": "Flecha de crecimiento",
+	"item.minecraft.tipped_arrow.effect.growth_long": "Flecha de crecimiento",
 	"effect.savageandravage.shrinking": "Encogimiento",
 	"item.minecraft.potion.effect.youth": "Poción de juventud",
 	"item.minecraft.potion.effect.youth_long": "Poción de juventud",
@@ -59,6 +59,8 @@
 	"item.minecraft.tipped_arrow.effect.youth_long": "Flecha de juventud",
 
 	"attribute.name.grieferArmor.explosiveDamageReduction": "Reducción de daño por explosiones",
+	"advancements.story.griefer_armor.title": "Dinamita y un rayo láser",
+	"advancements.story.griefer_armor.description": "Consigue una armadura de alborotador completa",
 	
-	"advancements.adventure.voluntary_exile.description": "Prende fuego a un estandarte de mal presagio.\nQuizás debas considerar alejarte de las aldeas por un tiempo..."
+	"advancements.adventure.voluntary_exile.description": "Prende fuego a un estandarte de mal presagio.\nY a lo mejor te conviente alejarte de las aldeas por el momento..."
 }
