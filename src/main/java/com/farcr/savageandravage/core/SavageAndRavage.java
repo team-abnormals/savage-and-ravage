@@ -9,6 +9,7 @@ import com.farcr.savageandravage.core.registry.other.SRConfig;
 import com.farcr.savageandravage.core.registry.other.SRDispenserBehaviors;
 import com.teamabnormals.abnormals_core.core.utils.RegistryHelper;
 
+import net.minecraft.world.raid.Raid;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;

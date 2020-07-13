@@ -69,7 +69,7 @@ public class SkeletonVillagerModel extends BipedModel<SkeletonVillagerEntity> {
 
     @Override
     protected Iterable<ModelRenderer> getBodyParts() 
-	{
+    {
       return ImmutableList.of(this.bipedBody, this.bipedRightArm, this.bipedLeftArm, this.bipedRightLeg, this.bipedLeftLeg, this.MiddleClosedArm);
     }
 
@@ -243,13 +243,13 @@ public class SkeletonVillagerModel extends BipedModel<SkeletonVillagerEntity> {
       }
     }
     
-	@Override
-	public void translateHand(HandSide sideIn, MatrixStack matrixStackIn) 
-	{
-	  float f = sideIn == HandSide.RIGHT ? 1.0F : -1.0F;
-	  ModelRenderer modelrenderer = this.getArmForSide(sideIn);
-	  modelrenderer.rotationPointX += f;
-	  modelrenderer.translateRotate(matrixStackIn);
-	  modelrenderer.rotationPointX -= f;
-	}
+    @Override
+    public void translateHand(HandSide sideIn, MatrixStack matrixStackIn) 
+    {
+      float f = sideIn == HandSide.RIGHT ? 1.0F : -1.0F;
+      ModelRenderer modelrenderer = this.getArmForSide(sideIn);
+      modelrenderer.rotationPointX += f;
+      modelrenderer.translateRotate(matrixStackIn);
+      modelrenderer.rotationPointX -= f;
+    }
 }
