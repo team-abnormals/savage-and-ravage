@@ -27,60 +27,6 @@ public class GrieferRenderer extends BipedRenderer<GrieferEntity, GrieferModel> 
 		this.addLayer(new BipedArmorLayer<GrieferEntity, GrieferModel, GrieferEntityArmorModel>(this, new GrieferEntityArmorModel(0.5F), new GrieferEntityArmorModel(1.0F)));
 	}
 	
-    public void render(GrieferEntity entity, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
-        this.setModelVisibilities(entity);
-        super.render(entity, partialTicks, partialTicks, matrixStackIn, bufferIn, packedLightIn);
-    }
-	
-    private void setModelVisibilities(GrieferEntity entityIn) {
-        GrieferModel griefermodel = this.getEntityModel();
-           ItemStack itemstack = entityIn.getHeldItemMainhand();
-           ItemStack itemstack1 = entityIn.getHeldItemOffhand();
-           griefermodel.setVisible(true);
-           BipedModel.ArmPose bipedmodel$armpose = this.getArmPose(entityIn, itemstack, itemstack1, Hand.MAIN_HAND);
-           BipedModel.ArmPose bipedmodel$armpose1 = this.getArmPose(entityIn, itemstack, itemstack1, Hand.OFF_HAND);
-           if (entityIn.getPrimaryHand() == HandSide.RIGHT) {
-              griefermodel.rightArmPose = bipedmodel$armpose;
-              griefermodel.leftArmPose = bipedmodel$armpose1;
-           } else {
-              griefermodel.rightArmPose = bipedmodel$armpose1;
-              griefermodel.leftArmPose = bipedmodel$armpose;
-           }
-     }
-	
-	private BipedModel.ArmPose getArmPose(GrieferEntity playerIn, ItemStack itemStackMain, ItemStack itemStackOff, Hand handIn) {
-		BipedModel.ArmPose bipedmodel$armpose = BipedModel.ArmPose.EMPTY;
-		 ItemStack itemstack = handIn == Hand.MAIN_HAND ? itemStackMain : itemStackOff;
-		 if (!itemstack.isEmpty()) {
-		   bipedmodel$armpose = BipedModel.ArmPose.ITEM;
-		    if (playerIn.getItemInUseCount() > 0) {
-		       UseAction useaction = itemstack.getUseAction();
-		        if (useaction == UseAction.BLOCK) {
-		               bipedmodel$armpose = BipedModel.ArmPose.BLOCK;
-		            } else if (useaction == UseAction.BOW) {
-		               bipedmodel$armpose = BipedModel.ArmPose.BOW_AND_ARROW;
-		            } else if (useaction == UseAction.SPEAR) {
-		               bipedmodel$armpose = BipedModel.ArmPose.THROW_SPEAR;
-		            } else if (useaction == UseAction.CROSSBOW && handIn == playerIn.getActiveHand()) {
-		               bipedmodel$armpose = BipedModel.ArmPose.CROSSBOW_CHARGE;
-		            }
-		         } else {
-		            boolean flag3 = itemStackMain.getItem() == Items.CROSSBOW;
-		            boolean flag = CrossbowItem.isCharged(itemStackMain);
-		            boolean flag1 = itemStackOff.getItem() == Items.CROSSBOW;
-		            boolean flag2 = CrossbowItem.isCharged(itemStackOff);
-		            if (flag3 && flag) {
-		               bipedmodel$armpose = BipedModel.ArmPose.CROSSBOW_HOLD;
-		            }
-
-		            if (flag1 && flag2 && itemStackMain.getItem().getUseAction(itemStackMain) == UseAction.NONE) {
-		               bipedmodel$armpose = BipedModel.ArmPose.CROSSBOW_HOLD;
-		            }
-		         }
-		     }
-			return bipedmodel$armpose;
-	}
-	
     public ResourceLocation getEntityTexture(GrieferEntity entity) 
     {
 	  return entity.isApeshit() ? APESHIT_MODE_TEXTURE : GRIEFER_TEXTURE;

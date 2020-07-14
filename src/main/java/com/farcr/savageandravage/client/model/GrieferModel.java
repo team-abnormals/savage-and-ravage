@@ -7,6 +7,9 @@ import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorItem;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.UseAction;
+import net.minecraft.util.HandSide;
 import net.minecraft.util.math.MathHelper;
 
 public class GrieferModel extends BipedModel<GrieferEntity>
@@ -91,6 +94,48 @@ public class GrieferModel extends BipedModel<GrieferEntity>
 	
     public void setLivingAnimations(GrieferEntity entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
         this.kickingTime = (float)entityIn.getKickTicks();
+        ItemStack itemstack = entityIn.getHeldItemMainhand();
+        UseAction useaction = itemstack.getUseAction();
+        this.rightArmPose = BipedModel.ArmPose.EMPTY;
+        this.leftArmPose = BipedModel.ArmPose.EMPTY;
+        if (entityIn.getPrimaryHand() == HandSide.RIGHT) 
+        {
+          switch(useaction) 
+          {
+            case BLOCK:
+            this.rightArmPose = BipedModel.ArmPose.BLOCK;
+            break;
+            case BOW:
+            this.rightArmPose = BipedModel.ArmPose.BOW_AND_ARROW;
+            break;
+  		    default:
+  		    this.rightArmPose = BipedModel.ArmPose.EMPTY;
+  		    if (!itemstack.isEmpty()) 
+  		    {
+  	  		  this.rightArmPose = BipedModel.ArmPose.ITEM;
+  	  	    }
+  	        break;
+          }
+        }
+        if (entityIn.getPrimaryHand() == HandSide.LEFT) 
+        {
+         switch(useaction) 
+         {
+           case BLOCK:
+           this.leftArmPose = BipedModel.ArmPose.BLOCK;
+           break;
+           case BOW:
+           this.leftArmPose = BipedModel.ArmPose.BOW_AND_ARROW;
+           break;
+           default:
+           this.leftArmPose = BipedModel.ArmPose.EMPTY;
+           if (!itemstack.isEmpty()) 
+    	   {
+             this.leftArmPose = BipedModel.ArmPose.ITEM;
+    	   }
+    	   break;
+         }
+        }
         super.setLivingAnimations(entityIn, limbSwing, limbSwingAmount, partialTick);
      }
 
