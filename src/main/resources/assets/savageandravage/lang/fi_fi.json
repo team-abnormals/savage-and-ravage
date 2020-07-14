@@ -35,17 +35,19 @@
 	"savageandravage:subtitles.generic.growth_failure": "Kasvu epäonnistuu",
 
 	"entity.savageandravage.skeleton_villager": "Luurankokyläläinen",
+	"entity.savageandravage.griefer": "Rettelöitsijä",
 	"item.savageandravage.skeleton_villager_spawn_egg": "Luo luurankokyläläinen",
+	"item.savageandravage.griefer_spawn_egg": "Luo rettelöitsijä",
     
-	"effect.savageandravage.growth": "Kasvaminen",
-	"item.minecraft.potion.effect.growing": "Kasvamisen taikajuoma",
-	"item.minecraft.potion.effect.growing_long": "Kasvamisen taikajuoma",
-	"item.minecraft.splash_potion.effect.growing": "Roiskahtava kasvamisen taikajuoma",
-	"item.minecraft.splash_potion.effect.growing_long": "Roiskahtava kasvamisen taikajuoma",
-	"item.minecraft.lingering_potion.effect.growing": "Viipyvä kasvamisen taikajuoma",
-	"item.minecraft.lingering_potion.effect.growing_long": "Viipyvä kasvamisen taikajuoma",
-	"item.minecraft.tipped_arrow.effect.growing": "Kasvamisen nuoli",
-	"item.minecraft.tipped_arrow.effect.growing_long": "Kasvamisen nuoli",
+	"effect.savageandravage.growing": "Kasvaminen",
+	"item.minecraft.potion.effect.growth": "Kasvamisen taikajuoma",
+	"item.minecraft.potion.effect.growth_long": "Kasvamisen taikajuoma",
+	"item.minecraft.splash_potion.effect.growth": "Roiskahtava kasvamisen taikajuoma",
+	"item.minecraft.splash_potion.effect.growth_long": "Roiskahtava kasvamisen taikajuoma",
+	"item.minecraft.lingering_potion.effect.growth": "Viipyvä kasvamisen taikajuoma",
+	"item.minecraft.lingering_potion.effect.growth_long": "Viipyvä kasvamisen taikajuoma",
+	"item.minecraft.tipped_arrow.effect.growth": "Kasvamisen nuoli",
+	"item.minecraft.tipped_arrow.effect.growth_long": "Kasvamisen nuoli",
 	"effect.savageandravage.shrinking": "Nuorentuminen",
 	"item.minecraft.potion.effect.youth": "Nuoruuden taikajuoma",
 	"item.minecraft.potion.effect.youth_long": "Nuoruuden taikajuoma",
@@ -57,6 +59,8 @@
 	"item.minecraft.tipped_arrow.effect.youth_long": "Nuoruuden nuoli",
 	
 	"attribute.name.grieferArmor.explosiveDamageReduction": "Räjähdyksenkestävyys",
+	"advancements.story.griefer_armor.title": "Dynamite with a Laser Beam",
+	"advancements.story.griefer_armor.description": "Saa kokonainen rettelöitsijän haarniska",
 	
 	"advancements.adventure.voluntary_exile.description": "Sytytä pahaenteinen viiri tuleen.\nKylien välttelemistä kannattaa harkita toistaiseksi..."
 }
