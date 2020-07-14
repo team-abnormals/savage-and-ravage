@@ -72,17 +72,14 @@ public class SREntities {
     		biome.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(SKELETON_VILLAGER.get(), 5, 5, 5)); //Rationalisation for this is that it used to be a pillager patrol
     	}
     }
-
-    @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
-    public static class registerStuffAfterEntityType
-    {
-    	@SubscribeEvent(priority = EventPriority.LOWEST)
-        public static void imstuff(final RegistryEvent.Register<EntityType<?>> event) 
-    	{
-    		GlobalEntityTypeAttributes.put(CREEPIE.get(), CreepieEntity.func_234200_m_().func_233813_a_());
-    		GlobalEntityTypeAttributes.put(GRIEFER.get(), GrieferEntity.func_234296_eI_().func_233813_a_());
-    		GlobalEntityTypeAttributes.put(SKELETON_VILLAGER.get(), SkeletonEntity.func_234275_m_().func_233813_a_());
-    		Raid.WaveMember.create("griefer", SREntities.GRIEFER.get(), new int[]{0, 2, 1, 2, 3, 3, 4, 3});
-    	}
+    
+    public static void registerAttributes() {
+    	GlobalEntityTypeAttributes.put(CREEPIE.get(), CreepieEntity.registerAttributes().func_233813_a_());
+		GlobalEntityTypeAttributes.put(GRIEFER.get(), GrieferEntity.registerAttributes().func_233813_a_());
+		GlobalEntityTypeAttributes.put(SKELETON_VILLAGER.get(), SkeletonEntity.func_234275_m_().func_233813_a_());
+    }
+    
+    public static void addWaveMembers() {
+		Raid.WaveMember.create("griefer", SREntities.GRIEFER.get(), new int[]{0, 2, 1, 2, 3, 3, 4, 3});
     }
 }

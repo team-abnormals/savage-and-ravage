@@ -61,10 +61,12 @@ public class SavageAndRavage {
     private void commonSetup(final FMLCommonSetupEvent event) {
     	DeferredWorkQueue.runLater(() -> {
     		SRBlocks.registerFlammables();
-    		SRDispenserBehaviors.registerDispenserBehaviors();
-    		REGISTRY_HELPER.processSpawnEggDispenseBehaviors();
     		SREffects.registerBrewingRecipes();
     		SREntities.addEntitySpawns();
+    		SREntities.registerAttributes();
+    		SREntities.addWaveMembers();
+    		SRDispenserBehaviors.registerDispenserBehaviors();
+    		REGISTRY_HELPER.processSpawnEggDispenseBehaviors();
     	});
 	}
     

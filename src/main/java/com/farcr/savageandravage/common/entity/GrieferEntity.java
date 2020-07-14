@@ -89,7 +89,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 	  this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(32.0D);
 	}*/
 	
-    public static AttributeModifierMap.MutableAttribute func_234296_eI_() {
+    public static AttributeModifierMap.MutableAttribute registerAttributes() {
 	    return MonsterEntity.func_234295_eP_()
 	    		.func_233815_a_(Attributes.MOVEMENT_SPEED, (double)0.35F)
 	    		.func_233815_a_(Attributes.MAX_HEALTH, 25.0D)
