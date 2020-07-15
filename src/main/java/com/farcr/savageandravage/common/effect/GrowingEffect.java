@@ -6,7 +6,9 @@ import com.farcr.savageandravage.core.registry.other.SREvents;
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.monster.SlimeEntity;
+import net.minecraft.entity.monster.ZoglinEntity;
 import net.minecraft.entity.monster.ZombieEntity;
+import net.minecraft.entity.monster.piglin.PiglinEntity;
 import net.minecraft.entity.passive.ParrotEntity;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.Effect;
@@ -25,7 +27,7 @@ public class GrowingEffect extends Effect {
         if(entity instanceof SlimeEntity && ((SlimeEntity)entity).getSlimeSize()<3) canGrow = true;
         else if(SREvents.checkBooflo(entity,false)) canGrow = true;
         else if(entity.isChild()){
-            if((entity instanceof AgeableEntity && !(entity instanceof ParrotEntity)) || entity instanceof CreepieEntity || entity instanceof ZombieEntity) canGrow = true;
+            if((entity instanceof AgeableEntity && !(entity instanceof ParrotEntity)) || entity instanceof CreepieEntity || entity instanceof ZombieEntity || entity instanceof ZoglinEntity || entity instanceof PiglinEntity) canGrow = true;
         }
         
         if(canGrow && entity.getRNG().nextInt(3)==0){

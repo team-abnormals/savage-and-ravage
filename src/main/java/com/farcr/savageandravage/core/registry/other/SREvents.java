@@ -38,7 +38,9 @@ import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.entity.monster.PillagerEntity;
 import net.minecraft.entity.monster.ShulkerEntity;
 import net.minecraft.entity.monster.SlimeEntity;
+import net.minecraft.entity.monster.ZoglinEntity;
 import net.minecraft.entity.monster.ZombieEntity;
+import net.minecraft.entity.monster.piglin.PiglinEntity;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.passive.ParrotEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -300,7 +302,7 @@ public class SREvents {
 		//Values initialised for what they should be if the potion is growth
 		boolean shouldSetChild = false;
 		int growingAgeValue = 0;
-		if(event.getPotionEffect().getPotion() instanceof ShrinkingEffect){
+		if(event.getPotionEffect().getPotion() instanceof ShrinkingEffect) {
 			shouldSetChild = true;
 			growingAgeValue = -24000;
 		}
@@ -309,19 +311,21 @@ public class SREvents {
 			if(affected instanceof SlimeEntity){
 				SlimeEntity slime = (SlimeEntity)affected;
 				int size = slime.getSlimeSize();
-				if(shouldSetChild ? size > 1 : size < 3){
+				if(shouldSetChild ? size > 1 : size < 3) {
 					canChange = true;
 					Method setSize = ObfuscationReflectionHelper.findMethod(SlimeEntity.class,"func_70799_a",int.class,boolean.class);
 					setSize.invoke(slime,(size + (shouldSetChild ? (size < 4 ? -1:-2) : (size < 2 ? 1:2))), false);
 				}
 			}
 			else if (checkBooflo(affected,shouldSetChild)) canChange = true;
-			else if(shouldSetChild != affected.isChild()){
+			else if (shouldSetChild != affected.isChild()) {
 				canChange = true;
 				if(affected instanceof AgeableEntity && !(affected instanceof ParrotEntity)) ((AgeableEntity)affected).setGrowingAge(growingAgeValue);
 				else if(shouldSetChild && affected instanceof CreeperEntity) convertCreeper((CreeperEntity)affected);
 				else if(!shouldSetChild && affected instanceof CreepieEntity) ((CreepieEntity)affected).setGrowingAge(growingAgeValue);
 				else if(affected instanceof ZombieEntity) ((ZombieEntity)affected).setChild(shouldSetChild);
+				else if(affected instanceof PiglinEntity) ((PiglinEntity)affected).setChild(shouldSetChild);
+				else if(affected instanceof ZoglinEntity) ((ZoglinEntity)affected).setChild(shouldSetChild);
 				else canChange = false;
 			}
 			if(!canChange) {
