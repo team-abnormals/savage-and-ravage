@@ -152,7 +152,14 @@ public class GrieferArmorModel<T extends LivingEntity> extends BipedModel<T> {
     			this.piglin_helmet3.copyModelAngles(this.bipedHead);
     			this.piglin_helmet4.copyModelAngles(this.bipedHead);
     			this.piglin_helmet5.copyModelAngles(this.bipedHead);
-
+    	    	if (this.entity.isChild()) {
+    	    		matrixStack.scale(0.8F, 0.8F, 0.8F);
+        			this.piglin_helmet1.setRotationPoint(0.0F, 15.0F, 0.0F);
+        			this.piglin_helmet2.setRotationPoint(0.0F, 15.0F, 0.0F);
+        			this.piglin_helmet3.setRotationPoint(0.0F, 15.0F, 0.0F);
+        			this.piglin_helmet4.setRotationPoint(0.0F, 15.0F, 0.0F);
+        			this.piglin_helmet5.setRotationPoint(0.0F, 15.0F, 0.0F);
+    	    	}
                 this.piglin_helmet1.render(matrixStack, buffer, packedLightIn, packedOverlayIn, red, green, blue, alpha);
                 this.piglin_helmet2.render(matrixStack, buffer, packedLightIn, packedOverlayIn, red, green, blue, alpha);
                 this.piglin_helmet3.render(matrixStack, buffer, packedLightIn, packedOverlayIn, red, green, blue, alpha);
@@ -184,28 +191,36 @@ public class GrieferArmorModel<T extends LivingEntity> extends BipedModel<T> {
         	this.chestplate1.copyModelAngles(this.bipedBody);
         	this.shoulderpadleft.copyModelAngles(this.bipedLeftArm);
         	this.shoulderpadright.copyModelAngles(this.bipedRightArm);
+	    	if (this.entity.isChild()) {
+	    		matrixStack.scale(0.5F, 0.5F, 0.5F);
+	        	this.chestplate1.setRotationPoint(0.0F, 24.0F, 0.0F);
+	        	this.shoulderpadleft.setRotationPoint(5.0F, 24.0F, 0.0F);
+	        	this.shoulderpadright.setRotationPoint(-5.0F, 24.0F, 0.0F);
+	    	}
+        	
         	
             this.chestplate1.render(matrixStack, buffer, packedLightIn, packedOverlayIn, red, green, blue, alpha);
             this.shoulderpadleft.render(matrixStack, buffer, packedLightIn, packedOverlayIn, red, green, blue, alpha);
             this.shoulderpadright.render(matrixStack, buffer, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-            
             matrixStack.pop();
     	}
     	
     	if (this.slot == EquipmentSlotType.LEGS) {
             matrixStack.push();
         	matrixStack.scale(1.01F, 1.0F, illager ? 1.35F : 1.01F);
-        	
         	this.chestplate2.copyModelAngles(this.bipedBody);
         	this.leggingsleft.copyModelAngles(this.bipedLeftLeg);
         	this.leggingsright.copyModelAngles(this.bipedRightLeg);
-        	
+	    	if (this.entity.isChild()) {
+	    		matrixStack.scale(0.6F, 0.6F, 0.6F);
+                this.leggingsleft.setRotationPoint(2.0F, 30.0F, 0.0F);
+                this.leggingsright.setRotationPoint(-2.0F, 30.0F, 0.0F);
+                this.chestplate2.setRotationPoint(0.0F, 18.0F, 0.0F);
+	    	}
             this.chestplate2.render(matrixStack, buffer, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-            matrixStack.pop();
-
         	this.leggingsleft.render(matrixStack, buffer, packedLightIn, packedOverlayIn, red, green, blue, alpha);
             this.leggingsright.render(matrixStack, buffer, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-            
+            matrixStack.pop(); //moved this here because leggings left and right werent scaling right
     	}
 
 		if (this.slot == EquipmentSlotType.FEET) {
@@ -214,10 +229,13 @@ public class GrieferArmorModel<T extends LivingEntity> extends BipedModel<T> {
 			
 	    	this.bootsleft.copyModelAngles(this.bipedLeftLeg);
 	    	this.bootsright.copyModelAngles(this.bipedRightLeg);
-	    	
+	    	if (this.entity.isChild()) {
+	    		matrixStack.scale(0.5F, 0.5F, 0.5F);
+	    		this.bootsleft.setRotationPoint(2.0F, 20.0F, 0.0F);
+	    		this.bootsright.setRotationPoint(-2.0F, 20.0F, 0.0F);
+	    	}
 	        this.bootsleft.render(matrixStack, buffer, packedLightIn, packedOverlayIn, red, green, blue, alpha);
 	        this.bootsright.render(matrixStack, buffer, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-	        
 	        matrixStack.pop();
 		}
     }
