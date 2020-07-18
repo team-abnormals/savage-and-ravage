@@ -231,8 +231,8 @@ public class GrieferArmorModel<T extends LivingEntity> extends BipedModel<T> {
 	    	this.bootsright.copyModelAngles(this.bipedRightLeg);
 	    	if (this.entity.isChild()) {
 	    		matrixStack.scale(0.5F, 0.5F, 0.5F);
-	    		this.bootsleft.setRotationPoint(2.0F, 20.0F, 0.0F);
-	    		this.bootsright.setRotationPoint(-2.0F, 20.0F, 0.0F);
+	    		this.bootsleft.setRotationPoint(2.0F, 37.0F, 0.0F);
+	    		this.bootsright.setRotationPoint(-2.0F, 37.0F, 0.0F);
 	    	}
 	        this.bootsleft.render(matrixStack, buffer, packedLightIn, packedOverlayIn, red, green, blue, alpha);
 	        this.bootsright.render(matrixStack, buffer, packedLightIn, packedOverlayIn, red, green, blue, alpha);
