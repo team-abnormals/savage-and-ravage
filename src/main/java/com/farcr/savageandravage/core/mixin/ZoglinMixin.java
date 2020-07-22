@@ -1,4 +1,4 @@
-package com.farcr.savageandravage.core.registry.other.mixin;
+package com.farcr.savageandravage.core.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -14,15 +14,12 @@ import net.minecraft.util.EntityPredicates;
 import net.minecraft.world.World;
 
 @Mixin(ZoglinEntity.class)
-public class ZoglinMixin extends MonsterEntity implements IMob, IFlinging
-{
-
+public class ZoglinMixin extends MonsterEntity implements IMob, IFlinging {
 	@Shadow 
 	public int field_234325_bu_;
 	
-	protected ZoglinMixin(EntityType<? extends MonsterEntity> p_i48553_1_, World p_i48553_2_) {
-		super(p_i48553_1_, p_i48553_2_);
-		// TODO Auto-generated constructor stub
+	protected ZoglinMixin(EntityType<? extends MonsterEntity> entity, World world) {
+		super(entity, world);
 	}
 
 	public int func_230290_eL_() {
@@ -30,10 +27,9 @@ public class ZoglinMixin extends MonsterEntity implements IMob, IFlinging
 	}
 	
 	@Overwrite(remap = true)
-	private static boolean func_234337_j_(LivingEntity p_234337_0_) 
-	{
-		 EntityType<?> entitytype = p_234337_0_.getType();
-	     return entitytype != EntityType.ZOGLIN && EntityPredicates.field_233583_f_.test(p_234337_0_);
+	private static boolean func_234337_j_(LivingEntity entity) {
+		 EntityType<?> entitytype = entity.getType();
+	     return entitytype != EntityType.ZOGLIN && EntityPredicates.field_233583_f_.test(entity);
 	}
 
 }
