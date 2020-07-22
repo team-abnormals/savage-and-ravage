@@ -115,9 +115,7 @@ public class SREvents {
     		   return p_213619_0_ instanceof IMob;
     		  }));
     		 });
-			 golem.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(golem, CreeperEntity.class, true));
 		}
-		
 		if (event.getEntity() instanceof CreeperEntity) {
 			CreeperEntity creeper = (CreeperEntity)event.getEntity();
 			creeper.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(creeper, IronGolemEntity.class, true));
