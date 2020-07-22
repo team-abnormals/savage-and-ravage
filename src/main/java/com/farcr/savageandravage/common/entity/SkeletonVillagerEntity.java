@@ -76,26 +76,23 @@ public class SkeletonVillagerEntity extends AbstractSkeletonEntity implements IC
 	}
 	
 	@Override
-	public double getYOffset() 
+    public double getYOffset() 
 	{
 	  return -0.4D;
 	}
 	
 	@Override
-	public void setCombatTask() 
+    public void setCombatTask() 
 	{
-	 {
 	   this.goalSelector.removeGoal(this.aiMelee);
 	   this.goalSelector.removeGoal(this.aiCrossBow);
 	   ItemStack itemstack = this.getHeldItem(ProjectileHelper.getHandWith(this, Items.CROSSBOW));
 	   if (itemstack.getItem() instanceof CrossbowItem) 
 	   {
 	      this.goalSelector.addGoal(3, this.aiCrossBow);
-	   } else 
-	   {
+	   } else {
 	     super.setCombatTask();
 	   } 
-	  }
 	}
 	
 	@Override
