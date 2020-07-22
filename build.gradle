@@ -52,9 +52,9 @@ minecraft {
             workingDirectory project.file('run')
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
-            args '--mod', 'nether_extension', '--all', '--output', file('src/generated/resources/')
+            args '--mod', 'savageandravage', '--all', '--output', file('src/generated/resources/')
             mods {
-                nether_extension {
+                savageandravage {
                     source sourceSets.main
                 }
             }
