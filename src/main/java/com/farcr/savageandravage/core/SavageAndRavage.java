@@ -1,12 +1,12 @@
 package com.farcr.savageandravage.core;
 
+import com.farcr.savageandravage.core.other.SRConfig;
+import com.farcr.savageandravage.core.other.SRDispenserBehaviors;
 import com.farcr.savageandravage.core.registry.SRBlocks;
 import com.farcr.savageandravage.core.registry.SREffects;
 import com.farcr.savageandravage.core.registry.SREntities;
 import com.farcr.savageandravage.core.registry.SRParticles;
 import com.farcr.savageandravage.core.registry.SRSounds;
-import com.farcr.savageandravage.core.registry.other.SRConfig;
-import com.farcr.savageandravage.core.registry.other.SRDispenserBehaviors;
 import com.teamabnormals.abnormals_core.core.utils.RegistryHelper;
 
 import net.minecraftforge.api.distmarker.Dist;

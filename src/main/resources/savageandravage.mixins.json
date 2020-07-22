@@ -1,15 +1,13 @@
 {
   "required": true,
-  "package": "com.farcr.savageandravage.core.registry.other.mixin",
+  "package": "com.farcr.savageandravage.core.mixin",
   "compatibilityLevel": "JAVA_8",
+  "minVersion": "0.8",
   "refmap": "savageandravage.refmap.json",
   "mixins": [
-  ],
-  "client":[
     "IronGolemMixin"
   ],
   "injectors": {
     "defaultRequire": 1
-  },
-  "minVersion": "0.8"
+  }
 }

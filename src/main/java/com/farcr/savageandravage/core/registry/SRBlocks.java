@@ -4,7 +4,7 @@ import com.farcr.savageandravage.common.block.ImprovedFlowerPotBlock;
 import com.farcr.savageandravage.common.block.RunedGloomyTilesBlock;
 import com.farcr.savageandravage.common.block.SporeBombBlock;
 import com.farcr.savageandravage.core.SavageAndRavage;
-import com.farcr.savageandravage.core.registry.other.SRProperties;
+import com.farcr.savageandravage.core.other.SRProperties;
 import com.teamabnormals.abnormals_core.common.blocks.AbnormalsStairsBlock;
 import com.teamabnormals.abnormals_core.common.blocks.VerticalSlabBlock;
 import com.teamabnormals.abnormals_core.core.utils.DataUtils;

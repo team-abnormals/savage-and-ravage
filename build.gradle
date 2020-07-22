@@ -31,46 +31,55 @@ minecraft {
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
             arg "-mixin.config=savageandravage.mixins.json"
-
             mods {
                 savageandravage {
                     source sourceSets.main
                 }
             }
         }
-
         server {
             workingDirectory project.file('run')
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
             arg "-mixin.config=savageandravage.mixins.json"
-
             mods {
                 savageandravage {
                     source sourceSets.main
                 }
             }
         }
+		data {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+            args '--mod', 'nether_extension', '--all', '--output', file('src/generated/resources/')
+            mods {
+                nether_extension {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
+}
+
+jar {
+    manifest {
+        attributes([
+        	"Specification-Title": "Savage & Ravage",
+            "Specification-Vendor": "Team Abnormals",
+            "Specification-Version": "1",
+            "Implementation-Title": project.name,
+            "Implementation-Version": "${version}",
+            "Implementation-Vendor": "Team Abnormals",
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+            "MixinConfigs": "savageandravage.mixins.json"
+        ])
     }
 }
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.16.1-32.0.72'
     implementation fg.deobf("curse.maven:abnormals-core:2989106")
-}
-
-jar {
-    manifest {
-        attributes([
-            "Specification-Title": "savageandravage",
-            "Specification-Vendor": "minecraftabnormals",
-            "Specification-Version": "1",
-            "Implementation-Title": project.name,
-            "Implementation-Version": "${version}",
-            "Implementation-Vendor" :"minecraftabnormals",
-            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
-    }
 }
 
 jar.finalizedBy('reobfJar') 

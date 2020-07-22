@@ -1,4 +1,4 @@
-package com.farcr.savageandravage.core.registry.other;
+package com.farcr.savageandravage.core.other;
 
 import com.farcr.savageandravage.common.entity.CreeperSporeCloudEntity;
 import com.farcr.savageandravage.common.entity.block.SporeBombEntity;

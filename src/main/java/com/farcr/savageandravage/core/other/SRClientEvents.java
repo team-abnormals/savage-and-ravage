@@ -1,4 +1,4 @@
-package com.farcr.savageandravage.core.registry.other;
+package com.farcr.savageandravage.core.other;
 
 import java.util.List;
 

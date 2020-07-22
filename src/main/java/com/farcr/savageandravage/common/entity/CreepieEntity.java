@@ -161,10 +161,8 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
     @Override
     public void writeAdditional(CompoundNBT compound) {
         super.writeAdditional(compound);
-        if (this.getOwnerId() == null) {
-            compound.putString("OwnerUUID", "");
-        } else {
-            compound.putString("OwnerUUID", this.getOwnerId().toString());
+        if (this.getOwnerId() != null) {
+            compound.putUniqueId("OwnerUUID", this.getOwnerId());
         }
         compound.putInt("Age", this.getGrowingAge());
         compound.putInt("ForcedAge", this.forcedAge);

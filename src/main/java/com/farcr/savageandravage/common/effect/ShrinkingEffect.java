@@ -1,6 +1,6 @@
 package com.farcr.savageandravage.common.effect;
 
-import com.farcr.savageandravage.core.registry.other.SREvents;
+import com.farcr.savageandravage.core.other.SREvents;
 
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.LivingEntity;
