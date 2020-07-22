@@ -30,6 +30,7 @@ minecraft {
             workingDirectory project.file('run')
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
+            arg "-mixin.config=savageandravage.mixins.json"
 
             mods {
                 savageandravage {
@@ -42,6 +43,7 @@ minecraft {
             workingDirectory project.file('run')
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
+            arg "-mixin.config=savageandravage.mixins.json"
 
             mods {
                 savageandravage {
@@ -53,7 +55,7 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.16.1-32.0.65'
+    minecraft 'net.minecraftforge:forge:1.16.1-32.0.72'
     implementation fg.deobf("curse.maven:abnormals-core:2989106")
 }
 

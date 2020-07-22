@@ -32,9 +32,11 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
+import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.ai.goal.RangedCrossbowAttackGoal;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.CreeperEntity;
+import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.monster.PillagerEntity;
 import net.minecraft.entity.monster.ShulkerEntity;
 import net.minecraft.entity.monster.SlimeEntity;
@@ -42,6 +44,7 @@ import net.minecraft.entity.monster.ZoglinEntity;
 import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.monster.piglin.PiglinEntity;
 import net.minecraft.entity.passive.GolemEntity;
+import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.passive.ParrotEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -103,7 +106,7 @@ public class SREvents {
 		}
 		
 		//Attempted to make golems attack creepers, didnt work
-		/*if (event.getEntity() instanceof IronGolemEntity) {
+		if (event.getEntity() instanceof IronGolemEntity) {
 			IronGolemEntity golem = (IronGolemEntity)event.getEntity();
 			 golem.targetSelector.goals.stream().map(it -> it.inner).filter(it -> it instanceof NearestAttackableTargetGoal<?>)
              .findFirst().ifPresent(noAngryAtCreeper -> {
@@ -113,7 +116,12 @@ public class SREvents {
     		  }));
     		 });
 			 golem.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(golem, CreeperEntity.class, true));
-		}*/
+		}
+		
+		if (event.getEntity() instanceof CreeperEntity) {
+			CreeperEntity creeper = (CreeperEntity)event.getEntity();
+			creeper.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(creeper, IronGolemEntity.class, true));
+		}
 
 		if (event.getEntity() instanceof AbstractVillagerEntity) {
 		   AbstractVillagerEntity villager = (AbstractVillagerEntity)event.getEntity();
@@ -155,11 +163,11 @@ public class SREvents {
 				((GolemEntity)event.getEntityLiving()).setAttackTarget(null);
 			}
 	    //Also an attempt at making golems attack creepers, didnt work too
-	    /*if (event.getEntity() instanceof GolemEntity && !(event.getEntityLiving() instanceof ShulkerEntity) && event.getTarget() instanceof CreeperEntity) {
+	    if (event.getEntity() instanceof GolemEntity && !(event.getEntityLiving() instanceof ShulkerEntity) && event.getTarget() instanceof CreeperEntity) {
 	    	 GolemEntity golem = (GolemEntity)event.getEntity();
 	    	 CreeperEntity creeper = (CreeperEntity)event.getTarget();
 	    	 golem.setAttackTarget(creeper);
-	      }*/
+	      }
 		}
 	}
 
