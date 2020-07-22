@@ -6,7 +6,8 @@
   "mixins": [
   ],
   "client":[
-    "IronGolemMixin"
+    "IronGolemMixin",
+    "ZoglinMixin"
   ],
   "injectors": {
     "defaultRequire": 1
