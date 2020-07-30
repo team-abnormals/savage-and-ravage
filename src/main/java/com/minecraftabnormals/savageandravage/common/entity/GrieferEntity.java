@@ -403,7 +403,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
            this.strafingBackwards = !this.strafingBackwards;
          }
          griefer.kick(2.5D, attackTarget);
-         if (!(d0 > 15.0D)) {
+         if (d0 < 15.0D) {
           this.griefer.getNavigator().clearPath();
           } else {
            this.griefer.getNavigator().tryMoveToEntityLiving(attackTarget, this.entityMoveSpeed);
