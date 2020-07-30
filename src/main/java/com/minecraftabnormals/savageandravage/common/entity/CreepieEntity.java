@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-import com.minecraftabnormals.abnormals_core.core.library.api.IAgeableEntity;
+import com.teamabnormals.abnormals_core.core.library.api.IAgeableEntity;
 import com.minecraftabnormals.savageandravage.common.entity.goals.ConditionalNearestAttackableTargetGoal;
 import com.minecraftabnormals.savageandravage.common.entity.goals.CreepieSwellGoal;
 import com.minecraftabnormals.savageandravage.common.entity.goals.FollowMobOwnerGoal;
@@ -100,18 +100,11 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
         this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(1, new ConditionalNearestAttackableTargetGoal(this, true));
     }
-    
-    // field_233821_d_ = movement speed
-    // field_233818_a_ = health
-    // field_233823_f_ = attack damage
-    // field_233819_b_ = follow range
-    // field_233826_i_ = armor
  	
-    public static AttributeModifierMap.MutableAttribute registerAttributes() 
-    {
- 	 return MonsterEntity.func_233666_p_().
- 			 func_233815_a_(Attributes.MAX_HEALTH, 5.0).
- 			 func_233815_a_(Attributes.MOVEMENT_SPEED, 0.35D);
+    public static AttributeModifierMap.MutableAttribute registerAttributes() {
+    	return MonsterEntity.func_233666_p_()
+    			.createMutableAttribute(Attributes.MAX_HEALTH, 5.0)
+    			.createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.35D);
     }
 
     /**
@@ -535,7 +528,7 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
     private void finishConversion(ServerWorld world) {
         CreeperEntity creeperEntity = EntityType.CREEPER.create(this.world);
         creeperEntity.copyLocationAndAnglesFrom(this);
-        creeperEntity.onInitialSpawn(this.world, this.world.getDifficultyForLocation(creeperEntity.func_233580_cy_()), SpawnReason.CONVERSION, null, null);
+        creeperEntity.onInitialSpawn(this.world, this.world.getDifficultyForLocation(creeperEntity.getPosition()), SpawnReason.CONVERSION, null, null);
         this.dead = true;
         this.remove();
         creeperEntity.setNoAI(this.isAIDisabled());

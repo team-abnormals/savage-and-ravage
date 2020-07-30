@@ -1,6 +1,6 @@
 package com.minecraftabnormals.savageandravage.common.advancement;
 
-import com.minecraftabnormals.abnormals_core.common.advancement.EmptyTrigger;
+import com.teamabnormals.abnormals_core.common.advancement.EmptyTrigger;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 
 import net.minecraft.advancements.CriteriaTriggers;

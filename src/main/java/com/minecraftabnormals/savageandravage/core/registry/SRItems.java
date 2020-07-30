@@ -1,6 +1,6 @@
 package com.minecraftabnormals.savageandravage.core.registry;
 
-import com.minecraftabnormals.abnormals_core.core.utils.RegistryHelper;
+import com.teamabnormals.abnormals_core.core.utils.RegistryHelper;
 import com.minecraftabnormals.savageandravage.common.item.CreeperSporesItem;
 import com.minecraftabnormals.savageandravage.common.item.GrieferArmorItem;
 import com.minecraftabnormals.savageandravage.common.item.SRArmorMaterial;

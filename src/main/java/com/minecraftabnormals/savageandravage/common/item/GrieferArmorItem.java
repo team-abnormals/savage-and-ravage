@@ -1,7 +1,7 @@
 package com.minecraftabnormals.savageandravage.common.item;
 
 import com.google.common.base.Supplier;
-import com.minecraftabnormals.abnormals_core.core.utils.ItemStackUtils;
+import com.teamabnormals.abnormals_core.core.utils.ItemStackUtils;
 import com.minecraftabnormals.savageandravage.client.model.GrieferArmorModel;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 import com.minecraftabnormals.savageandravage.core.registry.SRItems;

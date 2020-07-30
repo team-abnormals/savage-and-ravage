@@ -1,6 +1,5 @@
 package com.minecraftabnormals.savageandravage.core.registry;
 
-import com.minecraftabnormals.abnormals_core.core.utils.RegistryHelper;
 import com.minecraftabnormals.savageandravage.client.render.CreepieRenderer;
 import com.minecraftabnormals.savageandravage.client.render.GrieferRenderer;
 import com.minecraftabnormals.savageandravage.client.render.NoModelRenderer;
@@ -15,13 +14,13 @@ import com.minecraftabnormals.savageandravage.common.entity.RunePrisonEntity;
 import com.minecraftabnormals.savageandravage.common.entity.SkeletonVillagerEntity;
 import com.minecraftabnormals.savageandravage.common.entity.block.SporeBombEntity;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
+import com.teamabnormals.abnormals_core.core.utils.RegistryHelper;
 
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.monster.SkeletonEntity;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.raid.Raid;
@@ -71,9 +70,9 @@ public class SREntities {
     }
     
     public static void registerAttributes() {
-    	GlobalEntityTypeAttributes.put(CREEPIE.get(), CreepieEntity.registerAttributes().func_233813_a_());
-		GlobalEntityTypeAttributes.put(GRIEFER.get(), GrieferEntity.registerAttributes().func_233813_a_());
-		GlobalEntityTypeAttributes.put(SKELETON_VILLAGER.get(), SkeletonEntity.func_234275_m_().func_233813_a_());
+    	GlobalEntityTypeAttributes.put(CREEPIE.get(), CreepieEntity.registerAttributes().create());
+		GlobalEntityTypeAttributes.put(GRIEFER.get(), GrieferEntity.registerAttributes().create());
+		GlobalEntityTypeAttributes.put(SKELETON_VILLAGER.get(), SkeletonVillagerEntity.func_234275_m_().create());
     }
     
     public static void addWaveMembers() {

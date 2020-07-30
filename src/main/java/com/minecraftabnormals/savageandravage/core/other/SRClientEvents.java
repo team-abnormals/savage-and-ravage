@@ -31,8 +31,8 @@ public class SRClientEvents {
 			    }
 			}
 	    	tooltip.add(index + 1, new TranslationTextComponent("+" + armor.getReductionString() + "% ")
-	    			.func_230529_a_(new TranslationTextComponent("attribute.name.grieferArmor.explosiveDamageReduction"))
-	    			.func_240699_a_(TextFormatting.BLUE));
+	    			.append(new TranslationTextComponent("attribute.name.grieferArmor.explosiveDamageReduction"))
+	    			.mergeStyle(TextFormatting.BLUE));
 		}
 		
 	}	

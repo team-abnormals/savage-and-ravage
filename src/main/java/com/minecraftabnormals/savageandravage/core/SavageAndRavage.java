@@ -1,6 +1,6 @@
 package com.minecraftabnormals.savageandravage.core;
 
-import com.minecraftabnormals.abnormals_core.core.utils.RegistryHelper;
+import com.teamabnormals.abnormals_core.core.utils.RegistryHelper;
 import com.minecraftabnormals.savageandravage.core.other.SRConfig;
 import com.minecraftabnormals.savageandravage.core.other.SRDispenserBehaviors;
 import com.minecraftabnormals.savageandravage.core.registry.SRBlocks;

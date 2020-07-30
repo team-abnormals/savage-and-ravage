@@ -1,9 +1,9 @@
 package com.minecraftabnormals.savageandravage.core.registry;
 
-import com.minecraftabnormals.abnormals_core.common.blocks.AbnormalsStairsBlock;
-import com.minecraftabnormals.abnormals_core.common.blocks.VerticalSlabBlock;
-import com.minecraftabnormals.abnormals_core.core.utils.DataUtils;
-import com.minecraftabnormals.abnormals_core.core.utils.RegistryHelper;
+import com.teamabnormals.abnormals_core.common.blocks.AbnormalsStairsBlock;
+import com.teamabnormals.abnormals_core.common.blocks.VerticalSlabBlock;
+import com.teamabnormals.abnormals_core.core.utils.DataUtils;
+import com.teamabnormals.abnormals_core.core.utils.RegistryHelper;
 import com.minecraftabnormals.savageandravage.common.block.ImprovedFlowerPotBlock;
 import com.minecraftabnormals.savageandravage.common.block.RunedGloomyTilesBlock;
 import com.minecraftabnormals.savageandravage.common.block.SporeBombBlock;

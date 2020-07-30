@@ -2,7 +2,7 @@ package com.minecraftabnormals.savageandravage.common.block;
 
 import javax.annotation.Nullable;
 
-import com.minecraftabnormals.abnormals_core.core.utils.ItemStackUtils;
+import com.teamabnormals.abnormals_core.core.utils.ItemStackUtils;
 import com.minecraftabnormals.savageandravage.common.entity.block.SporeBombEntity;
 
 import net.minecraft.block.Block;

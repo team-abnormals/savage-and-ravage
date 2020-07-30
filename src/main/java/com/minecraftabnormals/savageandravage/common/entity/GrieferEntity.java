@@ -91,10 +91,10 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 	
     public static AttributeModifierMap.MutableAttribute registerAttributes() {
 	    return MonsterEntity.func_234295_eP_()
-	    		.func_233815_a_(Attributes.MOVEMENT_SPEED, (double)0.35F)
-	    		.func_233815_a_(Attributes.MAX_HEALTH, 25.0D)
-	    		.func_233815_a_(Attributes.ATTACK_DAMAGE, 5.0D)
-	    		.func_233815_a_(Attributes.FOLLOW_RANGE, 32.0D);
+	    		.createMutableAttribute(Attributes.MOVEMENT_SPEED, (double)0.35F)
+	    		.createMutableAttribute(Attributes.MAX_HEALTH, 25.0D)
+	    		.createMutableAttribute(Attributes.ATTACK_DAMAGE, 5.0D)
+	    		.createMutableAttribute(Attributes.FOLLOW_RANGE, 32.0D);
     }
 	
 	@Override
@@ -430,7 +430,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
   }
 
 	@Override
-	public void func_213660_a(int arg0, boolean arg1) {
+	public void applyWaveBonus(int arg0, boolean arg1) {
 	   //i dont know.
 	}
 }
