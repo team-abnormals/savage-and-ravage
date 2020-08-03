@@ -42,6 +42,11 @@ public class GrieferArmorItem extends ArmorItem {
 		return (A) new GrieferArmorModel(1.0F, slot, entityLiving);
 	}
 	
+	@Override
+    public boolean makesPiglinsNeutral(ItemStack stack, LivingEntity wearer) {
+        return true;
+    }
+	
 	public String getReductionString() {
 		return String.valueOf(this.reduction);
 	}
