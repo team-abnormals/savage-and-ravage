@@ -148,7 +148,6 @@ public class SkeletonVillagerEntity extends AbstractSkeletonEntity implements IC
 	     worldIn.addEntity(spider);
 	     this.startRiding(spider);
 	   }
-	   this.setCombatTask();
 	   return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
 	}
 	
@@ -175,20 +174,6 @@ public class SkeletonVillagerEntity extends AbstractSkeletonEntity implements IC
 	{ 
 	  this.func_234281_b_(this, 1.6F);
 	}
-	
-	public void readAdditional(CompoundNBT compound) 
-	{
-	  super.readAdditional(compound);
-	  this.setCombatTask(); 
-	}
-
-	public void setItemStackToSlot(EquipmentSlotType slotIn, ItemStack stack) 
-	{
-       super.setItemStackToSlot(slotIn, stack);
-	   {
-		 this.setCombatTask();
-	   }
-    }
 	
 	public boolean isCharging() 
 	{
