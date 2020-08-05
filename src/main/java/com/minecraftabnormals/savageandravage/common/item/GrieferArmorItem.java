@@ -22,12 +22,10 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class GrieferArmorItem extends ArmorItem {
 	private EquipmentSlotType slot;
-	private int reduction;
 
-	public GrieferArmorItem(int reduction, IArmorMaterial material, EquipmentSlotType slot, Properties properties) {
+	public GrieferArmorItem(IArmorMaterial material, EquipmentSlotType slot, Properties properties) {
 		super(material, slot, properties);
 		this.slot = slot;
-		this.reduction = reduction;
 	}
 	
 	@Override
@@ -46,14 +44,6 @@ public class GrieferArmorItem extends ArmorItem {
     public boolean makesPiglinsNeutral(ItemStack stack, LivingEntity wearer) {
         return true;
     }
-	
-	public String getReductionString() {
-		return String.valueOf(this.reduction);
-	}
-	
-	public float getReductionAmount() {
-		return this.reduction * 0.01F;
-	}
 	
 	@Override
 	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {

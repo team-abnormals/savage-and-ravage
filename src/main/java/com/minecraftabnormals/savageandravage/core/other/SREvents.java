@@ -15,7 +15,7 @@ import com.minecraftabnormals.savageandravage.common.entity.IOwnableMob;
 import com.minecraftabnormals.savageandravage.common.entity.SkeletonVillagerEntity;
 import com.minecraftabnormals.savageandravage.common.entity.goals.AvoidGrieferOwnedCreepiesGoal;
 import com.minecraftabnormals.savageandravage.common.entity.goals.ImprovedCrossbowGoal;
-import com.minecraftabnormals.savageandravage.common.item.GrieferArmorItem;
+import com.minecraftabnormals.savageandravage.common.item.BlastProofStats;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 import com.minecraftabnormals.savageandravage.core.registry.SREntities;
 import com.minecraftabnormals.savageandravage.core.registry.SRItems;
@@ -49,6 +49,7 @@ import net.minecraft.entity.passive.ParrotEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ArmorItem;
 import net.minecraft.item.FireChargeItem;
 import net.minecraft.item.FireworkRocketItem;
 import net.minecraft.item.FlintAndSteelItem;
@@ -197,12 +198,16 @@ public class SREvents {
 			for(EquipmentSlotType slot : EquipmentSlotType.values()) {
 				if (slot.getSlotType() == EquipmentSlotType.Group.ARMOR) {
 					ItemStack stack = entity.getItemStackFromSlot(slot);
-					if (stack.getItem() instanceof GrieferArmorItem) {
+					if (stack.getItem() instanceof ArmorItem && stack.getItem().isIn(SRTags.BLAST_PROOF_ARMOR)) {
 						flag = true;
 						int damage = 22;
-						decrease += ((GrieferArmorItem)stack.getItem()).getReductionAmount();
-						if (EnchantmentHelper.getEnchantmentLevel(Enchantments.BLAST_PROTECTION, stack) > 0) damage -= EnchantmentHelper.getEnchantmentLevel(Enchantments.BLAST_PROTECTION, stack) * 8;
-						stack.damageItem(damage, entity, (onBroken) -> { onBroken.sendBreakAnimation(EquipmentSlotType.CHEST);});
+						decrease += BlastProofStats.slotToType(((ArmorItem)stack.getItem()).getEquipmentSlot()).getReductionAmount();
+						if (EnchantmentHelper.getEnchantmentLevel(Enchantments.BLAST_PROTECTION, stack) > 0) {
+						    damage -= EnchantmentHelper.getEnchantmentLevel(Enchantments.BLAST_PROTECTION, stack) * 8;
+						}
+						stack.damageItem(damage, entity, (onBroken) -> { 
+						    onBroken.sendBreakAnimation(EquipmentSlotType.CHEST);
+						});
 					}
 				}
 			}
