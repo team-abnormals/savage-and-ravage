@@ -2,7 +2,7 @@ package com.minecraftabnormals.savageandravage.core.other;
 
 import java.util.List;
 
-import com.minecraftabnormals.savageandravage.common.item.BlastProofStats;
+import com.minecraftabnormals.savageandravage.common.item.BlastProofArmorType;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 
 import net.minecraft.item.ArmorItem;
@@ -31,7 +31,7 @@ public class SRClientEvents {
 			    	if(((TranslationTextComponent) component).getKey().equals("attribute.modifier.plus.0")) index = i;
 			    }
 			}
-	    	tooltip.add(index + 1, new TranslationTextComponent("+" + BlastProofStats.slotToType(armor.getEquipmentSlot()).getReductionString() + "% ")
+	    	tooltip.add(index + 1, new TranslationTextComponent("+" + BlastProofArmorType.slotToType(armor.getEquipmentSlot()).getReductionString() + "% ")
 	    			.append(new TranslationTextComponent("attribute.name.grieferArmor.explosiveDamageReduction"))
 	    			.mergeStyle(TextFormatting.BLUE));
 		}

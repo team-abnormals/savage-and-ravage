@@ -3,7 +3,7 @@ package com.minecraftabnormals.savageandravage.common.item;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.util.IStringSerializable;
 
-public enum BlastProofStats implements IStringSerializable {
+public enum BlastProofArmorType implements IStringSerializable {
     HEAD("head", EquipmentSlotType.HEAD, 25), 
     CHEST("chest", EquipmentSlotType.CHEST, 30), 
     LEGS("legs", EquipmentSlotType.LEGS, 25), 
@@ -13,7 +13,7 @@ public enum BlastProofStats implements IStringSerializable {
     private EquipmentSlotType slot;
     private int reduction;
     
-    private BlastProofStats(String name, EquipmentSlotType slot, int reduction) {
+    private BlastProofArmorType(String name, EquipmentSlotType slot, int reduction) {
         this.name = name;
         this.slot = slot;
         this.reduction = reduction;
@@ -23,16 +23,16 @@ public enum BlastProofStats implements IStringSerializable {
         return this.slot;
     }
     
-    public static BlastProofStats slotToType(EquipmentSlotType slot) {
+    public static BlastProofArmorType slotToType(EquipmentSlotType slot) {
         switch(slot) {
         case CHEST:
-            return BlastProofStats.CHEST;
+            return BlastProofArmorType.CHEST;
         case FEET:
-            return BlastProofStats.FEET;
+            return BlastProofArmorType.FEET;
         case HEAD:
-            return BlastProofStats.HEAD;
+            return BlastProofArmorType.HEAD;
         case LEGS:
-            return BlastProofStats.LEGS;
+            return BlastProofArmorType.LEGS;
         default:
             return null;
         }

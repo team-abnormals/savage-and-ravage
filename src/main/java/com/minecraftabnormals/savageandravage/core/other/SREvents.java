@@ -15,7 +15,7 @@ import com.minecraftabnormals.savageandravage.common.entity.IOwnableMob;
 import com.minecraftabnormals.savageandravage.common.entity.SkeletonVillagerEntity;
 import com.minecraftabnormals.savageandravage.common.entity.goals.AvoidGrieferOwnedCreepiesGoal;
 import com.minecraftabnormals.savageandravage.common.entity.goals.ImprovedCrossbowGoal;
-import com.minecraftabnormals.savageandravage.common.item.BlastProofStats;
+import com.minecraftabnormals.savageandravage.common.item.BlastProofArmorType;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 import com.minecraftabnormals.savageandravage.core.registry.SREntities;
 import com.minecraftabnormals.savageandravage.core.registry.SRItems;
@@ -201,7 +201,7 @@ public class SREvents {
 					if (stack.getItem() instanceof ArmorItem && stack.getItem().isIn(SRTags.BLAST_PROOF_ARMOR)) {
 						flag = true;
 						int damage = 22;
-						decrease += BlastProofStats.slotToType(((ArmorItem)stack.getItem()).getEquipmentSlot()).getReductionAmount();
+						decrease += BlastProofArmorType.slotToType(((ArmorItem)stack.getItem()).getEquipmentSlot()).getReductionAmount();
 						if (EnchantmentHelper.getEnchantmentLevel(Enchantments.BLAST_PROTECTION, stack) > 0) {
 						    damage -= EnchantmentHelper.getEnchantmentLevel(Enchantments.BLAST_PROTECTION, stack) * 8;
 						}
