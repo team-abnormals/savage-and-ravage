@@ -2,6 +2,8 @@ package com.minecraftabnormals.savageandravage.core.other;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import com.minecraftabnormals.savageandravage.common.advancement.SRTriggers;
@@ -34,6 +36,7 @@ import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.ai.goal.RangedCrossbowAttackGoal;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.entity.monster.IMob;
@@ -188,17 +191,19 @@ public class SREvents {
 		}
 	}
 	
-//	@SubscribeEvent
-//    public static void blastProofTag(ExplosionEvent.Detonate event) {
-//	    for(Entity entity : event.getAffectedEntities()) {
-//	        if (entity instanceof ItemEntity) {
-//	            ItemStack itemstack = ((ItemEntity)entity).getItem();
-//	            if (itemstack.getItem().isIn(SRTags.BLAST_PROOF_ITEMS)) {
-//	                event.getAffectedEntities().remove(entity);
-//	            }
-//	        }
-//	    }
-//    }
+	@SubscribeEvent
+    public static void blastProofTag(ExplosionEvent.Detonate event) {
+	    List<Entity> safeItems = new ArrayList<>();
+	    for(Entity entity : event.getAffectedEntities()) {
+	        if (entity instanceof ItemEntity) {
+	            ItemStack itemstack = ((ItemEntity)entity).getItem();
+	            if (itemstack.getItem().isIn(SRTags.BLAST_PROOF_ITEMS)) {
+	                safeItems.add(entity);
+	            }
+	        }
+	    }
+	    event.getAffectedEntities().removeAll(safeItems);
+    }
 
 	@SubscribeEvent
 	public static void handleBlastProof(LivingDamageEvent event){
