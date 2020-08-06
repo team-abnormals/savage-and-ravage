@@ -1,7 +1,7 @@
 package com.minecraftabnormals.savageandravage.client.render;
 
-import com.minecraftabnormals.savageandravage.client.model.GrieferEntityArmorModel;
 import com.minecraftabnormals.savageandravage.client.model.GrieferModel;
+import com.minecraftabnormals.savageandravage.client.model.VillagerArmorModel;
 import com.minecraftabnormals.savageandravage.common.entity.GrieferEntity;
 
 import net.minecraft.client.renderer.entity.BipedRenderer;
@@ -15,7 +15,7 @@ public class GrieferRenderer extends BipedRenderer<GrieferEntity, GrieferModel> 
 
 	public GrieferRenderer(EntityRendererManager renderManagerIn) {
 		super(renderManagerIn, new GrieferModel(0), 0.5f);
-		this.addLayer(new BipedArmorLayer<GrieferEntity, GrieferModel, GrieferEntityArmorModel>(this, new GrieferEntityArmorModel(0.5F), new GrieferEntityArmorModel(1.0F)));
+		this.addLayer(new BipedArmorLayer<GrieferEntity, GrieferModel, VillagerArmorModel<GrieferEntity>>(this, new VillagerArmorModel<GrieferEntity>(0.5F), new VillagerArmorModel<GrieferEntity>(1.0F)));
 	}
 	
     public ResourceLocation getEntityTexture(GrieferEntity entity) {

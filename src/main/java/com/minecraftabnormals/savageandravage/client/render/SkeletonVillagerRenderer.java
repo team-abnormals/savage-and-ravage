@@ -2,8 +2,8 @@ package com.minecraftabnormals.savageandravage.client.render;
 
 import javax.annotation.Nullable;
 
-import com.minecraftabnormals.savageandravage.client.model.SkeletonVillagerArmorModel;
 import com.minecraftabnormals.savageandravage.client.model.SkeletonVillagerModel;
+import com.minecraftabnormals.savageandravage.client.model.VillagerArmorModel;
 import com.minecraftabnormals.savageandravage.common.entity.SkeletonVillagerEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
 
@@ -21,7 +21,7 @@ public class SkeletonVillagerRenderer extends MobRenderer<SkeletonVillagerEntity
     public SkeletonVillagerRenderer(EntityRendererManager manager) 
     {
         super(manager, new SkeletonVillagerModel(0.0F), 0.5f);
-        this.addLayer(new BipedArmorLayer<SkeletonVillagerEntity, SkeletonVillagerModel, SkeletonVillagerArmorModel>(this, new SkeletonVillagerArmorModel(0.5F), new SkeletonVillagerArmorModel(1.0F)));
+        this.addLayer(new BipedArmorLayer<SkeletonVillagerEntity, SkeletonVillagerModel, VillagerArmorModel<SkeletonVillagerEntity>>(this, new VillagerArmorModel<SkeletonVillagerEntity>(0.5F), new VillagerArmorModel<SkeletonVillagerEntity>(1.0F)));
         this.addLayer(new HeldItemLayer<SkeletonVillagerEntity, SkeletonVillagerModel>(this) {
         public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, SkeletonVillagerEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
             if (entitylivingbaseIn.isAggressive()) {

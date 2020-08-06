@@ -64,6 +64,7 @@ public class GrieferModel extends BipedModel<GrieferEntity>
         this.bipedBody.addChild(this.tnt);
         this.bipedBody.addChild(this.pouch);
         this.bipedRightArm.addChild(this.shoulderPad);
+        this.bipedHeadwear.showModel = false;
     }
     
     protected Iterable<ModelRenderer> getBodyParts() {
