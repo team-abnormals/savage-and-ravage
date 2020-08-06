@@ -187,6 +187,18 @@ public class SREvents {
 			}
 		}
 	}
+	
+//	@SubscribeEvent
+//    public static void blastProofTag(ExplosionEvent.Detonate event) {
+//	    for(Entity entity : event.getAffectedEntities()) {
+//	        if (entity instanceof ItemEntity) {
+//	            ItemStack itemstack = ((ItemEntity)entity).getItem();
+//	            if (itemstack.getItem().isIn(SRTags.BLAST_PROOF_ITEMS)) {
+//	                event.getAffectedEntities().remove(entity);
+//	            }
+//	        }
+//	    }
+//    }
 
 	@SubscribeEvent
 	public static void handleBlastProof(LivingDamageEvent event){
