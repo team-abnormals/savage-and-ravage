@@ -215,7 +215,6 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 	public ILivingEntityData onInitialSpawn(IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) 
 	{
 	   this.setEquipmentBasedOnDifficulty(difficultyIn);
-	   //Why does this never get called?
 	   this.creeperSporeStacks = 10;
 	   return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
 	}
@@ -232,7 +231,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
     private void giveArmorOnRandom(EquipmentSlotType slot, ItemStack stack)
     {
         ItemStack itemstack = this.getItemStackFromSlot(slot);
-        float chance = 0.100F; //feedback on chance would be epic
+        float chance = this.isLeader() ? 1.00F : 0.100F; //feedback on chance would be epic
         if (itemstack.isEmpty() && this.world.rand.nextFloat() < chance) {
     	   this.setItemStackToSlot(slot, stack);
         }
