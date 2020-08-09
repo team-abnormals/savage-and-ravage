@@ -216,17 +216,27 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 	{
 	   this.setEquipmentBasedOnDifficulty(difficultyIn);
 	   //Why does this never get called?
-	   if (this.isLeader()) {
-	     this.setItemStackToSlot(EquipmentSlotType.CHEST, new ItemStack(SRItems.GRIEFER_CHESTPLATE.get()));
-	   }
 	   this.creeperSporeStacks = 10;
 	   return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
 	}
 	
 	protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty) 
 	{
-	  this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(SRItems.CREEPER_SPORES.get()));
+      this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(SRItems.CREEPER_SPORES.get()));
+      this.giveArmorOnRandom(EquipmentSlotType.HEAD, new ItemStack(SRItems.GRIEFER_HELMET.get()));
+      this.giveArmorOnRandom(EquipmentSlotType.CHEST, new ItemStack(SRItems.GRIEFER_CHESTPLATE.get()));
+      this.giveArmorOnRandom(EquipmentSlotType.LEGS, new ItemStack(SRItems.GRIEFER_LEGGINGS.get()));
+      this.giveArmorOnRandom(EquipmentSlotType.FEET, new ItemStack(SRItems.GRIEFER_BOOTS.get()));
 	}
+	
+    private void giveArmorOnRandom(EquipmentSlotType slot, ItemStack stack)
+    {
+        ItemStack itemstack = this.getItemStackFromSlot(slot);
+        float chance = 0.100F; //feedback on chance would be epic
+        if (itemstack.isEmpty() && this.world.rand.nextFloat() < chance) {
+    	   this.setItemStackToSlot(slot, stack);
+        }
+    }
 
 	@Override
 	public void attackEntityWithRangedAttack(LivingEntity target, float distanceFactor) 
