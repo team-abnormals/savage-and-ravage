@@ -1,8 +1,11 @@
 package com.minecraftabnormals.savageandravage.core.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -13,8 +16,8 @@ import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.world.World;
 
 @Mixin(IronGolemEntity.class)
-public class IronGolemMixin extends GolemEntity {
-	protected IronGolemMixin(EntityType<? extends GolemEntity> entity, World world) {
+public class IronGolemEntityMixin extends GolemEntity {
+	protected IronGolemEntityMixin(EntityType<? extends GolemEntity> entity, World world) {
 		super(entity, world);
 	}
 	
@@ -23,16 +26,16 @@ public class IronGolemMixin extends GolemEntity {
 		return false;
 	}
 	
-	@Overwrite(remap = true)
-    protected void collideWithEntity(Entity entityIn) {
+	@Inject(at = @At("RETURN"), method = "collideWithEntity(Lnet/minecraft/entity/Entity;)V", cancellable = true)
+    protected void collideWithEntity(Entity entityIn, CallbackInfo info) {
 		if (entityIn instanceof IMob && this.getRNG().nextInt(20) == 0) {
 			this.setAttackTarget((LivingEntity)entityIn);
 		}
 		super.collideWithEntity(entityIn);
 	}
 	
-	@Overwrite(remap = true)
-	public boolean canAttack(EntityType<?> typeIn) {
+	@Inject(at = @At("RETURN"), method = "canAttack(Lnet/minecraft/entity/EntityType;)Z", cancellable = true)
+	public boolean canAttack(EntityType<?> typeIn, CallbackInfoReturnable<Boolean> cir) {
 		if (this.isPlayerCreated() && typeIn == EntityType.PLAYER) {
 			return false;
 		} else {

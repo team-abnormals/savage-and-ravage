@@ -5,8 +5,8 @@
   "minVersion": "0.8",
   "refmap": "savageandravage.refmap.json",
   "mixins": [
-    "IronGolemMixin",
-    "ZoglinMixin"
+    "IronGolemEntityMixin",
+    "ZoglinEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1
