@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 import com.minecraftabnormals.savageandravage.common.item.CreeperSporesItem;
 import com.minecraftabnormals.savageandravage.core.registry.SRItems;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityPredicate;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ILivingEntityData;
@@ -44,6 +45,8 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttackMob
 {
@@ -55,8 +58,9 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 		super(type, worldIn);
 	}
 	
-	public int kickTicks;
 	public int creeperSporeStacks;
+	public int kickTicks;
+	public int kickCoolDown;
 	
 	protected void registerGoals() 
 	{
@@ -65,6 +69,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 	   this.goalSelector.addGoal(2, new AbstractRaiderEntity.FindTargetGoal(this, 10.0F));
 	   this.goalSelector.addGoal(3, new GrieferEntity.MeleePhaseGoal(this, 0.9D, true));
 	   this.goalSelector.addGoal(3, new GrieferEntity.GrieferAttackWithSporesGoal(this, 1.0D, 100));
+	   this.goalSelector.addGoal(2, new GrieferEntity.KickGoal(this));
 	   this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.0D, true) {
 		   @Override
 		   public boolean shouldExecute() {
@@ -131,25 +136,41 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 	
 	public void livingTick() 
 	{
-      if (this.kickTicks > 0) 
-      {
-        ++this.kickTicks;
-        LivingEntity attacker = this.getAttackTarget();
-        if (this.kickTicks == 10 && attacker != null && this.isKicking()) 
-        {
-          this.attackEntityAsMob(attacker);
-          attacker.applyKnockback(1.0F, MathHelper.sin(this.rotationYaw * ((float)Math.PI / 180F)), (-MathHelper.cos(this.rotationYaw * ((float)Math.PI / 180F))));
-          if (this.kickTicks < 10) {
-        	  this.setKicking(false);
+          if (this.kickTicks > 0)  {
+              --this.kickTicks;
           }
-        }
-      }
-	  super.livingTick();
+          
+          if (this.kickCoolDown > 0) {
+        	  --this.kickCoolDown;
+          }
+      
+     
+	    super.livingTick();
 	}
 	
+	
+    @Override
+    public boolean attackEntityAsMob(Entity entityIn) {
+    	if (this.isKicking()) {
+            ((LivingEntity) entityIn).applyKnockback(1.0F, MathHelper.sin(this.rotationYaw * ((float)Math.PI / 180F)), (-MathHelper.cos(this.rotationYaw * ((float)Math.PI / 180F))));
+            this.kickTicks = 10;
+            this.world.setEntityState(this, (byte)4);
+            this.faceEntity(entityIn, 90.0F, 90.0F);
+    	}
+		return super.attackEntityAsMob(entityIn);
+    }
+    
+    public void handleStatusUpdate(byte id) {
+       if (id == 4) {
+          this.kickTicks = 10;
+       } else {
+          super.handleStatusUpdate(id);
+       }
+
+    }
+	
 	@Override
-    protected void damageEntity(DamageSource damageSrc, float damageAmount) 
-    {
+    protected void damageEntity(DamageSource damageSrc, float damageAmount) {
 		super.damageEntity(damageSrc, damageAmount);
     	if (this.isApeshit() && creeperSporeStacks <= 0 &&  damageSrc.getTrueSource() == this.getAttackTarget() && this.getAttackTarget() != null) {
     		creeperSporeStacks = (int) this.lastDamage / 2;
@@ -180,34 +201,30 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 		return this.kickTicks;
 	}
 	
-	public void kick(double distance, LivingEntity entity) {
-		if (this.getDistance(entity) <= distance) {
-		 this.setKicking(true);
-		 this.faceEntity(entity, 30.0F, 30.0F);
-		 this.kickTicks = 9;
-		} else if (this.getDistance(entity) > distance) {
-			this.setKicking(false);
-		}
+	public void kick(LivingEntity entity) {
+        this.setKicking(true);
+        this.attackEntityAsMob(entity);
+        this.kickCoolDown = 30;
 	}
 	
     public boolean isKicking() 
     {
-	  return this.dataManager.get(KICKING);
+	    return this.dataManager.get(KICKING);
     }
     
     public boolean isApeshit() 
     {
-	  return this.dataManager.get(APESHIT_MODE);
+	    return this.dataManager.get(APESHIT_MODE);
     }
 
-    public void setKicking(boolean p_213671_1_) 
+    public void setKicking(boolean trueorfalse) 
     {
-	   this.dataManager.set(KICKING, p_213671_1_);
+	    this.dataManager.set(KICKING, trueorfalse);
     }
     
-    public void becomeApeshit(boolean p_213671_1_) 
+    public void becomeApeshit(boolean trueorfalse) 
     {
-	   this.dataManager.set(APESHIT_MODE, p_213671_1_);
+	    this.dataManager.set(APESHIT_MODE, trueorfalse);
     }
     
 	@Nullable
@@ -236,6 +253,13 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
     	   this.setItemStackToSlot(slot, stack);
         }
     }
+    
+	@Override
+	public void applyWaveBonus(int arg0, boolean arg1) {
+	   //TODO : put something here
+	}
+	
+	
 
 	@Override
 	public void attackEntityWithRangedAttack(LivingEntity target, float distanceFactor) 
@@ -258,7 +282,35 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 	  }
 	}
 	
-	//just a copy of melee attack goal for now.
+	public static class KickGoal extends Goal {
+
+        private final GrieferEntity griefer;
+        
+		public KickGoal(GrieferEntity griefer) {
+			this.griefer = griefer;
+		}
+		
+        @Override
+		public boolean shouldExecute() {
+        	LivingEntity entity = griefer.getAttackTarget();
+			return griefer.getAttackTarget() != null && entity != null && entity.getDistance(griefer) <= 2.5D && !griefer.isKicking() 
+			&& griefer.kickTicks <= 0 && griefer.kickCoolDown == 0 && griefer.creeperSporeStacks > 0;
+		}
+        
+        @Override
+        public void startExecuting() {
+        	LivingEntity entity = griefer.getAttackTarget();
+            griefer.kick(entity);
+        }
+        
+        @Override
+        public void resetTask() {
+        	griefer.kickTicks = 0;
+        	griefer.setKicking(false);
+        }
+		
+	}
+	
 	public static class MeleePhaseGoal extends MeleeAttackGoal 
 	{
 		private final GrieferEntity griefer;
@@ -270,40 +322,32 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 		
 		public boolean shouldExecute()
 		{
-	      return griefer.creeperSporeStacks == 0 && super.shouldExecute();
+	        return griefer.creeperSporeStacks == 0 && super.shouldExecute();
 		}
 		
 		public boolean shouldContinueExecuting() 
 		{
-		  return griefer.creeperSporeStacks == 0 && super.shouldContinueExecuting();
+		    return griefer.creeperSporeStacks == 0 && super.shouldContinueExecuting();
 		}
 		
 		public void startExecuting()
 		{
-		  griefer.becomeApeshit(true);
-	      if (griefer.creeperSporeStacks == 0) 
-	      {
-	       griefer.setHeldItem(griefer.getActiveHand(), ItemStack.EMPTY);
-	      }
-		  super.startExecuting();
+		    griefer.becomeApeshit(true);
+	        if (griefer.creeperSporeStacks == 0) 
+	        {
+	            griefer.setHeldItem(griefer.getActiveHand(), ItemStack.EMPTY);
+	        }
+		    super.startExecuting();
 		}
 		
 		public void resetTask()
 		{
 			super.resetTask();
-			if (this.griefer.isKicking()) 
-			{
-			  this.griefer.setKicking(false);
-			}
 		}
 		
 		public void tick()
 		{
-		  super.tick();
-		  if (this.griefer.getDistance(griefer.getAttackTarget()) > 2.0D) 
-		  {
-		   this.griefer.setKicking(false);
-		  }
+		    super.tick();
 		}
 		
 		protected void checkAndPerformAttack(LivingEntity enemy, double distToEnemySqr) 
@@ -315,17 +359,17 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 		    this.field_234037_i_ = 60;
 		    switch (i) 
 		    {
-		     case 0: 
-		     this.griefer.swingArm(Hand.MAIN_HAND);	
-		     break;
+		        case 0: 
+		        this.griefer.swingArm(Hand.MAIN_HAND);	
+		        break;
 		     
-		     case 1:
-		     this.griefer.swingArm(Hand.OFF_HAND);
-		     break;
+		        case 1:
+		        this.griefer.swingArm(Hand.OFF_HAND);
+		        break;
 		     
-		     case 2:
-		     this.griefer.kick(2.0D, enemy);
-		     break;
+		        case 2:
+		        this.griefer.kick(enemy);
+		        break;
 		    } //if this breaks anything tell me
 		     this.griefer.faceEntity(enemy, 30.0F, 30.0F);
 			 this.griefer.attackEntityAsMob(enemy);
@@ -361,85 +405,80 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 
       public boolean shouldExecute() 
       {
-        LivingEntity livingentity = this.griefer.getAttackTarget();
-        return livingentity != null && livingentity.isAlive() && this.griefer.creeperSporeStacks > 0; 
+          LivingEntity livingentity = this.griefer.getAttackTarget();
+          return livingentity != null && livingentity.isAlive() && this.griefer.creeperSporeStacks > 0; 
       }
 
       public boolean shouldContinueExecuting() 
       {
-       return this.shouldExecute() || !this.griefer.getNavigator().noPath();
+          return this.shouldExecute() || !this.griefer.getNavigator().noPath();
       }
      
       public void startExecuting()
       {
-        if (griefer.isApeshit()) 
-        {
-    	  griefer.becomeApeshit(false);
-        }
-		if (griefer.creeperSporeStacks > 0) 
-		{
-		  griefer.setHeldItem(Hand.MAIN_HAND, new ItemStack(SRItems.CREEPER_SPORES.get()));
-		}
+          if (griefer.isApeshit()) 
+          {
+    	      griefer.becomeApeshit(false);
+          }
+          
+		  if (griefer.creeperSporeStacks > 0) 
+		  {
+		      griefer.setHeldItem(Hand.MAIN_HAND, new ItemStack(SRItems.CREEPER_SPORES.get()));
+		  }
       }
 
       public void resetTask() 
       {
-	    this.griefer.setAggroed(false);
-	    this.griefer.setAttackTarget((LivingEntity)null);
-        this.rangedAttackTime = -1;
-        if (griefer.isKicking()) 
-        {
-         this.griefer.setKicking(false);
-        }
+	      this.griefer.setAggroed(false);
+	      this.griefer.setAttackTarget((LivingEntity)null);
+          this.rangedAttackTime = -1;
+          if (griefer.isKicking()) 
+          {
+             this.griefer.setKicking(false);
+          }
       }
 
       public void tick() {
-        LivingEntity attackTarget = griefer.getAttackTarget();
-        if (attackTarget != null) {
-         double d0 = this.griefer.getDistance(attackTarget);
-         boolean flag = this.griefer.getEntitySenses().canSee(attackTarget);
-         this.griefer.setAggroed(true);
-         if (flag) {
-        	++this.seeTime;
-         } else {
-        	--this.seeTime;
-         }
-         if (this.griefer.getRNG().nextDouble() < 0.3D) {
-           this.strafingClockwise = !this.strafingClockwise;
-         }
+          LivingEntity attackTarget = griefer.getAttackTarget();
+          if (attackTarget != null) {
+              double d0 = this.griefer.getDistance(attackTarget);
+              boolean flag = this.griefer.getEntitySenses().canSee(attackTarget);
+              this.griefer.setAggroed(true);
+              if (flag) {
+        	      ++this.seeTime;
+              } else {
+        	     --this.seeTime;
+              }
+              
+              if (this.griefer.getRNG().nextDouble() < 0.3D) {
+                  this.strafingClockwise = !this.strafingClockwise;
+              }
 
-         if (this.griefer.getRNG().nextDouble() < 0.3D) {
-           this.strafingBackwards = !this.strafingBackwards;
-         }
-         griefer.kick(2.5D, attackTarget);
-         if (d0 < 15.0D) {
-          this.griefer.getNavigator().clearPath();
-          } else {
-           this.griefer.getNavigator().tryMoveToEntityLiving(attackTarget, this.entityMoveSpeed);
-          }
+              if (this.griefer.getRNG().nextDouble() < 0.3D) {
+                  this.strafingBackwards = !this.strafingBackwards;
+              }
+              if (d0 < 15.0D) {
+                  this.griefer.getNavigator().clearPath();
+              } else {
+                  this.griefer.getNavigator().tryMoveToEntityLiving(attackTarget, this.entityMoveSpeed);
+              }
 
-          this.griefer.getLookController().setLookPositionWithEntity(attackTarget, 30.0F, 30.0F);
-          if (--this.rangedAttackTime == 0 || this.seeTime == 3) {
-            if (!flag) {
-             return;
-           }
-            float f = MathHelper.sqrt(d0) / this.attackRadius;
-            float lvt_5_1_ = MathHelper.clamp(f, 0.1F, 1.0F);
-            this.griefer.attackEntityWithRangedAttack(attackTarget, lvt_5_1_);
-            this.griefer.faceEntity(attackTarget, 30.0F, 30.0F);
-  		    this.griefer.getMoveHelper().strafe((float) (this.strafingBackwards ? -this.entityMoveSpeed : this.entityMoveSpeed), (float) (this.strafingClockwise ? this.entityMoveSpeed : -this.entityMoveSpeed));
-            this.rangedAttackTime = MathHelper.floor(f * (float)(this.maxRangedAttackTime - this.attackIntervalMin) + (float)this.attackIntervalMin);
-           } else if (this.rangedAttackTime < 0) 
-           {
-            float f2 = MathHelper.sqrt(d0) / this.attackRadius;
-            this.rangedAttackTime = MathHelper.floor(f2 * (float)(this.maxRangedAttackTime - this.attackIntervalMin) + (float)this.attackIntervalMin);
-           }
+              this.griefer.getLookController().setLookPositionWithEntity(attackTarget, 30.0F, 30.0F);
+              if (--this.rangedAttackTime == 0 || this.seeTime == 3) {
+                  if (!flag) {
+                      return;
+                  }
+                 float f = MathHelper.sqrt(d0) / this.attackRadius;
+                 float lvt_5_1_ = MathHelper.clamp(f, 0.1F, 1.0F);
+                 this.griefer.attackEntityWithRangedAttack(attackTarget, lvt_5_1_);
+                 this.griefer.faceEntity(attackTarget, 30.0F, 30.0F);
+  		         this.griefer.getMoveHelper().strafe((float) (this.strafingBackwards ? -this.entityMoveSpeed : this.entityMoveSpeed), (float) (this.strafingClockwise ? this.entityMoveSpeed : -this.entityMoveSpeed));
+                 this.rangedAttackTime = MathHelper.floor(f * (float)(this.maxRangedAttackTime - this.attackIntervalMin) + (float)this.attackIntervalMin);
+                 } else if (this.rangedAttackTime < 0) {
+                     float f2 = MathHelper.sqrt(d0) / this.attackRadius;
+                     this.rangedAttackTime = MathHelper.floor(f2 * (float)(this.maxRangedAttackTime - this.attackIntervalMin) + (float)this.attackIntervalMin);
+                }
       }
     }
   }
-
-	@Override
-	public void applyWaveBonus(int arg0, boolean arg1) {
-	   //i dont know.
-	}
 }

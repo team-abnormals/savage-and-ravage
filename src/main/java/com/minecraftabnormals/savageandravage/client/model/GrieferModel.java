@@ -77,11 +77,10 @@ public class GrieferModel extends BipedModel<GrieferEntity>
 		boolean flag = entityIn.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() instanceof ArmorItem;
 		this.bipedBody2Layer.copyModelAngles(this.bipedBody);
 		this.shoulderPad.showModel = !flag;
-        if (entityIn.isKicking())
-        {
-        	 float f1 = MathHelper.clamp(this.kickingTime,  0.0F, 25.0F);
-        	 this.bipedRightLeg.rotateAngleX = MathHelper.lerp(f1 / 10.0F, -1.40F, 1.05F);
-        }
+		if (entityIn.getKickTicks() > 0) {
+		    float f1 = 1.0F - (float)MathHelper.abs(10 - 2 * entityIn.getKickTicks()) / 10.0F;
+            this.bipedRightLeg.rotateAngleX = MathHelper.lerp(f1, 0.0F, -1.40F);
+		}
         if (entityIn.func_213656_en()) //party rockers in the hou
         {
             this.bipedHead.rotateAngleX = MathHelper.cos(ageInTicks * 0.6662F) * 0.05F;
