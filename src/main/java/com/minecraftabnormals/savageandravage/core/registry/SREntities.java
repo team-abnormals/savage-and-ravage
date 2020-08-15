@@ -3,6 +3,7 @@ package com.minecraftabnormals.savageandravage.core.registry;
 import com.minecraftabnormals.savageandravage.client.render.CreepieRenderer;
 import com.minecraftabnormals.savageandravage.client.render.GrieferRenderer;
 import com.minecraftabnormals.savageandravage.client.render.NoModelRenderer;
+import com.minecraftabnormals.savageandravage.client.render.RevampedVindicatorRenderer;
 import com.minecraftabnormals.savageandravage.client.render.RunePrisonRenderer;
 import com.minecraftabnormals.savageandravage.client.render.SkeletonVillagerRenderer;
 import com.minecraftabnormals.savageandravage.client.render.SporeBombRenderer;
@@ -56,6 +57,7 @@ public class SREntities {
         RenderingRegistry.registerEntityRenderingHandler(SPORE_BOMB.get(), SporeBombRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(BURNING_BANNER.get(), NoModelRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(RUNE_PRISON.get(), RunePrisonRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityType.VINDICATOR, RevampedVindicatorRenderer::new);
     }
     
     public static void addEntitySpawns() {
