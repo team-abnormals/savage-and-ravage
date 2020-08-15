@@ -25,6 +25,7 @@ public class SRConfig
 	public static boolean CreepersSpawnCreepiesWhenBoom;
 	public static boolean CreepersSpawnSporesAfterDeathByBoom;
 	public static boolean PoisonPotatoCompatEnabled;
+	public static boolean VindicatorRemodel;
 	public static boolean PoisonEffect;
 	public static double PoisonChance;
 
@@ -37,6 +38,7 @@ public class SRConfig
 		PoisonPotatoCompatEnabled = COMMON.PoisonPotatoCompatEnabled.get();
 		PoisonEffect = COMMON.PoisonEffect.get();
 		PoisonChance = COMMON.PoisonChance.get();
+		VindicatorRemodel = COMMON.VindiRemodel.get();
 	}
 
 	@SubscribeEvent
@@ -56,12 +58,13 @@ public class SRConfig
 		public final ForgeConfigSpec.BooleanValue PoisonPotatoCompatEnabled;
 		public final ForgeConfigSpec.BooleanValue PoisonEffect;
 		public final ForgeConfigSpec.DoubleValue PoisonChance;
+		public final ForgeConfigSpec.BooleanValue VindiRemodel;
 
 		public CommonConfig(ForgeConfigSpec.Builder builder) 
 		{
 			CreeperNoDestroyBlocks = builder
 					.translation(SavageAndRavage.MODID + ".config.CreeperNoDestroyBlocks")
-					.define("Creepers do not destroy blocks", true);
+					.define("Creepers don't destroy blocks", true);
 			CreepersSpawnCreepiesWhenBoom = builder
 					.translation(SavageAndRavage.MODID + ".config.CreepersSpawnCreepiesWhenBoom")
 					.define("Creepies spawn after creeper explosions", true);
@@ -86,6 +89,9 @@ public class SRConfig
 					.comment("If true, creepies grow significantly larger when they explode.")
 					.translation(SavageAndRavage.MODID + ".config.CreepieGoBigWhenBoom")
 					.define("Creepie go big when boom", false);
+			VindiRemodel = builder
+					.translation(SavageAndRavage.MODID + ".config.VindiRemodel")
+					.define("Enable Vindicator Remodel", true);
 		}
 	}
 }
