@@ -14,8 +14,8 @@ import com.minecraftabnormals.savageandravage.common.entity.GrieferEntity;
 import com.minecraftabnormals.savageandravage.common.entity.RunePrisonEntity;
 import com.minecraftabnormals.savageandravage.common.entity.SkeletonVillagerEntity;
 import com.minecraftabnormals.savageandravage.common.entity.block.SporeBombEntity;
+import com.minecraftabnormals.savageandravage.core.SRConfig;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
-import com.minecraftabnormals.savageandravage.core.other.SRConfig;
 import com.teamabnormals.abnormals_core.core.utils.RegistryHelper;
 
 import net.minecraft.entity.EntityClassification;
@@ -58,7 +58,7 @@ public class SREntities {
         RenderingRegistry.registerEntityRenderingHandler(SPORE_BOMB.get(), SporeBombRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(BURNING_BANNER.get(), NoModelRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(RUNE_PRISON.get(), RunePrisonRenderer::new);
-        if (SRConfig.VindicatorRemodel) RenderingRegistry.registerEntityRenderingHandler(EntityType.VINDICATOR, RevampedVindicatorRenderer::new);
+        if (SRConfig.CLIENT.vindicatorRemodel.get()) RenderingRegistry.registerEntityRenderingHandler(EntityType.VINDICATOR, RevampedVindicatorRenderer::new);
     }
     
     public static void addEntitySpawns() {

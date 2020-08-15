@@ -2,7 +2,7 @@ package com.minecraftabnormals.savageandravage.client.render;
 
 import com.minecraftabnormals.savageandravage.client.model.CreepieModel;
 import com.minecraftabnormals.savageandravage.common.entity.CreepieEntity;
-import com.minecraftabnormals.savageandravage.core.other.SRConfig;
+import com.minecraftabnormals.savageandravage.core.SRConfig;
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -31,7 +31,7 @@ public class CreepieRenderer extends MobRenderer<CreepieEntity, CreepieModel>{
         matrixStackIn.scale(0.5F, 0.5F, 0.5F); 
         //it small - i hope this doesn't conflict with swelling
         //the names for the maths variables are temporary - i just haven't bothered fully understanding what this does yet
-        if (SRConfig.CreepieGoBigWhenBoom) {
+        if (SRConfig.CLIENT.creepiesGrowLargerOnExplosion.get()) {
         	float creeperFlashIntensity2 = entityLivingBaseIn.getCreeperFlashIntensity(partialTickTime);
             final float mathsThing2 = 1.0f + MathHelper.sin(creeperFlashIntensity2 * 100.0f) * creeperFlashIntensity2 * 0.01f;
             creeperFlashIntensity2 = MathHelper.clamp(creeperFlashIntensity2, 0.0f, 1.0f);

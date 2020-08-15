@@ -18,6 +18,7 @@ import com.minecraftabnormals.savageandravage.common.entity.SkeletonVillagerEnti
 import com.minecraftabnormals.savageandravage.common.entity.goals.AvoidGrieferOwnedCreepiesGoal;
 import com.minecraftabnormals.savageandravage.common.entity.goals.ImprovedCrossbowGoal;
 import com.minecraftabnormals.savageandravage.common.item.BlastProofArmorType;
+import com.minecraftabnormals.savageandravage.core.SRConfig;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 import com.minecraftabnormals.savageandravage.core.registry.SREntities;
 import com.minecraftabnormals.savageandravage.core.registry.SRItems;
@@ -135,7 +136,7 @@ public class SREvents {
     public static void onLivingDrops(LivingDropsEvent event) {
         if (event.getEntity() instanceof CreeperEntity) {
             CreeperEntity creeper = (CreeperEntity) event.getEntity();
-            if (event.getSource().isExplosion() && SRConfig.CreepersSpawnSporesAfterDeathByBoom) {
+            if (event.getSource().isExplosion() && SRConfig.COMMON.creepersDropSporesAfterExplosionDeath.get()) {
                 creeper.entityDropItem(new ItemStack(SRItems.CREEPER_SPORES.get(), 1 + creeper.world.rand.nextInt(5)));
             }
         }
@@ -168,11 +169,11 @@ public class SREvents {
     public static void onExplosion(ExplosionEvent.Detonate event) {
         if (event.getExplosion().getExplosivePlacedBy() instanceof CreeperEntity && !(event.getExplosion().getExplosivePlacedBy() instanceof CreepieEntity)) {
             CreeperEntity creeper = (CreeperEntity) event.getExplosion().getExplosivePlacedBy();
-            if (SRConfig.CreeperNoDestroyBlocks) {
+            if (!SRConfig.COMMON.creeperExplosionsDestroyBlocks.get()) {
                 event.getAffectedBlocks().clear();
             }
             CreeperSporeCloudEntity spores = new CreeperSporeCloudEntity(SREntities.CREEPER_SPORE_CLOUD.get(), event.getWorld());
-            if (SRConfig.CreepersSpawnCreepiesWhenBoom) {
+            if (SRConfig.COMMON.creeperExplosionsSpawnCreepies.get()) {
                 spores.cloudSize = (creeper.isCharged() ? (int) (creeper.getHealth() / 2) : (int) (creeper.getHealth() / 5));
                 spores.copyLocationAndAnglesFrom(creeper);
                 creeper.world.addEntity(spores);

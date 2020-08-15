@@ -1,7 +1,6 @@
 package com.minecraftabnormals.savageandravage.core;
 
 import com.teamabnormals.abnormals_core.core.utils.RegistryHelper;
-import com.minecraftabnormals.savageandravage.core.other.SRConfig;
 import com.minecraftabnormals.savageandravage.core.other.SRDispenserBehaviors;
 import com.minecraftabnormals.savageandravage.core.registry.SRBlocks;
 import com.minecraftabnormals.savageandravage.core.registry.SREffects;
@@ -46,6 +45,7 @@ public class SavageAndRavage {
 
         MinecraftForge.EVENT_BUS.register(this);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, SRConfig.COMMON_SPEC); 
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, SRConfig.CLIENT_SPEC); 
         modEventBus.addListener(this::commonSetup);
     	DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
         	modEventBus.addListener(this::clientSetup);
