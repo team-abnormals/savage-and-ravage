@@ -36,7 +36,7 @@ public class RevampedVindicatorModel extends BipedModel<VindicatorEntity> {
 		this.closedArms.setTextureOffset(32, 40).addBox(-4.0F, 4.0F, -1.0F, 8.0F, 4.0F, 4.0F, 0.0F, true);
 		this.closedArms.setTextureOffset(32, 20).addBox(4.0F, 0.0F, -1.0F, 4.0F, 8.0F, 4.0F, 0.0F, true);
 		this.closedArms.setTextureOffset(32, 20).addBox(-8.0F, 0.0F, -1.0F, 4.0F, 8.0F, 4.0F, 0.0F, false);
-		this.closedArms.setTextureOffset(40, 0).addBox(4.0F, -2.5F, -2.5F, 6.0F, 7.0F, 5.0F, 0.1F, true);
+		this.closedArms.setTextureOffset(40, 0).addBox(4.0F, -2.5F, -1.5F, 6.0F, 7.0F, 5.0F, 0.1F, true);
 		this.closedArms.setTextureOffset(40, 0).addBox(-10.0F, -2.5F, -1.5F, 6.0F, 7.0F, 5.0F, 0.1F, false);
 
 		this.bipedRightArm = new ModelRenderer(this);

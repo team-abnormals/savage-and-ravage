@@ -13,8 +13,6 @@ public class SRConfig {
 
 		public Common(ForgeConfigSpec.Builder builder) 
 		{
-		    builder.comment("Common")
-            .push("common");
 		    creeperExplosionsDestroyBlocks = builder
 					.translation(makeTranslation("creeperExplosionsDestroyBlocks"))
 					.define("Creeper explosions destroy blocks", false);
@@ -24,7 +22,6 @@ public class SRConfig {
 			creepersDropSporesAfterExplosionDeath = builder
 					.translation(makeTranslation("creepersDropSporesAfterExplosionDeath"))
 					.define("Creepers drop Creeper Spores after they die from an explosion", true);
-			builder.pop();
 		}
 	}
     
@@ -34,8 +31,6 @@ public class SRConfig {
 
         public Client(ForgeConfigSpec.Builder builder) 
         {
-            builder.comment("Client")
-            .push("client");
             creepiesGrowLargerOnExplosion = builder
                     .comment("If true, creepies grow significantly larger when they explode.")
                     .translation(makeTranslation("creepieGoBigWhenBoom"))
@@ -43,7 +38,6 @@ public class SRConfig {
             vindicatorRemodel = builder
                     .translation(makeTranslation("vindicatorRemodel"))
                     .define("Enable Vindicator Remodel", true);
-            builder.pop();
         }
     }
     
