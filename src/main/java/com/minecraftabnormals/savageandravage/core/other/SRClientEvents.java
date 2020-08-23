@@ -23,7 +23,7 @@ public class SRClientEvents {
 		List<ITextComponent> tooltip = event.getToolTip();
 		int index = 0;
 		Item item = event.getItemStack().getItem();
-		if (item instanceof ArmorItem && item.isIn(SRTags.BLAST_PROOF_ARMOR)) {
+		if (event.getPlayer() != null && item instanceof ArmorItem && item.isIn(SRTags.BLAST_PROOF_ARMOR)) {
 			ArmorItem armor = (ArmorItem)item;
 			for(int i = 0; i < tooltip.size(); i++) {
 			    ITextComponent component = tooltip.get(i);
