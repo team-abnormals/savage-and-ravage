@@ -1,0 +1,20 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        " # ",
+        "#L#",
+        " # "
+    ],
+    "key": {
+        "#": {
+            "item": "minecraft:arrow"
+        },
+        "L": {
+            "item": "savageandravage:creeper_spores"
+        }
+    },
+    "result": {
+        "item": "savageandravage:mischief_arrow",
+        "count": 4
+    }
+}
