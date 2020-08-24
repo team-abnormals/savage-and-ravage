@@ -12,8 +12,7 @@ import net.minecraft.item.UseAction;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.math.MathHelper;
 
-public class GrieferModel extends BipedModel<GrieferEntity>
-{
+public class GrieferModel extends BipedModel<GrieferEntity> {
     public ModelRenderer bipedBody2Layer;
     public ModelRenderer lenose;
     public ModelRenderer tnt;
@@ -22,7 +21,7 @@ public class GrieferModel extends BipedModel<GrieferEntity>
     public float kickingTime;
 
     public GrieferModel(float f) {
-    	super(f);
+        super(f);
         this.textureWidth = 64;
         this.textureHeight = 64;
         this.bipedBody = new ModelRenderer(this, 36, 0);
@@ -66,22 +65,22 @@ public class GrieferModel extends BipedModel<GrieferEntity>
         this.bipedRightArm.addChild(this.shoulderPad);
         this.bipedHeadwear.showModel = false;
     }
-    
+
     protected Iterable<ModelRenderer> getBodyParts() {
         return ImmutableList.of(this.bipedBody, this.bipedRightArm, this.bipedLeftArm, this.bipedRightLeg, this.bipedLeftLeg, this.bipedBody2Layer);
-     }
+    }
 
-	@Override
-	public void setRotationAngles(GrieferEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netbipedbipedHeadYaw, float bipedbipedHeadPitch){
-		super.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netbipedbipedHeadYaw, bipedbipedHeadPitch);
-		boolean flag = entityIn.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() instanceof ArmorItem;
-		this.bipedBody2Layer.copyModelAngles(this.bipedBody);
-		this.shoulderPad.showModel = !flag;
-		if (entityIn.getKickTicks() > 0) {
-		    float f1 = 1.0F - (float)MathHelper.abs(10 - 2 * entityIn.getKickTicks()) / 10.0F;
+    @Override
+    public void setRotationAngles(GrieferEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netbipedbipedHeadYaw, float bipedbipedHeadPitch) {
+        super.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netbipedbipedHeadYaw, bipedbipedHeadPitch);
+        boolean flag = entityIn.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() instanceof ArmorItem;
+        this.bipedBody2Layer.copyModelAngles(this.bipedBody);
+        this.shoulderPad.showModel = !flag;
+        if (entityIn.getKickTicks() > 0) {
+            float f1 = 1.0F - (float)MathHelper.abs(10 - 2 * entityIn.getKickTicks()) / 10.0F;
             this.bipedRightLeg.rotateAngleX = MathHelper.lerp(f1, 0.0F, -1.40F);
-		}
-        if (entityIn.func_213656_en()) //party rockers in the hou
+        }
+        if (entityIn.func_213656_en()) // party rockers in the hou
         {
             this.bipedHead.rotateAngleX = MathHelper.cos(ageInTicks * 0.6662F) * 0.05F;
             this.bipedLeftArm.rotationPointZ = 0.0F;
@@ -90,58 +89,53 @@ public class GrieferModel extends BipedModel<GrieferEntity>
             this.bipedLeftArm.rotateAngleZ = -2.3561945F;
             this.bipedLeftArm.rotateAngleY = 0.0F;
         }
-	}
-	
+    }
+
+    @Override
     public void setLivingAnimations(GrieferEntity entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
-        this.kickingTime = (float)entityIn.getKickTicks();
+        this.kickingTime = (float) entityIn.getKickTicks();
         ItemStack itemstack = entityIn.getHeldItemMainhand();
         UseAction useaction = itemstack.getUseAction();
         this.rightArmPose = BipedModel.ArmPose.EMPTY;
         this.leftArmPose = BipedModel.ArmPose.EMPTY;
-        if (entityIn.getPrimaryHand() == HandSide.RIGHT) 
-        {
-          switch(useaction) 
-          {
+        if (entityIn.getPrimaryHand() == HandSide.RIGHT) {
+            switch (useaction) {
             case BLOCK:
-            this.rightArmPose = BipedModel.ArmPose.BLOCK;
-            break;
+                this.rightArmPose = BipedModel.ArmPose.BLOCK;
+                break;
             case BOW:
-            this.rightArmPose = BipedModel.ArmPose.BOW_AND_ARROW;
-            break;
-  		    default:
-  		    this.rightArmPose = BipedModel.ArmPose.EMPTY;
-  		    if (!itemstack.isEmpty()) 
-  		    {
-  	  		  this.rightArmPose = BipedModel.ArmPose.ITEM;
-  	  	    }
-  	        break;
-          }
+                this.rightArmPose = BipedModel.ArmPose.BOW_AND_ARROW;
+                break;
+            default:
+                this.rightArmPose = BipedModel.ArmPose.EMPTY;
+                if (!itemstack.isEmpty()) {
+                    this.rightArmPose = BipedModel.ArmPose.ITEM;
+                }
+                break;
+            }
         }
-        if (entityIn.getPrimaryHand() == HandSide.LEFT) 
-        {
-         switch(useaction) 
-         {
-           case BLOCK:
-           this.leftArmPose = BipedModel.ArmPose.BLOCK;
-           break;
-           case BOW:
-           this.leftArmPose = BipedModel.ArmPose.BOW_AND_ARROW;
-           break;
-           default:
-           this.leftArmPose = BipedModel.ArmPose.EMPTY;
-           if (!itemstack.isEmpty()) 
-    	   {
-             this.leftArmPose = BipedModel.ArmPose.ITEM;
-    	   }
-    	   break;
-         }
+        if (entityIn.getPrimaryHand() == HandSide.LEFT) {
+            switch (useaction) {
+            case BLOCK:
+                this.leftArmPose = BipedModel.ArmPose.BLOCK;
+                break;
+            case BOW:
+                this.leftArmPose = BipedModel.ArmPose.BOW_AND_ARROW;
+                break;
+            default:
+                this.leftArmPose = BipedModel.ArmPose.EMPTY;
+                if (!itemstack.isEmpty()) {
+                    this.leftArmPose = BipedModel.ArmPose.ITEM;
+                }
+                break;
+            }
         }
         super.setLivingAnimations(entityIn, limbSwing, limbSwingAmount, partialTick);
-     }
+    }
 
-	public void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) {
-		modelRenderer.rotateAngleX = x;
-		modelRenderer.rotateAngleY = y;
-		modelRenderer.rotateAngleZ = z;
-	}
+    public void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) {
+        modelRenderer.rotateAngleX = x;
+        modelRenderer.rotateAngleY = y;
+        modelRenderer.rotateAngleZ = z;
+    }
 }
