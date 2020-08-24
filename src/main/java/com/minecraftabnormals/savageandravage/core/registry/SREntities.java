@@ -2,6 +2,7 @@ package com.minecraftabnormals.savageandravage.core.registry;
 
 import com.minecraftabnormals.savageandravage.client.render.CreepieRenderer;
 import com.minecraftabnormals.savageandravage.client.render.GrieferRenderer;
+import com.minecraftabnormals.savageandravage.client.render.MischiefArrowRenderer;
 import com.minecraftabnormals.savageandravage.client.render.NoModelRenderer;
 import com.minecraftabnormals.savageandravage.client.render.RevampedVindicatorRenderer;
 import com.minecraftabnormals.savageandravage.client.render.RunePrisonRenderer;
@@ -11,6 +12,7 @@ import com.minecraftabnormals.savageandravage.common.entity.BurningBannerEntity;
 import com.minecraftabnormals.savageandravage.common.entity.CreeperSporeCloudEntity;
 import com.minecraftabnormals.savageandravage.common.entity.CreepieEntity;
 import com.minecraftabnormals.savageandravage.common.entity.GrieferEntity;
+import com.minecraftabnormals.savageandravage.common.entity.MischiefArrowEntity;
 import com.minecraftabnormals.savageandravage.common.entity.RunePrisonEntity;
 import com.minecraftabnormals.savageandravage.common.entity.SkeletonVillagerEntity;
 import com.minecraftabnormals.savageandravage.common.entity.block.SporeBombEntity;
@@ -48,7 +50,8 @@ public class SREntities {
     public static final RegistryObject<EntityType<SporeBombEntity>> SPORE_BOMB 					= ENTITIES.register("spore_bomb", () -> EntityType.Builder.<SporeBombEntity>create(SporeBombEntity::new, EntityClassification.MISC).immuneToFire().size(0.98F, 0.98F).build("savageandravage:spore_bomb"));
     public static final RegistryObject<EntityType<BurningBannerEntity>> BURNING_BANNER 			= ENTITIES.register("burning_banner", () -> EntityType.Builder.<BurningBannerEntity>create(BurningBannerEntity::new, EntityClassification.MISC).immuneToFire().build("savageandravage:burning_banner"));
     public static final RegistryObject<EntityType<RunePrisonEntity>> RUNE_PRISON 				= ENTITIES.register("rune_prison", () -> EntityType.Builder.<RunePrisonEntity>create(RunePrisonEntity::new, EntityClassification.MISC).immuneToFire().size(1.35F, 0.7F).build("savageandravage:rune_prison"));
-    
+    public static final RegistryObject<EntityType<MischiefArrowEntity>> MISCHIEF_ARROW          = HELPER.createEntity("mischief_arrow", MischiefArrowEntity::new, MischiefArrowEntity::new, EntityClassification.MISC, 0.5F, 0.5F);
+
     @OnlyIn(Dist.CLIENT)
     public static void registerRendering() {
         RenderingRegistry.registerEntityRenderingHandler(CREEPIE.get(), CreepieRenderer::new);
@@ -58,6 +61,7 @@ public class SREntities {
         RenderingRegistry.registerEntityRenderingHandler(SPORE_BOMB.get(), SporeBombRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(BURNING_BANNER.get(), NoModelRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(RUNE_PRISON.get(), RunePrisonRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(MISCHIEF_ARROW.get(), MischiefArrowRenderer::new);
         if (SRConfig.CLIENT.vindicatorRemodel.get()) RenderingRegistry.registerEntityRenderingHandler(EntityType.VINDICATOR, RevampedVindicatorRenderer::new);
     }
     

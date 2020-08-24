@@ -1,4 +1,4 @@
-package com.minecraftabnormals.savageandravage.common.item;
+package com.minecraftabnormals.savageandravage.core.other;
 
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 import com.minecraftabnormals.savageandravage.core.registry.SRItems;

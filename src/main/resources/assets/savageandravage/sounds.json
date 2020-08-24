@@ -7,35 +7,35 @@
      "savageandravage:entity/creepie/creepie_hurt3",
      "savageandravage:entity/creepie/creepie_hurt4"
     ],
-    "subtitle": "savageandravage:subtitles.creepie.hurt"
+    "subtitle": "subtitles.savageandravage.creepie.hurt"
    },
   "entity.creepie.death": {
   "category" : "hostile",
    "sounds": [
      "savageandravage:entity/creepie/creepie_death"
     ],
-    "subtitle": "savageandravage:subtitles.creepie.death"
+    "subtitle": "subtitles.savageandravage.creepie.death"
    },
  "entity.creepie.primed": {
   "category" : "hostile",
    "sounds": [
      "savageandravage:entity/creepie/creepie_fuse"
     ],
-    "subtitle": "savageandravage:subtitles.creepie.fuse"
+    "subtitle": "subtitles.savageandravage.creepie.fuse"
    },
   "entity.creepie.convert": {
     "category" : "hostile",
     "sounds": [
       "mob/zombie/remedy"
     ],
-    "subtitle": "savageandravage:subtitles.creepie.convert"
+    "subtitle": "subtitles.savageandravage.creepie.convert"
   },
   "entity.creepie.grow": {
   "category" : "hostile",
   "sounds": [
     "mob/zombie/infect"
   ],
-  "subtitle": "savageandravage:subtitles.creepie.grow"
+  "subtitle": "subtitles.savageandravage.creepie.grow"
 },
 
   "block.runed_gloomy_tiles.activated": {
@@ -44,20 +44,20 @@
       "minecraft:mob/evocation_illager/prepare_attack1",
       "minecraft:mob/evocation_illager/prepare_attack2"
     ],
-    "subtitle": "savageandravage:subtitles.runed_gloomy_tiles.activated"
+    "subtitle": "subtitles.savageandravage.runed_gloomy_tiles.activated"
   },
   "entity.generic.growth_success": {
     "category": "neutral",
     "sounds": [
       "mob/zombie/unfect"
     ],
-    "subtitle": "savageandravage:subtitles.generic.growth_success"
+    "subtitle": "subtitles.savageandravage.generic.growth_success"
   },
   "entity.generic.growth_failure": {
     "category": "neutral",
     "sounds": [
       "mob/zombie/infect"
     ],
-    "subtitle": "savageandravage:subtitles.generic.growth_failure"
+    "subtitle": "subtitles.savageandravage.generic.growth_failure"
   }
 }
