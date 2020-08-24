@@ -135,7 +135,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
     @Override
     public boolean attackEntityAsMob(Entity entityIn) {
         if (this.isKicking()) {
-            ((LivingEntity) entityIn).applyKnockback(1.0F, MathHelper.sin(this.rotationYaw * ((float) Math.PI / 180F)), (-MathHelper.cos(this.rotationYaw * ((float) Math.PI / 180F))));
+            ((LivingEntity) entityIn).applyKnockback(1.5F, MathHelper.sin(this.rotationYaw * ((float) Math.PI / 180F)), (-MathHelper.cos(this.rotationYaw * ((float) Math.PI / 180F))));
             this.kickTicks = 10;
             this.world.setEntityState(this, (byte) 4);
             this.faceEntity(entityIn, 90.0F, 90.0F);

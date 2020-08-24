@@ -2,6 +2,7 @@ package com.minecraftabnormals.savageandravage.common.entity;
 
 import com.minecraftabnormals.savageandravage.core.registry.SREntities;
 import com.minecraftabnormals.savageandravage.core.registry.SRItems;
+import com.minecraftabnormals.savageandravage.core.registry.SRParticles;
 
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -74,6 +75,12 @@ public class MischiefArrowEntity extends AbstractArrowEntity {
                 creepie.setOwnerId(null);
             }
         }
+    }
+    
+    @Override
+    public void tick() {
+        super.tick();
+        this.world.addParticle(SRParticles.CREEPER_SPORES.get(), this.getPosX(), this.getPosY(), this.getPosZ() - 0.0D, 0.0D, 0.0D, 0.0D);
     }
 
     protected ItemStack getArrowStack() {

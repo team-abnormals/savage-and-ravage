@@ -94,8 +94,8 @@ public class CreeperSporeCloudEntity extends ThrowableEntity {
     }
     
     public void tick() {
-    	super.tick();
-    	this.world.addParticle(SRParticles.CREEPER_SPORES.get(), this.getPosX(), this.getPosY(), this.getPosZ() - 0.0D, 0.0D, 0.0D, 0.0D);
+        super.tick();
+        this.world.addParticle(SRParticles.CREEPER_SPORES.get(), this.getPosX(), this.getPosY(), this.getPosZ() - 0.0D, 0.0D, 0.0D, 0.0D);
         if(shouldSpawnCreepies) {
             this.setMotion(0,0,0);
             this.setTicksTillRemove(this.getTicksTillRemove()-1);

@@ -1,6 +1,7 @@
 package com.minecraftabnormals.savageandravage.client.model;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.minecraftabnormals.savageandravage.common.entity.GrieferEntity;
 
 import net.minecraft.client.renderer.entity.model.BipedModel;
@@ -67,7 +68,7 @@ public class GrieferModel extends BipedModel<GrieferEntity> {
     }
 
     protected Iterable<ModelRenderer> getBodyParts() {
-        return ImmutableList.of(this.bipedBody, this.bipedRightArm, this.bipedLeftArm, this.bipedRightLeg, this.bipedLeftLeg, this.bipedBody2Layer);
+        return Iterables.concat(super.getBodyParts(), ImmutableList.of(this.bipedBody2Layer));
     }
 
     @Override
