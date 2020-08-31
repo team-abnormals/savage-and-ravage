@@ -6,7 +6,8 @@
   "refmap": "savageandravage.refmap.json",
   "mixins": [
     "IronGolemEntityMixin",
-    "ZoglinEntityMixin"
+    "ZoglinEntityMixin",
+    "AbstractRaiderEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1
