@@ -221,7 +221,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
     private void giveArmorOnRandom(EquipmentSlotType slot, ItemStack stack) {
         ItemStack itemstack = this.getItemStackFromSlot(slot);
         float chance = this.isLeader() ? 1.00F : 0.100F; // feedback on chance would be epic
-        if (itemstack.isEmpty() && this.world.rand.nextFloat() < chance) {
+        if (itemstack.isEmpty() && this.rand.nextFloat() < chance) {
             this.setItemStackToSlot(slot, stack);
         }
     }
