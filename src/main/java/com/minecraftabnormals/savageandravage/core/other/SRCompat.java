@@ -4,6 +4,7 @@ import com.minecraftabnormals.savageandravage.common.entity.CreeperSporeCloudEnt
 import com.minecraftabnormals.savageandravage.common.entity.block.SporeBombEntity;
 import com.minecraftabnormals.savageandravage.core.registry.SRBlocks;
 import com.minecraftabnormals.savageandravage.core.registry.SRItems;
+import com.teamabnormals.abnormals_core.core.utils.DataUtils;
 
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.dispenser.DefaultDispenseItemBehavior;
@@ -19,10 +20,13 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class SRDispenserBehaviors {
-
+public class SRCompat {
+	public static void registerFlammables() {
+        DataUtils.registerFlammable(SRBlocks.CREEPER_SPORE_SACK.get(), 30, 60);
+        DataUtils.registerFlammable(SRBlocks.SPORE_BOMB.get(), 15, 100);
+	}
+	
 	public static void registerDispenserBehaviors() {
-		
 		DispenserBlock.registerDispenseBehavior(SRItems.CREEPER_SPORES.get(), new ProjectileDispenseBehavior() {
 			@Override
 			protected ProjectileEntity getProjectileEntity(World worldIn, IPosition position, ItemStack stackIn) {

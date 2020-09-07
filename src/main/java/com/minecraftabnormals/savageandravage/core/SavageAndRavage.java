@@ -1,7 +1,7 @@
 package com.minecraftabnormals.savageandravage.core;
 
 import com.teamabnormals.abnormals_core.core.utils.RegistryHelper;
-import com.minecraftabnormals.savageandravage.core.other.SRDispenserBehaviors;
+import com.minecraftabnormals.savageandravage.core.other.SRCompat;
 import com.minecraftabnormals.savageandravage.core.registry.SRBlocks;
 import com.minecraftabnormals.savageandravage.core.registry.SREffects;
 import com.minecraftabnormals.savageandravage.core.registry.SREntities;
@@ -60,12 +60,12 @@ public class SavageAndRavage {
 
     private void commonSetup(final FMLCommonSetupEvent event) {
     	DeferredWorkQueue.runLater(() -> {
-    		SRBlocks.registerFlammables();
     		SREffects.registerBrewingRecipes();
     		SREntities.addEntitySpawns();
     		SREntities.registerAttributes();
     		SREntities.addWaveMembers();
-    		SRDispenserBehaviors.registerDispenserBehaviors();
+    		SRCompat.registerFlammables();
+    		SRCompat.registerDispenserBehaviors();
     		REGISTRY_HELPER.processSpawnEggDispenseBehaviors();
     	});
 	}

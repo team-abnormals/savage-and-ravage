@@ -1,14 +1,13 @@
 package com.minecraftabnormals.savageandravage.core.registry;
 
-import com.teamabnormals.abnormals_core.common.blocks.AbnormalsStairsBlock;
-import com.teamabnormals.abnormals_core.common.blocks.VerticalSlabBlock;
-import com.teamabnormals.abnormals_core.core.utils.DataUtils;
-import com.teamabnormals.abnormals_core.core.utils.RegistryHelper;
 import com.minecraftabnormals.savageandravage.common.block.ImprovedFlowerPotBlock;
 import com.minecraftabnormals.savageandravage.common.block.RunedGloomyTilesBlock;
 import com.minecraftabnormals.savageandravage.common.block.SporeBombBlock;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 import com.minecraftabnormals.savageandravage.core.other.SRProperties;
+import com.teamabnormals.abnormals_core.common.blocks.AbnormalsStairsBlock;
+import com.teamabnormals.abnormals_core.common.blocks.VerticalSlabBlock;
+import com.teamabnormals.abnormals_core.core.utils.RegistryHelper;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -41,8 +40,4 @@ public class SRBlocks {
 	public static final RegistryObject<Block> POTTED_CREEPIE			= HELPER.createBlockNoItem("potted_creeper_spores", () -> new ImprovedFlowerPotBlock(SRItems.CREEPER_SPORES, Block.Properties.from(Blocks.FLOWER_POT)));
 	public static final RegistryObject<Block> SPORE_BOMB 				= HELPER.createBlock("spore_bomb", () -> new SporeBombBlock(Block.Properties.from(Blocks.TNT)), ItemGroup.REDSTONE);
 	public static final RegistryObject<Block> CREEPER_SPORE_SACK 		= HELPER.createCompatBlock("quark", "creeper_spore_sack", () -> new Block(Block.Properties.create(Material.WOOL, MaterialColor.LIME_TERRACOTTA).hardnessAndResistance(0.5F).sound(SoundType.CLOTH)), ItemGroup.DECORATIONS);
-
-	public static void registerFlammables() {
-		DataUtils.registerFlammable(SRBlocks.SPORE_BOMB.get(), 15, 100);
-	}
 }
