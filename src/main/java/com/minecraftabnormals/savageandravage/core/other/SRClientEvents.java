@@ -3,6 +3,7 @@ package com.minecraftabnormals.savageandravage.core.other;
 import java.util.List;
 
 import com.minecraftabnormals.savageandravage.common.item.BlastProofArmorType;
+import com.minecraftabnormals.savageandravage.common.item.GrieferArmorItem;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 
 import net.minecraft.item.ArmorItem;
@@ -23,7 +24,7 @@ public class SRClientEvents {
 		List<ITextComponent> tooltip = event.getToolTip();
 		int index = 0;
 		Item item = event.getItemStack().getItem();
-		if (event.getPlayer() != null && item instanceof ArmorItem && item.isIn(SRTags.BLAST_PROOF_ARMOR)) {
+		if (item instanceof GrieferArmorItem) {
 			ArmorItem armor = (ArmorItem)item;
 			for(int i = 0; i < tooltip.size(); i++) {
 			    ITextComponent component = tooltip.get(i);
