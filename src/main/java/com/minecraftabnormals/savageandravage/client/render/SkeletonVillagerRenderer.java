@@ -29,6 +29,11 @@ public class SkeletonVillagerRenderer extends MobRenderer<SkeletonVillagerEntity
         });
     }
 
+    @Override
+    protected void preRenderCallback(SkeletonVillagerEntity entitylivingbaseIn, MatrixStack matrixStackIn, float partialTickTime) {
+        matrixStackIn.scale(0.9375F, 0.9375F, 0.9375F);
+    }
+
     @Nullable
     @Override
     public ResourceLocation getEntityTexture(SkeletonVillagerEntity entity) {

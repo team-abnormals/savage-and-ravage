@@ -3,6 +3,7 @@ package com.minecraftabnormals.savageandravage.client.render;
 import com.minecraftabnormals.savageandravage.client.model.GrieferModel;
 import com.minecraftabnormals.savageandravage.client.model.VillagerArmorModel;
 import com.minecraftabnormals.savageandravage.common.entity.GrieferEntity;
+import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.client.renderer.entity.BipedRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -20,5 +21,10 @@ public class GrieferRenderer extends BipedRenderer<GrieferEntity, GrieferModel> 
 
     public ResourceLocation getEntityTexture(GrieferEntity entity) {
         return entity.isApeshit() ? APESHIT_MODE_TEXTURE : GRIEFER_TEXTURE;
+    }
+    
+    @Override
+    protected void preRenderCallback(GrieferEntity entitylivingbaseIn, MatrixStack matrixStackIn, float partialTickTime) {
+        matrixStackIn.scale(0.9375F, 0.9375F, 0.9375F);
     }
 }

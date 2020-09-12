@@ -28,4 +28,9 @@ public class RevampedVindicatorRenderer extends MobRenderer<VindicatorEntity, Re
     public ResourceLocation getEntityTexture(VindicatorEntity entity) {
         return TEXTURE;
     }
+
+    @Override
+    protected void preRenderCallback(VindicatorEntity entitylivingbaseIn, MatrixStack matrixStackIn, float partialTickTime) {
+        matrixStackIn.scale(0.9375F, 0.9375F, 0.9375F);
+    }
 }
