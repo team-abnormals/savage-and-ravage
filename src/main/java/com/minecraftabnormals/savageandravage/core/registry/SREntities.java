@@ -65,12 +65,12 @@ public class SREntities {
         if (SRConfig.CLIENT.vindicatorRemodel.get()) RenderingRegistry.registerEntityRenderingHandler(EntityType.VINDICATOR, RevampedVindicatorRenderer::new);
     }
     
-    public static void addEntitySpawns() {
+    public static void registerEntitySpawns() {
 		EntitySpawnPlacementRegistry.register(SKELETON_VILLAGER.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::canMonsterSpawnInLight);
-        ForgeRegistries.BIOMES.getValues().forEach(SREntities::addSpawns);
+        ForgeRegistries.BIOMES.getValues().forEach(SREntities::registerSpawns);
 	}
 
-    public static void addSpawns(Biome biome) {
+    public static void registerSpawns(Biome biome) {
     	if (BiomeDictionary.hasType(biome, Type.OVERWORLD) && biome.getCategory() != Biome.Category.MUSHROOM && biome.getCategory() != Biome.Category.NONE) {
     		biome.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(SKELETON_VILLAGER.get(), 5, 5, 5)); //Rationalisation for this is that it used to be a pillager patrol
     	}
@@ -82,7 +82,7 @@ public class SREntities {
 		GlobalEntityTypeAttributes.put(SKELETON_VILLAGER.get(), SkeletonVillagerEntity.func_234275_m_().create());
     }
     
-    public static void addWaveMembers() {
+    public static void registerWaveMembers() {
 		Raid.WaveMember.create("griefer", SREntities.GRIEFER.get(), new int[]{0, 2, 1, 2, 3, 3, 4, 3});
     }
 }

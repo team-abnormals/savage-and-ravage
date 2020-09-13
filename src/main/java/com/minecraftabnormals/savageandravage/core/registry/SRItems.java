@@ -8,8 +8,12 @@ import com.minecraftabnormals.savageandravage.core.other.SRArmorMaterial;
 import com.teamabnormals.abnormals_core.core.utils.RegistryHelper;
 
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.CrossbowItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemModelsProperties;
+import net.minecraft.item.Items;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
 
@@ -28,4 +32,13 @@ public class SRItems {
 	
 	public static final RegistryObject<Item> SKELETON_VILLAGER_SPAWN_EGG   = HELPER.createSpawnEggItem("skeleton_villager", SREntities.SKELETON_VILLAGER::get, 11447986, 9407641);
 	public static final RegistryObject<Item> GRIEFER_SPAWN_EGG             = HELPER.createSpawnEggItem("griefer", SREntities.GRIEFER::get, 8296024, 16037892);
+	
+	public static void registerItemProperties() {
+		ItemModelsProperties.func_239418_a_(Items.CROSSBOW, new ResourceLocation("mischief_arrow"), (stack, world, entity) -> {
+			return entity != null && CrossbowItem.isCharged(stack) && CrossbowItem.hasChargedProjectile(stack, SRItems.MISCHIEF_ARROW.get()) ? 1.0F : 0.0F;
+		});
+		ItemModelsProperties.func_239418_a_(Items.CROSSBOW, new ResourceLocation("spectral_arrow"), (stack, world, entity) -> {
+			return entity != null && CrossbowItem.isCharged(stack) && CrossbowItem.hasChargedProjectile(stack, Items.SPECTRAL_ARROW) ? 1.0F : 0.0F;
+		});
+	}
 }

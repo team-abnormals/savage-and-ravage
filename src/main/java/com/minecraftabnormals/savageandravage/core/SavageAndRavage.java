@@ -3,6 +3,7 @@ package com.minecraftabnormals.savageandravage.core;
 import com.minecraftabnormals.savageandravage.core.other.SRCompat;
 import com.minecraftabnormals.savageandravage.core.registry.SREffects;
 import com.minecraftabnormals.savageandravage.core.registry.SREntities;
+import com.minecraftabnormals.savageandravage.core.registry.SRItems;
 import com.minecraftabnormals.savageandravage.core.registry.SRParticles;
 import com.minecraftabnormals.savageandravage.core.registry.SRSounds;
 import com.teamabnormals.abnormals_core.core.utils.RegistryHelper;
@@ -59,10 +60,11 @@ public class SavageAndRavage {
 
     private void commonSetup(final FMLCommonSetupEvent event) {
     	DeferredWorkQueue.runLater(() -> {
+    		SRItems.registerItemProperties();
     		SREffects.registerBrewingRecipes();
-    		SREntities.addEntitySpawns();
+    		SREntities.registerEntitySpawns();
     		SREntities.registerAttributes();
-    		SREntities.addWaveMembers();
+    		SREntities.registerWaveMembers();
     		SRCompat.registerFlammables();
     		SRCompat.registerDispenserBehaviors();
     		REGISTRY_HELPER.processSpawnEggDispenseBehaviors();
