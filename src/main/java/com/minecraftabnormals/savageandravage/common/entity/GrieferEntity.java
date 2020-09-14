@@ -59,12 +59,13 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
     public int kickTicks;
     public int kickCoolDown;
 
+    @Override
     protected void registerGoals() {
         super.registerGoals();
         this.goalSelector.addGoal(0, new SwimGoal(this));
         this.goalSelector.addGoal(2, new AbstractRaiderEntity.FindTargetGoal(this, 10.0F));
         this.goalSelector.addGoal(3, new GrieferEntity.MeleePhaseGoal(this, 0.9D, true));
-        this.goalSelector.addGoal(3, new GrieferEntity.GrieferAttackWithSporesGoal(this, 0.7D, 100));
+        this.goalSelector.addGoal(3, new GrieferEntity.GrieferAttackWithSporesGoal(this, 0.9D, 100));
         this.goalSelector.addGoal(2, new GrieferEntity.KickGoal(this));
         this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.0D, true) {
             @Override
@@ -405,6 +406,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
                 }
 
                 this.griefer.getLookController().setLookPositionWithEntity(attackTarget, 30.0F, 30.0F);
+                this.griefer.faceEntity(attackTarget, 30.0F, 30.0F);
                 if (--this.rangedAttackTime == 0 || this.seeTime == 3) {
                     if (!canSee) {
                         return;
@@ -412,7 +414,6 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
                     float f = MathHelper.sqrt(distance) / this.attackRadius;
                     float lvt_5_1_ = MathHelper.clamp(f, 0.1F, 1.0F);
                     this.griefer.attackEntityWithRangedAttack(attackTarget, lvt_5_1_);
-                    this.griefer.faceEntity(attackTarget, 30.0F, 30.0F);
                     this.griefer.getMoveHelper().strafe((float) (this.strafingBackwards ? -this.entityMoveSpeed : this.entityMoveSpeed), (float) (this.strafingClockwise ? this.entityMoveSpeed : -this.entityMoveSpeed));
                     this.rangedAttackTime = MathHelper.floor(f * (float) (this.maxRangedAttackTime - this.attackIntervalMin) + (float) this.attackIntervalMin);
                 } else if (this.rangedAttackTime < 0) {
