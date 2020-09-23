@@ -17,78 +17,84 @@ import net.minecraftforge.fml.network.FMLPlayMessages;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 public class MischiefArrowEntity extends AbstractArrowEntity {
+	public boolean finished = false;
 
-    public MischiefArrowEntity(EntityType<? extends MischiefArrowEntity> type, World worldIn) {
-        super(type, worldIn);
-    }
+	public MischiefArrowEntity(EntityType<? extends MischiefArrowEntity> type, World worldIn) {
+		super(type, worldIn);
+	}
 
-    public MischiefArrowEntity(World worldIn, double x, double y, double z) {
-        super(SREntities.MISCHIEF_ARROW.get(), x, y, z, worldIn);
-    }
+	public MischiefArrowEntity(World worldIn, double x, double y, double z) {
+		super(SREntities.MISCHIEF_ARROW.get(), x, y, z, worldIn);
+	}
 
-    public MischiefArrowEntity(FMLPlayMessages.SpawnEntity spawnEntity, World world) {
-        this(SREntities.MISCHIEF_ARROW.get(), world);
-    }
+	public MischiefArrowEntity(FMLPlayMessages.SpawnEntity spawnEntity, World world) {
+		this(SREntities.MISCHIEF_ARROW.get(), world);
+	}
 
-    public MischiefArrowEntity(World worldIn, LivingEntity shooter) {
-        super(SREntities.MISCHIEF_ARROW.get(), shooter, worldIn);
-    }
+	public MischiefArrowEntity(World worldIn, LivingEntity shooter) {
+		super(SREntities.MISCHIEF_ARROW.get(), shooter, worldIn);
+	}
 
-    @Override
-    protected void func_230299_a_(BlockRayTraceResult result) {
-        super.func_230299_a_(result);
-        this.pickupStatus = PickupStatus.DISALLOWED;
-        
-        CreepieEntity creepie = SREntities.CREEPIE.get().create(world);
-        creepie.setLocationAndAngles(this.getPosX(), this.getPosY(), this.getPosZ(), 0.0F, 0.0F);
-        this.attemptSetOwner(creepie);
+	@Override
+	protected void func_230299_a_(BlockRayTraceResult result) {
+		super.func_230299_a_(result);
+		if (!finished) {
+			this.pickupStatus = PickupStatus.DISALLOWED;
 
-        this.world.addEntity(creepie);
-    }
+			CreepieEntity creepie = SREntities.CREEPIE.get().create(world);
+			creepie.setLocationAndAngles(this.getPosX(), this.getPosY(), this.getPosZ(), 0.0F, 0.0F);
+			this.attemptSetOwner(creepie);
 
-    @Override
-    protected void onEntityHit(EntityRayTraceResult result) {
-        super.onEntityHit(result);
+			this.world.addEntity(creepie);
+			this.finished = true;
+		}
+	}
 
-        CreepieEntity creepie = SREntities.CREEPIE.get().create(world);
-        creepie.setLocationAndAngles(this.getPosX(), this.getPosY(), this.getPosZ(), 0.0F, 0.0F);
-        this.attemptSetOwner(creepie);
+	@Override
+	protected void onEntityHit(EntityRayTraceResult result) {
+		super.onEntityHit(result);
+		if (!finished) {
+			CreepieEntity creepie = SREntities.CREEPIE.get().create(world);
+			creepie.setLocationAndAngles(this.getPosX(), this.getPosY(), this.getPosZ(), 0.0F, 0.0F);
+			this.attemptSetOwner(creepie);
 
-        if (result.getEntity() instanceof LivingEntity) {
-            creepie.setAttackTarget((LivingEntity) result.getEntity());
-        }
+			if (result.getEntity() instanceof LivingEntity) {
+				creepie.setAttackTarget((LivingEntity) result.getEntity());
+			}
 
-        this.world.addEntity(creepie);
-    }
+			this.world.addEntity(creepie);
+		}
+	}
 
-    public void attemptSetOwner(CreepieEntity creepie) {
-        boolean throwerIsInvisible;
-        try {
-            throwerIsInvisible = ((LivingEntity) this.func_234616_v_()).isPotionActive(Effects.INVISIBILITY);
-        } catch (NullPointerException nullPointer) {
-            throwerIsInvisible = false;
-        }
-        if (!throwerIsInvisible) {
-            try {
-                creepie.setOwnerId(((LivingEntity) this.func_234616_v_()).getUniqueID());
-            } catch (NullPointerException nullPointer) {
-                creepie.setOwnerId(null);
-            }
-        }
-    }
-    
-    @Override
-    public void tick() {
-        super.tick();
-        this.world.addParticle(SRParticles.CREEPER_SPORES.get(), this.getPosX(), this.getPosY(), this.getPosZ() - 0.0D, 0.0D, 0.0D, 0.0D);
-    }
+	public void attemptSetOwner(CreepieEntity creepie) {
+		boolean throwerIsInvisible;
+		try {
+			throwerIsInvisible = ((LivingEntity) this.func_234616_v_()).isPotionActive(Effects.INVISIBILITY);
+		} catch (NullPointerException nullPointer) {
+			throwerIsInvisible = false;
+		}
+		if (!throwerIsInvisible) {
+			try {
+				creepie.setOwnerId(((LivingEntity) this.func_234616_v_()).getUniqueID());
+			} catch (NullPointerException nullPointer) {
+				creepie.setOwnerId(null);
+			}
+		}
+	}
 
-    protected ItemStack getArrowStack() {
-        return new ItemStack(SRItems.MISCHIEF_ARROW.get());
-    }
+	@Override
+	public void tick() {
+		super.tick();
+		if (!finished)
+			this.world.addParticle(SRParticles.CREEPER_SPORES.get(), this.getPosX(), this.getPosY(), this.getPosZ() - 0.0D, 0.0D, 0.0D, 0.0D);
+	}
 
-    @Override
-    public IPacket<?> createSpawnPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
-    }
+	protected ItemStack getArrowStack() {
+		return new ItemStack(SRItems.MISCHIEF_ARROW.get());
+	}
+
+	@Override
+	public IPacket<?> createSpawnPacket() {
+		return NetworkHooks.getEntitySpawningPacket(this);
+	}
 }

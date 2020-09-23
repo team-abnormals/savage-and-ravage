@@ -73,7 +73,7 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
     public int timeSinceIgnited;
     public int fuseTime = 30;
     private float explosionRadius;
-    private int growingAge = -24000; //I literally had to do this because the entity was being deleted before it got the chance to have its age set, update order moment
+    private int growingAge = -24000;
     private int forcedAge;
     private int forcedAgeTimer;
     private int conversionTime;
@@ -169,22 +169,19 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
 		return new ItemStack(Items.CREEPER_SPAWN_EGG);
 	}
 
-    /*/**
-     * (abstract) Protected helper method to read subclass entity data from NBT.
-     */
     @Override
     public void readAdditional(CompoundNBT compound) {
         super.readAdditional(compound);
-        UUID s;
+        UUID uuid;
         if (compound.contains("OwnerUUID", 8)) {
-            s = compound.getUniqueId("OwnerUUID");
+        	uuid = compound.getUniqueId("OwnerUUID");
         } else {
             String s1 = compound.getString("Owner");
-            s = PreYggdrasilConverter.convertMobOwnerIfNeeded(this.getServer(), s1);
+            uuid = PreYggdrasilConverter.convertMobOwnerIfNeeded(this.getServer(), s1);
         }
-        if (s != null) {
+        if (uuid != null) {
             try {
-                this.setOwnerId(s);
+                this.setOwnerId(uuid);
             } catch (Throwable var4) {
                 this.setOwnerId(null);
             }
