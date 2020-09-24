@@ -18,6 +18,7 @@ import com.minecraftabnormals.savageandravage.common.entity.SkeletonVillagerEnti
 import com.minecraftabnormals.savageandravage.common.entity.goals.AvoidGrieferOwnedCreepiesGoal;
 import com.minecraftabnormals.savageandravage.common.entity.goals.ImprovedCrossbowGoal;
 import com.minecraftabnormals.savageandravage.common.item.BlastProofArmorType;
+import com.minecraftabnormals.savageandravage.common.item.GrieferArmorItem;
 import com.minecraftabnormals.savageandravage.core.SRConfig;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 import com.minecraftabnormals.savageandravage.core.registry.SREntities;
@@ -202,7 +203,7 @@ public class SREvents {
             for (EquipmentSlotType slot : EquipmentSlotType.values()) {
                 if (slot.getSlotType() == EquipmentSlotType.Group.ARMOR) {
                     ItemStack stack = entity.getItemStackFromSlot(slot);
-                    if (stack.getItem() instanceof ArmorItem && stack.getItem().isIn(SRTags.BLAST_PROOF_ARMOR)) {
+                    if (stack.getItem() instanceof GrieferArmorItem) {
                         flag = true;
                         int damage = 22;
                         decrease += BlastProofArmorType.slotToType(((ArmorItem) stack.getItem()).getEquipmentSlot()).getReductionAmount();
@@ -238,7 +239,6 @@ public class SREvents {
         }
     }
 
-    @SuppressWarnings("deprecation")
     @SubscribeEvent
     public static void onInteractWithBlock(PlayerInteractEvent.RightClickBlock event) {
         ItemStack heldItemStack = event.getItemStack();
