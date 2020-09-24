@@ -24,7 +24,7 @@ mixin {
     add sourceSets.main, "savageandravage.refmap.json"
 }
 
-version = '2.1.0'
+version = '2.1.1'
 group = 'com.minecraftabnormals'
 archivesBaseName = 'Savage-and-Ravage-1.16.1'
 

@@ -3,6 +3,7 @@ package com.minecraftabnormals.savageandravage.core.other;
 import com.minecraftabnormals.savageandravage.common.entity.CreeperSporeCloudEntity;
 import com.minecraftabnormals.savageandravage.common.entity.MischiefArrowEntity;
 import com.minecraftabnormals.savageandravage.common.entity.block.SporeBombEntity;
+import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 import com.minecraftabnormals.savageandravage.core.registry.SRBlocks;
 import com.minecraftabnormals.savageandravage.core.registry.SRItems;
 import com.teamabnormals.abnormals_core.core.utils.DataUtils;
@@ -28,6 +29,7 @@ public class SRCompat {
 	}
 
 	public static void registerDispenserBehaviors() {
+		SavageAndRavage.REGISTRY_HELPER.processSpawnEggDispenseBehaviors();
 		DispenserBlock.registerDispenseBehavior(SRItems.MISCHIEF_ARROW.get(), new ProjectileDispenseBehavior() {
 			protected ProjectileEntity getProjectileEntity(World worldIn, IPosition position, ItemStack stackIn) {
 				MischiefArrowEntity arrowentity = new MischiefArrowEntity(worldIn, position.getX(), position.getY(), position.getZ());

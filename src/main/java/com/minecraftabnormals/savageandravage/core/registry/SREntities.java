@@ -83,6 +83,6 @@ public class SREntities {
     }
     
     public static void registerWaveMembers() {
-		Raid.WaveMember.create("griefer", SREntities.GRIEFER.get(), new int[]{0, 2, 1, 2, 3, 3, 4, 3});
+		Raid.WaveMember.create("griefer", SREntities.GRIEFER.get(), new int[]{0, 1, 0, 1, 2, 2, 3, 2});
     }
 }

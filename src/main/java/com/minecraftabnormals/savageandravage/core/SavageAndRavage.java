@@ -59,18 +59,19 @@ public class SavageAndRavage {
 
     private void commonSetup(final FMLCommonSetupEvent event) {
     	DeferredWorkQueue.runLater(() -> {
-    		SRItems.registerItemProperties();
     		SREffects.registerBrewingRecipes();
     		SREntities.registerEntitySpawns();
     		SREntities.registerAttributes();
     		SREntities.registerWaveMembers();
     		SRCompat.registerFlammables();
     		SRCompat.registerDispenserBehaviors();
-    		REGISTRY_HELPER.processSpawnEggDispenseBehaviors();
     	});
 	}
     
     private void clientSetup(final FMLClientSetupEvent event) {
-		SREntities.registerRendering();
+    	DeferredWorkQueue.runLater(() -> {
+    		SREntities.registerRendering();
+    		SRItems.registerItemProperties();
+    	});
     }
 }
