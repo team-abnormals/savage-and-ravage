@@ -111,7 +111,7 @@ public class SREvents {
         }
 
         // Attempted to make golems attack creepers, didnt work
-        if (event.getEntity() instanceof IronGolemEntity) {
+        if (event.getEntity() instanceof IronGolemEntity && !SRConfig.COMMON.creeperExplosionsDestroyBlocks.get()) {
             IronGolemEntity golem = (IronGolemEntity) event.getEntity();
             golem.targetSelector.goals.stream().map(it -> it.inner).filter(it -> it instanceof NearestAttackableTargetGoal<?>).findFirst().ifPresent(noAngryAtCreeper -> {
                 golem.targetSelector.removeGoal(noAngryAtCreeper);
@@ -120,7 +120,7 @@ public class SREvents {
                 }));
             });
         }
-        if (event.getEntity() instanceof CreeperEntity) {
+        if (event.getEntity() instanceof CreeperEntity && !SRConfig.COMMON.creeperExplosionsDestroyBlocks.get()) {
             CreeperEntity creeper = (CreeperEntity) event.getEntity();
             creeper.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(creeper, IronGolemEntity.class, true));
         }
