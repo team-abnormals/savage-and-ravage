@@ -81,16 +81,9 @@ public class SREntities {
     * This is  a terrible implementation and should only be used until a better one is found - Abigail
     * */
     private static boolean isSpawnableBiome(Biome biome) {
-        boolean flag = true;
-        if(biome.getCategory() == Biome.Category.MUSHROOM || biome.getCategory() == Biome.Category.NONE) {
-            flag = false;
-        }
-        else if(ForgeRegistries.BIOMES.getValue(new ResourceLocation("biomesoplenty:rainbow_valley")).toString() != null) {
-            if (biome.getCategory().getName().equals(ForgeRegistries.BIOMES.getValue(new ResourceLocation("biomesoplenty:rainbow_valley")).toString())) {
-                flag = false;
-            }
-        }
-        return flag;
+        return biome.getCategory() == Biome.Category.MUSHROOM
+        || biome.getCategory() == Biome.Category.NONE
+        || biome == ForgeRegistries.BIOMES.getValue(new ResourceLocation("biomesoplenty:rainbow_valley"));
     }
 
     public static void registerAttributes() {
