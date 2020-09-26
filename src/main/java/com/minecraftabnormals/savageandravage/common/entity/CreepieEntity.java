@@ -174,7 +174,7 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
         super.readAdditional(compound);
         UUID uuid;
         if (compound.contains("OwnerUUID", 8)) {
-        	uuid = compound.getUniqueId("OwnerUUID");
+            uuid = compound.getUniqueId("OwnerUUID");
         } else {
             String s1 = compound.getString("Owner");
             uuid = PreYggdrasilConverter.convertMobOwnerIfNeeded(this.getServer(), s1);
