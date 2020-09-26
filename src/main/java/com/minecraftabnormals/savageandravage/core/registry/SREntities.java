@@ -78,7 +78,7 @@ public class SREntities {
     }
 
     /*
-    * This is  a terrible implementation and should only be used if Forstride can't think of a better one - Abigail
+    * This is  a terrible implementation and should only be used until a better one is found - Abigail
     * */
     private static boolean isSpawnableBiome(Biome biome) {
         boolean flag = true;
