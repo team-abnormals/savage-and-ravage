@@ -25,6 +25,7 @@ import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.entity.monster.MonsterEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.raid.Raid;
@@ -71,11 +72,27 @@ public class SREntities {
 	}
 
     public static void registerSpawns(Biome biome) {
-    	if (BiomeDictionary.hasType(biome, Type.OVERWORLD) && biome.getCategory() != Biome.Category.MUSHROOM && biome.getCategory() != Biome.Category.NONE) {
+    	if (BiomeDictionary.hasType(biome, Type.OVERWORLD) && isSpawnableBiome(biome)) {
     		biome.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(SKELETON_VILLAGER.get(), 5, 5, 5)); //Rationalisation for this is that it used to be a pillager patrol
     	}
     }
-    
+
+    /*
+    * This is  a terrible implementation and should only be used if Forstride can't think of a better one - Abigail
+    * */
+    private static boolean isSpawnableBiome(Biome biome) {
+        boolean flag = true;
+        if(biome.getCategory() == Biome.Category.MUSHROOM || biome.getCategory() == Biome.Category.NONE) {
+            flag = false;
+        }
+        else if(ForgeRegistries.BIOMES.getValue(new ResourceLocation("biomesoplenty:rainbow_valley")).toString() != null) {
+            if (biome.getCategory().getName().equals(ForgeRegistries.BIOMES.getValue(new ResourceLocation("biomesoplenty:rainbow_valley")).toString())) {
+                flag = false;
+            }
+        }
+        return flag;
+    }
+
     public static void registerAttributes() {
     	GlobalEntityTypeAttributes.put(CREEPIE.get(), CreepieEntity.registerAttributes().create());
 		GlobalEntityTypeAttributes.put(GRIEFER.get(), GrieferEntity.registerAttributes().create());
