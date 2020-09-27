@@ -164,44 +164,25 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
         compound.putByte("ExplosionRadius", (byte)this.explosionRadius);
         compound.putBoolean("ignited", this.hasIgnited());
     }
-    
-    public ItemStack getPickedResult(RayTraceResult target) {
-		return new ItemStack(Items.CREEPER_SPAWN_EGG);
-	}
 
     @Override
     public void readAdditional(CompoundNBT compound) {
         super.readAdditional(compound);
-        UUID uuid;
-        if (compound.contains("OwnerUUID", 8)) {
-        	uuid = compound.getUniqueId("OwnerUUID");
-        } else {
-            String s1 = compound.getString("Owner");
-            uuid = PreYggdrasilConverter.convertMobOwnerIfNeeded(this.getServer(), s1);
-        }
-        if (uuid != null) {
-            try {
-                this.setOwnerId(uuid);
-            } catch (Throwable var4) {
-                this.setOwnerId(null);
-            }
-        }
-        if (compound.contains("Fuse", 99)) {
-            this.fuseTime = compound.getShort("Fuse");
-        }
-
-        if (compound.contains("ExplosionRadius", 99)) {
-            this.explosionRadius = compound.getByte("ExplosionRadius");
-        }
-
-        if (compound.getBoolean("ignited")) {
-            this.ignite();
-        }
+        this.fuseTime = compound.getShort("Fuse");
+        this.explosionRadius = compound.getByte("ExplosionRadius");
         this.setGrowingAge(compound.getInt("Age"));
         this.forcedAge = compound.getInt("ForcedAge");
+        if (compound.getBoolean("ignited")) this.ignite();
         if (compound.contains("ConversionTime", 99) && compound.getInt("ConversionTime") > -1) {
             this.startConverting(compound.getInt("ConversionTime"));
         }
+        if(compound.getUniqueId("OwnerUUID")!=null){
+            this.setOwnerId(compound.getUniqueId("OwnerUUID"));
+        }
+    }
+
+    public ItemStack getPickedResult(RayTraceResult target) {
+        return new ItemStack(Items.CREEPER_SPAWN_EGG);
     }
 
     @Override
