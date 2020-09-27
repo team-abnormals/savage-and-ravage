@@ -176,8 +176,11 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
         if (compound.contains("ConversionTime", 99) && compound.getInt("ConversionTime") > -1) {
             this.startConverting(compound.getInt("ConversionTime"));
         }
-        if(compound.getUniqueId("OwnerUUID")!=null){
+        try {
             this.setOwnerId(compound.getUniqueId("OwnerUUID"));
+        }
+        catch(NullPointerException e) {
+            //lmao
         }
     }
 
