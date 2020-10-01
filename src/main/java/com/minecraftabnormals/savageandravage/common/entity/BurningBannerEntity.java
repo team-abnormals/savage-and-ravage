@@ -39,10 +39,10 @@ public class BurningBannerEntity extends Entity {
     public BurningBannerEntity(World worldIn, BlockPos positionIn) {
         super(SREntities.BURNING_BANNER.get(), worldIn);
         this.setBannerPosition(positionIn);
-        setBoundingBoxAndOrPosition(true);
+        setBoundingBoxWithPosition(true);
     }
 
-    private void setBoundingBoxAndOrPosition(boolean shouldSetPosition) {
+    private void setBoundingBoxWithPosition(boolean shouldSetPosition) {
         if (getBannerPosition() != null) {
             AxisAlignedBB boundingBox = new AxisAlignedBB(0, 0, 0, 1, 1, 1);
             double xPos = getBannerPosition().getX();
@@ -52,27 +52,25 @@ public class BurningBannerEntity extends Entity {
                 xPos += 0.5d;
                 yPos += 0.2d;
                 zPos += 0.5d;
-                if (world.getBlockState(getBannerPosition()).get(BlockStateProperties.ROTATION_0_15) == 0 || world.getBlockState(getBannerPosition()).get(BlockStateProperties.ROTATION_0_15) == 8) {
-                    boundingBox = new AxisAlignedBB(0, 0, 0, 0.8, 1.65, 0.4);
-                } else if (world.getBlockState(getBannerPosition()).get(BlockStateProperties.ROTATION_0_15) == 1 || world.getBlockState(getBannerPosition()).get(BlockStateProperties.ROTATION_0_15) == 9) {
-                    boundingBox = new AxisAlignedBB(0, 0, 0, 0.8, 1.65, 0.6);
-                } else if (world.getBlockState(getBannerPosition()).get(BlockStateProperties.ROTATION_0_15) == 2 || world.getBlockState(getBannerPosition()).get(BlockStateProperties.ROTATION_0_15) == 10) {
-                    boundingBox = new AxisAlignedBB(0, 0, 0, 0.8, 1.65, 0.8);
-                } else if (world.getBlockState(getBannerPosition()).get(BlockStateProperties.ROTATION_0_15) == 3 || world.getBlockState(getBannerPosition()).get(BlockStateProperties.ROTATION_0_15) == 11) {
-                    boundingBox = new AxisAlignedBB(0, 0, 0, 0.6, 1.65, 0.8);
-                } else if (world.getBlockState(getBannerPosition()).get(BlockStateProperties.ROTATION_0_15) == 4 || world.getBlockState(getBannerPosition()).get(BlockStateProperties.ROTATION_0_15) == 12) {
-                    boundingBox = new AxisAlignedBB(0, 0, 0, 0.4, 1.65, 0.8);
-                } else if (world.getBlockState(getBannerPosition()).get(BlockStateProperties.ROTATION_0_15) == 5 || world.getBlockState(getBannerPosition()).get(BlockStateProperties.ROTATION_0_15) == 13) {
-                    boundingBox = new AxisAlignedBB(0, 0, 0, 0.6, 1.65, 0.8);
-                } else if (world.getBlockState(getBannerPosition()).get(BlockStateProperties.ROTATION_0_15) == 6 || world.getBlockState(getBannerPosition()).get(BlockStateProperties.ROTATION_0_15) == 14) {
-                    boundingBox = new AxisAlignedBB(0, 0, 0, 0.8, 1.65, 0.8);
-                } else if (world.getBlockState(getBannerPosition()).get(BlockStateProperties.ROTATION_0_15) == 7 || world.getBlockState(getBannerPosition()).get(BlockStateProperties.ROTATION_0_15) == 15) {
-                    boundingBox = new AxisAlignedBB(0, 0, 0, 0.8, 1.65, 0.6);
+                switch (world.getBlockState(getBannerPosition()).get(BlockStateProperties.ROTATION_0_15)) {
+                    case 0: case 8:
+                        boundingBox = new AxisAlignedBB(0, 0, 0, 0.8, 1.65, 0.4);
+                        break;
+                    case 1: case 9: case 7: case 15:
+                        boundingBox = new AxisAlignedBB(0, 0, 0, 0.8, 1.65, 0.6);
+                        break;
+                    case 2: case 10: case 6: case 14:
+                        boundingBox = new AxisAlignedBB(0, 0, 0, 0.8, 1.65, 0.8);
+                        break;
+                    case 3: case 11: case 5: case 13:
+                        boundingBox = new AxisAlignedBB(0, 0, 0, 0.6, 1.65, 0.8);
+                        break;
+                    case 4: case 12:
+                        boundingBox = new AxisAlignedBB(0, 0, 0, 0.4, 1.65, 0.8);
                 }
             }
             if (world.getBlockState(getBannerPosition()).getBlock() instanceof WallBannerBlock) {
                 switch (world.getBlockState(getBannerPosition()).get(BlockStateProperties.HORIZONTAL_FACING)) {
-                	default:
                     case NORTH:
                         boundingBox = new AxisAlignedBB(0, 0, 0, 0.9, 1.65, 0.3);
                         xPos += 0.48d;
@@ -96,7 +94,6 @@ public class BurningBannerEntity extends Entity {
                         xPos += 0.84d;
                         yPos -= 0.76d;
                         zPos += 0.48d;
-                        break;
                 }
             }
             this.setBoundingBox(boundingBox);
@@ -107,8 +104,7 @@ public class BurningBannerEntity extends Entity {
     }
 
     /**
-     * Sets the x,y,z of the entity from the given parameters. Also sets up a bounding box but it's not in the name,
-     * MCP moment.
+     * Sets the x,y,z of the entity from the given parameters.
      */
     @Override
     public void setPosition(double x, double y, double z) {
@@ -118,7 +114,7 @@ public class BurningBannerEntity extends Entity {
 
     public void setPositionNew(double x, double y, double z){
         setRawPosition(x,y,z);
-        setBoundingBoxAndOrPosition(false);
+        setBoundingBoxWithPosition(false);
         double halfXSize = this.getBoundingBox().getXSize() / 2.0F;
         double YSize = this.getBoundingBox().getYSize();
         double halfZSize = this.getBoundingBox().getZSize() / 2.0F;
@@ -132,30 +128,25 @@ public class BurningBannerEntity extends Entity {
     }
 
     private boolean isOminousBanner(BlockPos positionIn) {
-        try {
+        boolean ominousBannerExists = false;
+        if (positionIn != null) {
             if (world.getBlockState(positionIn).getBlock() instanceof AbstractBannerBlock) {
                 TileEntity te = world.getTileEntity(positionIn);
                 BannerTileEntity banner = (BannerTileEntity) te;
                 TranslationTextComponent bannerName;
-                try {
+                if (banner.getName() instanceof TranslationTextComponent) {
                     bannerName = (TranslationTextComponent) banner.getName();
-                } catch (ClassCastException cast) {
-                    bannerName = null;
+                    ominousBannerExists = bannerName.getKey().contains("block.minecraft.ominous_banner");
                 }
-                return bannerName.getKey().contains("block.minecraft.ominous_banner");
-            } else {
-                return false;
             }
         }
-        catch (NullPointerException whyTheFuckDoesThisHappenAnyway) {
-            return false;
-        }
+        return ominousBannerExists;
     }
 
     public void tick() {
         setTicksTillRemove(getTicksTillRemove()-1);
         if(isOminousBanner(getBannerPosition())) {
-            setBoundingBoxAndOrPosition(true);
+            setBoundingBoxWithPosition(true);
         }
         if (blockDestroyed||getTicksTillRemove()<=0) {
             this.remove();
@@ -179,26 +170,21 @@ public class BurningBannerEntity extends Entity {
             }
         }
         else {
-            try {
-                if (getTicksTillRemove() > 10 && !isOminousBanner(getBannerPosition())) {
-                    this.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH, 2F, world.rand.nextFloat() * 0.4F + 0.8F);
-                    this.blockDestroyed = true;
+            if (getTicksTillRemove() > 10 && !isOminousBanner(getBannerPosition())) {
+                this.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH, 2F, world.rand.nextFloat() * 0.4F + 0.8F);
+                this.blockDestroyed = true;
+            }
+            else if (getTicksTillRemove() == 10) {
+                this.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH, 2F, world.rand.nextFloat() * 0.4F + 0.8F);
+                if(getBannerPosition() != null) {
+                    world.removeBlock(getBannerPosition(), false);
                 }
             }
-            catch(NullPointerException nullPointer){
-                this.blockDestroyed = true;
-                //Swallowed because of crash when summoning
-            }
-            if (getTicksTillRemove() == 10) {
-                this.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH, 2F, world.rand.nextFloat() * 0.4F + 0.8F);
-                world.removeBlock(getBannerPosition(), false);
-            }
-            if (getTicksTillRemove() > 10) {
+            else if (getTicksTillRemove() > 10) {
                 this.playSound(SoundEvents.BLOCK_FIRE_AMBIENT, 2F, world.rand.nextFloat() * 0.4F + 0.8F);
             }
         }
     }
-
 
     @Override
     protected void registerData(){

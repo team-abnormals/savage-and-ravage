@@ -239,6 +239,7 @@ public class SREvents {
         }
     }
 
+    //TODO redesign this logic structure, there has to be a better way
     @SubscribeEvent
     public static void onInteractWithBlock(PlayerInteractEvent.RightClickBlock event) {
         ItemStack heldItemStack = event.getItemStack();
@@ -260,50 +261,49 @@ public class SREvents {
             if ((isFlintAndSteel || isFireCharge)) {
                 BannerTileEntity banner = (BannerTileEntity) te;
                 TranslationTextComponent bannerName;
-                try {
+
+                if (banner.getName() instanceof TranslationTextComponent) {
                     bannerName = (TranslationTextComponent) banner.getName();
-                } catch (ClassCastException cast) {
-                    bannerName = null;
-                }
-                if (bannerName.getKey().contains("block.minecraft.ominous_banner")) {
-                    if (isFlintAndSteel) {
-                        event.getWorld().playSound(player, blockPos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, new Random().nextFloat() * 0.4F + 0.8F);
-                        player.swingArm(event.getHand());
+                    if (bannerName.getKey().contains("block.minecraft.ominous_banner")) {
+                        if (isFlintAndSteel) {
+                            event.getWorld().playSound(player, blockPos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, new Random().nextFloat() * 0.4F + 0.8F);
+                            player.swingArm(event.getHand());
+                            if (player instanceof ServerPlayerEntity) {
+                                CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayerEntity) player, blockPos, heldItemStack);
+                                heldItemStack.damageItem(1, player, (p_219998_1_) -> {
+                                    p_219998_1_.sendBreakAnimation(event.getHand());
+                                });
+                            }
+                        }
+                        if (isFireCharge && !(event.getWorld().getBlockState(blockPos.offset(event.getFace())).isAir())) {
+                            event.getWorld().playSound(player, blockPos, SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.BLOCKS, 1.0F, (new Random().nextFloat() - new Random().nextFloat()) * 0.2F + 1.0F);
+                            player.swingArm(event.getHand());
+                            if (!(player.abilities.isCreativeMode)) {
+                                heldItemStack.shrink(1);
+                            }
+                        }
                         if (player instanceof ServerPlayerEntity) {
-                            CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayerEntity) player, blockPos, heldItemStack);
-                            heldItemStack.damageItem(1, player, (p_219998_1_) -> {
-                                p_219998_1_.sendBreakAnimation(event.getHand());
-                            });
+                            SRTriggers.BURN_BANNER.trigger((ServerPlayerEntity) player);
                         }
-                    }
-                    if (isFireCharge && !(event.getWorld().getBlockState(blockPos.offset(event.getFace())).isAir())) {
-                        event.getWorld().playSound(player, blockPos, SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.BLOCKS, 1.0F, (new Random().nextFloat() - new Random().nextFloat()) * 0.2F + 1.0F);
-                        player.swingArm(event.getHand());
-                        if (!(player.abilities.isCreativeMode)) {
-                            heldItemStack.shrink(1);
-                        }
-                    }
-                    if (player instanceof ServerPlayerEntity) {
-                        SRTriggers.BURN_BANNER.trigger((ServerPlayerEntity) player);
-                    }
-                    if (!event.getWorld().isRemote) {
-                        ServerWorld server = (ServerWorld) event.getWorld();
-                        if (server.findRaid(blockPos) == null) {
-                            EffectInstance badOmenOnPlayer = event.getPlayer().getActivePotionEffect(Effects.BAD_OMEN);
-                            int i = 1;
-                            if (badOmenOnPlayer != null) {
-                                i += badOmenOnPlayer.getAmplifier();
-                                event.getPlayer().removeActivePotionEffect(Effects.BAD_OMEN);
-                            } else {
-                                --i;
+                        if (!event.getWorld().isRemote) {
+                            ServerWorld server = (ServerWorld) event.getWorld();
+                            if (server.findRaid(blockPos) == null) {
+                                EffectInstance badOmenOnPlayer = event.getPlayer().getActivePotionEffect(Effects.BAD_OMEN);
+                                int i = 1;
+                                if (badOmenOnPlayer != null) {
+                                    i += badOmenOnPlayer.getAmplifier();
+                                    event.getPlayer().removeActivePotionEffect(Effects.BAD_OMEN);
+                                } else {
+                                    --i;
+                                }
+                                i = MathHelper.clamp(i, 0, 5);
+                                EffectInstance effectinstance = new EffectInstance(Effects.BAD_OMEN, 120000, i, false, false, true);
+                                if (!(event.getWorld().getGameRules().getBoolean(GameRules.DISABLE_RAIDS))) {
+                                    event.getPlayer().addPotionEffect(effectinstance);
+                                }
                             }
-                            i = MathHelper.clamp(i, 0, 5);
-                            EffectInstance effectinstance = new EffectInstance(Effects.BAD_OMEN, 120000, i, false, false, true);
-                            if (!(event.getWorld().getGameRules().getBoolean(GameRules.DISABLE_RAIDS))) {
-                                event.getPlayer().addPotionEffect(effectinstance);
-                            }
+                            event.getWorld().addEntity(new BurningBannerEntity(event.getWorld(), blockPos));
                         }
-                        event.getWorld().addEntity(new BurningBannerEntity(event.getWorld(), blockPos));
                     }
                 }
             }
