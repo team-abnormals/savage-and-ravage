@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-import com.teamabnormals.abnormals_core.core.library.api.IAgeableEntity;
 import com.minecraftabnormals.savageandravage.common.entity.goals.ConditionalNearestAttackableTargetGoal;
 import com.minecraftabnormals.savageandravage.common.entity.goals.CreepieSwellGoal;
 import com.minecraftabnormals.savageandravage.common.entity.goals.FollowMobOwnerGoal;
@@ -14,6 +13,7 @@ import com.minecraftabnormals.savageandravage.common.entity.goals.MobOwnerHurtBy
 import com.minecraftabnormals.savageandravage.common.entity.goals.MobOwnerHurtTargetGoal;
 import com.minecraftabnormals.savageandravage.core.registry.SRParticles;
 import com.minecraftabnormals.savageandravage.core.registry.SRSounds;
+import com.teamabnormals.abnormals_core.core.library.api.IAgeableEntity;
 
 import net.minecraft.entity.AreaEffectCloudEntity;
 import net.minecraft.entity.Entity;
@@ -21,6 +21,7 @@ import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ILivingEntityData;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.Pose;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
@@ -30,6 +31,7 @@ import net.minecraft.entity.ai.goal.HurtByTargetGoal;
 import net.minecraft.entity.ai.goal.LookAtGoal;
 import net.minecraft.entity.ai.goal.LookRandomlyGoal;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
 import net.minecraft.entity.monster.CreeperEntity;
@@ -47,7 +49,6 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.scoreboard.Team;
-import net.minecraft.server.management.PreYggdrasilConverter;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
@@ -69,6 +70,7 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
     private static final DataParameter<Boolean> IGNITED = EntityDataManager.createKey(CreepieEntity.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Optional<UUID>> OWNER_UUID = EntityDataManager.createKey(CreepieEntity.class, DataSerializers.OPTIONAL_UNIQUE_ID);
     private static final DataParameter<Boolean> CONVERTING = EntityDataManager.createKey(CreepieEntity.class, DataSerializers.BOOLEAN);
+    public boolean spawnedFromSporeBomb;
     public int lastActiveTime;
     public int timeSinceIgnited;
     public int fuseTime = 30;
@@ -99,6 +101,12 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
         this.targetSelector.addGoal(2, new MobOwnerHurtTargetGoal(this));
         this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(1, new ConditionalNearestAttackableTargetGoal(this, true));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<MobEntity>(this, MobEntity.class, false) {
+            @Override
+            public boolean shouldExecute() {
+                return super.shouldExecute() && ((CreepieEntity)goalOwner).spawnedFromSporeBomb && !(this.nearestTarget instanceof CreepieEntity);
+            }
+        });
     }
  	
     public static AttributeModifierMap.MutableAttribute registerAttributes() {
@@ -134,13 +142,12 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
         return flag;
     }
     
-	@Nullable
-	@Override
-	public ILivingEntityData onInitialSpawn(IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) 
-	{
-	   this.growingAge = -24000;
-	   return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
-	}
+    @Nullable
+    @Override
+    public ILivingEntityData onInitialSpawn(IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+        this.growingAge = -24000;
+        return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+    }
 
     @Override
     protected void registerData(){
@@ -163,6 +170,7 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
         compound.putShort("Fuse", (short)this.fuseTime);
         compound.putByte("ExplosionRadius", (byte)this.explosionRadius);
         compound.putBoolean("ignited", this.hasIgnited());
+        compound.putBoolean("SporeBomb", this.spawnedFromSporeBomb);
     }
 
     @Override
@@ -179,6 +187,7 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
         if (compound.hasUniqueId("OwnerUUID")) {
             this.setOwnerId(compound.getUniqueId("OwnerUUID"));
         }
+        this.spawnedFromSporeBomb = compound.getBoolean("SporeBomb");
     }
 
     public ItemStack getPickedResult(RayTraceResult target) {
@@ -420,7 +429,6 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
         if (!player.abilities.isCreativeMode) {
             stack.shrink(1);
         }
-
     }
 
     /**
@@ -431,7 +439,6 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
         if (!this.world.isRemote) {
             this.startConverting(this.rand.nextInt(80)+160); //10 seconds before it converts
         }
-
     }
 
     /**

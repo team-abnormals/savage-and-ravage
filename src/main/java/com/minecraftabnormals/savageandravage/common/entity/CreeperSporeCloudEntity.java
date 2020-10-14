@@ -27,6 +27,7 @@ public class CreeperSporeCloudEntity extends ThrowableEntity {
 	private boolean shouldSpawnCreepies = false;
     private static final DataParameter<Integer> TICKS_TILL_REMOVE = EntityDataManager.createKey(BurningBannerEntity.class, DataSerializers.VARINT);
 	private AreaEffectCloudEntity aoe;
+	public boolean sporeBomb = false;
 
     public CreeperSporeCloudEntity(EntityType<? extends CreeperSporeCloudEntity> type, World worldIn) {
         super(type, worldIn);
@@ -81,16 +82,17 @@ public class CreeperSporeCloudEntity extends ThrowableEntity {
         super.writeAdditional(compound);
         compound.putInt("TicksTillRemove",this.getTicksTillRemove());
         compound.putInt("CloudSize", this.cloudSize);
+        compound.putBoolean("SporeBomb", this.sporeBomb);
     }
 
     @Override
     public void readAdditional(CompoundNBT compound) {
         super.readAdditional(compound);
-       if (compound.contains("CloudSize", 99))
-       {
-           this.cloudSize = compound.getInt("CloudSize");
-       }
+        if (compound.contains("CloudSize", 99)) {
+            this.cloudSize = compound.getInt("CloudSize");
+        }
         this.setTicksTillRemove(compound.getInt("TicksTillRemove"));
+        this.sporeBomb = compound.getBoolean("SporeBomb");
     }
     
     public void tick() {
@@ -98,6 +100,7 @@ public class CreeperSporeCloudEntity extends ThrowableEntity {
         this.world.addParticle(SRParticles.CREEPER_SPORES.get(), this.getPosX(), this.getPosY(), this.getPosZ() - 0.0D, 0.0D, 0.0D, 0.0D);
         if(shouldSpawnCreepies) {
             this.setMotion(0,0,0);
+            aoe.setNoGravity(false);
             this.setTicksTillRemove(this.getTicksTillRemove()-1);
             if(this.getTicksTillRemove() % 20 == 0) {
                 double xPos = aoe.getPosXRandom(0.1D);
@@ -111,6 +114,7 @@ public class CreeperSporeCloudEntity extends ThrowableEntity {
                 if(flag) {
                     CreepieEntity creepie = SREntities.CREEPIE.get().create(world);
                     creepie.setLocationAndAngles(xPos, aoe.getPosY(), zPos, 0.0F, 0.0F);
+                    creepie.spawnedFromSporeBomb = this.sporeBomb;
                     boolean throwerIsInvisible;
                     try { //TODO see if these two checks are needed
                         throwerIsInvisible = ((LivingEntity) this.func_234616_v_()).isPotionActive(Effects.INVISIBILITY);

@@ -28,6 +28,7 @@ public class SporeBombEntity extends TNTEntity {
     protected void explode() {
         CreeperSporeCloudEntity sporecloud = new CreeperSporeCloudEntity(SREntities.CREEPER_SPORE_CLOUD.get(), world);
         sporecloud.cloudSize = 4 + sporecloud.world.rand.nextInt(3);
+        sporecloud.sporeBomb = true;
         this.world.createExplosion(this, this.getPosX(), this.getPosYHeight(0.0625D), this.getPosZ(), 4.0F, Explosion.Mode.NONE); // hacky.
         sporecloud.copyLocationAndAnglesFrom(this);
         this.world.addEntity(sporecloud);
