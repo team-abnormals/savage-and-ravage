@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import com.minecraftabnormals.savageandravage.common.advancement.SRTriggers;
 import com.minecraftabnormals.savageandravage.common.effect.GrowingEffect;
 import com.minecraftabnormals.savageandravage.common.effect.ShrinkingEffect;
 import com.minecraftabnormals.savageandravage.common.entity.BurningBannerEntity;
@@ -25,7 +24,6 @@ import com.minecraftabnormals.savageandravage.core.registry.SREntities;
 import com.minecraftabnormals.savageandravage.core.registry.SRItems;
 import com.minecraftabnormals.savageandravage.core.registry.SRSounds;
 
-import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.AbstractBannerBlock;
 import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -69,15 +67,11 @@ import net.minecraft.potion.Effects;
 import net.minecraft.stats.Stats;
 import net.minecraft.tileentity.BannerTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.GameRules;
+import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
@@ -111,7 +105,7 @@ public class SREvents {
         }
 
         // Attempted to make golems attack creepers, didnt work
-        if (event.getEntity() instanceof IronGolemEntity) {
+        if (event.getEntity() instanceof IronGolemEntity && !SRConfig.COMMON.creeperExplosionsDestroyBlocks.get()) {
             IronGolemEntity golem = (IronGolemEntity) event.getEntity();
             golem.targetSelector.goals.stream().map(it -> it.inner).filter(it -> it instanceof NearestAttackableTargetGoal<?>).findFirst().ifPresent(noAngryAtCreeper -> {
                 golem.targetSelector.removeGoal(noAngryAtCreeper);
@@ -120,7 +114,7 @@ public class SREvents {
                 }));
             });
         }
-        if (event.getEntity() instanceof CreeperEntity) {
+        if (event.getEntity() instanceof CreeperEntity && !SRConfig.COMMON.creeperExplosionsDestroyBlocks.get()) {
             CreeperEntity creeper = (CreeperEntity) event.getEntity();
             creeper.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(creeper, IronGolemEntity.class, true));
         }
@@ -141,8 +135,7 @@ public class SREvents {
                 creeper.entityDropItem(new ItemStack(SRItems.CREEPER_SPORES.get(), 1 + creeper.world.rand.nextInt(5)));
             }
         }
-        // kinda messy rn will clean it up later, maybe use switch cases instead of
-        // this?
+        // kinda messy rn will clean it up later
         else if (event.getEntity() instanceof PillagerEntity) {
             PillagerEntity pillager = (PillagerEntity) event.getEntity();
             if (pillager.isServerWorld() && ((ServerWorld) pillager.getEntityWorld()).findRaid(pillager.getPosition()) != null) {
@@ -244,70 +237,63 @@ public class SREvents {
         ItemStack heldItemStack = event.getItemStack();
         Item heldItem = event.getItemStack().getItem();
         PlayerEntity player = event.getPlayer();
-        BlockPos blockPos = event.getPos();
+        BlockPos pos = event.getPos();
+        World world = event.getWorld();
         ResourceLocation pot = new ResourceLocation(("savageandravage:potted_" + heldItem.getRegistryName().getPath()));
-        if (event.getWorld().getBlockState(blockPos).getBlock() == Blocks.FLOWER_POT && ForgeRegistries.BLOCKS.containsKey(pot)) {
-            event.getWorld().setBlockState(blockPos, ForgeRegistries.BLOCKS.getValue(pot).getDefaultState());
+        if (world.getBlockState(pos).getBlock() == Blocks.FLOWER_POT && ForgeRegistries.BLOCKS.containsKey(pot)) {
+            world.setBlockState(pos, ForgeRegistries.BLOCKS.getValue(pot).getDefaultState());
             event.getPlayer().swingArm(event.getHand());
             player.addStat(Stats.POT_FLOWER);
             if (!event.getPlayer().abilities.isCreativeMode)
                 heldItemStack.shrink(1);
         }
-        if (event.getWorld().getBlockState(blockPos).getBlock() instanceof AbstractBannerBlock && event.getWorld().getEntitiesWithinAABB(BurningBannerEntity.class, new AxisAlignedBB(blockPos)).isEmpty()) {
-            TileEntity te = event.getWorld().getTileEntity(blockPos);
+        else if(isValidBannerPos(event)) {
+            TileEntity te = world.getTileEntity(pos);
             boolean isFlintAndSteel = heldItem instanceof FlintAndSteelItem;
-            boolean isFireCharge = heldItem instanceof FireChargeItem;
-            if ((isFlintAndSteel || isFireCharge)) {
+            if ((isFlintAndSteel || heldItem instanceof FireChargeItem)) {
                 BannerTileEntity banner = (BannerTileEntity) te;
                 TranslationTextComponent bannerName;
-                try {
+                if (banner.getName() instanceof TranslationTextComponent) {
                     bannerName = (TranslationTextComponent) banner.getName();
-                } catch (ClassCastException cast) {
-                    bannerName = null;
-                }
-                if (bannerName.getKey().contains("block.minecraft.ominous_banner")) {
-                    if (isFlintAndSteel) {
-                        event.getWorld().playSound(player, blockPos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, new Random().nextFloat() * 0.4F + 0.8F);
+                    if (bannerName.getKey().contains("block.minecraft.ominous_banner")) {
+                        SoundEvent sound = isFlintAndSteel ? SoundEvents.ITEM_FLINTANDSTEEL_USE : SoundEvents.ITEM_FIRECHARGE_USE;
+                        float pitch = isFlintAndSteel ? new Random().nextFloat() * 0.4F + 0.8F : (new Random().nextFloat() - new Random().nextFloat()) * 0.2F + 1.0F;
+                        world.playSound(player, pos, sound, SoundCategory.BLOCKS, 1.0F, pitch);
                         player.swingArm(event.getHand());
-                        if (player instanceof ServerPlayerEntity) {
-                            CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayerEntity) player, blockPos, heldItemStack);
+                        if (isFlintAndSteel && player instanceof ServerPlayerEntity) {
                             heldItemStack.damageItem(1, player, (p_219998_1_) -> {
                                 p_219998_1_.sendBreakAnimation(event.getHand());
                             });
                         }
-                    }
-                    if (isFireCharge && !(event.getWorld().getBlockState(blockPos.offset(event.getFace())).isAir())) {
-                        event.getWorld().playSound(player, blockPos, SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.BLOCKS, 1.0F, (new Random().nextFloat() - new Random().nextFloat()) * 0.2F + 1.0F);
-                        player.swingArm(event.getHand());
-                        if (!(player.abilities.isCreativeMode)) {
+                        else if (!(player.abilities.isCreativeMode)) {
                             heldItemStack.shrink(1);
                         }
-                    }
-                    if (player instanceof ServerPlayerEntity) {
-                        SRTriggers.BURN_BANNER.trigger((ServerPlayerEntity) player);
-                    }
-                    if (!event.getWorld().isRemote) {
-                        ServerWorld server = (ServerWorld) event.getWorld();
-                        if (server.findRaid(blockPos) == null) {
-                            EffectInstance badOmenOnPlayer = event.getPlayer().getActivePotionEffect(Effects.BAD_OMEN);
-                            int i = 1;
-                            if (badOmenOnPlayer != null) {
-                                i += badOmenOnPlayer.getAmplifier();
-                                event.getPlayer().removeActivePotionEffect(Effects.BAD_OMEN);
-                            } else {
-                                --i;
-                            }
-                            i = MathHelper.clamp(i, 0, 5);
-                            EffectInstance effectinstance = new EffectInstance(Effects.BAD_OMEN, 120000, i, false, false, true);
-                            if (!(event.getWorld().getGameRules().getBoolean(GameRules.DISABLE_RAIDS))) {
-                                event.getPlayer().addPotionEffect(effectinstance);
-                            }
-                        }
-                        event.getWorld().addEntity(new BurningBannerEntity(event.getWorld(), blockPos));
+                        world.addEntity(new BurningBannerEntity(world, pos, player));
+                        event.setCancellationResult(ActionResultType.SUCCESS);
+                        event.setCanceled(true);
                     }
                 }
             }
         }
+    }
+
+    private static boolean isValidBannerPos(PlayerInteractEvent.RightClickBlock event) {
+        boolean isValid = false;
+        BlockPos pos = event.getPos();
+        World world = event.getWorld();
+        if (world.getBlockState(pos).getBlock() instanceof AbstractBannerBlock) {
+             if (world.getEntitiesWithinAABB(BurningBannerEntity.class, new AxisAlignedBB(pos)).isEmpty()) {
+                 isValid = true;
+             }
+             else {
+                 List<BurningBannerEntity> burningBanners = world.getEntitiesWithinAABB(BurningBannerEntity.class, new AxisAlignedBB(pos));
+                 isValid = true;
+                 for (BurningBannerEntity burningBanner : burningBanners) {
+                     if (burningBanner.getBannerPosition().equals(pos)) isValid = false;
+                 }
+             }
+        }
+        return isValid;
     }
 
     @SubscribeEvent

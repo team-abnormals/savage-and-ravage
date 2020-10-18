@@ -7,6 +7,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import com.minecraftabnormals.savageandravage.core.SRConfig;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -36,7 +38,7 @@ public class IronGolemEntityMixin extends GolemEntity {
 	
 	@Inject(at = @At("RETURN"), method = "canAttack(Lnet/minecraft/entity/EntityType;)Z", cancellable = true)
 	public boolean canAttack(EntityType<?> typeIn, CallbackInfoReturnable<Boolean> cir) {
-		if (this.isPlayerCreated() && typeIn == EntityType.PLAYER) {
+		if (this.isPlayerCreated() && typeIn == EntityType.PLAYER || SRConfig.COMMON.creeperExplosionsDestroyBlocks.get() && typeIn == EntityType.CREEPER) {
 			return false;
 		} else {
 			return super.canAttack(typeIn);

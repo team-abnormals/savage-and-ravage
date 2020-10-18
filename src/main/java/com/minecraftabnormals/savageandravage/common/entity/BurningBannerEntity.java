@@ -1,7 +1,13 @@
 package com.minecraftabnormals.savageandravage.common.entity;
 
-import net.minecraft.block.*;
-import net.minecraft.entity.*;
+import com.minecraftabnormals.savageandravage.core.registry.SRTriggers;
+import net.minecraft.block.AbstractBannerBlock;
+import net.minecraft.block.BannerBlock;
+import net.minecraft.block.WallBannerBlock;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.IPacket;
@@ -9,6 +15,9 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
+import net.minecraft.server.management.PreYggdrasilConverter;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.BannerTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -16,7 +25,9 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -26,23 +37,27 @@ import javax.annotation.Nullable;
 import com.minecraftabnormals.savageandravage.core.registry.SREntities;
 
 import java.util.Optional;
+import java.util.UUID;
 
 public class BurningBannerEntity extends Entity {
     private Boolean blockDestroyed = false;
     private static final DataParameter<Integer> TICKS_TILL_REMOVE = EntityDataManager.createKey(BurningBannerEntity.class, DataSerializers.VARINT);
     private static final DataParameter<Optional<BlockPos>> BLOCK_POS = EntityDataManager.createKey(BurningBannerEntity.class, DataSerializers.OPTIONAL_BLOCK_POS);
+    public static final DataParameter<Optional<UUID>> OFFENDER_UUID = EntityDataManager.createKey(BurningBannerEntity.class, DataSerializers.OPTIONAL_UNIQUE_ID);
 
     public BurningBannerEntity(EntityType<? extends BurningBannerEntity> type, World worldIn) {
         super(type, worldIn);
     }
 
-    public BurningBannerEntity(World worldIn, BlockPos positionIn) {
+    public BurningBannerEntity(World worldIn, BlockPos positionIn, PlayerEntity playerIn) {
         super(SREntities.BURNING_BANNER.get(), worldIn);
-        this.setBannerPosition(positionIn);
-        setBoundingBoxAndOrPosition(true);
+        setBannerPosition(positionIn);
+        setOffenderId(playerIn.getUniqueID());
+        setBoundingBoxWithPosition(true);
+
     }
 
-    private void setBoundingBoxAndOrPosition(boolean shouldSetPosition) {
+    private void setBoundingBoxWithPosition(boolean shouldSetPosition) {
         if (getBannerPosition() != null) {
             AxisAlignedBB boundingBox = new AxisAlignedBB(0, 0, 0, 1, 1, 1);
             double xPos = getBannerPosition().getX();
@@ -52,27 +67,25 @@ public class BurningBannerEntity extends Entity {
                 xPos += 0.5d;
                 yPos += 0.2d;
                 zPos += 0.5d;
-                if (world.getBlockState(getBannerPosition()).get(BlockStateProperties.ROTATION_0_15) == 0 || world.getBlockState(getBannerPosition()).get(BlockStateProperties.ROTATION_0_15) == 8) {
-                    boundingBox = new AxisAlignedBB(0, 0, 0, 0.8, 1.65, 0.4);
-                } else if (world.getBlockState(getBannerPosition()).get(BlockStateProperties.ROTATION_0_15) == 1 || world.getBlockState(getBannerPosition()).get(BlockStateProperties.ROTATION_0_15) == 9) {
-                    boundingBox = new AxisAlignedBB(0, 0, 0, 0.8, 1.65, 0.6);
-                } else if (world.getBlockState(getBannerPosition()).get(BlockStateProperties.ROTATION_0_15) == 2 || world.getBlockState(getBannerPosition()).get(BlockStateProperties.ROTATION_0_15) == 10) {
-                    boundingBox = new AxisAlignedBB(0, 0, 0, 0.8, 1.65, 0.8);
-                } else if (world.getBlockState(getBannerPosition()).get(BlockStateProperties.ROTATION_0_15) == 3 || world.getBlockState(getBannerPosition()).get(BlockStateProperties.ROTATION_0_15) == 11) {
-                    boundingBox = new AxisAlignedBB(0, 0, 0, 0.6, 1.65, 0.8);
-                } else if (world.getBlockState(getBannerPosition()).get(BlockStateProperties.ROTATION_0_15) == 4 || world.getBlockState(getBannerPosition()).get(BlockStateProperties.ROTATION_0_15) == 12) {
-                    boundingBox = new AxisAlignedBB(0, 0, 0, 0.4, 1.65, 0.8);
-                } else if (world.getBlockState(getBannerPosition()).get(BlockStateProperties.ROTATION_0_15) == 5 || world.getBlockState(getBannerPosition()).get(BlockStateProperties.ROTATION_0_15) == 13) {
-                    boundingBox = new AxisAlignedBB(0, 0, 0, 0.6, 1.65, 0.8);
-                } else if (world.getBlockState(getBannerPosition()).get(BlockStateProperties.ROTATION_0_15) == 6 || world.getBlockState(getBannerPosition()).get(BlockStateProperties.ROTATION_0_15) == 14) {
-                    boundingBox = new AxisAlignedBB(0, 0, 0, 0.8, 1.65, 0.8);
-                } else if (world.getBlockState(getBannerPosition()).get(BlockStateProperties.ROTATION_0_15) == 7 || world.getBlockState(getBannerPosition()).get(BlockStateProperties.ROTATION_0_15) == 15) {
-                    boundingBox = new AxisAlignedBB(0, 0, 0, 0.8, 1.65, 0.6);
+                switch (world.getBlockState(getBannerPosition()).get(BlockStateProperties.ROTATION_0_15)) {
+                    case 0: case 8:
+                        boundingBox = new AxisAlignedBB(0, 0, 0, 0.8, 1.65, 0.4);
+                        break;
+                    case 1: case 9: case 7: case 15:
+                        boundingBox = new AxisAlignedBB(0, 0, 0, 0.8, 1.65, 0.6);
+                        break;
+                    case 2: case 10: case 6: case 14:
+                        boundingBox = new AxisAlignedBB(0, 0, 0, 0.8, 1.65, 0.8);
+                        break;
+                    case 3: case 11: case 5: case 13:
+                        boundingBox = new AxisAlignedBB(0, 0, 0, 0.6, 1.65, 0.8);
+                        break;
+                    case 4: case 12:
+                        boundingBox = new AxisAlignedBB(0, 0, 0, 0.4, 1.65, 0.8);
                 }
             }
             if (world.getBlockState(getBannerPosition()).getBlock() instanceof WallBannerBlock) {
                 switch (world.getBlockState(getBannerPosition()).get(BlockStateProperties.HORIZONTAL_FACING)) {
-                	default:
                     case NORTH:
                         boundingBox = new AxisAlignedBB(0, 0, 0, 0.9, 1.65, 0.3);
                         xPos += 0.48d;
@@ -96,7 +109,6 @@ public class BurningBannerEntity extends Entity {
                         xPos += 0.84d;
                         yPos -= 0.76d;
                         zPos += 0.48d;
-                        break;
                 }
             }
             this.setBoundingBox(boundingBox);
@@ -107,8 +119,7 @@ public class BurningBannerEntity extends Entity {
     }
 
     /**
-     * Sets the x,y,z of the entity from the given parameters. Also sets up a bounding box but it's not in the name,
-     * MCP moment.
+     * Sets the x,y,z of the entity from the given parameters. In Entity it also sets a bounding box, this was omitted.
      */
     @Override
     public void setPosition(double x, double y, double z) {
@@ -118,7 +129,7 @@ public class BurningBannerEntity extends Entity {
 
     public void setPositionNew(double x, double y, double z){
         setRawPosition(x,y,z);
-        setBoundingBoxAndOrPosition(false);
+        setBoundingBoxWithPosition(false);
         double halfXSize = this.getBoundingBox().getXSize() / 2.0F;
         double YSize = this.getBoundingBox().getYSize();
         double halfZSize = this.getBoundingBox().getZSize() / 2.0F;
@@ -132,30 +143,25 @@ public class BurningBannerEntity extends Entity {
     }
 
     private boolean isOminousBanner(BlockPos positionIn) {
-        try {
+        boolean ominousBannerExists = false;
+        if (positionIn != null) {
             if (world.getBlockState(positionIn).getBlock() instanceof AbstractBannerBlock) {
                 TileEntity te = world.getTileEntity(positionIn);
                 BannerTileEntity banner = (BannerTileEntity) te;
                 TranslationTextComponent bannerName;
-                try {
+                if (banner.getName() instanceof TranslationTextComponent) {
                     bannerName = (TranslationTextComponent) banner.getName();
-                } catch (ClassCastException cast) {
-                    bannerName = null;
+                    ominousBannerExists = bannerName.getKey().contains("block.minecraft.ominous_banner");
                 }
-                return bannerName.getKey().contains("block.minecraft.ominous_banner");
-            } else {
-                return false;
             }
         }
-        catch (NullPointerException whyTheFuckDoesThisHappenAnyway) {
-            return false;
-        }
+        return ominousBannerExists;
     }
 
     public void tick() {
         setTicksTillRemove(getTicksTillRemove()-1);
         if(isOminousBanner(getBannerPosition())) {
-            setBoundingBoxAndOrPosition(true);
+            setBoundingBoxWithPosition(true);
         }
         if (blockDestroyed||getTicksTillRemove()<=0) {
             this.remove();
@@ -179,30 +185,43 @@ public class BurningBannerEntity extends Entity {
             }
         }
         else {
-            try {
-                if (getTicksTillRemove() > 10 && !isOminousBanner(getBannerPosition())) {
-                    this.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH, 2F, world.rand.nextFloat() * 0.4F + 0.8F);
-                    this.blockDestroyed = true;
+            if (getTicksTillRemove() > 10 && !isOminousBanner(getBannerPosition())) {
+                this.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH, 2F, world.rand.nextFloat() * 0.4F + 0.8F);
+                this.blockDestroyed = true;
+            }
+            else if (getTicksTillRemove() == 10) {
+                this.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH, 2F, world.rand.nextFloat() * 0.4F + 0.8F);
+                if(getBannerPosition() != null) {
+                    world.removeBlock(getBannerPosition(), false);
+                }
+                ServerWorld server = (ServerWorld) world;
+                if (server.findRaid(getBannerPosition()) == null) {
+                    if (getOffender() instanceof ServerPlayerEntity) SRTriggers.BURN_BANNER.trigger((ServerPlayerEntity) getOffender());
+                    EffectInstance badOmenOnPlayer = getOffender().getActivePotionEffect(Effects.BAD_OMEN);
+                    int i = 1;
+                    if (badOmenOnPlayer != null) {
+                        i += badOmenOnPlayer.getAmplifier();
+                        getOffender().removeActivePotionEffect(Effects.BAD_OMEN);
+                    } else {
+                        --i;
+                    }
+                    i = MathHelper.clamp(i, 0, 5);
+                    EffectInstance effectinstance = new EffectInstance(Effects.BAD_OMEN, 120000, i, false, false, true);
+                    if (!(world.getGameRules().getBoolean(GameRules.DISABLE_RAIDS))) {
+                        getOffender().addPotionEffect(effectinstance);
+                    }
                 }
             }
-            catch(NullPointerException nullPointer){
-                this.blockDestroyed = true;
-                //Swallowed because of crash when summoning
-            }
-            if (getTicksTillRemove() == 10) {
-                this.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH, 2F, world.rand.nextFloat() * 0.4F + 0.8F);
-                world.removeBlock(getBannerPosition(), false);
-            }
-            if (getTicksTillRemove() > 10) {
+            else if (getTicksTillRemove() > 10) {
                 this.playSound(SoundEvents.BLOCK_FIRE_AMBIENT, 2F, world.rand.nextFloat() * 0.4F + 0.8F);
             }
         }
     }
 
-
     @Override
     protected void registerData(){
         this.dataManager.register(BLOCK_POS, Optional.empty());
+        this.dataManager.register(OFFENDER_UUID, Optional.empty());
         this.dataManager.register(TICKS_TILL_REMOVE, 50);
     }
 
@@ -213,6 +232,9 @@ public class BurningBannerEntity extends Entity {
         if(this.getBannerPosition() != null) {
             compound.put("BannerPosition", NBTUtil.writeBlockPos(this.getBannerPosition()));
         }
+        if (this.getOffenderId() != null) {
+            compound.putUniqueId("Offender", this.getOffenderId());
+        }
     }
 
     @Override
@@ -220,6 +242,16 @@ public class BurningBannerEntity extends Entity {
         this.setTicksTillRemove(compound.getInt("TicksTillRemove"));
         if(compound.contains("BannerPosition", 10)) {
             this.setBannerPosition(NBTUtil.readBlockPos(compound.getCompound("BannerPosition")));
+        }
+        UUID uuid;
+        if (compound.hasUniqueId("Offender")) {
+            uuid = compound.getUniqueId("Offender");
+        } else {
+            String s = compound.getString("Offender");
+            uuid = PreYggdrasilConverter.convertMobOwnerIfNeeded(this.getServer(), s);
+        }
+        if (uuid != null) {
+            setOffenderId(uuid);
         }
     }
 
@@ -238,6 +270,21 @@ public class BurningBannerEntity extends Entity {
 
     private void setBannerPosition(@Nullable BlockPos positionIn){
         this.dataManager.set(BLOCK_POS, Optional.ofNullable(positionIn));
+    }
+
+    @Nullable
+    public UUID getOffenderId() {
+        return this.dataManager.get(OFFENDER_UUID).orElse(null);
+    }
+
+    public void setOffenderId(@Nullable UUID ownerId) {
+        this.dataManager.set(OFFENDER_UUID, Optional.ofNullable(ownerId));
+    }
+
+    @Nullable
+    public PlayerEntity getOffender() {
+        UUID uuid = this.getOffenderId();
+        return uuid == null ? null : this.world.getPlayerByUuid(uuid);
     }
 
     @Override

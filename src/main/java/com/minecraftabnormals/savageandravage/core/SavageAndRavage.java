@@ -6,7 +6,6 @@ import com.minecraftabnormals.savageandravage.core.registry.SREntities;
 import com.minecraftabnormals.savageandravage.core.registry.SRItems;
 import com.minecraftabnormals.savageandravage.core.registry.SRParticles;
 import com.minecraftabnormals.savageandravage.core.registry.SRSounds;
-import com.minecraftabnormals.savageandravage.core.registry.SRStructures;
 import com.teamabnormals.abnormals_core.core.utils.RegistryHelper;
 
 import net.minecraftforge.api.distmarker.Dist;
@@ -66,14 +65,13 @@ public class SavageAndRavage {
     		SREntities.registerWaveMembers();
     		SRCompat.registerFlammables();
     		SRCompat.registerDispenserBehaviors();
-			SRStructures.registerPools();
     	});
 	}
     
     private void clientSetup(final FMLClientSetupEvent event) {
-		DeferredWorkQueue.runLater(() -> {
-			SREntities.registerRendering();
-			SRItems.registerItemProperties();
-		});
+    	DeferredWorkQueue.runLater(() -> {
+    		SREntities.registerRendering();
+    		SRItems.registerItemProperties();
+    	});
     }
 }
