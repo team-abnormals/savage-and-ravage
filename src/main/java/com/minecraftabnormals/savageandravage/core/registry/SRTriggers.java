@@ -1,4 +1,4 @@
-package com.minecraftabnormals.savageandravage.common.advancement;
+package com.minecraftabnormals.savageandravage.core.registry;
 
 import com.teamabnormals.abnormals_core.common.advancement.EmptyTrigger;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
