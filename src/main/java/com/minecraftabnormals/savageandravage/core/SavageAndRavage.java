@@ -1,11 +1,7 @@
 package com.minecraftabnormals.savageandravage.core;
 
 import com.minecraftabnormals.savageandravage.core.other.SRCompat;
-import com.minecraftabnormals.savageandravage.core.registry.SREffects;
-import com.minecraftabnormals.savageandravage.core.registry.SREntities;
-import com.minecraftabnormals.savageandravage.core.registry.SRItems;
-import com.minecraftabnormals.savageandravage.core.registry.SRParticles;
-import com.minecraftabnormals.savageandravage.core.registry.SRSounds;
+import com.minecraftabnormals.savageandravage.core.registry.*;
 import com.teamabnormals.abnormals_core.core.utils.RegistryHelper;
 
 import net.minecraftforge.api.distmarker.Dist;
@@ -65,6 +61,7 @@ public class SavageAndRavage {
     		SREntities.registerWaveMembers();
     		SRCompat.registerFlammables();
     		SRCompat.registerDispenserBehaviors();
+			SRStructures.registerPools();
     	});
 	}
     
