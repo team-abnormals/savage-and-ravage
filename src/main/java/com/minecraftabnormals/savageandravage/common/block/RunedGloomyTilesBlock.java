@@ -5,7 +5,6 @@ import com.minecraftabnormals.savageandravage.core.registry.SRSounds;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.EvokerFangsEntity;
 import net.minecraft.tags.EntityTypeTags;
@@ -24,21 +23,17 @@ public class RunedGloomyTilesBlock extends ChiseledGloomyTilesBlock {
         super.onEntityWalk(world, pos, entity);
 
         BlockState state = world.getBlockState(pos);
-        if (!state.get(TRIGGERED)) {
-            boolean isValidPlayer = true;
-            if (entity instanceof PlayerEntity) isValidPlayer = !((PlayerEntity) entity).isCreative() && !entity.isSpectator();
-            if (!(EntityTypeTags.RAIDERS.contains(entity.getType())) && entity.getType() != EntityType.ARMOR_STAND && entity instanceof LivingEntity && isValidPlayer) {
-                world.setBlockState(pos, state.with(TRIGGERED, true));
-                world.playSound(null, pos, SRSounds.RUNES_ACTIVATED.get(), SoundCategory.HOSTILE, 1.0F, 1.0F);
-                EvokerFangsEntity evokerFangs = EntityType.EVOKER_FANGS.create(world);
-                if (evokerFangs != null) {
-                    evokerFangs.setLocationAndAngles(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 0.0F, 0.0F);
-                    world.addEntity(evokerFangs);
-                }
-                RunePrisonEntity runePrison = new RunePrisonEntity(world, pos, 25);
-                runePrison.setLocationAndAngles(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 0.0F, 0.0F);
-                world.addEntity(runePrison);
+        if (!state.get(TRIGGERED) && !(EntityTypeTags.RAIDERS.contains(entity.getType())) && entity.getType() != EntityType.ARMOR_STAND && entity instanceof PlayerEntity && !((PlayerEntity) entity).isCreative() && !entity.isSpectator()) {
+            world.setBlockState(pos, state.with(TRIGGERED, true));
+            world.playSound(null, pos, SRSounds.RUNES_ACTIVATED.get(), SoundCategory.HOSTILE, 1.0F, 1.0F);
+            EvokerFangsEntity evokerFangs = EntityType.EVOKER_FANGS.create(world);
+            if (evokerFangs != null) {
+                evokerFangs.setLocationAndAngles(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 0.0F, 0.0F);
+                world.addEntity(evokerFangs);
             }
+            RunePrisonEntity runePrison = new RunePrisonEntity(world, pos, 25);
+            runePrison.setLocationAndAngles(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 0.0F, 0.0F);
+            world.addEntity(runePrison);
         }
     }
 }
