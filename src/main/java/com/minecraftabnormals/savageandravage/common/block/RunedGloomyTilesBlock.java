@@ -25,10 +25,9 @@ public class RunedGloomyTilesBlock extends ChiseledGloomyTilesBlock {
 
         BlockState state = world.getBlockState(pos);
         if (!state.get(TRIGGERED)) {
-            boolean canUse = false;
-            if (entity instanceof PlayerEntity && !state.get(TRIGGERED))
-                canUse = !((PlayerEntity) entity).isCreative();
-            if (!(EntityTypeTags.RAIDERS.contains(entity.getType())) && entity.getType() != EntityType.ARMOR_STAND && entity instanceof LivingEntity && canUse) {
+            boolean isValidPlayer = true;
+            if (entity instanceof PlayerEntity) isValidPlayer = !((PlayerEntity) entity).isCreative() && !entity.isSpectator();
+            if (!(EntityTypeTags.RAIDERS.contains(entity.getType())) && entity.getType() != EntityType.ARMOR_STAND && entity instanceof LivingEntity && isValidPlayer) {
                 world.setBlockState(pos, state.with(TRIGGERED, true));
                 world.playSound(null, pos, SRSounds.RUNES_ACTIVATED.get(), SoundCategory.HOSTILE, 1.0F, 1.0F);
                 EvokerFangsEntity evokerFangs = EntityType.EVOKER_FANGS.create(world);
