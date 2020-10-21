@@ -1,11 +1,7 @@
 package com.minecraftabnormals.savageandravage.common.entity.block;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.minecraftabnormals.savageandravage.common.entity.CreeperSporeCloudEntity;
 import com.minecraftabnormals.savageandravage.core.registry.SREntities;
-
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.TNTEntity;
@@ -13,6 +9,9 @@ import net.minecraft.network.IPacket;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class SporeBombEntity extends TNTEntity {
 
@@ -26,9 +25,12 @@ public class SporeBombEntity extends TNTEntity {
 
     @Override
     protected void explode() {
-        CreeperSporeCloudEntity sporecloud = new CreeperSporeCloudEntity(SREntities.CREEPER_SPORE_CLOUD.get(), world);
-        sporecloud.cloudSize = 4 + sporecloud.world.rand.nextInt(3);
-        sporecloud.sporeBomb = true;
+        CreeperSporeCloudEntity sporecloud = SREntities.CREEPER_SPORE_CLOUD.get().create(this.world);
+        if (sporecloud == null)
+            return;
+
+        sporecloud.setCloudSize(4 + this.world.getRandom().nextInt(3));
+        sporecloud.setSporeBomb(true);
         this.world.createExplosion(this, this.getPosX(), this.getPosYHeight(0.0625D), this.getPosZ(), 4.0F, Explosion.Mode.NONE); // hacky.
         sporecloud.copyLocationAndAnglesFrom(this);
         this.world.addEntity(sporecloud);
@@ -37,11 +39,5 @@ public class SporeBombEntity extends TNTEntity {
     @Override
     public IPacket<?> createSpawnPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
-    }
-    
-    @Nonnull
-    @Override
-    public EntityType<?> getType() {
-        return SREntities.SPORE_BOMB.get();
     }
 }

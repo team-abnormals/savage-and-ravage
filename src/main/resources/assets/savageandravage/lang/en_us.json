@@ -39,7 +39,7 @@
 	"effect.savageandravage.growing": "Growing",
 	"effect.savageandravage.shrinking": "Shrinking",
 	
-  	"attribute.name.grieferArmor.explosiveDamageReduction": "Explosive Damage Reduction",
+  	"attribute.name.generic.explosive_damage_reduction": "Explosive Damage Reduction",
   
   	"advancements.story.griefer_armor.title": "Dynamite with a Laser Beam",
   	"advancements.story.griefer_armor.description": "Get a full suit of Griefer armor",

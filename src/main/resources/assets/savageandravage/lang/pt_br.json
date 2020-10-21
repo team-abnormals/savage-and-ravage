@@ -39,10 +39,10 @@
 	"effect.savageandravage.growing": "Crescimento",
 	"effect.savageandravage.shrinking": "Encolhimento",
 	
-	"attribute.name.grieferArmor.explosiveDamageReduction": "Redução de dano explosivo",
+	"attribute.name.generic.explosive_damage_reduction": "Redução de dano explosivo",
 	
-    	"savageandravage:subtitles.creepie.hurt": "Creepie ferido",
-    	"savageandravage:subtitles.creepie.death": "Creepie morre",
+    "savageandravage:subtitles.creepie.hurt": "Creepie ferido",
+	"savageandravage:subtitles.creepie.death": "Creepie morre",
 	"savageandravage:subtitles.creepie.fuse": "Creepie sibilando",
 	"savageandravage:subtitles.creepie.convert": "Creepie começa a se converter",
 	"savageandravage:subtitles.creepie.grow": "Creepie cresce em creeper",

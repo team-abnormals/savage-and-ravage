@@ -1,39 +1,13 @@
 package com.minecraftabnormals.savageandravage.common.entity;
 
-import java.util.Collection;
-import java.util.Optional;
-import java.util.UUID;
-
-import javax.annotation.Nullable;
-
-import com.minecraftabnormals.savageandravage.common.entity.goals.ConditionalNearestAttackableTargetGoal;
-import com.minecraftabnormals.savageandravage.common.entity.goals.CreepieSwellGoal;
-import com.minecraftabnormals.savageandravage.common.entity.goals.FollowMobOwnerGoal;
-import com.minecraftabnormals.savageandravage.common.entity.goals.MobOwnerHurtByTargetGoal;
-import com.minecraftabnormals.savageandravage.common.entity.goals.MobOwnerHurtTargetGoal;
+import com.minecraftabnormals.savageandravage.common.entity.goals.*;
 import com.minecraftabnormals.savageandravage.core.registry.SRParticles;
 import com.minecraftabnormals.savageandravage.core.registry.SRSounds;
 import com.teamabnormals.abnormals_core.core.library.api.IAgeableEntity;
-
-import net.minecraft.entity.AreaEffectCloudEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntitySize;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ILivingEntityData;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.Pose;
-import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.AvoidEntityGoal;
-import net.minecraft.entity.ai.goal.HurtByTargetGoal;
-import net.minecraft.entity.ai.goal.LookAtGoal;
-import net.minecraft.entity.ai.goal.LookRandomlyGoal;
-import net.minecraft.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
-import net.minecraft.entity.ai.goal.SwimGoal;
-import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
+import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.CatEntity;
@@ -49,11 +23,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.scoreboard.Team;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.util.*;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.DifficultyInstance;
@@ -64,6 +34,11 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
+
+import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.UUID;
 
 public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeableEntity {
     private static final DataParameter<Integer> STATE = EntityDataManager.createKey(CreepieEntity.class, DataSerializers.VARINT);
@@ -93,7 +68,7 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
         this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, OcelotEntity.class, 6.0F, 1.0D, 1.2D));
         this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, CatEntity.class, 6.0F, 1.0D, 1.2D));
         this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0D, false));
-        this.goalSelector.addGoal(3, new FollowMobOwnerGoal(this, 1.0D, 2.0F, 20.0F, false));
+        this.goalSelector.addGoal(3, new FollowMobOwnerGoal(this, 1.0D, 2.0F, 20.0F));
         this.goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 0.8D));
         this.goalSelector.addGoal(6, new LookAtGoal(this, PlayerEntity.class, 8.0F));
         this.goalSelector.addGoal(6, new LookRandomlyGoal(this));
@@ -104,22 +79,22 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<MobEntity>(this, MobEntity.class, false) {
             @Override
             public boolean shouldExecute() {
-                return super.shouldExecute() && ((CreepieEntity)goalOwner).spawnedFromSporeBomb && !(this.nearestTarget instanceof CreepieEntity);
+                return super.shouldExecute() && ((CreepieEntity) goalOwner).spawnedFromSporeBomb && !(this.nearestTarget instanceof CreepieEntity);
             }
         });
     }
- 	
+
     public static AttributeModifierMap.MutableAttribute registerAttributes() {
-    	return MonsterEntity.func_233666_p_()
-    			.createMutableAttribute(Attributes.MAX_HEALTH, 5.0)
-    			.createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.35D);
+        return MonsterEntity.func_233666_p_()
+                .createMutableAttribute(Attributes.MAX_HEALTH, 5.0)
+                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.35D);
     }
 
     /**
      * The maximum height from where the entity is allowed to jump (used in pathfinder)
      */
     public int getMaxFallHeight() {
-        return this.getAttackTarget() == null ? 3 : 3 + (int)(this.getHealth() - 1.0F);
+        return this.getAttackTarget() == null ? 3 : 3 + (int) (this.getHealth() - 1.0F);
     }
 
     @Override
@@ -134,14 +109,14 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
 
     public boolean onLivingFall(float distance, float damageMultiplier) {
         boolean flag = super.onLivingFall(distance, damageMultiplier);
-        this.timeSinceIgnited = (int)((float)this.timeSinceIgnited + distance * 1.5F);
+        this.timeSinceIgnited = (int) ((float) this.timeSinceIgnited + distance * 1.5F);
         if (this.timeSinceIgnited > this.fuseTime - 5) {
             this.timeSinceIgnited = this.fuseTime - 5;
         }
 
         return flag;
     }
-    
+
     @Nullable
     @Override
     public ILivingEntityData onInitialSpawn(IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
@@ -150,7 +125,7 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
     }
 
     @Override
-    protected void registerData(){
+    protected void registerData() {
         super.registerData();
         this.dataManager.register(STATE, -1);
         this.dataManager.register(IGNITED, false);
@@ -167,8 +142,8 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
         compound.putInt("Age", this.getGrowingAge());
         compound.putInt("ForcedAge", this.forcedAge);
         compound.putInt("ConversionTime", this.isConverting() ? this.conversionTime : -1);
-        compound.putShort("Fuse", (short)this.fuseTime);
-        compound.putByte("ExplosionRadius", (byte)this.explosionRadius);
+        compound.putShort("Fuse", (short) this.fuseTime);
+        compound.putByte("ExplosionRadius", (byte) this.explosionRadius);
         compound.putBoolean("ignited", this.hasIgnited());
         compound.putBoolean("SporeBomb", this.spawnedFromSporeBomb);
     }
@@ -195,7 +170,7 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
     }
 
     @Override
-    protected float getStandingEyeHeight(Pose poseIn, EntitySize sizeIn){
+    protected float getStandingEyeHeight(Pose poseIn, EntitySize sizeIn) {
         return sizeIn.height * 0.50F;
     }
 
@@ -254,7 +229,7 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
     /**
      * Creates an explosion as determined by this creeper's power and explosion radius.
      */
-	protected void explode() {
+    protected void explode() {
         if (!this.world.isRemote) {
             Explosion.Mode explosion$mode = Explosion.Mode.NONE;
             float chargedModifier = 1.0F;
@@ -292,20 +267,20 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
         }
 
     }
-    
+
     protected float getSoundPitch() {
         return (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.5F;
-     }
+    }
 
-     @Override
+    @Override
     protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
         return SRSounds.CREEPIE_HURT.get();
-     }
+    }
 
-     @Override
-     protected SoundEvent getDeathSound() {
+    @Override
+    protected SoundEvent getDeathSound() {
         return SRSounds.CREEPIE_DEATH.get();
-     }
+    }
 
     /**
      * Called to update the entity's position/logic.
@@ -319,7 +294,7 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
             }
             int i = this.getCreeperState();
             if (i > 0 && this.timeSinceIgnited == 0) {
-               this.playSound(SRSounds.CREEPIE_PRIMED.get(), this.getSoundVolume(), this.getSoundPitch());
+                this.playSound(SRSounds.CREEPIE_PRIMED.get(), this.getSoundVolume(), this.getSoundPitch());
             }
             this.timeSinceIgnited += i;
             if (this.timeSinceIgnited < 0) {
@@ -331,13 +306,13 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
                 this.explode();
             }
             if (this.isConverting()) {
-                if(!this.world.isRemote) {
+                if (!this.world.isRemote) {
                     this.conversionTime--;
                     if (this.conversionTime <= 0) {
                         this.finishConversion((ServerWorld) this.world);
                     }
                 }
-                this.world.addParticle(SRParticles.CREEPER_SPORES.get(), this.getPosX() -0.5d + (double)(this.rand.nextFloat()), this.getPosY()+0.5d, this.getPosZ() -0.5d + (double)(this.rand.nextFloat()), 0.0D, (double)(this.rand.nextFloat() / 5.0F), 0.0D);
+                this.world.addParticle(SRParticles.CREEPER_SPORES.get(), this.getPosX() - 0.5d + (double) (this.rand.nextFloat()), this.getPosY() + 0.5d, this.getPosZ() - 0.5d + (double) (this.rand.nextFloat()), 0.0D, (double) (this.rand.nextFloat() / 5.0F), 0.0D);
             }
         }
         super.tick();
@@ -354,7 +329,7 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
             if (this.isNotCreeper()) {
                 this.consumeItemFromStack(player, itemstack);
                 player.swing(hand, true); //this makes the player's hand swing
-                this.ageUp((int)((float)(-this.getGrowingAge() / 20) * 0.1F), true);
+                this.ageUp((int) ((float) (-this.getGrowingAge() / 20) * 0.1F), true);
                 return ActionResultType.SUCCESS;
             }
         }
@@ -369,7 +344,7 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
 
             return ActionResultType.SUCCESS;
         } else {
-        	return ActionResultType.FAIL;
+            return ActionResultType.FAIL;
         }
     }
 
@@ -378,7 +353,7 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
      */
     @OnlyIn(Dist.CLIENT)
     public float getCreeperFlashIntensity(float partialTicks) {
-        return MathHelper.lerp(partialTicks, (float)this.lastActiveTime, (float)this.timeSinceIgnited) / (float)(this.fuseTime - 2);
+        return MathHelper.lerp(partialTicks, (float) this.lastActiveTime, (float) this.timeSinceIgnited) / (float) (this.fuseTime - 2);
     }
 
     /**
@@ -411,9 +386,9 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
             areaeffectcloudentity.setRadiusOnUse(-0.5F);
             areaeffectcloudentity.setWaitTime(10);
             areaeffectcloudentity.setDuration(areaeffectcloudentity.getDuration() / 2);
-            areaeffectcloudentity.setRadiusPerTick(-areaeffectcloudentity.getRadius() / (float)areaeffectcloudentity.getDuration());
+            areaeffectcloudentity.setRadiusPerTick(-areaeffectcloudentity.getRadius() / (float) areaeffectcloudentity.getDuration());
 
-            for(EffectInstance effectinstance : collection) {
+            for (EffectInstance effectinstance : collection) {
                 areaeffectcloudentity.addEffect(new EffectInstance(effectinstance));
             }
 
@@ -437,7 +412,7 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
      */
     private void onGrowingIntoCreeper() {
         if (!this.world.isRemote) {
-            this.startConverting(this.rand.nextInt(80)+160); //10 seconds before it converts
+            this.startConverting(this.rand.nextInt(80) + 160); //10 seconds before it converts
         }
     }
 
@@ -449,7 +424,7 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
     }
 
     @Override
-    public boolean isChild(){
+    public boolean isChild() {
         return true;
     }
 
@@ -458,42 +433,38 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
     }
 
 
+    @Override
     @Nullable
     public UUID getOwnerId() {
-        return this.dataManager.get(OWNER_UUID).orElse((UUID)null);
+        return this.dataManager.get(OWNER_UUID).orElse(null);
     }
 
     public void setOwnerId(@Nullable UUID ownerId) {
         this.dataManager.set(OWNER_UUID, Optional.ofNullable(ownerId));
     }
 
+    @Override
     @Nullable
     public LivingEntity getOwner() {
-        if(!world.isRemote) { //TODO: this is experimental, if anything breaks by being only on the client, a packet is needed
+        if (!this.world.isRemote()) { //TODO: this is experimental, if anything breaks by being only on the client, a packet is needed
             UUID uuid = this.getOwnerId();
-            return uuid == null ? null : (LivingEntity)((ServerWorld)this.world).getEntityByUuid(uuid);
+            return uuid == null ? null : (LivingEntity) ((ServerWorld) this.world).getEntityByUuid(uuid);
         }
         return null;
     }
 
+    @Override
     public boolean canAttack(LivingEntity target) {
-        return !this.isOwner(target) && super.canAttack(target); /*this was originally this.isOwner(target) ? false : super.canAttack(target), change back if this breaks*/
+        return target != this.getOwner() && super.canAttack(target);
     }
 
-    private boolean isOwner(LivingEntity entityIn) {
-        return entityIn == this.getOwner();
-    }
-
-
+    @Override
     public boolean shouldAttackEntity(LivingEntity target, LivingEntity owner) {
         if (target instanceof CreepieEntity) {
             CreepieEntity creepieEntity = (CreepieEntity) target;
             return creepieEntity.getOwner() != owner;
-        } else if (target instanceof PlayerEntity && owner instanceof PlayerEntity && !((PlayerEntity)owner).canAttackPlayer((PlayerEntity)target)) {
-            return false;
-        } else {
-            return true;
-        }
+        } else
+            return !(target instanceof PlayerEntity) || !(owner instanceof PlayerEntity) || ((PlayerEntity) owner).canAttackPlayer((PlayerEntity) target);
     }
 
     public boolean isConverting() {
@@ -503,15 +474,18 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
     /**
      * Starts conversion of this zombie villager to a villager
      */
-    private void startConverting( int conversionTimeIn) {
+    private void startConverting(int conversionTimeIn) {
         this.conversionTime = conversionTimeIn;
         this.getDataManager().set(CONVERTING, true);
-        if(this.isServerWorld()) this.playSound(SRSounds.CREEPIE_BEGIN_CONVERSION.get(),1.0F,1.0F);
+        if (this.isServerWorld()) this.playSound(SRSounds.CREEPIE_BEGIN_CONVERSION.get(), 1.0F, 1.0F);
         //this.world.setEntityState(this, (byte)16);
     }
 
     private void finishConversion(ServerWorld world) {
         CreeperEntity creeperEntity = EntityType.CREEPER.create(this.world);
+        if (creeperEntity == null)
+            return;
+
         creeperEntity.copyLocationAndAnglesFrom(this);
         creeperEntity.onInitialSpawn(this.world, this.world.getDifficultyForLocation(creeperEntity.getPosition()), SpawnReason.CONVERSION, null, null);
         this.dead = true;
@@ -525,52 +499,42 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
         if (this.isNoDespawnRequired()) {
             creeperEntity.enablePersistence();
         }
-        if(this.getLeashed()) {
+        if (this.getLeashed()) {
             creeperEntity.setLeashHolder(this.getLeashHolder(), true);
             this.clearLeashed(true, false);
         }
 
-        if(this.getRidingEntity() != null) {
+        if (this.getRidingEntity() != null) {
             creeperEntity.startRiding(this.getRidingEntity());
         }
         creeperEntity.setInvulnerable(this.isInvulnerable());
         creeperEntity.setHealth(creeperEntity.getMaxHealth());
         this.world.addEntity(creeperEntity);
-        if(this.isServerWorld()) this.playSound(SRSounds.CREEPIE_GROW.get(),1.0F,1.0F);
+        if (this.isServerWorld()) this.playSound(SRSounds.CREEPIE_GROW.get(), 1.0F, 1.0F);
     }
 
+    @Override
     public Team getTeam() {
-        if (this.getOwnerId()!=null) {
-            LivingEntity livingentity = this.getOwner();
-            if (livingentity != null) {
-                return livingentity.getTeam();
-            }
-        }
-
+        LivingEntity owner = this.getOwner();
+        if (owner != null)
+            return owner.getTeam();
         return super.getTeam();
     }
 
-    /**
-     * Returns whether this Entity is on the same team as the given Entity.
-     */
+    @Override
     public boolean isOnSameTeam(Entity entityIn) {
-        if (this.getOwnerId()!=null) {
-            LivingEntity livingentity = this.getOwner();
-            if (entityIn == livingentity) {
-                return true;
-            }
+        LivingEntity owner = this.getOwner();
+        if (entityIn == owner)
+            return true;
 
-            if (livingentity != null) {
-                return livingentity.isOnSameTeam(entityIn);
-            }
-        }
+        if (owner != null)
+            return owner.isOnSameTeam(entityIn);
 
         return super.isOnSameTeam(entityIn);
     }
 
     @Override
-    public IPacket<?> createSpawnPacket()
-    {
+    public IPacket<?> createSpawnPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 }

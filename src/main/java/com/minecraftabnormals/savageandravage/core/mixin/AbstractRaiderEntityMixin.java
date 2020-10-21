@@ -14,16 +14,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * @author - SmellyModder (Luke Tonon)
  */
 @Mixin(AbstractRaiderEntity.class)
-public final class AbstractRaiderEntityMixin extends PatrollerEntity {
+public abstract class AbstractRaiderEntityMixin extends PatrollerEntity {
 
-	private AbstractRaiderEntityMixin(EntityType<? extends PatrollerEntity> entityType, World world) {
-		super(entityType, world);
-	}
+    private AbstractRaiderEntityMixin(EntityType<? extends PatrollerEntity> entityType, World world) {
+        super(entityType, world);
+    }
 
-	@Inject(method = "onDeath", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/GameRules;getBoolean(Lnet/minecraft/world/GameRules$RuleKey;)Z", shift = At.Shift.AFTER), cancellable = true)
-	private void cancelBadOmenEffect(DamageSource source, CallbackInfo info) {
-		super.onDeath(source);
-		info.cancel();
-	}
-
+    @Inject(method = "onDeath", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/GameRules;getBoolean(Lnet/minecraft/world/GameRules$RuleKey;)Z", shift = At.Shift.AFTER), cancellable = true)
+    private void cancelBadOmenEffect(DamageSource source, CallbackInfo info) {
+        info.cancel();
+    }
 }

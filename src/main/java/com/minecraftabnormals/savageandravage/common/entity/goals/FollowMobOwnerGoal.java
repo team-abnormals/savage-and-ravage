@@ -1,9 +1,6 @@
 package com.minecraftabnormals.savageandravage.common.entity.goals;
 
-import java.util.EnumSet;
-
 import com.minecraftabnormals.savageandravage.common.entity.IOwnableMob;
-
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.Goal;
@@ -11,6 +8,8 @@ import net.minecraft.pathfinding.FlyingPathNavigator;
 import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.pathfinding.PathNavigator;
 import net.minecraft.pathfinding.PathNodeType;
+
+import java.util.EnumSet;
 
 public class FollowMobOwnerGoal extends Goal {
     private final MobEntity ownedMob;
@@ -21,8 +20,8 @@ public class FollowMobOwnerGoal extends Goal {
     private final float minDist;
     private final float maxDist;
     private float oldWaterCost;
-    
-    public FollowMobOwnerGoal(MobEntity entityIn, double followSpeed, float minimumDistance, float maximumDistance, boolean canFly) {
+
+    public FollowMobOwnerGoal(MobEntity entityIn, double followSpeed, float minimumDistance, float maximumDistance) {
         this.ownedMob = entityIn;
         this.followSpeed = followSpeed;
         this.navigator = entityIn.getNavigator();
@@ -44,7 +43,7 @@ public class FollowMobOwnerGoal extends Goal {
             return false;
         } else if (livingentity.isSpectator()) {
             return false;
-        } else if (this.ownedMob.getDistanceSq(livingentity) <= (double)(this.minDist * this.minDist) || this.ownedMob.getDistanceSq(livingentity) >= (double)(this.maxDist * this.maxDist)) {
+        } else if (this.ownedMob.getDistanceSq(livingentity) <= (double) (this.minDist * this.minDist) || this.ownedMob.getDistanceSq(livingentity) >= (double) (this.maxDist * this.maxDist)) {
             return false;
         } else if (this.ownedMob.getAttackTarget() != null) {
             return false;
@@ -54,43 +53,30 @@ public class FollowMobOwnerGoal extends Goal {
         }
     }
 
-    /**
-     * Returns whether an in-progress EntityAIBase should continue executing
-     */
+    @Override
     public boolean shouldContinueExecuting() {
         if (this.navigator.noPath()) {
             return false;
-        } else if((this.ownedMob.getDistanceSq(this.owner) <= (double)(this.minDist * this.minDist)) || (this.ownedMob.getDistanceSq(this.owner) >= (double)(this.maxDist * this.maxDist))){
+        } else if ((this.ownedMob.getDistanceSq(this.owner) <= (double) (this.minDist * this.minDist)) || (this.ownedMob.getDistanceSq(this.owner) >= (double) (this.maxDist * this.maxDist))) {
             return false;
-        } else if (this.ownedMob.getAttackTarget() != null) {
-            return false;
-        } else{
-            return true;
-        }
-
+        } else return this.ownedMob.getAttackTarget() == null;
     }
 
-    /**
-     * Execute a one shot task or start executing a continuous task
-     */
+    @Override
     public void startExecuting() {
         this.timeToRecalcPath = 0;
         this.oldWaterCost = this.ownedMob.getPathPriority(PathNodeType.WATER);
         this.ownedMob.setPathPriority(PathNodeType.WATER, 0.0F);
     }
 
-    /**
-     * Reset the task's internal state. Called when this task is interrupted by another one
-     */
+    @Override
     public void resetTask() {
         this.owner = null;
         this.navigator.clearPath();
         this.ownedMob.setPathPriority(PathNodeType.WATER, this.oldWaterCost);
     }
 
-    /**
-     * Keep ticking a continuous task that has already been started
-     */
+    @Override
     public void tick() {
         this.ownedMob.getLookController().setLookPositionWithEntity(this.owner, 10.0F, (float) this.ownedMob.getVerticalFaceSpeed());
         if (--this.timeToRecalcPath <= 0) {

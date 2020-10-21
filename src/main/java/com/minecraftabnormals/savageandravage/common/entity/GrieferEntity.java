@@ -1,29 +1,11 @@
 package com.minecraftabnormals.savageandravage.common.entity;
 
-import java.util.EnumSet;
-
-import javax.annotation.Nullable;
-
 import com.minecraftabnormals.savageandravage.common.item.CreeperSporesItem;
 import com.minecraftabnormals.savageandravage.core.registry.SRItems;
-
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityPredicate;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ILivingEntityData;
-import net.minecraft.entity.IRangedAttackMob;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.ai.goal.HurtByTargetGoal;
-import net.minecraft.entity.ai.goal.LookAtGoal;
-import net.minecraft.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
-import net.minecraft.entity.ai.goal.RandomWalkingGoal;
-import net.minecraft.entity.ai.goal.SwimGoal;
+import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.AbstractIllagerEntity;
 import net.minecraft.entity.monster.AbstractRaiderEntity;
@@ -45,6 +27,9 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
+import java.util.EnumSet;
 
 public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttackMob {
     private static final DataParameter<Boolean> KICKING = EntityDataManager.createKey(GrieferEntity.class, DataSerializers.BOOLEAN);
@@ -81,10 +66,10 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillagerEntity.class, true));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, IronGolemEntity.class, true));
     }
-    
+
     public static AttributeModifierMap.MutableAttribute registerAttributes() {
         return MonsterEntity.func_234295_eP_()
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, (double) 0.35F)
+                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.35F)
                 .createMutableAttribute(Attributes.MAX_HEALTH, 25.0D)
                 .createMutableAttribute(Attributes.ATTACK_DAMAGE, 5.0D)
                 .createMutableAttribute(Attributes.FOLLOW_RANGE, 32.0D);
@@ -98,18 +83,22 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
     }
 
     // temporary sounds
+    @Override
     protected SoundEvent getAmbientSound() {
         return SoundEvents.ENTITY_PILLAGER_AMBIENT;
     }
 
+    @Override
     protected SoundEvent getDeathSound() {
         return SoundEvents.ENTITY_PILLAGER_DEATH;
     }
 
+    @Override
     protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
         return SoundEvents.ENTITY_PILLAGER_HURT;
     }
 
+    @Override
     public ItemStack getPickedResult(RayTraceResult target) {
         return new ItemStack(SRItems.GRIEFER_SPAWN_EGG.get());
     }
@@ -242,7 +231,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
             double d3 = target.getPosZ() - this.getPosZ();
             float f = MathHelper.sqrt(d1 * d1 + d3 * d3) * 0.2F;
             creeperSpores.shoot(d1, d2 + (double) f, d3, 1.6F, 12.0F);
-            creeperSpores.cloudSize = creeperSpores.world.rand.nextInt(50) == 0 ? 0 : 1 + creeperSpores.world.rand.nextInt(3);
+            creeperSpores.setCloudSize(creeperSpores.world.rand.nextInt(50) == 0 ? 0 : 1 + creeperSpores.world.rand.nextInt(3));
             this.swingArm(getActiveHand());
             this.playSound(SoundEvents.ENTITY_EGG_THROW, 1.0F, 1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
             this.world.addEntity(creeperSpores);
@@ -268,7 +257,8 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
         @Override
         public void startExecuting() {
             LivingEntity entity = griefer.getAttackTarget();
-            griefer.kick(entity);
+            if (entity != null)
+                griefer.kick(entity);
         }
 
         @Override
@@ -280,6 +270,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
     }
 
     public static class MeleePhaseGoal extends MeleeAttackGoal {
+
         private final GrieferEntity griefer;
 
         public MeleePhaseGoal(GrieferEntity griefer, double speedIn, boolean useLongMemory) {
@@ -287,14 +278,17 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
             this.griefer = griefer;
         }
 
+        @Override
         public boolean shouldExecute() {
             return griefer.creeperSporeStacks == 0 && super.shouldExecute();
         }
 
+        @Override
         public boolean shouldContinueExecuting() {
             return griefer.creeperSporeStacks == 0 && super.shouldContinueExecuting();
         }
 
+        @Override
         public void startExecuting() {
             griefer.becomeApeshit(true);
             if (griefer.creeperSporeStacks == 0) {
@@ -303,27 +297,28 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
             super.startExecuting();
         }
 
+        @Override
         protected void checkAndPerformAttack(LivingEntity enemy, double distToEnemySqr) {
             double distance = this.getAttackReachSqr(enemy);
             int i = griefer.world.rand.nextInt(3);
             if (distToEnemySqr <= distance && this.field_234037_i_ <= 0) {
                 this.field_234037_i_ = 60;
                 switch (i) {
-                case 0:
-                    this.griefer.swingArm(Hand.MAIN_HAND);
-                    break;
+                    case 0:
+                        this.griefer.swingArm(Hand.MAIN_HAND);
+                        break;
 
-                case 1:
-                    this.griefer.swingArm(Hand.OFF_HAND);
-                    break;
+                    case 1:
+                        this.griefer.swingArm(Hand.OFF_HAND);
+                        break;
 
-                case 2:
-                    this.griefer.kick(enemy);
-                    break;
+                    case 2:
+                        this.griefer.kick(enemy);
+                        break;
                 } // if this breaks anything tell me
                 this.griefer.faceEntity(enemy, 30.0F, 30.0F);
                 this.griefer.attackEntityAsMob(enemy);
-                enemy.applyKnockback(1.5F, (double) MathHelper.sin(griefer.rotationYaw * ((float) Math.PI / 180F)), (double) (-MathHelper.cos(griefer.rotationYaw * ((float) Math.PI / 180F))));
+                enemy.applyKnockback(1.5F, MathHelper.sin(griefer.rotationYaw * ((float) Math.PI / 180F)), -MathHelper.cos(griefer.rotationYaw * ((float) Math.PI / 180F)));
             }
         }
     }
@@ -373,7 +368,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 
         public void resetTask() {
             this.griefer.setAggroed(false);
-            this.griefer.setAttackTarget((LivingEntity) null);
+            this.griefer.setAttackTarget(null);
             this.rangedAttackTime = -1;
             if (griefer.isKicking()) {
                 this.griefer.setKicking(false);
