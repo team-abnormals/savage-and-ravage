@@ -3,11 +3,13 @@ package com.minecraftabnormals.savageandravage.core.registry;
 import com.minecraftabnormals.savageandravage.common.effect.GrowingEffect;
 import com.minecraftabnormals.savageandravage.common.effect.ShrinkingEffect;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.potion.*;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
+import net.minecraftforge.common.brewing.IBrewingRecipe;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -33,8 +35,47 @@ public class SREffects {
     }
 
     private static void addMix(Potion input, Ingredient ingredient, Potion result) {
-        BrewingRecipeRegistry.addRecipe(Ingredient.fromStacks(PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), input)), ingredient, PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), result));
-        BrewingRecipeRegistry.addRecipe(Ingredient.fromStacks(PotionUtils.addPotionToItemStack(new ItemStack(Items.SPLASH_POTION), input)), ingredient, PotionUtils.addPotionToItemStack(new ItemStack(Items.SPLASH_POTION), result));
-        BrewingRecipeRegistry.addRecipe(Ingredient.fromStacks(PotionUtils.addPotionToItemStack(new ItemStack(Items.LINGERING_POTION), input)), ingredient, PotionUtils.addPotionToItemStack(new ItemStack(Items.LINGERING_POTION), result));
+//        BrewingRecipeRegistry.addRecipe(Ingredient.fromStacks(PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), input)), ingredient, PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), result));
+//        BrewingRecipeRegistry.addRecipe(Ingredient.fromStacks(PotionUtils.addPotionToItemStack(new ItemStack(Items.SPLASH_POTION), input)), ingredient, PotionUtils.addPotionToItemStack(new ItemStack(Items.SPLASH_POTION), result));
+//        BrewingRecipeRegistry.addRecipe(Ingredient.fromStacks(PotionUtils.addPotionToItemStack(new ItemStack(Items.LINGERING_POTION), input)), ingredient, PotionUtils.addPotionToItemStack(new ItemStack(Items.LINGERING_POTION), result));
+        BrewingRecipeRegistry.addRecipe(new Recipe(input, ingredient, result));
+    }
+
+    /**
+     * Custom implementation of {@link IBrewingRecipe} to respect NBT.
+     */
+    private static class Recipe implements IBrewingRecipe {
+
+        private final Potion input;
+        private final Ingredient ingredient;
+        private final Potion result;
+
+        private Recipe(Potion input, Ingredient ingredient, Potion result) {
+            this.input = input;
+            this.ingredient = ingredient;
+            this.result = result;
+        }
+
+        @Override
+        public boolean isInput(ItemStack input) {
+            Item item = input.getItem();
+            return item == Items.POTION || item == Items.SPLASH_POTION || item == Items.LINGERING_POTION || item == Items.GLASS_BOTTLE;
+        }
+
+        @Override
+        public boolean isIngredient(ItemStack ingredient) {
+            return this.ingredient.test(ingredient);
+        }
+
+        @Override
+        public ItemStack getOutput(ItemStack input, ItemStack ingredient) {
+            if (!this.isInput(input))
+                return ItemStack.EMPTY;
+
+            if (this.input == PotionUtils.getPotionFromItem(input) && this.ingredient.test(ingredient))
+                return PotionUtils.addPotionToItemStack(new ItemStack(input.getItem()), this.result);
+
+            return ItemStack.EMPTY;
+        }
     }
 }
