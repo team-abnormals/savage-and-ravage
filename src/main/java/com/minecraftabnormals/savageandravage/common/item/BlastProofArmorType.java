@@ -3,8 +3,6 @@ package com.minecraftabnormals.savageandravage.common.item;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.util.IStringSerializable;
 
-import javax.annotation.Nullable;
-
 public enum BlastProofArmorType implements IStringSerializable {
     HEAD("head", EquipmentSlotType.HEAD, 25),
     CHEST("chest", EquipmentSlotType.CHEST, 30),

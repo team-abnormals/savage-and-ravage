@@ -2,7 +2,6 @@ package com.minecraftabnormals.savageandravage.client.model;
 
 import com.google.common.collect.ImmutableList;
 import com.minecraftabnormals.savageandravage.common.entity.CreepieEntity;
-
 import net.minecraft.client.renderer.entity.model.SegmentedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.util.math.MathHelper;

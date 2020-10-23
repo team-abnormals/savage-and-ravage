@@ -1,7 +1,6 @@
 package com.minecraftabnormals.savageandravage.core.other;
 
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
-
 import net.minecraft.item.Item;
 import net.minecraft.tags.ITag.INamedTag;
 import net.minecraft.tags.ItemTags;
