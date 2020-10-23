@@ -40,8 +40,8 @@ public class SporeBombEntity extends TNTEntity {
 
         sporecloud.setCloudSize(4 + this.world.getRandom().nextInt(3));
         sporecloud.setSporeBomb(true);
-        this.world.createExplosion(this, this.getPosX(), this.getPosYHeight(0.0625D), this.getPosZ(), 4.0F, Explosion.Mode.NONE); // hacky.
-        sporecloud.copyLocationAndAnglesFrom(this);
+        this.world.createExplosion(this, this.getPosX(), this.getPosYHeight(0.0625D), this.getPosZ(), 4.0F, Explosion.Mode.NONE);
+        sporecloud.setPositionAndRotation(this.getPosX(), this.getPosYHeight(0.0625), this.getPosZ(), this.rotationYaw, this.rotationPitch);
         this.world.addEntity(sporecloud);
     }
 
