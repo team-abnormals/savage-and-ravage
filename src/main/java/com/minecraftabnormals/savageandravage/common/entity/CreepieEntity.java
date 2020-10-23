@@ -448,7 +448,10 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
     public LivingEntity getOwner() {
         if (!this.world.isRemote()) { //TODO: this is experimental, if anything breaks by being only on the client, a packet is needed
             UUID uuid = this.getOwnerId();
-            return uuid == null ? null : (LivingEntity) ((ServerWorld) this.world).getEntityByUuid(uuid);
+            if (uuid == null)
+                return null;
+            Entity entity = ((ServerWorld) this.world).getEntityByUuid(uuid);
+            return entity instanceof LivingEntity ? (LivingEntity) entity : null;
         }
         return null;
     }
