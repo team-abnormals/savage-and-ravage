@@ -4,15 +4,15 @@ import com.minecraftabnormals.savageandravage.common.effect.GrowingEffect;
 import com.minecraftabnormals.savageandravage.common.effect.ShrinkingEffect;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.potion.*;
-import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
-import net.minecraftforge.common.brewing.IBrewingRecipe;
 import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public class SREffects {
     public static final DeferredRegister<Effect> EFFECTS = DeferredRegister.create(ForgeRegistries.POTIONS, SavageAndRavage.MODID);
@@ -26,53 +26,21 @@ public class SREffects {
     public static final RegistryObject<Potion> YOUTH_NORMAL = POTIONS.register("youth", () -> new Potion(new EffectInstance(SHRINKING.get(), 600)));
     public static final RegistryObject<Potion> YOUTH_LONG = POTIONS.register("youth_long", () -> new Potion(new EffectInstance(SHRINKING.get(), 1800)));
 
+    private static final Method ADD_MIX_METHOD = ObfuscationReflectionHelper.findMethod(PotionBrewing.class, "func_193357_a", Potion.class, Item.class, Potion.class);
+
     public static void registerBrewingRecipes() {
-        addMix(Potions.AWKWARD, Ingredient.fromItems(Items.GOLDEN_APPLE), GROWTH_NORMAL.get());
-        addMix(GROWTH_NORMAL.get(), Ingredient.fromItems(Items.REDSTONE), GROWTH_LONG.get());
-        addMix(GROWTH_NORMAL.get(), Ingredient.fromItems(Items.FERMENTED_SPIDER_EYE), YOUTH_NORMAL.get());
-        addMix(GROWTH_LONG.get(), Ingredient.fromItems(Items.FERMENTED_SPIDER_EYE), YOUTH_LONG.get());
-        addMix(YOUTH_NORMAL.get(), Ingredient.fromItems(Items.REDSTONE), YOUTH_LONG.get());
+        addMix(Potions.AWKWARD, Items.GOLDEN_APPLE, GROWTH_NORMAL.get());
+        addMix(GROWTH_NORMAL.get(), Items.REDSTONE, GROWTH_LONG.get());
+        addMix(GROWTH_NORMAL.get(), Items.FERMENTED_SPIDER_EYE, YOUTH_NORMAL.get());
+        addMix(GROWTH_LONG.get(), Items.FERMENTED_SPIDER_EYE, YOUTH_LONG.get());
+        addMix(YOUTH_NORMAL.get(), Items.REDSTONE, YOUTH_LONG.get());
     }
 
-    private static void addMix(Potion input, Ingredient ingredient, Potion result) {
-        BrewingRecipeRegistry.addRecipe(new Recipe(input, ingredient, result));
-    }
-
-    /**
-     * Custom implementation of {@link IBrewingRecipe} to respect NBT.
-     */
-    private static class Recipe implements IBrewingRecipe {
-
-        private final Potion input;
-        private final Ingredient ingredient;
-        private final Potion result;
-
-        private Recipe(Potion input, Ingredient ingredient, Potion result) {
-            this.input = input;
-            this.ingredient = ingredient;
-            this.result = result;
-        }
-
-        @Override
-        public boolean isInput(ItemStack input) {
-            Item item = input.getItem();
-            return item == Items.POTION || item == Items.SPLASH_POTION || item == Items.LINGERING_POTION || item == Items.GLASS_BOTTLE;
-        }
-
-        @Override
-        public boolean isIngredient(ItemStack ingredient) {
-            return this.ingredient.test(ingredient);
-        }
-
-        @Override
-        public ItemStack getOutput(ItemStack input, ItemStack ingredient) {
-            if (!this.isInput(input))
-                return ItemStack.EMPTY;
-
-            if (this.input == PotionUtils.getPotionFromItem(input) && this.ingredient.test(ingredient))
-                return PotionUtils.addPotionToItemStack(new ItemStack(input.getItem()), this.result);
-
-            return ItemStack.EMPTY;
+    private static void addMix(Potion input, Item reactant, Potion result) {
+        try {
+            ADD_MIX_METHOD.invoke(null, input, reactant, result);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new IllegalStateException("Failed to add mix for " + result.getRegistryName() + " from " + reactant.getRegistryName(), e);
         }
     }
 }
