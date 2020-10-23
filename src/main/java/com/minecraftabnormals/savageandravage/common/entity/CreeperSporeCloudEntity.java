@@ -94,7 +94,7 @@ public class CreeperSporeCloudEntity extends ThrowableEntity {
         this.world.addEntity(aoe);
         this.setCloudEntity(aoe);
 
-        this.world.setEntityState(this, (byte) 3); // Why is this set? - Ocelot
+        this.world.setEntityState(this, (byte) 3);
         this.hit = true;
     }
 
@@ -147,7 +147,7 @@ public class CreeperSporeCloudEntity extends ThrowableEntity {
                     creepie.spawnedFromSporeBomb = this.sporeBomb;
 
                     Entity thrower = this.func_234616_v_();
-                    if (thrower != null && (!(thrower instanceof LivingEntity) || ((LivingEntity) thrower).isPotionActive(Effects.INVISIBILITY)))
+                    if (thrower != null && (!(thrower instanceof LivingEntity) || !((LivingEntity) thrower).isPotionActive(Effects.INVISIBILITY)))
                         creepie.setOwnerId(thrower.getUniqueID());
                     this.world.addEntity(creepie);
                 }
