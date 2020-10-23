@@ -35,9 +35,6 @@ public class SREffects {
     }
 
     private static void addMix(Potion input, Ingredient ingredient, Potion result) {
-//        BrewingRecipeRegistry.addRecipe(Ingredient.fromStacks(PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), input)), ingredient, PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), result));
-//        BrewingRecipeRegistry.addRecipe(Ingredient.fromStacks(PotionUtils.addPotionToItemStack(new ItemStack(Items.SPLASH_POTION), input)), ingredient, PotionUtils.addPotionToItemStack(new ItemStack(Items.SPLASH_POTION), result));
-//        BrewingRecipeRegistry.addRecipe(Ingredient.fromStacks(PotionUtils.addPotionToItemStack(new ItemStack(Items.LINGERING_POTION), input)), ingredient, PotionUtils.addPotionToItemStack(new ItemStack(Items.LINGERING_POTION), result));
         BrewingRecipeRegistry.addRecipe(new Recipe(input, ingredient, result));
     }
 
