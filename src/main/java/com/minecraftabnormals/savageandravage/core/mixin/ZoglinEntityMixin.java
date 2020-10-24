@@ -4,7 +4,6 @@ import com.minecraftabnormals.savageandravage.core.SRConfig;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.monster.ZoglinEntity;
-import net.minecraft.util.EntityPredicates;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
