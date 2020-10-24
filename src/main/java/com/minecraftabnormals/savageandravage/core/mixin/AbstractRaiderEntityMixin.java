@@ -22,6 +22,7 @@ public abstract class AbstractRaiderEntityMixin extends PatrollerEntity {
 
     @Inject(method = "onDeath", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/GameRules;getBoolean(Lnet/minecraft/world/GameRules$RuleKey;)Z", shift = At.Shift.AFTER), cancellable = true)
     private void cancelBadOmenEffect(DamageSource source, CallbackInfo info) {
+        super.onDeath(source);
         info.cancel();
     }
 }

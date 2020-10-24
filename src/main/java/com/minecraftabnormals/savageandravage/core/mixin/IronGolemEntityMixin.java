@@ -26,7 +26,7 @@ public abstract class IronGolemEntityMixin extends GolemEntity {
     public abstract boolean isPlayerCreated();
 
     @Inject(at = @At("HEAD"), method = "collideWithEntity(Lnet/minecraft/entity/Entity;)V", cancellable = true)
-    protected void collideWithEntity(Entity entity, CallbackInfo ci) {
+    public void collideWithEntity(Entity entity, CallbackInfo ci) {
         if (entity instanceof IMob && this.getRNG().nextInt(20) == 0) {
             this.setAttackTarget((LivingEntity) entity);
             ci.cancel();
