@@ -44,7 +44,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -62,7 +61,10 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Random;
 
 @Mod.EventBusSubscriber(modid = SavageAndRavage.MODID)
 public class SREvents {
@@ -235,30 +237,21 @@ public class SREvents {
             boolean isFlintAndSteel = stack.getItem() instanceof FlintAndSteelItem;
 
             if (world.getTileEntity(pos) instanceof BannerTileEntity && (isFlintAndSteel || stack.getItem() instanceof FireChargeItem)) {
-                BannerTileEntity banner = (BannerTileEntity) Objects.requireNonNull(te);
-                TranslationTextComponent bannerName;
+                SoundEvent sound = isFlintAndSteel ? SoundEvents.ITEM_FLINTANDSTEEL_USE : SoundEvents.ITEM_FIRECHARGE_USE;
+                float pitch = isFlintAndSteel ? new Random().nextFloat() * 0.4F + 0.8F : (new Random().nextFloat() - new Random().nextFloat()) * 0.2F + 1.0F;
+                world.playSound(player, pos, sound, SoundCategory.BLOCKS, 1.0F, pitch);
 
-                if (banner.getName() instanceof TranslationTextComponent) {
-                    bannerName = (TranslationTextComponent) banner.getName();
-
-                    if (bannerName.getKey().contains("block.minecraft.ominous_banner")) {
-                        SoundEvent sound = isFlintAndSteel ? SoundEvents.ITEM_FLINTANDSTEEL_USE : SoundEvents.ITEM_FIRECHARGE_USE;
-                        float pitch = isFlintAndSteel ? new Random().nextFloat() * 0.4F + 0.8F : (new Random().nextFloat() - new Random().nextFloat()) * 0.2F + 1.0F;
-                        world.playSound(player, pos, sound, SoundCategory.BLOCKS, 1.0F, pitch);
-
-                        if (isFlintAndSteel && player instanceof ServerPlayerEntity) {
-                            stack.damageItem(1, player, (p_219998_1_) -> {
-                                p_219998_1_.sendBreakAnimation(event.getHand());
-                            });
-                        } else if (!(player.abilities.isCreativeMode)) {
-                            stack.shrink(1);
-                        }
-
-                        world.addEntity(new BurningBannerEntity(world, pos, player));
-                        event.setCancellationResult(ActionResultType.SUCCESS);
-                        event.setCanceled(true);
-                    }
+                if (isFlintAndSteel && player instanceof ServerPlayerEntity) {
+                    stack.damageItem(1, player, (p_219998_1_) -> {
+                        p_219998_1_.sendBreakAnimation(event.getHand());
+                    });
+                } else if (!player.isCreative()) {
+                    stack.shrink(1);
                 }
+
+                world.addEntity(new BurningBannerEntity(world, pos, player));
+                event.setCancellationResult(ActionResultType.SUCCESS);
+                event.setCanceled(true);
             }
         }
     }

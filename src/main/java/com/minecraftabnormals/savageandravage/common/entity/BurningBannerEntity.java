@@ -38,6 +38,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+// Bagel decided all banners could be burned, but only ominous banner gives effects for obvious reasons
 public class BurningBannerEntity extends Entity implements IEntityAdditionalSpawnData {
 
     public static final DataParameter<Integer> TICKS_TILL_REMOVE = EntityDataManager.createKey(BurningBannerEntity.class, DataSerializers.VARINT);
@@ -82,7 +83,7 @@ public class BurningBannerEntity extends Entity implements IEntityAdditionalSpaw
             return;
         }
 
-        if ((ticksRemaining > 10 && !isOminousBanner(this.world, bannerPos)) || ticksRemaining <= 0) {
+        if ((ticksRemaining > 10 && !(this.world.getTileEntity(bannerPos) instanceof BannerTileEntity)) || ticksRemaining <= 0) {
             this.remove();
             return;
         }
@@ -108,12 +109,12 @@ public class BurningBannerEntity extends Entity implements IEntityAdditionalSpaw
             }
         } else {
             if (this.getTicksTillRemove() > 10) {
-                this.playSound(isOminousBanner(this.world, bannerPos) ? SoundEvents.BLOCK_FIRE_AMBIENT : SoundEvents.BLOCK_FIRE_EXTINGUISH, 2F, world.rand.nextFloat() * 0.4F + 0.8F);
+                this.playSound(this.world.getTileEntity(bannerPos) instanceof BannerTileEntity ? SoundEvents.BLOCK_FIRE_AMBIENT : SoundEvents.BLOCK_FIRE_EXTINGUISH, 2F, this.world.getRandom().nextFloat() * 0.4F + 0.8F);
             } else if (this.getTicksTillRemove() == 10) {
-                this.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH, 2F, world.rand.nextFloat() * 0.4F + 0.8F);
+                this.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH, 2F, this.world.getRandom().nextFloat() * 0.4F + 0.8F);
                 this.world.removeBlock(bannerPos, false);
 
-                if (((ServerWorld) this.world).findRaid(bannerPos) == null) {
+                if (isOminousBanner(this.world, bannerPos) && ((ServerWorld) this.world).findRaid(bannerPos) == null) {
                     PlayerEntity offender = this.getOffender();
                     if (offender == null)
                         return;

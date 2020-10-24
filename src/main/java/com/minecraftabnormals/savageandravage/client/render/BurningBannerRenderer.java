@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.inventory.container.PlayerContainer;
+import net.minecraft.tileentity.BannerTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -29,7 +30,7 @@ public class BurningBannerRenderer extends EntityRenderer<BurningBannerEntity> {
 
         World world = entity.world;
         BlockPos bannerPos = entity.getBannerPosition();
-        if (bannerPos == null || !BurningBannerEntity.isOminousBanner(world, bannerPos))
+        if (bannerPos == null || !(world.getTileEntity(bannerPos) instanceof BannerTileEntity))
             return;
 
         matrixStack.push();
