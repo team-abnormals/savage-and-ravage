@@ -69,7 +69,7 @@ public class BurningBannerEntity extends Entity implements IEntityAdditionalSpaw
     protected void registerData() {
         this.dataManager.register(BLOCK_POS, Optional.empty());
         this.dataManager.register(OFFENDER_UUID, Optional.empty());
-        this.dataManager.register(TICKS_TILL_REMOVE, 110);
+        this.dataManager.register(TICKS_TILL_REMOVE, 50);
     }
 
     @Override
@@ -78,12 +78,13 @@ public class BurningBannerEntity extends Entity implements IEntityAdditionalSpaw
         int ticksRemaining = this.getTicksTillRemove();
 
         BlockPos bannerPos = this.getBannerPosition();
-        if (bannerPos == null || ticksRemaining <= 0) {
+        if (bannerPos == null) {
             this.remove();
             return;
         }
-        else if (ticksRemaining > 10 && !(this.world.getTileEntity(bannerPos) instanceof BannerTileEntity)) {
-            extinguish();
+
+        if ((ticksRemaining > 10 && !(this.world.getTileEntity(bannerPos) instanceof BannerTileEntity)) || ticksRemaining <= 0) {
+            this.remove();
             return;
         }
 
@@ -128,11 +129,6 @@ public class BurningBannerEntity extends Entity implements IEntityAdditionalSpaw
                 }
             }
         }
-    }
-
-    public void extinguish() {
-        this.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH, 0.5F, this.world.getRandom().nextFloat() * 0.4F + 0.8F);
-        this.remove();
     }
 
     @Override
