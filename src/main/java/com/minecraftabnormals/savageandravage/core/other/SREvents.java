@@ -214,7 +214,21 @@ public class SREvents {
     }
 
     @SubscribeEvent
-    public static void onInteractWithBlock(PlayerInteractEvent.RightClickBlock event) {
+    public static void onLeftClickBlock(PlayerInteractEvent.LeftClickBlock event) {
+        World world = event.getWorld();
+        BlockPos pos = event.getPos();
+        if(world.getBlockState(pos).getBlock() instanceof AbstractBannerBlock) {
+            List<BurningBannerEntity> burningBanners = world.getEntitiesWithinAABB(BurningBannerEntity.class, new AxisAlignedBB(pos));
+            for (BurningBannerEntity burningBanner : burningBanners) {
+                if (burningBanner.getBannerPosition().equals(pos)) {
+                    burningBanner.extinguish();
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
         ItemStack stack = event.getItemStack();
         PlayerEntity player = event.getPlayer();
         BlockPos pos = event.getPos();
@@ -256,7 +270,7 @@ public class SREvents {
         }
     }
 
-    private static boolean isValidBannerPos(PlayerInteractEvent.RightClickBlock event) {
+    private static boolean isValidBannerPos(PlayerInteractEvent event) {
         boolean isValid = false;
         BlockPos pos = event.getPos();
         World world = event.getWorld();
