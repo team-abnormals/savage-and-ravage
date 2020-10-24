@@ -1,6 +1,8 @@
 package com.minecraftabnormals.savageandravage.common.block;
 
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -18,7 +20,8 @@ import net.minecraft.world.World;
 import java.util.function.Supplier;
 
 public class ImprovedFlowerPotBlock extends Block {
-    protected static final VoxelShape SHAPE = Block.makeCuboidShape(5.0D, 0.0D, 5.0D, 11.0D, 6.0D, 11.0D);
+
+    private static final VoxelShape SHAPE = Block.makeCuboidShape(5.0D, 0.0D, 5.0D, 11.0D, 6.0D, 11.0D);
     private final Supplier<Item> flower;
 
     public ImprovedFlowerPotBlock(Supplier<Item> flower, Block.Properties properties) {
@@ -27,11 +30,11 @@ public class ImprovedFlowerPotBlock extends Block {
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if (player.getHeldItem(handIn).getItem() == Blocks.AIR.asItem()) {
-            player.setHeldItem(handIn, new ItemStack(this.flower.get().asItem()));
-            player.swingArm(handIn);
-            worldIn.setBlockState(pos, Blocks.FLOWER_POT.getDefaultState());
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        if (player.getHeldItem(hand).getItem() == Blocks.AIR.asItem()) {
+            player.setHeldItem(hand, new ItemStack(this.flower.get().asItem()));
+            player.swingArm(hand);
+            world.setBlockState(pos, Blocks.FLOWER_POT.getDefaultState());
         }
         return ActionResultType.CONSUME;
     }
@@ -47,10 +50,7 @@ public class ImprovedFlowerPotBlock extends Block {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
         return facing == Direction.DOWN && !stateIn.isValidPosition(worldIn, currentPos) ? Blocks.AIR.getDefaultState() : super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
-
-
 }

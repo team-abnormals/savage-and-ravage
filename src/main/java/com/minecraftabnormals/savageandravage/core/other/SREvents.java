@@ -1,50 +1,30 @@
 package com.minecraftabnormals.savageandravage.core.other;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 import com.minecraftabnormals.savageandravage.common.effect.GrowingEffect;
 import com.minecraftabnormals.savageandravage.common.effect.ShrinkingEffect;
-import com.minecraftabnormals.savageandravage.common.entity.BurningBannerEntity;
-import com.minecraftabnormals.savageandravage.common.entity.CreeperSporeCloudEntity;
-import com.minecraftabnormals.savageandravage.common.entity.CreepieEntity;
-import com.minecraftabnormals.savageandravage.common.entity.GrieferEntity;
-import com.minecraftabnormals.savageandravage.common.entity.IOwnableMob;
-import com.minecraftabnormals.savageandravage.common.entity.SkeletonVillagerEntity;
+import com.minecraftabnormals.savageandravage.common.entity.*;
 import com.minecraftabnormals.savageandravage.common.entity.goals.AvoidGrieferOwnedCreepiesGoal;
 import com.minecraftabnormals.savageandravage.common.entity.goals.ImprovedCrossbowGoal;
-import com.minecraftabnormals.savageandravage.common.item.BlastProofArmorType;
-import com.minecraftabnormals.savageandravage.common.item.GrieferArmorItem;
+import com.minecraftabnormals.savageandravage.common.item.PottableItem;
 import com.minecraftabnormals.savageandravage.core.SRConfig;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
+import com.minecraftabnormals.savageandravage.core.registry.SRAttributes;
 import com.minecraftabnormals.savageandravage.core.registry.SREntities;
 import com.minecraftabnormals.savageandravage.core.registry.SRItems;
 import com.minecraftabnormals.savageandravage.core.registry.SRSounds;
-
 import net.minecraft.block.AbstractBannerBlock;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.AgeableEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.*;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.ai.goal.RangedCrossbowAttackGoal;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
-import net.minecraft.entity.monster.CreeperEntity;
-import net.minecraft.entity.monster.IMob;
-import net.minecraft.entity.monster.PillagerEntity;
-import net.minecraft.entity.monster.ShulkerEntity;
-import net.minecraft.entity.monster.SlimeEntity;
-import net.minecraft.entity.monster.ZoglinEntity;
-import net.minecraft.entity.monster.ZombieEntity;
+import net.minecraft.entity.monster.*;
 import net.minecraft.entity.monster.piglin.PiglinEntity;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
@@ -52,13 +32,7 @@ import net.minecraft.entity.passive.ParrotEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.FireChargeItem;
-import net.minecraft.item.FireworkRocketItem;
-import net.minecraft.item.FlintAndSteelItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.particles.ParticleTypes;
@@ -70,7 +44,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -86,8 +59,16 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Random;
+
 @Mod.EventBusSubscriber(modid = SavageAndRavage.MODID)
 public class SREvents {
+
     @SubscribeEvent
     public static void onLivingSpawned(EntityJoinWorldEvent event) {
         if (event.getEntity() instanceof PillagerEntity) {
@@ -162,13 +143,17 @@ public class SREvents {
     @SubscribeEvent
     public static void onExplosion(ExplosionEvent.Detonate event) {
         if (event.getExplosion().getExplosivePlacedBy() instanceof CreeperEntity && !(event.getExplosion().getExplosivePlacedBy() instanceof CreepieEntity)) {
-            CreeperEntity creeper = (CreeperEntity) event.getExplosion().getExplosivePlacedBy();
             if (!SRConfig.COMMON.creeperExplosionsDestroyBlocks.get()) {
                 event.getAffectedBlocks().clear();
             }
-            CreeperSporeCloudEntity spores = new CreeperSporeCloudEntity(SREntities.CREEPER_SPORE_CLOUD.get(), event.getWorld());
             if (SRConfig.COMMON.creeperExplosionsSpawnCreepies.get()) {
-                spores.cloudSize = (creeper.isCharged() ? (int) (creeper.getHealth() / 4) : (int) (creeper.getHealth() / 5));
+                CreeperEntity creeper = (CreeperEntity) event.getExplosion().getExplosivePlacedBy();
+                CreeperSporeCloudEntity spores = SREntities.CREEPER_SPORE_CLOUD.get().create(event.getWorld());
+                if (spores == null)
+                    return;
+
+                spores.setSporeBomb(true);
+                spores.setCloudSize(creeper.isCharged() ? (int) (creeper.getHealth() / 4) : (int) (creeper.getHealth() / 5));
                 spores.copyLocationAndAnglesFrom(creeper);
                 creeper.world.addEntity(spores);
             }
@@ -189,28 +174,24 @@ public class SREvents {
     @SubscribeEvent
     public static void handleBlastProof(LivingDamageEvent event) {
         LivingEntity entity = event.getEntityLiving();
-        float decrease = 0.0F;
-        boolean flag = false;
 
         if (event.getSource().isExplosion()) {
+            double decrease = 0;
+
             for (EquipmentSlotType slot : EquipmentSlotType.values()) {
-                if (slot.getSlotType() == EquipmentSlotType.Group.ARMOR) {
-                    ItemStack stack = entity.getItemStackFromSlot(slot);
-                    if (stack.getItem() instanceof GrieferArmorItem) {
-                        flag = true;
-                        int damage = 22;
-                        decrease += BlastProofArmorType.slotToType(((ArmorItem) stack.getItem()).getEquipmentSlot()).getReductionAmount();
-                        if (EnchantmentHelper.getEnchantmentLevel(Enchantments.BLAST_PROTECTION, stack) > 0) {
-                            damage -= EnchantmentHelper.getEnchantmentLevel(Enchantments.BLAST_PROTECTION, stack) * 8;
-                        }
-                        stack.damageItem(damage, entity, (onBroken) -> {
-                            onBroken.sendBreakAnimation(EquipmentSlotType.CHEST);
-                        });
-                    }
-                }
+                ItemStack stack = entity.getItemStackFromSlot(slot);
+                Collection<AttributeModifier> modifiers = stack.getAttributeModifiers(slot).get(SRAttributes.EXPLOSIVE_DAMAGE_REDUCTION.get());
+                if (modifiers.isEmpty())
+                    continue;
+
+                decrease += modifiers.stream().mapToDouble(AttributeModifier::getAmount).sum();
+                stack.damageItem(22 - EnchantmentHelper.getEnchantmentLevel(Enchantments.BLAST_PROTECTION, stack) * 8, entity, onBroken -> onBroken.sendBreakAnimation(slot));
             }
-            if (flag)
-                event.setAmount(event.getAmount() - (event.getAmount() * decrease));
+
+            if (decrease == 0)
+                return;
+
+            event.setAmount(event.getAmount() - (float) (event.getAmount() * decrease));
         }
     }
 
@@ -234,45 +215,43 @@ public class SREvents {
 
     @SubscribeEvent
     public static void onInteractWithBlock(PlayerInteractEvent.RightClickBlock event) {
-        ItemStack heldItemStack = event.getItemStack();
-        Item heldItem = event.getItemStack().getItem();
+        ItemStack stack = event.getItemStack();
         PlayerEntity player = event.getPlayer();
         BlockPos pos = event.getPos();
         World world = event.getWorld();
-        ResourceLocation pot = new ResourceLocation(("savageandravage:potted_" + heldItem.getRegistryName().getPath()));
-        if (world.getBlockState(pos).getBlock() == Blocks.FLOWER_POT && ForgeRegistries.BLOCKS.containsKey(pot)) {
-            world.setBlockState(pos, ForgeRegistries.BLOCKS.getValue(pot).getDefaultState());
-            event.getPlayer().swingArm(event.getHand());
+
+        if (stack.getItem() instanceof PottableItem && world.getBlockState(pos).getBlock() == Blocks.FLOWER_POT) {
+            BlockState pottedState = ((PottableItem) stack.getItem()).getPottedState();
+            if (pottedState == null)
+                return;
+
+            world.setBlockState(pos, pottedState);
             player.addStat(Stats.POT_FLOWER);
-            if (!event.getPlayer().abilities.isCreativeMode)
-                heldItemStack.shrink(1);
-        }
-        else if(isValidBannerPos(event)) {
+
+            if (!event.getPlayer().isCreative())
+                stack.shrink(1);
+            event.setCancellationResult(ActionResultType.SUCCESS);
+            event.setCanceled(true);
+        } else if (isValidBannerPos(event)) {
             TileEntity te = world.getTileEntity(pos);
-            boolean isFlintAndSteel = heldItem instanceof FlintAndSteelItem;
-            if ((isFlintAndSteel || heldItem instanceof FireChargeItem)) {
-                BannerTileEntity banner = (BannerTileEntity) te;
-                TranslationTextComponent bannerName;
-                if (banner.getName() instanceof TranslationTextComponent) {
-                    bannerName = (TranslationTextComponent) banner.getName();
-                    if (bannerName.getKey().contains("block.minecraft.ominous_banner")) {
-                        SoundEvent sound = isFlintAndSteel ? SoundEvents.ITEM_FLINTANDSTEEL_USE : SoundEvents.ITEM_FIRECHARGE_USE;
-                        float pitch = isFlintAndSteel ? new Random().nextFloat() * 0.4F + 0.8F : (new Random().nextFloat() - new Random().nextFloat()) * 0.2F + 1.0F;
-                        world.playSound(player, pos, sound, SoundCategory.BLOCKS, 1.0F, pitch);
-                        player.swingArm(event.getHand());
-                        if (isFlintAndSteel && player instanceof ServerPlayerEntity) {
-                            heldItemStack.damageItem(1, player, (p_219998_1_) -> {
-                                p_219998_1_.sendBreakAnimation(event.getHand());
-                            });
-                        }
-                        else if (!(player.abilities.isCreativeMode)) {
-                            heldItemStack.shrink(1);
-                        }
-                        world.addEntity(new BurningBannerEntity(world, pos, player));
-                        event.setCancellationResult(ActionResultType.SUCCESS);
-                        event.setCanceled(true);
-                    }
+            boolean isFlintAndSteel = stack.getItem() instanceof FlintAndSteelItem;
+
+            if (world.getTileEntity(pos) instanceof BannerTileEntity && (isFlintAndSteel || stack.getItem() instanceof FireChargeItem)) {
+                SoundEvent sound = isFlintAndSteel ? SoundEvents.ITEM_FLINTANDSTEEL_USE : SoundEvents.ITEM_FIRECHARGE_USE;
+                float pitch = isFlintAndSteel ? new Random().nextFloat() * 0.4F + 0.8F : (new Random().nextFloat() - new Random().nextFloat()) * 0.2F + 1.0F;
+                world.playSound(player, pos, sound, SoundCategory.BLOCKS, 1.0F, pitch);
+
+                if (isFlintAndSteel && player instanceof ServerPlayerEntity) {
+                    stack.damageItem(1, player, (p_219998_1_) -> {
+                        p_219998_1_.sendBreakAnimation(event.getHand());
+                    });
+                } else if (!player.isCreative()) {
+                    stack.shrink(1);
                 }
+
+                world.addEntity(new BurningBannerEntity(world, pos, player));
+                event.setCancellationResult(ActionResultType.SUCCESS);
+                event.setCanceled(true);
             }
         }
     }
@@ -282,16 +261,15 @@ public class SREvents {
         BlockPos pos = event.getPos();
         World world = event.getWorld();
         if (world.getBlockState(pos).getBlock() instanceof AbstractBannerBlock) {
-             if (world.getEntitiesWithinAABB(BurningBannerEntity.class, new AxisAlignedBB(pos)).isEmpty()) {
-                 isValid = true;
-             }
-             else {
-                 List<BurningBannerEntity> burningBanners = world.getEntitiesWithinAABB(BurningBannerEntity.class, new AxisAlignedBB(pos));
-                 isValid = true;
-                 for (BurningBannerEntity burningBanner : burningBanners) {
-                     if (burningBanner.getBannerPosition().equals(pos)) isValid = false;
-                 }
-             }
+            if (world.getEntitiesWithinAABB(BurningBannerEntity.class, new AxisAlignedBB(pos)).isEmpty()) {
+                isValid = true;
+            } else {
+                List<BurningBannerEntity> burningBanners = world.getEntitiesWithinAABB(BurningBannerEntity.class, new AxisAlignedBB(pos));
+                isValid = true;
+                for (BurningBannerEntity burningBanner : burningBanners) {
+                    if (burningBanner.getBannerPosition().equals(pos)) isValid = false;
+                }
+            }
         }
         return isValid;
     }
@@ -359,6 +337,9 @@ public class SREvents {
 
     public static void convertCreeper(CreeperEntity creeper) {
         CreepieEntity creepie = SREntities.CREEPIE.get().create(creeper.world);
+        if (creepie == null)
+            return;
+
         creepie.copyLocationAndAnglesFrom(creeper.getEntity());
         creepie.onInitialSpawn(creeper.world, creeper.world.getDifficultyForLocation(new BlockPos(creepie.getPositionVec())), SpawnReason.CONVERSION, null, null);
         creeper.remove();
@@ -371,7 +352,7 @@ public class SREvents {
         if (creeper.isNoDespawnRequired()) {
             creepie.enablePersistence();
         }
-        if (creeper.getLeashed()) {
+        if (creeper.getLeashed() && creeper.getLeashHolder() != null) {
             creepie.setLeashHolder(creeper.getLeashHolder(), true);
             creeper.clearLeashed(true, false);
         }

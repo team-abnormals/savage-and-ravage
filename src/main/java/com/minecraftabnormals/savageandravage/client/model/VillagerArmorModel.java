@@ -1,7 +1,6 @@
 package com.minecraftabnormals.savageandravage.client.model;
 
 import com.minecraftabnormals.savageandravage.common.entity.GrieferEntity;
-
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.LivingEntity;

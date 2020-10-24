@@ -1,14 +1,8 @@
 package com.minecraftabnormals.savageandravage.common.entity;
 
-import java.util.List;
-import java.util.Optional;
-
-import javax.annotation.Nullable;
-
 import com.minecraftabnormals.savageandravage.common.block.RunedGloomyTilesBlock;
 import com.minecraftabnormals.savageandravage.core.registry.SRBlocks;
 import com.minecraftabnormals.savageandravage.core.registry.SREntities;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -26,6 +20,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Optional;
+
 public class RunePrisonEntity extends Entity {
     private static final DataParameter<Integer> TICKS_TILL_REMOVE = EntityDataManager.createKey(BurningBannerEntity.class, DataSerializers.VARINT);
     private static final DataParameter<Optional<BlockPos>> BLOCK_POS = EntityDataManager.createKey(BurningBannerEntity.class, DataSerializers.OPTIONAL_BLOCK_POS);
@@ -36,8 +34,8 @@ public class RunePrisonEntity extends Entity {
         super(type, worldIn);
     }
 
-    public RunePrisonEntity(World worldIn, BlockPos positionIn, int ticksTillRemove){
-        super(SREntities.RUNE_PRISON.get(),  worldIn);
+    public RunePrisonEntity(World worldIn, BlockPos positionIn, int ticksTillRemove) {
+        super(SREntities.RUNE_PRISON.get(), worldIn);
         this.setBlockPos(positionIn);
         this.setTicksTillRemove(ticksTillRemove);
     }
@@ -51,15 +49,15 @@ public class RunePrisonEntity extends Entity {
     @Override
     protected void readAdditional(CompoundNBT compound) {
         this.setTicksTillRemove(compound.getInt("TicksTillRemove"));
-        if(compound.contains("GloomyTilePosition", 10)) {
+        if (compound.contains("GloomyTilePosition", 10)) {
             this.setBlockPos(NBTUtil.readBlockPos(compound.getCompound("GloomyTilePosition")));
         }
     }
 
     @Override
     protected void writeAdditional(CompoundNBT compound) {
-        compound.putInt("TicksTillRemove",this.getTicksTillRemove());
-        if(this.getBlockPos() != null) {
+        compound.putInt("TicksTillRemove", this.getTicksTillRemove());
+        if (this.getBlockPos() != null) {
             compound.put("GloomyTilePosition", NBTUtil.writeBlockPos(this.getBlockPos()));
         }
     }
@@ -77,14 +75,15 @@ public class RunePrisonEntity extends Entity {
         return this.dataManager.get(BLOCK_POS).orElse(null);
     }
 
-    private void setBlockPos(@Nullable BlockPos positionIn){
+    private void setBlockPos(@Nullable BlockPos positionIn) {
         this.dataManager.set(BLOCK_POS, Optional.ofNullable(positionIn));
     }
 
     @Override
     public void tick() {
         super.tick();
-        if (world.isRemote && getTicksTillRemove() % 5 == 0) {
+
+        if (world.isRemote() && getTicksTillRemove() % 5 == 0) {
             if (!isBackwardsFrameCycle) {
                 currentFrame++;
                 if (currentFrame == 4) {
@@ -97,36 +96,33 @@ public class RunePrisonEntity extends Entity {
                 }
             }
         }
-        if(getTicksTillRemove()>0) {
+
+        if (getTicksTillRemove() > 0) {
             setTicksTillRemove(getTicksTillRemove() - 1);
         }
+
         List<LivingEntity> intersectingEntityList = this.world.getEntitiesWithinAABB(LivingEntity.class, this.getBoundingBox());
         if (!intersectingEntityList.isEmpty()) {
             for (LivingEntity livingEntity : intersectingEntityList) {
-                boolean isCreativeMode;
-                try{
-                    isCreativeMode = ((PlayerEntity)livingEntity).abilities.isCreativeMode;
-                }
-                catch (ClassCastException classCast){
-                    isCreativeMode = false;
-                }
-                if (livingEntity.canBeHitWithPotion() && !(EntityTypeTags.RAIDERS.contains(livingEntity.getType())) && !isCreativeMode) {
+                if (livingEntity.canBeHitWithPotion() && !(EntityTypeTags.RAIDERS.contains(livingEntity.getType())) && (!(livingEntity instanceof PlayerEntity) || !((PlayerEntity) livingEntity).isCreative())) {
                     livingEntity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 20, 2));
                 }
             }
         }
-        if (getTicksTillRemove() == 0) {
-            try {
-                if (world.getBlockState(getBlockPos()).getBlock() instanceof RunedGloomyTilesBlock) {
-                    world.setBlockState(getBlockPos(), SRBlocks.GLOOMY_TILES.get().getDefaultState());
-                }
-            } catch(NullPointerException bruhMoment){
-                //this is supposed to be empty, IntelliJ
-            }
+
+        if (this.getTicksTillRemove() == 0) {
             this.remove();
+
+            BlockPos pos = this.getBlockPos();
+            if (pos == null)
+                return;
+
+            if (this.world.getBlockState(pos).getBlock() instanceof RunedGloomyTilesBlock)
+                this.world.setBlockState(pos, SRBlocks.GLOOMY_TILES.get().getDefaultState());
         }
     }
-    public int getCurrentFrame(){
+
+    public int getCurrentFrame() {
         return this.currentFrame;
     }
 

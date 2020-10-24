@@ -58,9 +58,9 @@
 	"item.minecraft.tipped_arrow.effect.youth": "Nuoruuden nuoli",
 	"item.minecraft.tipped_arrow.effect.youth_long": "Nuoruuden nuoli",
 	
-	"attribute.name.grieferArmor.explosiveDamageReduction": "Räjähdyksenkestävyys",
+	"attribute.name.generic.explosive_damage_reduction": "Räjähdyksenkestävyys",
+
 	"advancements.story.griefer_armor.title": "Dynamite with a Laser Beam",
 	"advancements.story.griefer_armor.description": "Saa kokonainen rettelöitsijän haarniska",
-	
 	"advancements.adventure.voluntary_exile.description": "Sytytä pahaenteinen viiri tuleen.\nKylien välttelemistä kannattaa harkita toistaiseksi..."
 }

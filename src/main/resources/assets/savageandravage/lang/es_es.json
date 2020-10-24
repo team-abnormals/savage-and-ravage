@@ -39,7 +39,7 @@
 	"effect.savageandravage.growing": "Crecimiento",
 	"effect.savageandravage.shrinking": "Encogimiento",
 
-	"attribute.name.grieferArmor.explosiveDamageReduction": "Reducción de daño por explosiones",
+	"attribute.name.generic.explosive_damage_reduction": "Reducción de daño por explosiones",
 
 	"advancements.story.griefer_armor.title": "Dinamita con un rayo láser",
 	"advancements.story.griefer_armor.description": "Consigue una armadura de alborotador completa",
@@ -70,6 +70,5 @@
 	"item.minecraft.tipped_arrow.effect.youth": "Flecha de juventud",
 	"item.minecraft.tipped_arrow.effect.youth_long": "Flecha de juventud",
 
-	
 	"advancements.adventure.voluntary_exile.description": "Prende fuego a un estandarte repugnante.\nY a lo mejor te conviente alejarte de las aldeas por el momento..."
 }
