@@ -38,5 +38,6 @@ public abstract class IronGolemEntityMixin extends GolemEntity {
         if (this.isPlayerCreated() && typeIn == EntityType.PLAYER || SRConfig.COMMON.creeperExplosionsDestroyBlocks.get() && typeIn == EntityType.CREEPER) {
             ci.setReturnValue(false);
         }
+        ci.setReturnValue(super.canAttack(typeIn));
     }
 }
