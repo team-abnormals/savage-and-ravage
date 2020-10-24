@@ -1,10 +1,13 @@
 package com.minecraftabnormals.savageandravage.core;
 
+import com.minecraftabnormals.savageandravage.client.render.IceologerIceChunkRenderer;
 import com.minecraftabnormals.savageandravage.core.other.SRCompat;
 import com.minecraftabnormals.savageandravage.core.registry.*;
 import com.teamabnormals.abnormals_core.core.utils.RegistryHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ColorHandlerEvent;
+import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -45,11 +48,16 @@ public class SavageAndRavage {
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
             modEventBus.addListener(this::clientSetup);
             modEventBus.addListener(EventPriority.LOWEST, this::registerItemColors);
+            modEventBus.addListener(this::registerModels);
         });
     }
 
     private void registerItemColors(ColorHandlerEvent.Item event) {
         REGISTRY_HELPER.processSpawnEggColors(event);
+    }
+
+    private void registerModels(ModelRegistryEvent event) {
+        ModelLoader.addSpecialModel(IceologerIceChunkRenderer.MODEL_LOCATION);
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {

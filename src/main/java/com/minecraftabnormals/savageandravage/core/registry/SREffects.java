@@ -1,5 +1,6 @@
 package com.minecraftabnormals.savageandravage.core.registry;
 
+import com.minecraftabnormals.savageandravage.common.effect.FrozenEffect;
 import com.minecraftabnormals.savageandravage.common.effect.GrowingEffect;
 import com.minecraftabnormals.savageandravage.common.effect.ShrinkingEffect;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
@@ -20,6 +21,7 @@ public class SREffects {
 
     public static final RegistryObject<Effect> GROWING = EFFECTS.register("growing", GrowingEffect::new);
     public static final RegistryObject<Effect> SHRINKING = EFFECTS.register("shrinking", ShrinkingEffect::new);
+    public static final RegistryObject<FrozenEffect> FROZEN = EFFECTS.register("frozen", FrozenEffect::new);
 
     public static final RegistryObject<Potion> GROWTH_NORMAL = POTIONS.register("growth", () -> new Potion(new EffectInstance(GROWING.get(), 600)));
     public static final RegistryObject<Potion> GROWTH_LONG = POTIONS.register("growth_long", () -> new Potion(new EffectInstance(GROWING.get(), 1800)));
