@@ -236,7 +236,7 @@ public class SREvents {
             TileEntity te = world.getTileEntity(pos);
             boolean isFlintAndSteel = stack.getItem() instanceof FlintAndSteelItem;
 
-            if (world.getTileEntity(pos) instanceof BannerTileEntity && (isFlintAndSteel || stack.getItem() instanceof FireChargeItem)) {
+            if (te instanceof BannerTileEntity && (isFlintAndSteel || stack.getItem() instanceof FireChargeItem)) {
                 SoundEvent sound = isFlintAndSteel ? SoundEvents.ITEM_FLINTANDSTEEL_USE : SoundEvents.ITEM_FIRECHARGE_USE;
                 float pitch = isFlintAndSteel ? new Random().nextFloat() * 0.4F + 0.8F : (new Random().nextFloat() - new Random().nextFloat()) * 0.2F + 1.0F;
                 world.playSound(player, pos, sound, SoundCategory.BLOCKS, 1.0F, pitch);
