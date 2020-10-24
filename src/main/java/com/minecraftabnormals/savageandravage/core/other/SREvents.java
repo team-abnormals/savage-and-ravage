@@ -150,6 +150,7 @@ public class SREvents {
                 if (spores == null)
                     return;
 
+                spores.setSporeBomb(true);
                 spores.setCloudSize(creeper.isCharged() ? (int) (creeper.getHealth() / 4) : (int) (creeper.getHealth() / 5));
                 spores.copyLocationAndAnglesFrom(creeper);
                 creeper.world.addEntity(spores);
