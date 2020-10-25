@@ -1,9 +1,9 @@
 {
     "variants": {
-        "triggered=false": {
+        "powered=false": {
             "model": "savageandravage:block/runed_gloomy_tiles_off"
         },
-        "triggered=true": {
+        "powered=true": {
             "model": "savageandravage:block/runed_gloomy_tiles_on"
         }
     }

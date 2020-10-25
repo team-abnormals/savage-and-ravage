@@ -3,7 +3,6 @@ package com.minecraftabnormals.savageandravage.client.model;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.minecraftabnormals.savageandravage.common.entity.GrieferEntity;
-
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.inventory.EquipmentSlotType;

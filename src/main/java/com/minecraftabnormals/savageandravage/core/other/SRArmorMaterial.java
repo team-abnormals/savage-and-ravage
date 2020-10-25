@@ -2,7 +2,6 @@ package com.minecraftabnormals.savageandravage.core.other;
 
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 import com.minecraftabnormals.savageandravage.core.registry.SRItems;
-
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.IArmorMaterial;
 import net.minecraft.item.Item;

@@ -56,7 +56,7 @@
 	"item.minecraft.tipped_arrow.effect.youth": "Стрела молодняка",
 	"item.minecraft.tipped_arrow.effect.youth_long": "Стрела молодняка",
 
-	"attribute.name.grieferArmor.explosiveDamageReduction": "Защита от взрывов",
+	"attribute.name.generic.explosive_damage_reduction": "Защита от взрывов",
 	
 	"advancements.adventure.voluntary_exile.description": "Сожгите зловещий флаг.\nМожет, стоит пока держаться подальше от деревень..."
 }

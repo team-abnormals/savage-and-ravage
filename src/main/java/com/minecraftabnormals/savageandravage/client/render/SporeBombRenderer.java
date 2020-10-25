@@ -3,7 +3,6 @@ package com.minecraftabnormals.savageandravage.client.render;
 import com.minecraftabnormals.savageandravage.common.entity.block.SporeBombEntity;
 import com.minecraftabnormals.savageandravage.core.registry.SRBlocks;
 import com.mojang.blaze3d.matrix.MatrixStack;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -14,8 +13,10 @@ import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3f;
+import net.minecraftforge.client.model.data.EmptyModelData;
 
 public class SporeBombRenderer extends EntityRenderer<SporeBombEntity> {
+
     public SporeBombRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn);
         this.shadowSize = 0.5F;
@@ -41,7 +42,6 @@ public class SporeBombRenderer extends EntityRenderer<SporeBombEntity> {
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     }
 
-    @SuppressWarnings("deprecation")
     public static void renderBombFlash(BlockState blockStateIn, MatrixStack matrixStackIn, IRenderTypeBuffer renderTypeBuffer, int combinedLight, boolean doFullBright) {
         int i;
         if (doFullBright) {
@@ -50,9 +50,10 @@ public class SporeBombRenderer extends EntityRenderer<SporeBombEntity> {
             i = OverlayTexture.NO_OVERLAY;
         }
 
-        Minecraft.getInstance().getBlockRendererDispatcher().renderBlock(blockStateIn, matrixStackIn, renderTypeBuffer, combinedLight, i);
+        Minecraft.getInstance().getBlockRendererDispatcher().renderBlock(blockStateIn, matrixStackIn, renderTypeBuffer, combinedLight, i, EmptyModelData.INSTANCE);
     }
 
+    @Override
     public ResourceLocation getEntityTexture(SporeBombEntity entity) {
         return PlayerContainer.LOCATION_BLOCKS_TEXTURE;
     }

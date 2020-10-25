@@ -1,12 +1,11 @@
 package com.minecraftabnormals.savageandravage.client.render;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import com.teamabnormals.abnormals_core.client.ACRenderTypes;
 import com.minecraftabnormals.savageandravage.client.model.RunePrisonModel;
 import com.minecraftabnormals.savageandravage.common.entity.RunePrisonEntity;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
-
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.teamabnormals.abnormals_core.client.ACRenderTypes;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -14,6 +13,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.ResourceLocation;
 
 public class RunePrisonRenderer extends EntityRenderer<RunePrisonEntity> {
+
     public static final ResourceLocation[] RUNE_PRISON_FRAMES = new ResourceLocation[] {
         new ResourceLocation(SavageAndRavage.MODID, "textures/entity/rune_prison/rune_prison_0.png"),
         new ResourceLocation(SavageAndRavage.MODID, "textures/entity/rune_prison/rune_prison_1.png"),
