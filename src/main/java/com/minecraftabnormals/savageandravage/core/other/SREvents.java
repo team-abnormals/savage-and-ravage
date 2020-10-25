@@ -90,9 +90,7 @@ public class SREvents {
             IronGolemEntity golem = (IronGolemEntity) event.getEntity();
             golem.targetSelector.goals.stream().map(it -> it.inner).filter(it -> it instanceof NearestAttackableTargetGoal<?>).findFirst().ifPresent(noAngryAtCreeper -> {
                 golem.targetSelector.removeGoal(noAngryAtCreeper);
-                golem.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(golem, MobEntity.class, 5, false, false, (p_213619_0_) -> {
-                    return p_213619_0_ instanceof IMob;
-                }));
+                golem.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(golem, MobEntity.class, 5, false, false, (p_213619_0_) -> p_213619_0_ instanceof IMob));
             });
         }
         if (event.getEntity() instanceof CreeperEntity && !SRConfig.COMMON.creeperExplosionsDestroyBlocks.get()) {
@@ -214,6 +212,20 @@ public class SREvents {
     }
 
     @SubscribeEvent
+    public static void onLeftClickBlock(PlayerInteractEvent.LeftClickBlock event) {
+        World world = event.getWorld();
+        BlockPos pos = event.getPos();
+        if(world.getBlockState(pos).getBlock() instanceof AbstractBannerBlock) {
+            List<BurningBannerEntity> burningBanners = world.getEntitiesWithinAABB(BurningBannerEntity.class, new AxisAlignedBB(pos));
+            for (BurningBannerEntity burningBanner : burningBanners) {
+                if(burningBanner.getBannerPosition() != null && burningBanner.getBannerPosition().equals(pos)) {
+                    burningBanner.extinguishFire();
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
     public static void onInteractWithBlock(PlayerInteractEvent.RightClickBlock event) {
         ItemStack stack = event.getItemStack();
         PlayerEntity player = event.getPlayer();
@@ -241,10 +253,8 @@ public class SREvents {
                 float pitch = isFlintAndSteel ? new Random().nextFloat() * 0.4F + 0.8F : (new Random().nextFloat() - new Random().nextFloat()) * 0.2F + 1.0F;
                 world.playSound(player, pos, sound, SoundCategory.BLOCKS, 1.0F, pitch);
 
-                if (isFlintAndSteel && player instanceof ServerPlayerEntity) {
-                    stack.damageItem(1, player, (p_219998_1_) -> {
-                        p_219998_1_.sendBreakAnimation(event.getHand());
-                    });
+                if (isFlintAndSteel) {
+                    stack.damageItem(1, player, (p_219998_1_) -> p_219998_1_.sendBreakAnimation(event.getHand()));
                 } else if (!player.isCreative()) {
                     stack.shrink(1);
                 }
@@ -256,7 +266,7 @@ public class SREvents {
         }
     }
 
-    private static boolean isValidBannerPos(PlayerInteractEvent.RightClickBlock event) {
+    private static boolean isValidBannerPos(PlayerInteractEvent event) {
         boolean isValid = false;
         BlockPos pos = event.getPos();
         World world = event.getWorld();
@@ -267,7 +277,7 @@ public class SREvents {
                 List<BurningBannerEntity> burningBanners = world.getEntitiesWithinAABB(BurningBannerEntity.class, new AxisAlignedBB(pos));
                 isValid = true;
                 for (BurningBannerEntity burningBanner : burningBanners) {
-                    if (burningBanner.getBannerPosition().equals(pos)) isValid = false;
+                    if (burningBanner.getBannerPosition() != null && burningBanner.getBannerPosition().equals(pos)) isValid = false;
                 }
             }
         }
@@ -279,51 +289,53 @@ public class SREvents {
         LivingEntity affected = event.getEntityLiving();
         boolean shouldSetChild = false;
         int growingAgeValue = 0;
-        if (event.getPotionEffect().getPotion() instanceof ShrinkingEffect) {
-            shouldSetChild = true;
-            growingAgeValue = -24000;
-        }
-        if (event.getPotionEffect().getPotion() instanceof GrowingEffect || shouldSetChild) {
-            boolean canChange = false;
-            if (affected instanceof SlimeEntity) {
-                SlimeEntity slime = (SlimeEntity) affected;
-                int size = slime.getSlimeSize();
-                if (shouldSetChild ? size > 1 : size < 3) {
+        if(event.getPotionEffect() != null) {
+            if (event.getPotionEffect().getPotion() instanceof ShrinkingEffect) {
+                shouldSetChild = true;
+                growingAgeValue = -24000;
+            }
+            if (event.getPotionEffect().getPotion() instanceof GrowingEffect || shouldSetChild) {
+                boolean canChange = false;
+                if (affected instanceof SlimeEntity) {
+                    SlimeEntity slime = (SlimeEntity) affected;
+                    int size = slime.getSlimeSize();
+                    if (shouldSetChild ? size > 1 : size < 3) {
+                        canChange = true;
+                        Method setSize = ObfuscationReflectionHelper.findMethod(SlimeEntity.class, "func_70799_a", int.class, boolean.class);
+                        setSize.invoke(slime, (size + (shouldSetChild ? (size < 4 ? -1 : -2) : (size < 2 ? 1 : 2))), false);
+                    }
+                } else if (checkBooflo(affected, shouldSetChild))
                     canChange = true;
-                    Method setSize = ObfuscationReflectionHelper.findMethod(SlimeEntity.class, "func_70799_a", int.class, boolean.class);
-                    setSize.invoke(slime, (size + (shouldSetChild ? (size < 4 ? -1 : -2) : (size < 2 ? 1 : 2))), false);
+                else if (shouldSetChild != affected.isChild()) {
+                    canChange = true;
+                    if (affected instanceof AgeableEntity && !(affected instanceof ParrotEntity))
+                        ((AgeableEntity) affected).setGrowingAge(growingAgeValue);
+                    else if (shouldSetChild && affected instanceof CreeperEntity)
+                        convertCreeper((CreeperEntity) affected);
+                    else if (!shouldSetChild && affected instanceof CreepieEntity)
+                        ((CreepieEntity) affected).setGrowingAge(growingAgeValue);
+                    else if (affected instanceof ZombieEntity)
+                        ((ZombieEntity) affected).setChild(shouldSetChild);
+                    else if (affected instanceof PiglinEntity)
+                        ((PiglinEntity) affected).setChild(shouldSetChild);
+                    else if (affected instanceof ZoglinEntity)
+                        ((ZoglinEntity) affected).setChild(shouldSetChild);
+                    else
+                        canChange = false;
                 }
-            } else if (checkBooflo(affected, shouldSetChild))
-                canChange = true;
-            else if (shouldSetChild != affected.isChild()) {
-                canChange = true;
-                if (affected instanceof AgeableEntity && !(affected instanceof ParrotEntity))
-                    ((AgeableEntity) affected).setGrowingAge(growingAgeValue);
-                else if (shouldSetChild && affected instanceof CreeperEntity)
-                    convertCreeper((CreeperEntity) affected);
-                else if (!shouldSetChild && affected instanceof CreepieEntity)
-                    ((CreepieEntity) affected).setGrowingAge(growingAgeValue);
-                else if (affected instanceof ZombieEntity)
-                    ((ZombieEntity) affected).setChild(shouldSetChild);
-                else if (affected instanceof PiglinEntity)
-                    ((PiglinEntity) affected).setChild(shouldSetChild);
-                else if (affected instanceof ZoglinEntity)
-                    ((ZoglinEntity) affected).setChild(shouldSetChild);
-                else
-                    canChange = false;
-            }
-            if (!canChange) {
-                EffectInstance effectInstance;
-                if (!shouldSetChild)
-                    affected.addPotionEffect(new EffectInstance(Effects.ABSORPTION, 2400, 0));
-                if (affected.isEntityUndead())
-                    shouldSetChild = !shouldSetChild;
-                effectInstance = new EffectInstance(shouldSetChild ? Effects.INSTANT_DAMAGE : Effects.INSTANT_HEALTH, 1, 1);
-                effectInstance.getPotion().affectEntity(null, null, affected, effectInstance.getAmplifier(), 1.0D);
-            }
-            if (affected.isServerWorld()) {
-                ((ServerWorld) affected.world).spawnParticle(canChange ? (shouldSetChild ? ParticleTypes.TOTEM_OF_UNDYING : ParticleTypes.HAPPY_VILLAGER) : ParticleTypes.LARGE_SMOKE, affected.getPosXRandom(0.3D), affected.getPosYRandom() - 0.1D, affected.getPosZRandom(0.3D), canChange ? 40 : 20, 0.3D, 0.6D, 0.3D, canChange ? 0.2D : 0.01D);
-                affected.playSound(canChange ? SRSounds.GROWTH_MODIFICATION_SUCCESS.get() : SRSounds.GROWTH_MODIFICATION_FAILURE.get(), 1.0F, 1.0F);
+                if (!canChange) {
+                    EffectInstance effectInstance;
+                    if (!shouldSetChild)
+                        affected.addPotionEffect(new EffectInstance(Effects.ABSORPTION, 2400, 0));
+                    if (affected.isEntityUndead())
+                        shouldSetChild = !shouldSetChild;
+                    effectInstance = new EffectInstance(shouldSetChild ? Effects.INSTANT_DAMAGE : Effects.INSTANT_HEALTH, 1, 1);
+                    effectInstance.getPotion().affectEntity(null, null, affected, effectInstance.getAmplifier(), 1.0D);
+                }
+                if (affected.isServerWorld()) {
+                    ((ServerWorld) affected.world).spawnParticle(canChange ? (shouldSetChild ? ParticleTypes.TOTEM_OF_UNDYING : ParticleTypes.HAPPY_VILLAGER) : ParticleTypes.LARGE_SMOKE, affected.getPosXRandom(0.3D), affected.getPosYRandom() - 0.1D, affected.getPosZRandom(0.3D), canChange ? 40 : 20, 0.3D, 0.6D, 0.3D, canChange ? 0.2D : 0.01D);
+                    affected.playSound(canChange ? SRSounds.GROWTH_MODIFICATION_SUCCESS.get() : SRSounds.GROWTH_MODIFICATION_FAILURE.get(), 1.0F, 1.0F);
+                }
             }
         }
     }

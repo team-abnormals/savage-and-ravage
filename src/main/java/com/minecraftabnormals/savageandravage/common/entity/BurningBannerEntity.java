@@ -2,6 +2,7 @@ package com.minecraftabnormals.savageandravage.common.entity;
 
 import com.minecraftabnormals.savageandravage.core.registry.SREntities;
 import com.minecraftabnormals.savageandravage.core.registry.SRTriggers;
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.BannerBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.WallBannerBlock;
@@ -38,7 +39,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
-// Bagel decided all banners could be burned, but only ominous banner gives effects for obvious reasons
+@MethodsReturnNonnullByDefault
 public class BurningBannerEntity extends Entity implements IEntityAdditionalSpawnData {
 
     public static final DataParameter<Integer> TICKS_TILL_REMOVE = EntityDataManager.createKey(BurningBannerEntity.class, DataSerializers.VARINT);
@@ -69,7 +70,7 @@ public class BurningBannerEntity extends Entity implements IEntityAdditionalSpaw
     protected void registerData() {
         this.dataManager.register(BLOCK_POS, Optional.empty());
         this.dataManager.register(OFFENDER_UUID, Optional.empty());
-        this.dataManager.register(TICKS_TILL_REMOVE, 50);
+        this.dataManager.register(TICKS_TILL_REMOVE, 110);
     }
 
     @Override
@@ -78,13 +79,12 @@ public class BurningBannerEntity extends Entity implements IEntityAdditionalSpaw
         int ticksRemaining = this.getTicksTillRemove();
 
         BlockPos bannerPos = this.getBannerPosition();
-        if (bannerPos == null) {
+        if (bannerPos == null || ticksRemaining <= 0) {
             this.remove();
             return;
         }
-
-        if ((ticksRemaining > 10 && !(this.world.getTileEntity(bannerPos) instanceof BannerTileEntity)) || ticksRemaining <= 0) {
-            this.remove();
+        else if (ticksRemaining > 10 && !(this.world.getTileEntity(bannerPos) instanceof BannerTileEntity)) {
+            extinguishFire();
             return;
         }
 
@@ -112,8 +112,6 @@ public class BurningBannerEntity extends Entity implements IEntityAdditionalSpaw
                 this.playSound(this.world.getTileEntity(bannerPos) instanceof BannerTileEntity ? SoundEvents.BLOCK_FIRE_AMBIENT : SoundEvents.BLOCK_FIRE_EXTINGUISH, 2F, this.world.getRandom().nextFloat() * 0.4F + 0.8F);
             } else if (this.getTicksTillRemove() == 10) {
                 this.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH, 2F, this.world.getRandom().nextFloat() * 0.4F + 0.8F);
-                this.world.removeBlock(bannerPos, false);
-
                 if (isOminousBanner(this.world, bannerPos) && ((ServerWorld) this.world).findRaid(bannerPos) == null) {
                     PlayerEntity offender = this.getOffender();
                     if (offender == null)
@@ -127,8 +125,14 @@ public class BurningBannerEntity extends Entity implements IEntityAdditionalSpaw
                     if (!this.world.getGameRules().getBoolean(GameRules.DISABLE_RAIDS))
                         offender.addPotionEffect(new EffectInstance(Effects.BAD_OMEN, 120000, MathHelper.clamp(effect == null ? 0 : effect.getAmplifier() + 1, 0, 5), false, false, true));
                 }
+                this.world.removeBlock(bannerPos, false);
             }
         }
+    }
+
+    public void extinguishFire() {
+        this.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH, 0.5F, this.world.getRandom().nextFloat() * 0.4F + 0.8F);
+        this.remove();
     }
 
     @Override
