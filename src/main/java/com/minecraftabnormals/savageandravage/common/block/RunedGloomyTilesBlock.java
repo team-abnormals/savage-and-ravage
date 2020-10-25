@@ -53,10 +53,11 @@ public class RunedGloomyTilesBlock extends ChiseledGloomyTilesBlock {
                         isValidEntity = true;
                     }
                 } else if (entity instanceof IOwnableMob) {
+                    isValidEntity = true;
                     LivingEntity owner = ((IOwnableMob) entity).getOwner();
                     if(owner != null) {
-                        if (!EntityTypeTags.RAIDERS.contains(owner.getType())) {
-                            isValidEntity = true;
+                        if (EntityTypeTags.RAIDERS.contains(owner.getType())) {
+                            isValidEntity = false;
                         }
                     }
                 } else if (!(entity instanceof ArmorStandEntity)) {
