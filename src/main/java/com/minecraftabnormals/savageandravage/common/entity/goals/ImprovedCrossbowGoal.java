@@ -28,7 +28,7 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
         this.entity = entity;
         this.speedChanger = speedChanger;
         this.radiusSq = radius * radius;
-        this.blocksUntilBackupSq = blocksUntilBackup * blocksUntilBackup;
+        this.blocksUntilBackupSq = blocksUntilBackup;
         this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
     }
 
@@ -77,9 +77,11 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
         }
 
         double distanceSq = target.getDistanceSq(entity);
+        double distance = target.getDistance(entity);
         // makes the entity that has this goal back up if the attack target is whatever
         // number blockstillbackup is, infront of them.
-        if (distanceSq <= blocksUntilBackupSq * blocksUntilBackupSq && !(entity.getAttackTarget() instanceof AbstractVillagerEntity)) {
+        if (distance <= blocksUntilBackupSq && !(entity.getAttackTarget() instanceof AbstractVillagerEntity)) {
+            this.entity.faceEntity(target, 30.0F, 30.0F);
             this.entity.getMoveHelper().strafe(entity.isHandActive() ? -0.5F : -3.0F, 0); // note: when an entity is "charging" their crossbow they set an active hand
         }
 
