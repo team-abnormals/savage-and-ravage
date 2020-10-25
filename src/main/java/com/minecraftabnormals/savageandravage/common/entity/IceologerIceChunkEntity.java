@@ -33,8 +33,8 @@ import java.util.UUID;
  */
 public class IceologerIceChunkEntity extends Entity implements IEntityAdditionalSpawnData {
 
-    private static final int HOVER_TIME = 80;
-    private static final int HOVER_DISTANCE = 3;
+    public static final int HOVER_TIME = 80;
+    public static final int HOVER_DISTANCE = 3;
 
     private UUID casterEntityUUID;
     private int casterEntity;
