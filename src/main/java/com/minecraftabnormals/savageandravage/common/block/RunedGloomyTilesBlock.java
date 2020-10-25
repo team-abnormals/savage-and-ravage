@@ -3,7 +3,6 @@ package com.minecraftabnormals.savageandravage.common.block;
 import com.minecraftabnormals.savageandravage.common.entity.IOwnableMob;
 import com.minecraftabnormals.savageandravage.common.entity.RunePrisonEntity;
 import com.minecraftabnormals.savageandravage.core.registry.SRSounds;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -16,15 +15,12 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 public class RunedGloomyTilesBlock extends ChiseledGloomyTilesBlock {
 
     public RunedGloomyTilesBlock(Properties blockProperties) {
         super(blockProperties);
     }
 
-    @ParametersAreNonnullByDefault
     @Override
     public void onEntityWalk(World world, BlockPos pos, Entity entity) {
         super.onEntityWalk(world, pos, entity);
@@ -43,7 +39,6 @@ public class RunedGloomyTilesBlock extends ChiseledGloomyTilesBlock {
         }
     }
 
-    @SuppressWarnings("null") //There's literally a null check for getOwner(), wtf intellij
     private boolean shouldTrigger(Entity entity) {
         boolean isValidEntity = false;
         if(entity instanceof LivingEntity) {

@@ -2,7 +2,6 @@ package com.minecraftabnormals.savageandravage.common.entity;
 
 import com.minecraftabnormals.savageandravage.core.registry.SREntities;
 import com.minecraftabnormals.savageandravage.core.registry.SRTriggers;
-import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.BannerBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.WallBannerBlock;
@@ -39,7 +38,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
-@MethodsReturnNonnullByDefault
 public class BurningBannerEntity extends Entity implements IEntityAdditionalSpawnData {
 
     public static final DataParameter<Integer> TICKS_TILL_REMOVE = EntityDataManager.createKey(BurningBannerEntity.class, DataSerializers.VARINT);
