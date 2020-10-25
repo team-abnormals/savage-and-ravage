@@ -22,7 +22,7 @@ import net.minecraft.world.World;
  */
 public class IceWandItem extends Item {
 
-    private static final double RAYTRACE_DISTANCE = 256;
+    private static final double RAYTRACE_DISTANCE = 16;
 
     public IceWandItem(Properties properties) {
         super(properties);
