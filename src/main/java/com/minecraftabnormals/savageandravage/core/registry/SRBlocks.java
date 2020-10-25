@@ -1,7 +1,7 @@
 package com.minecraftabnormals.savageandravage.core.registry;
 
 import com.minecraftabnormals.savageandravage.common.block.ChiseledGloomyTilesBlock;
-import com.minecraftabnormals.savageandravage.common.block.ImprovedFlowerPotBlock;
+import com.minecraftabnormals.savageandravage.common.block.PottedCreeperSporesBlock;
 import com.minecraftabnormals.savageandravage.common.block.RunedGloomyTilesBlock;
 import com.minecraftabnormals.savageandravage.common.block.SporeBombBlock;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
@@ -9,7 +9,11 @@ import com.minecraftabnormals.savageandravage.core.other.SRProperties;
 import com.teamabnormals.abnormals_core.common.blocks.AbnormalsStairsBlock;
 import com.teamabnormals.abnormals_core.common.blocks.VerticalSlabBlock;
 import com.teamabnormals.abnormals_core.core.utils.RegistryHelper;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.SlabBlock;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.WallBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.item.ItemGroup;
@@ -33,7 +37,7 @@ public class SRBlocks {
     public static final RegistryObject<Block> BLAST_PROOF_SLAB = HELPER.createBlock("blast_proof_slab", () -> new SlabBlock(SRProperties.BLAST_PROOF_PLATES), ItemGroup.BUILDING_BLOCKS);
     public static final RegistryObject<Block> BLAST_PROOF_VERTICAL_SLAB = HELPER.createCompatBlock("quark", "blast_proof_vertical_slab", () -> new VerticalSlabBlock(SRProperties.BLAST_PROOF_PLATES), ItemGroup.BUILDING_BLOCKS);
 
-    public static final RegistryObject<Block> POTTED_CREEPIE = HELPER.createBlockNoItem("potted_creeper_spores", () -> new ImprovedFlowerPotBlock(SRItems.CREEPER_SPORES, Block.Properties.from(Blocks.FLOWER_POT)));
+    public static final RegistryObject<Block> POTTED_CREEPER_SPORES = HELPER.createBlockNoItem("potted_creeper_spores", () -> new PottedCreeperSporesBlock(SRItems.CREEPER_SPORES, Block.Properties.from(Blocks.FLOWER_POT)));
     public static final RegistryObject<Block> SPORE_BOMB = HELPER.createBlock("spore_bomb", () -> new SporeBombBlock(Block.Properties.from(Blocks.TNT)), ItemGroup.REDSTONE);
     public static final RegistryObject<Block> CREEPER_SPORE_SACK = HELPER.createCompatBlock("quark", "creeper_spore_sack", () -> new Block(Block.Properties.create(Material.WOOL, MaterialColor.LIME_TERRACOTTA).hardnessAndResistance(0.5F).sound(SoundType.CLOTH)), ItemGroup.DECORATIONS);
 }

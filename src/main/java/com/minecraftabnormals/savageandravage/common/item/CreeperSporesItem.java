@@ -1,5 +1,6 @@
 package com.minecraftabnormals.savageandravage.common.item;
 
+import com.minecraftabnormals.savageandravage.common.block.PottedCreeperSporesBlock;
 import com.minecraftabnormals.savageandravage.common.entity.CreeperSporeCloudEntity;
 import com.minecraftabnormals.savageandravage.core.registry.SRBlocks;
 import net.minecraft.block.BlockState;
@@ -8,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
@@ -38,7 +40,7 @@ public class CreeperSporesItem extends Item implements PottableItem {
     }
 
     @Override
-    public BlockState getPottedState() {
-        return SRBlocks.POTTED_CREEPIE.get().getDefaultState();
+    public BlockState getPottedState(Direction direction) {
+        return ((PottedCreeperSporesBlock)SRBlocks.POTTED_CREEPER_SPORES.get()).getDirectionalState(direction);
     }
 }
