@@ -132,10 +132,11 @@ public class SREvents {
 
     @SubscribeEvent
     public static void onLivingDrops(LivingDropsEvent event) {
+        //TODO can this not just be a loot table? check with tallest
         if (event.getEntity() instanceof CreeperEntity) {
             CreeperEntity creeper = (CreeperEntity) event.getEntity();
             if (event.getSource().isExplosion() && SRConfig.COMMON.creepersDropSporesAfterExplosionDeath.get()) {
-                creeper.entityDropItem(new ItemStack(SRItems.CREEPER_SPORES.get(), creeper.world.rand.nextInt(4)));
+                creeper.entityDropItem(new ItemStack(SRItems.CREEPER_SPORES.get(), 1 + creeper.world.rand.nextInt(3)));
             }
         }
         // kinda messy rn will clean it up later
