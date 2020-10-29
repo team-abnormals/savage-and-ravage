@@ -135,7 +135,7 @@ public class SREvents {
         if (event.getEntity() instanceof CreeperEntity) {
             CreeperEntity creeper = (CreeperEntity) event.getEntity();
             if (event.getSource().isExplosion() && SRConfig.COMMON.creepersDropSporesAfterExplosionDeath.get()) {
-                creeper.entityDropItem(new ItemStack(SRItems.CREEPER_SPORES.get(), 1 + creeper.world.rand.nextInt(5)));
+                creeper.entityDropItem(new ItemStack(SRItems.CREEPER_SPORES.get(), creeper.world.rand.nextInt(4)));
             }
         }
         // kinda messy rn will clean it up later
