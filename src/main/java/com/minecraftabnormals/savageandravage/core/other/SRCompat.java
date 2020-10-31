@@ -7,6 +7,7 @@ import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 import com.minecraftabnormals.savageandravage.core.registry.SRBlocks;
 import com.minecraftabnormals.savageandravage.core.registry.SRItems;
 import com.teamabnormals.abnormals_core.core.utils.DataUtils;
+
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.dispenser.IBlockSource;
@@ -38,6 +39,8 @@ public class SRCompat {
         DispenserBlock.registerDispenseBehavior(SRItems.CREEPER_SPORES.get(), new ProjectileDispenseBehavior() {
             @Override
             protected ProjectileEntity getProjectileEntity(World world, IPosition position, ItemStack stack) {
+                CreeperSporeCloudEntity spore = new CreeperSporeCloudEntity(world, position.getX(), position.getY(), position.getZ());
+                spore.setSporeBomb(true);
                 return new CreeperSporeCloudEntity(world, position.getX(), position.getY(), position.getZ());
             }
         });

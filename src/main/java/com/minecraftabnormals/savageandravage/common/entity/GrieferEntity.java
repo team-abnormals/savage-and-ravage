@@ -195,9 +195,10 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
     @Nullable
     @Override
     public ILivingEntityData onInitialSpawn(IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+        super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
         this.setEquipmentBasedOnDifficulty(difficultyIn);
         this.creeperSporeStacks = 10;
-        return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+        return spawnDataIn;
     }
 
     protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty) {
