@@ -41,7 +41,7 @@ public class SRCompat {
             protected ProjectileEntity getProjectileEntity(World world, IPosition position, ItemStack stack) {
                 CreeperSporeCloudEntity spore = new CreeperSporeCloudEntity(world, position.getX(), position.getY(), position.getZ());
                 spore.setSporeBomb(true);
-                return new CreeperSporeCloudEntity(world, position.getX(), position.getY(), position.getZ());
+                return spore;
             }
         });
 
