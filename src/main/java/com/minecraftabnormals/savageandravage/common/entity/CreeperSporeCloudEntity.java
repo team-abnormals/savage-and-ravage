@@ -32,6 +32,7 @@ public class CreeperSporeCloudEntity extends ThrowableEntity implements IEntityA
 
     private int cloudSize;
     private boolean sporeBomb;
+    private boolean haveCreepiesAttackPlayersOnly;
     private boolean hit;
 
     public CreeperSporeCloudEntity(EntityType<? extends CreeperSporeCloudEntity> type, World world) {
@@ -87,6 +88,7 @@ public class CreeperSporeCloudEntity extends ThrowableEntity implements IEntityA
             nbt.putUniqueId("CloudEntity", this.cloudId);
         nbt.putInt("CloudSize", this.cloudSize);
         nbt.putBoolean("SporeBomb", this.sporeBomb);
+        nbt.putBoolean("AttackPlayers", this.haveCreepiesAttackPlayersOnly);
     }
 
     @Override
@@ -96,6 +98,7 @@ public class CreeperSporeCloudEntity extends ThrowableEntity implements IEntityA
         this.cloudId = nbt.hasUniqueId("CloudEntity") ? nbt.getUniqueId("CloudEntity") : null;
         this.cloudSize = nbt.getInt("CloudSize");
         this.sporeBomb = nbt.getBoolean("SporeBomb");
+        this.haveCreepiesAttackPlayersOnly = nbt.getBoolean("AttackPlayers");
     }
 
     @Override
@@ -160,7 +163,6 @@ public class CreeperSporeCloudEntity extends ThrowableEntity implements IEntityA
                         return;
 
                     creepie.setLocationAndAngles(xPos, aoe.getPosY(), zPos, 0.0F, 0.0F);
-                    creepie.spawnedFromSporeBomb = this.sporeBomb;
 
                     Entity thrower = this.func_234616_v_();
                     if (thrower != null && (!(thrower instanceof LivingEntity) || !((LivingEntity) thrower).isPotionActive(Effects.INVISIBILITY)))
@@ -200,5 +202,13 @@ public class CreeperSporeCloudEntity extends ThrowableEntity implements IEntityA
     @Override
     public void readSpawnData(PacketBuffer buf) {
         this.hit = buf.readBoolean();
+    }
+
+    public boolean haveCreepiesAttackPlayersOnly() {
+        return haveCreepiesAttackPlayersOnly;
+    }
+
+    public void setHaveCreepiesAttackPlayersOnly(boolean haveCreepiesAttackPlayersOnly) {
+        this.haveCreepiesAttackPlayersOnly = haveCreepiesAttackPlayersOnly;
     }
 }

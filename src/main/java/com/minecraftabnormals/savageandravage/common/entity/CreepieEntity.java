@@ -45,7 +45,7 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
     private static final DataParameter<Boolean> IGNITED = EntityDataManager.createKey(CreepieEntity.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Optional<UUID>> OWNER_UUID = EntityDataManager.createKey(CreepieEntity.class, DataSerializers.OPTIONAL_UNIQUE_ID);
     private static final DataParameter<Boolean> CONVERTING = EntityDataManager.createKey(CreepieEntity.class, DataSerializers.BOOLEAN);
-    public boolean spawnedFromSporeBomb;
+    public boolean attackPlayers;
     public int lastActiveTime;
     public int timeSinceIgnited;
     public int fuseTime = 30;
@@ -79,7 +79,13 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<MobEntity>(this, MobEntity.class, false) {
             @Override
             public boolean shouldExecute() {
-                return super.shouldExecute() && ((CreepieEntity) goalOwner).spawnedFromSporeBomb && !(this.nearestTarget instanceof CreepieEntity);
+                return super.shouldExecute() && ((CreepieEntity) goalOwner).getOwner() == null && !(this.nearestTarget instanceof CreepieEntity);
+            }
+        });
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<PlayerEntity>(this, PlayerEntity.class, false) {
+            @Override
+            public boolean shouldExecute() {
+                return super.shouldExecute() && ((CreepieEntity) goalOwner).getOwner() == null && ((CreepieEntity) goalOwner).attackPlayers;
             }
         });
     }
@@ -143,13 +149,15 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
         compound.putShort("Fuse", (short) this.fuseTime);
         compound.putByte("ExplosionRadius", (byte) this.explosionRadius);
         compound.putBoolean("ignited", this.hasIgnited());
-        compound.putBoolean("SporeBomb", this.spawnedFromSporeBomb);
+        compound.putBoolean("AttackPlayers", this.attackPlayers);
     }
 
     @Override
     public void readAdditional(CompoundNBT compound) {
         super.readAdditional(compound);
-        this.fuseTime = compound.getShort("Fuse");
+        if (compound.contains("Fuse", 99)) {
+            this.fuseTime = compound.getShort("Fuse");
+        }
         this.explosionRadius = compound.getByte("ExplosionRadius");
         this.setGrowingAge(compound.getInt("Age"));
         this.forcedAge = compound.getInt("ForcedAge");
@@ -160,7 +168,7 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
         if (compound.hasUniqueId("OwnerUUID")) {
             this.setOwnerId(compound.getUniqueId("OwnerUUID"));
         }
-        this.spawnedFromSporeBomb = compound.getBoolean("SporeBomb");
+        this.attackPlayers = compound.getBoolean("AttackPlayers");
     }
 
     @Override
