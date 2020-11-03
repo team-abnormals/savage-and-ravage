@@ -38,6 +38,9 @@ public class SREntities {
     public static final RegistryObject<EntityType<BurningBannerEntity>> BURNING_BANNER = ENTITIES.register("burning_banner", () -> EntityType.Builder.<BurningBannerEntity>create(BurningBannerEntity::new, EntityClassification.MISC).immuneToFire().size(1.0F, 2.0F).build("savageandravage:burning_banner"));
     public static final RegistryObject<EntityType<RunePrisonEntity>> RUNE_PRISON = ENTITIES.register("rune_prison", () -> EntityType.Builder.<RunePrisonEntity>create(RunePrisonEntity::new, EntityClassification.MISC).immuneToFire().size(1.35F, 0.7F).build("savageandravage:rune_prison"));
     public static final RegistryObject<EntityType<MischiefArrowEntity>> MISCHIEF_ARROW = HELPER.createEntity("mischief_arrow", MischiefArrowEntity::new, MischiefArrowEntity::new, EntityClassification.MISC, 0.5F, 0.5F);
+    public static final RegistryObject<EntityType<IceologerEntity>> ICEOLOGER = ENTITIES.register("iceologer", () -> EntityType.Builder.create(IceologerEntity::new, EntityClassification.MONSTER).size(0.6F, 1.95F).func_233606_a_(8).build(SavageAndRavage.MODID + ":iceologer"));
+    public static final RegistryObject<EntityType<IceologerIceChunkEntity>> ICEOLOGER_ICE_CHUNK = ENTITIES.register("iceologer_ice_chunk", () -> EntityType.Builder.<IceologerIceChunkEntity>create(IceologerIceChunkEntity::new, EntityClassification.MISC).size(2.0F, 1.0F).func_233606_a_(8).func_233608_b_(Integer.MAX_VALUE).build(SavageAndRavage.MODID + ":iceologer_ice_chunk"));
+    public static final RegistryObject<EntityType<IceologerIceCloudEntity>> ICEOLOGER_ICE_CLOUD = ENTITIES.register("iceologer_ice_cloud", () -> EntityType.Builder.<IceologerIceCloudEntity>create(IceologerIceCloudEntity::new, EntityClassification.MISC).size(1.0F, 1.0F).func_233606_a_(8).build(SavageAndRavage.MODID + ":iceologer_ice_cloud"));
 
     @OnlyIn(Dist.CLIENT)
     public static void registerRendering() {
@@ -49,6 +52,9 @@ public class SREntities {
         RenderingRegistry.registerEntityRenderingHandler(BURNING_BANNER.get(), BurningBannerRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(RUNE_PRISON.get(), RunePrisonRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(MISCHIEF_ARROW.get(), MischiefArrowRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ICEOLOGER.get(), IceologerRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ICEOLOGER_ICE_CHUNK.get(), IceologerIceChunkRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ICEOLOGER_ICE_CLOUD.get(), NoModelRenderer::new);
         if (SRConfig.CLIENT.vindicatorRemodel.get())
             RenderingRegistry.registerEntityRenderingHandler(EntityType.VINDICATOR, RevampedVindicatorRenderer::new);
     }
@@ -77,6 +83,7 @@ public class SREntities {
         GlobalEntityTypeAttributes.put(CREEPIE.get(), CreepieEntity.registerAttributes().create());
         GlobalEntityTypeAttributes.put(GRIEFER.get(), GrieferEntity.registerAttributes().create());
         GlobalEntityTypeAttributes.put(SKELETON_VILLAGER.get(), AbstractSkeletonEntity.func_234275_m_().create());
+        GlobalEntityTypeAttributes.put(ICEOLOGER.get(), IceologerEntity.registerAttributes().create());
     }
 
     public static void registerWaveMembers() {
