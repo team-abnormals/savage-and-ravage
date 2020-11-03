@@ -1,6 +1,12 @@
 package com.minecraftabnormals.savageandravage.common.entity;
 
+import java.util.UUID;
+
+import javax.annotation.Nullable;
+
+import com.minecraftabnormals.savageandravage.core.registry.SREffects;
 import com.minecraftabnormals.savageandravage.core.registry.SREntities;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
@@ -14,7 +20,6 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.particles.BlockParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceContext;
@@ -25,13 +30,10 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
 
-import javax.annotation.Nullable;
-import java.util.UUID;
-
 /**
  * @author Ocelot
  */
-public class IceologerIceChunkEntity extends Entity implements IEntityAdditionalSpawnData {
+public class IceChunkEntity extends Entity implements IEntityAdditionalSpawnData {
 
     public static final int HOVER_TIME = 80;
     public static final int HOVER_DISTANCE = 3;
@@ -42,12 +44,12 @@ public class IceologerIceChunkEntity extends Entity implements IEntityAdditional
     private int targetEntity;
     private int hoverTicks;
 
-    public IceologerIceChunkEntity(EntityType<IceologerIceChunkEntity> entityType, World world) {
+    public IceChunkEntity(EntityType<IceChunkEntity> entityType, World world) {
         super(entityType, world);
     }
 
-    public IceologerIceChunkEntity(World world, @Nullable Entity caster, @Nullable Entity target) {
-        this(SREntities.ICEOLOGER_ICE_CHUNK.get(), world);
+    public IceChunkEntity(World world, @Nullable Entity caster, @Nullable Entity target) {
+        this(SREntities.ICE_CHUNK.get(), world);
         if (target != null)
             this.setPositionAndRotation(target.getPosX(), target.getPosYHeight(1) + HOVER_DISTANCE, target.getPosZ(), this.rotationYaw, this.rotationPitch);
         this.setCaster(caster);
@@ -65,7 +67,7 @@ public class IceologerIceChunkEntity extends Entity implements IEntityAdditional
                 Entity entity = ((EntityRayTraceResult) result).getEntity();
                 entity.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, this.getCaster()), 8.0f);
                 if (entity instanceof LivingEntity) {
-                    ((LivingEntity) entity).addPotionEffect(new EffectInstance(Effects.SLOWNESS, 40, 2, false, false, true));
+                    ((LivingEntity) entity).addPotionEffect(new EffectInstance(SREffects.FROSTBITE.get(), 40, 2, false, false, true));
                 }
             }
         }

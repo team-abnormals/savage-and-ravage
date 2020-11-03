@@ -1,6 +1,6 @@
 package com.minecraftabnormals.savageandravage.common.item;
 
-import com.minecraftabnormals.savageandravage.common.entity.IceologerIceChunkEntity;
+import com.minecraftabnormals.savageandravage.common.entity.IceChunkEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileHelper;
@@ -45,11 +45,11 @@ public class IceWandItem extends Item {
             player.getCooldownTracker().setCooldown(this, 20);
             if (!world.isRemote()) {
                 if (entityraytraceresult != null) {
-                    world.addEntity(new IceologerIceChunkEntity(world, player, entityraytraceresult.getEntity()));
+                    world.addEntity(new IceChunkEntity(world, player, entityraytraceresult.getEntity()));
                 } else {
                     BlockPos pos = result.getPos();
-                    IceologerIceChunkEntity iceChunk = new IceologerIceChunkEntity(world, player, null);
-                    iceChunk.setPositionAndRotation(pos.getX() + 0.5, pos.getY() + 1 + IceologerIceChunkEntity.HOVER_DISTANCE, pos.getZ() + 0.5, iceChunk.rotationYaw, iceChunk.rotationPitch);
+                    IceChunkEntity iceChunk = new IceChunkEntity(world, player, null);
+                    iceChunk.setPositionAndRotation(pos.getX() + 0.5, pos.getY() + 1 + IceChunkEntity.HOVER_DISTANCE, pos.getZ() + 0.5, iceChunk.rotationYaw, iceChunk.rotationPitch);
                     world.addEntity(iceChunk);
                 }
             }

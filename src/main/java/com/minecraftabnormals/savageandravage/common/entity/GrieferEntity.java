@@ -225,7 +225,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
     @Override
     public void attackEntityWithRangedAttack(LivingEntity target, float distanceFactor) {
         if (this.world.getTargettableEntitiesWithinAABB(CreepieEntity.class, social_distance, this, this.getBoundingBox().grow(30.0D)).size() < 5 && this.getHeldItemMainhand().getItem() instanceof CreeperSporesItem) {
-            CreeperSporeCloudEntity creeperSpores = new CreeperSporeCloudEntity(this.world, this);
+            SporeCloudEntity creeperSpores = new SporeCloudEntity(this.world, this);
             double distance = target.getPosYEye() - (double) 1.1F;
             double d1 = target.getPosX() - this.getPosX();
             double d2 = distance - creeperSpores.getPosY();

@@ -1,6 +1,6 @@
 package com.minecraftabnormals.savageandravage.core.other;
 
-import com.minecraftabnormals.savageandravage.common.entity.CreeperSporeCloudEntity;
+import com.minecraftabnormals.savageandravage.common.entity.SporeCloudEntity;
 import com.minecraftabnormals.savageandravage.common.entity.MischiefArrowEntity;
 import com.minecraftabnormals.savageandravage.common.entity.block.SporeBombEntity;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
@@ -39,7 +39,7 @@ public class SRCompat {
         DispenserBlock.registerDispenseBehavior(SRItems.CREEPER_SPORES.get(), new ProjectileDispenseBehavior() {
             @Override
             protected ProjectileEntity getProjectileEntity(World world, IPosition position, ItemStack stack) {
-                return new CreeperSporeCloudEntity(world, position.getX(), position.getY(), position.getZ());
+                return new SporeCloudEntity(world, position.getX(), position.getY(), position.getZ());
             }
         });
 

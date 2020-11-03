@@ -1,7 +1,7 @@
 package com.minecraftabnormals.savageandravage.common.item;
 
 import com.minecraftabnormals.savageandravage.common.block.PottedCreeperSporesBlock;
-import com.minecraftabnormals.savageandravage.common.entity.CreeperSporeCloudEntity;
+import com.minecraftabnormals.savageandravage.common.entity.SporeCloudEntity;
 import com.minecraftabnormals.savageandravage.core.registry.SRBlocks;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -26,7 +26,7 @@ public class CreeperSporesItem extends Item implements PottableItem {
         ItemStack stack = player.getHeldItem(hand);
         world.playSound(player, player.getPosX(), player.getPosY(), player.getPosZ(), SoundEvents.ENTITY_EGG_THROW, SoundCategory.PLAYERS, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
         if (!world.isRemote()) {
-            CreeperSporeCloudEntity spores = new CreeperSporeCloudEntity(world, player);
+            SporeCloudEntity spores = new SporeCloudEntity(world, player);
             spores.func_234612_a_(player, player.rotationPitch, player.rotationYaw, 0.0F, 0.99F, 1.0F);
             spores.setCloudSize(world.getRandom().nextInt(50) == 0 ? 0 : 1 + spores.world.getRandom().nextInt(3));
             world.addEntity(spores);

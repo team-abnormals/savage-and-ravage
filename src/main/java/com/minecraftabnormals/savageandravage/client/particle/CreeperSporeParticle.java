@@ -1,4 +1,4 @@
-package com.minecraftabnormals.savageandravage.common.particles;
+package com.minecraftabnormals.savageandravage.client.particle;
 
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;

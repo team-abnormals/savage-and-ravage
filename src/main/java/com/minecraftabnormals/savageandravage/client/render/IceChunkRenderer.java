@@ -1,6 +1,6 @@
 package com.minecraftabnormals.savageandravage.client.render;
 
-import com.minecraftabnormals.savageandravage.common.entity.IceologerIceChunkEntity;
+import com.minecraftabnormals.savageandravage.common.entity.IceChunkEntity;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -21,17 +21,17 @@ import java.util.Random;
 /**
  * @author Ocelot
  */
-public class IceologerIceChunkRenderer extends EntityRenderer<IceologerIceChunkEntity> {
+public class IceChunkRenderer extends EntityRenderer<IceChunkEntity> {
 
-    public static final ResourceLocation MODEL_LOCATION = new ResourceLocation(SavageAndRavage.MODID, "entity/iceologer_ice_chunk");
-    public static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation(SavageAndRavage.MODID, "textures/entity/iceologer_ice_chunk.png");
+    public static final ResourceLocation MODEL_LOCATION = new ResourceLocation(SavageAndRavage.MODID, "entity/ice_chunk");
+    public static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation(SavageAndRavage.MODID, "textures/entity/ice_chunk.png");
 
-    public IceologerIceChunkRenderer(EntityRendererManager renderManager) {
+    public IceChunkRenderer(EntityRendererManager renderManager) {
         super(renderManager);
     }
 
     @Override
-    public void render(IceologerIceChunkEntity entity, float entityYaw, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLight) {
+    public void render(IceChunkEntity entity, float entityYaw, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLight) {
         matrixStack.push();
         matrixStack.translate(-0.5, 0, -0.5);
 
@@ -43,7 +43,7 @@ public class IceologerIceChunkRenderer extends EntityRenderer<IceologerIceChunkE
     }
 
     @Override
-    public ResourceLocation getEntityTexture(IceologerIceChunkEntity entity) {
+    public ResourceLocation getEntityTexture(IceChunkEntity entity) {
         return TEXTURE_LOCATION;
     }
 

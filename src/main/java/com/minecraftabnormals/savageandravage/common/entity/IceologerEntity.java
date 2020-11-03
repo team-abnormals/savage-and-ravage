@@ -162,20 +162,20 @@ public class IceologerEntity extends SpellcastingIllagerEntity {
     }
 
     @Nullable
-    public IceologerIceChunkEntity getIceChunk() {
+    public IceChunkEntity getIceChunk() {
         if (this.iceChunkEntityUUID != null && this.world instanceof ServerWorld) {
             Entity entity = ((ServerWorld) this.world).getEntityByUuid(this.iceChunkEntityUUID);
-            return entity instanceof IceologerIceChunkEntity ? (IceologerIceChunkEntity) entity : null;
+            return entity instanceof IceChunkEntity ? (IceChunkEntity) entity : null;
         } else {
             if (this.iceChunkEntity == 0)
                 return null;
 
             Entity entity = this.world.getEntityByID(this.iceChunkEntity);
-            return entity instanceof IceologerIceChunkEntity ? (IceologerIceChunkEntity) entity : null;
+            return entity instanceof IceChunkEntity ? (IceChunkEntity) entity : null;
         }
     }
 
-    public void setIceChunk(@Nullable IceologerIceChunkEntity target) {
+    public void setIceChunk(@Nullable IceChunkEntity target) {
         if (target != null) {
             this.iceChunkEntity = target.getEntityId();
             this.iceChunkEntityUUID = target.getUniqueID();
@@ -210,7 +210,7 @@ public class IceologerEntity extends SpellcastingIllagerEntity {
         protected void castSpell() {
             LivingEntity target = IceologerEntity.this.getAttackTarget();
             if (IceologerEntity.this.getIceChunk() == null) {
-                IceologerIceChunkEntity iceChunk = new IceologerIceChunkEntity(IceologerEntity.this.world, IceologerEntity.this, target);
+                IceChunkEntity iceChunk = new IceChunkEntity(IceologerEntity.this.world, IceologerEntity.this, target);
                 IceologerEntity.this.setIceChunk(iceChunk);
                 IceologerEntity.this.world.addEntity(iceChunk);
             }
@@ -245,7 +245,7 @@ public class IceologerEntity extends SpellcastingIllagerEntity {
         protected void castSpell() {
             LivingEntity target = IceologerEntity.this.getAttackTarget();
             if (target != null) {
-                IceologerIceCloudEntity iceCloud = new IceologerIceCloudEntity(IceologerEntity.this.getPosX(), IceologerEntity.this.getPosY(), IceologerEntity.this.getPosZ(), target.getPosX(), target.getPosY(), target.getPosZ(), IceologerEntity.this.world);
+                IceCloudEntity iceCloud = new IceCloudEntity(IceologerEntity.this.getPosX(), IceologerEntity.this.getPosY(), IceologerEntity.this.getPosZ(), target.getPosX(), target.getPosY(), target.getPosZ(), IceologerEntity.this.world);
                 iceCloud.setShooter(IceologerEntity.this);
                 IceologerEntity.this.world.addEntity(iceCloud);
             }

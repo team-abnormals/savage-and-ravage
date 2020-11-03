@@ -2,15 +2,15 @@ package com.minecraftabnormals.savageandravage.common.entity;
 
 import com.minecraftabnormals.savageandravage.core.registry.SREffects;
 import com.minecraftabnormals.savageandravage.core.registry.SREntities;
+import com.minecraftabnormals.savageandravage.core.registry.SRParticles;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.DamagingProjectileEntity;
 import net.minecraft.network.IPacket;
 import net.minecraft.particles.IParticleData;
-import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -18,14 +18,14 @@ import net.minecraftforge.fml.network.NetworkHooks;
 /**
  * @author Ocelot
  */
-public class IceologerIceCloudEntity extends DamagingProjectileEntity {
+public class IceCloudEntity extends DamagingProjectileEntity {
 
-    public IceologerIceCloudEntity(EntityType<IceologerIceCloudEntity> entityType, World world) {
+    public IceCloudEntity(EntityType<IceCloudEntity> entityType, World world) {
         super(entityType, world);
     }
 
-    public IceologerIceCloudEntity(double x, double y, double z, double targetX, double targetY, double targetZ, World world) {
-        super(SREntities.ICEOLOGER_ICE_CLOUD.get(), x, y, z, targetX - x, targetY - y, targetZ - z, world);
+    public IceCloudEntity(double x, double y, double z, double targetX, double targetY, double targetZ, World world) {
+        super(SREntities.ICE_CLOUD.get(), x, y, z, targetX - x, targetY - y, targetZ - z, world);
     }
 
     @Override
@@ -33,9 +33,8 @@ public class IceologerIceCloudEntity extends DamagingProjectileEntity {
         super.tick();
 
         for (Entity entity : this.world.getEntitiesInAABBexcluding(this.func_234616_v_(), this.getBoundingBox().expand(2, 2, 2), this::func_230298_a_)) {
-            if (entity instanceof LivingEntity) {
-                ((LivingEntity) entity).addPotionEffect(new EffectInstance(Effects.WITHER, 60, 1, false, false, true));
-                ((LivingEntity) entity).addPotionEffect(new EffectInstance(SREffects.FROZEN.get(), 60, 0, false, false, true));
+            if (entity instanceof LivingEntity && !(entity instanceof IceologerEntity)) {
+                ((LivingEntity) entity).addPotionEffect(new EffectInstance(SREffects.FROSTBITE.get(), 60, 0, false, false, true));
             }
         }
 
@@ -54,7 +53,7 @@ public class IceologerIceCloudEntity extends DamagingProjectileEntity {
 
     @Override
     protected IParticleData getParticle() {
-        return ParticleTypes.EFFECT;
+        return SRParticles.SNOWFLAKE.get();
     }
 
     @Override

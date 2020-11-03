@@ -1,6 +1,6 @@
 package com.minecraftabnormals.savageandravage.common.entity.block;
 
-import com.minecraftabnormals.savageandravage.common.entity.CreeperSporeCloudEntity;
+import com.minecraftabnormals.savageandravage.common.entity.SporeCloudEntity;
 import com.minecraftabnormals.savageandravage.core.registry.SREntities;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -34,7 +34,7 @@ public class SporeBombEntity extends TNTEntity {
 
     @Override
     protected void explode() {
-        CreeperSporeCloudEntity sporecloud = SREntities.CREEPER_SPORE_CLOUD.get().create(this.world);
+        SporeCloudEntity sporecloud = SREntities.SPORE_CLOUD.get().create(this.world);
         if (sporecloud == null)
             return;
 

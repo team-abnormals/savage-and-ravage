@@ -1,6 +1,6 @@
 package com.minecraftabnormals.savageandravage.core;
 
-import com.minecraftabnormals.savageandravage.client.render.IceologerIceChunkRenderer;
+import com.minecraftabnormals.savageandravage.client.render.IceChunkRenderer;
 import com.minecraftabnormals.savageandravage.core.other.SRCompat;
 import com.minecraftabnormals.savageandravage.core.registry.*;
 import com.teamabnormals.abnormals_core.core.utils.RegistryHelper;
@@ -57,7 +57,7 @@ public class SavageAndRavage {
     }
 
     private void registerModels(ModelRegistryEvent event) {
-        ModelLoader.addSpecialModel(IceologerIceChunkRenderer.MODEL_LOCATION);
+        ModelLoader.addSpecialModel(IceChunkRenderer.MODEL_LOCATION);
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {

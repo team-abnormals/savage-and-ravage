@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 
-public class CreeperSporeCloudEntity extends ThrowableEntity implements IEntityAdditionalSpawnData {
+public class SporeCloudEntity extends ThrowableEntity implements IEntityAdditionalSpawnData {
 
     private AreaEffectCloudEntity cloudEntity;
     private UUID cloudId;
@@ -35,16 +35,16 @@ public class CreeperSporeCloudEntity extends ThrowableEntity implements IEntityA
     private boolean haveCreepiesAttackPlayersOnly;
     private boolean hit;
 
-    public CreeperSporeCloudEntity(EntityType<? extends CreeperSporeCloudEntity> type, World world) {
+    public SporeCloudEntity(EntityType<? extends SporeCloudEntity> type, World world) {
         super(type, world);
     }
 
-    public CreeperSporeCloudEntity(World world, LivingEntity thrower) {
-        super(SREntities.CREEPER_SPORE_CLOUD.get(), thrower, world);
+    public SporeCloudEntity(World world, LivingEntity thrower) {
+        super(SREntities.SPORE_CLOUD.get(), thrower, world);
     }
 
-    public CreeperSporeCloudEntity(World world, double x, double y, double z) {
-        super(SREntities.CREEPER_SPORE_CLOUD.get(), x, y, z, world);
+    public SporeCloudEntity(World world, double x, double y, double z) {
+        super(SREntities.SPORE_CLOUD.get(), x, y, z, world);
     }
 
     private void spawnAreaEffectCloud(double x, double y, double z) {

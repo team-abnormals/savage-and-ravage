@@ -3,7 +3,7 @@ package com.minecraftabnormals.savageandravage.core.other;
 import com.minecraftabnormals.savageandravage.common.effect.GrowingEffect;
 import com.minecraftabnormals.savageandravage.common.effect.ShrinkingEffect;
 import com.minecraftabnormals.savageandravage.common.entity.BurningBannerEntity;
-import com.minecraftabnormals.savageandravage.common.entity.CreeperSporeCloudEntity;
+import com.minecraftabnormals.savageandravage.common.entity.SporeCloudEntity;
 import com.minecraftabnormals.savageandravage.common.entity.CreepieEntity;
 import com.minecraftabnormals.savageandravage.common.entity.GrieferEntity;
 import com.minecraftabnormals.savageandravage.common.entity.IOwnableMob;
@@ -171,7 +171,7 @@ public class SREvents {
             }
             if (SRConfig.COMMON.creeperExplosionsSpawnCreepies.get()) {
                 CreeperEntity creeper = (CreeperEntity) event.getExplosion().getExplosivePlacedBy();
-                CreeperSporeCloudEntity spores = SREntities.CREEPER_SPORE_CLOUD.get().create(event.getWorld());
+                SporeCloudEntity spores = SREntities.SPORE_CLOUD.get().create(event.getWorld());
                 if (spores == null)
                     return;
 
