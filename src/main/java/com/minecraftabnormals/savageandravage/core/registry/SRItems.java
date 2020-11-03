@@ -1,14 +1,22 @@
 package com.minecraftabnormals.savageandravage.core.registry;
 
 import com.minecraftabnormals.savageandravage.common.item.CreeperSporesItem;
+import com.minecraftabnormals.savageandravage.common.item.CleaverOfBeheadingItem;
 import com.minecraftabnormals.savageandravage.common.item.GrieferArmorItem;
-import com.minecraftabnormals.savageandravage.common.item.IceWandItem;
+import com.minecraftabnormals.savageandravage.common.item.WandOfFreezingItem;
 import com.minecraftabnormals.savageandravage.common.item.MischiefArrowItem;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 import com.minecraftabnormals.savageandravage.core.other.SRArmorMaterial;
+import com.minecraftabnormals.savageandravage.core.other.SRItemTier;
 import com.teamabnormals.abnormals_core.core.utils.RegistryHelper;
+
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.*;
+import net.minecraft.item.CrossbowItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemModelsProperties;
+import net.minecraft.item.Items;
+import net.minecraft.item.Rarity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
@@ -26,8 +34,10 @@ public class SRItems {
     public static final RegistryObject<Item> GRIEFER_CHESTPLATE = HELPER.createItem("griefer_chestplate", () -> new GrieferArmorItem(SRArmorMaterial.GRIEFER, EquipmentSlotType.CHEST, new Item.Properties().group(ItemGroup.COMBAT)));
     public static final RegistryObject<Item> GRIEFER_LEGGINGS = HELPER.createItem("griefer_leggings", () -> new GrieferArmorItem(SRArmorMaterial.GRIEFER, EquipmentSlotType.LEGS, new Item.Properties().group(ItemGroup.COMBAT)));
     public static final RegistryObject<Item> GRIEFER_BOOTS = HELPER.createItem("griefer_boots", () -> new GrieferArmorItem(SRArmorMaterial.GRIEFER, EquipmentSlotType.FEET, new Item.Properties().group(ItemGroup.COMBAT)));
-    public static final RegistryObject<IceWandItem> ICE_WAND = HELPER.createItem("ice_wand", () -> new IceWandItem(new Item.Properties().maxDamage(250).group(ItemGroup.COMBAT)));
-
+    
+    public static final RegistryObject<Item> WAND_OF_FREEZING = HELPER.createItem("wand_of_freezing", () -> new WandOfFreezingItem(new Item.Properties().maxDamage(250).rarity(Rarity.UNCOMMON).group(ItemGroup.COMBAT)));
+    public static final RegistryObject<Item> CLEAVER_OF_BEHEADING = HELPER.createItem("cleaver_of_beheading", () -> new CleaverOfBeheadingItem(SRItemTier.CLEAVER, 6.5f, -3.1F, new Item.Properties().rarity(Rarity.UNCOMMON).maxStackSize(1).group(ItemGroup.COMBAT)));
+    
     public static final RegistryObject<Item> SKELETON_VILLAGER_SPAWN_EGG = HELPER.createSpawnEggItem("skeleton_villager", SREntities.SKELETON_VILLAGER::get, 11447986, 9407641);
     public static final RegistryObject<Item> GRIEFER_SPAWN_EGG = HELPER.createSpawnEggItem("griefer", SREntities.GRIEFER::get, 8296024, 16037892);
     public static final RegistryObject<Item> ICEOLOGER_SPAWN_EGG = HELPER.createSpawnEggItem("iceologer", SREntities.ICEOLOGER::get, 9343891, 1388394);

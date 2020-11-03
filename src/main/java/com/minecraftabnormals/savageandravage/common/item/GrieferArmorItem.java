@@ -1,5 +1,7 @@
 package com.minecraftabnormals.savageandravage.common.item;
 
+import java.util.UUID;
+
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.minecraftabnormals.savageandravage.client.model.GrieferArmorModel;
@@ -7,20 +9,23 @@ import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 import com.minecraftabnormals.savageandravage.core.registry.SRAttributes;
 import com.minecraftabnormals.savageandravage.core.registry.SRItems;
 import com.teamabnormals.abnormals_core.core.utils.ItemStackUtils;
+
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.*;
+import net.minecraft.item.ArmorItem;
+import net.minecraft.item.IArmorMaterial;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.LazyValue;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
-import java.util.UUID;
-import java.util.function.Supplier;
 
 public class GrieferArmorItem extends ArmorItem {
 
@@ -56,20 +61,15 @@ public class GrieferArmorItem extends ArmorItem {
 
     @Override
     public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-        Supplier<Item> item = () -> Items.GOLDEN_BOOTS;
-        if (this.getItem() == SRItems.GRIEFER_HELMET.get()) item = () -> Items.GOLDEN_BOOTS;
-        if (this.getItem() == SRItems.GRIEFER_CHESTPLATE.get()) item = SRItems.GRIEFER_HELMET;
-        if (this.getItem() == SRItems.GRIEFER_LEGGINGS.get()) item = SRItems.GRIEFER_CHESTPLATE;
-        if (this.getItem() == SRItems.GRIEFER_BOOTS.get()) item = SRItems.GRIEFER_LEGGINGS;
-
-        if (ItemStackUtils.isInGroup(this.asItem(), group)) {
-            int targetIndex = ItemStackUtils.findIndexOfItem(item.get(), items);
-            if (targetIndex != -1) {
-                items.add(targetIndex + 1, new ItemStack(this));
-            } else {
-                super.fillItemGroup(group, items);
-            }
-        }
+        Item fill = Items.GOLDEN_BOOTS;
+        Item item = this.asItem();
+        if (item == SRItems.GRIEFER_CHESTPLATE.get()) 
+        	fill = SRItems.GRIEFER_HELMET.get();
+        if (item == SRItems.GRIEFER_LEGGINGS.get()) 
+        	fill = SRItems.GRIEFER_CHESTPLATE.get();
+        if (item == SRItems.GRIEFER_BOOTS.get()) 
+        	fill = SRItems.GRIEFER_LEGGINGS.get();
+        ItemStackUtils.fillAfterItemForGroup(this.asItem(), fill, group, items);
     }
 
     @Override

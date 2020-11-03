@@ -1,0 +1,15 @@
+{
+  "parent": "minecraft:item/handheld",
+  "loader": "forge:separate-perspective",
+  "base": {
+    "parent": "savageandravage:item/cleaver_of_beheading_handheld"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "savageandravage:item/cleaver_of_beheading_gui"
+    },
+    "fixed": {
+      "parent": "savageandravage:item/cleaver_of_beheading_gui"
+    }
+  }
+}

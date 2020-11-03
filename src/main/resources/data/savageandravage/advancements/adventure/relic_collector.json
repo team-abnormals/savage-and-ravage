@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:adventure/totem_of_undying",
+  "display": {
+    "icon": {
+      "item": "savageandravage:cleaver_of_beheading",
+      "nbt": "{Damage:0}"
+    },
+    "title": {
+      "translate": "advancements.adventure.relic_collector.title"
+    },
+    "description": {
+      "translate": "advancements.adventure.relic_collector.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "rewards": {
+    "experience": 100
+  },
+  "criteria": {
+    "relics": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:totem_of_undying"
+          },
+          {
+            "item": "savageandravage:cleaver_of_beheading"
+          },
+          {
+            "item": "savageandravage:wand_of_freezing"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "relics"
+    ]
+  ]
+}
