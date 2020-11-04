@@ -17,12 +17,12 @@ public class FrostbiteEffect extends Effect {
 	}
 
 	@Override
-	public void performEffect(LivingEntity entityLivingBaseIn, int amplifier) {
-		entityLivingBaseIn.attackEntityFrom(DamageSource.MAGIC, 1.0F);
+	public void performEffect(LivingEntity entity, int amplifier) {
+		entity.attackEntityFrom(DamageSource.MAGIC, 0.5F);
 	}
 
 	public boolean isReady(int duration, int amplifier) {
-		int i = 40 >> amplifier;
+		int i = 20 >> amplifier;
 		if (i > 0) {
 			return duration % i == 0;
 		} else {

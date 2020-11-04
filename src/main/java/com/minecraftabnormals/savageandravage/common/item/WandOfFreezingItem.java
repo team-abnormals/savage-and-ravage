@@ -1,7 +1,6 @@
 package com.minecraftabnormals.savageandravage.common.item;
 
 import com.minecraftabnormals.savageandravage.common.entity.IceChunkEntity;
-import com.minecraftabnormals.savageandravage.core.registry.SRItems;
 import com.teamabnormals.abnormals_core.core.utils.ItemStackUtils;
 
 import net.minecraft.entity.LivingEntity;

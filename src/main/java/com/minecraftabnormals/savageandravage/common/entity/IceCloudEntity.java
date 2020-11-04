@@ -34,7 +34,7 @@ public class IceCloudEntity extends DamagingProjectileEntity {
 
         for (Entity entity : this.world.getEntitiesInAABBexcluding(this.func_234616_v_(), this.getBoundingBox().expand(2, 2, 2), this::func_230298_a_)) {
             if (entity instanceof LivingEntity && !(entity instanceof IceologerEntity)) {
-                ((LivingEntity) entity).addPotionEffect(new EffectInstance(SREffects.FROSTBITE.get(), 60, 0, false, false, true));
+                ((LivingEntity) entity).addPotionEffect(new EffectInstance(SREffects.FROSTBITE.get(), 80, 0, false, false, true));
             }
         }
 

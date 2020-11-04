@@ -67,7 +67,7 @@ public class IceChunkEntity extends Entity implements IEntityAdditionalSpawnData
                 Entity entity = ((EntityRayTraceResult) result).getEntity();
                 entity.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, this.getCaster()), 8.0f);
                 if (entity instanceof LivingEntity) {
-                    ((LivingEntity) entity).addPotionEffect(new EffectInstance(SREffects.FROSTBITE.get(), 40, 2, false, false, true));
+                    ((LivingEntity) entity).addPotionEffect(new EffectInstance(SREffects.FROSTBITE.get(), 160, 0, false, false, true));
                 }
             }
         }
