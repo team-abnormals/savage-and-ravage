@@ -3,6 +3,8 @@ package com.minecraftabnormals.savageandravage.client.render;
 import com.minecraftabnormals.savageandravage.client.model.IceologerModel;
 import com.minecraftabnormals.savageandravage.common.entity.IceologerEntity;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.layers.HeadLayer;
@@ -25,5 +27,10 @@ public class IceologerRenderer extends MobRenderer<IceologerEntity, IceologerMod
     public ResourceLocation getEntityTexture(IceologerEntity entity)
     {
         return TEXTURE_LOCATION;
+    }
+
+    @Override
+    protected void preRenderCallback(IceologerEntity entitylivingbaseIn, MatrixStack matrixStackIn, float partialTickTime) {
+        matrixStackIn.scale(0.9375F, 0.9375F, 0.9375F);
     }
 }
