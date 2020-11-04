@@ -28,6 +28,7 @@
   
   "item.savageandravage.skeleton_villager_spawn_egg": "Skeleton Villager Spawn Egg",
   "item.savageandravage.griefer_spawn_egg": "Griefer Spawn Egg",
+  "item.savageandravage.executioner_spawn_egg": "Executioner Spawn Egg",
   "item.savageandravage.iceologer_spawn_egg": "Iceologer Spawn Egg",
   
   "entity.savageandravage.skeleton_villager": "Skeleton Villager",
@@ -38,6 +39,7 @@
   "entity.savageandravage.rune_prison": "Rune Prison",
   "entity.savageandravage.burning_banner": "Burning Banner",
   "entity.savageandravage.mischief_arrow": "Mischief Arrow",
+  "entity.savageandravage.executioner": "Executioner",
   "entity.savageandravage.iceologer": "Iceologer",
   "entity.savageandravage.ice_chunk": "Ice Chunk",
   "entity.savageandravage.ice_cloud": "Ice Cloud",

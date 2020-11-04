@@ -25,7 +25,6 @@ public class SRConfig {
     }
 
     public static class Client {
-        public final ConfigValue<Boolean> vindicatorRemodel;
         public final ConfigValue<Boolean> creepiesGrowLargerOnExplosion;
 
         public Client(ForgeConfigSpec.Builder builder) {
@@ -33,9 +32,6 @@ public class SRConfig {
                     .comment("If true, creepies grow significantly larger when they explode.")
                     .translation(makeTranslation("creepieGoBigWhenBoom"))
                     .define("Creepies grow larger on explosion", false);
-            this.vindicatorRemodel = builder
-                    .translation(makeTranslation("vindicatorRemodel"))
-                    .define("Enable Vindicator Remodel", true);
         }
     }
 

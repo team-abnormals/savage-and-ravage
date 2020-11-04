@@ -8,7 +8,7 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.LazyValue;
 
 public enum SRItemTier implements IItemTier {
-	CLEAVER(0, 954, 0.0F, 7.5F, 10, () -> {
+	CLEAVER(0, 459, 0.0F, 7.5F, 10, () -> {
 		return Ingredient.fromItems(Items.IRON_INGOT);
 	});
 

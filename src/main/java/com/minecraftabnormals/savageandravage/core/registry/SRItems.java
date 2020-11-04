@@ -41,6 +41,7 @@ public class SRItems {
     public static final RegistryObject<Item> SKELETON_VILLAGER_SPAWN_EGG = HELPER.createSpawnEggItem("skeleton_villager", SREntities.SKELETON_VILLAGER::get, 11447986, 9407641);
     public static final RegistryObject<Item> GRIEFER_SPAWN_EGG = HELPER.createSpawnEggItem("griefer", SREntities.GRIEFER::get, 8296024, 16037892);
     public static final RegistryObject<Item> ICEOLOGER_SPAWN_EGG = HELPER.createSpawnEggItem("iceologer", SREntities.ICEOLOGER::get, 9343891, 1388394);
+    public static final RegistryObject<Item> EXECUTIONER_SPAWN_EGG = HELPER.createSpawnEggItem("executioner", SREntities.EXECUTIONER::get, 0x8E9393, 0x6F484C);
 
     public static void registerItemProperties() {
         // Shouldn't these be under your mod id? - Ocelot
