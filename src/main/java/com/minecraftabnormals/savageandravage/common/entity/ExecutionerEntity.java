@@ -50,11 +50,11 @@ public class ExecutionerEntity extends VindicatorEntity {
 	}
 
 	@Override
-	public void applyWaveBonus(int p_213660_1_, boolean p_213660_2_) {
+	public void applyWaveBonus(int wave, boolean p_213660_2_) {
 		ItemStack itemstack = new ItemStack(SRItems.CLEAVER_OF_BEHEADING.get());
 		Raid raid = this.getRaid();
 		int i = 1;
-		if (p_213660_1_ > raid.getWaves(Difficulty.NORMAL)) {
+		if (wave > raid.getWaves(Difficulty.NORMAL)) {
 			i = 2;
 		}
 
