@@ -50,7 +50,7 @@ public class CleaverOfBeheadingItem extends SwordItem {
 
 	@SubscribeEvent
 	public static void onExecutionerCleaverKill(LivingDeathEvent event) {
-		if (event.getEntity() instanceof PlayerEntity) {
+		if (event.getSource().getTrueSource() instanceof LivingEntity && event.getEntity() instanceof PlayerEntity) {
 			LivingEntity wielder = (LivingEntity) event.getSource().getTrueSource();
 			PlayerEntity targetPlayer = (PlayerEntity) event.getEntity();
 			World world = wielder.world;
