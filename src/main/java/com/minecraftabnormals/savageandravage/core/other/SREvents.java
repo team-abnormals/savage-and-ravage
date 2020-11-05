@@ -359,12 +359,8 @@ public class SREvents {
                         convertCreeper((CreeperEntity) affected);
                     else if (!shouldSetChild && affected instanceof CreepieEntity)
                         ((CreepieEntity) affected).setGrowingAge(growingAgeValue);
-                    else if (affected instanceof ZombieEntity)
-                        ((ZombieEntity) affected).setChild(shouldSetChild);
-                    else if (affected instanceof PiglinEntity)
-                        ((PiglinEntity) affected).setChild(shouldSetChild);
-                    else if (affected instanceof ZoglinEntity)
-                        ((ZoglinEntity) affected).setChild(shouldSetChild);
+                    else if (affected instanceof ZombieEntity || affected instanceof PiglinEntity || affected instanceof ZoglinEntity)
+                        ((MobEntity) affected).setChild(shouldSetChild);
                     else
                         canChange = false;
                 }
