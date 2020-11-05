@@ -31,8 +31,8 @@ public class SporeCloudEntity extends ThrowableEntity implements IEntityAddition
     private UUID cloudId;
 
     private int cloudSize;
-    private boolean sporeBomb;
-    private boolean haveCreepiesAttackPlayersOnly;
+    private boolean spawnCloudInstantly;
+    private boolean creepiesAttackPlayersOnly;
     private boolean hit;
 
     public SporeCloudEntity(EntityType<? extends SporeCloudEntity> type, World world) {
@@ -87,8 +87,8 @@ public class SporeCloudEntity extends ThrowableEntity implements IEntityAddition
         if (this.cloudId != null)
             nbt.putUniqueId("CloudEntity", this.cloudId);
         nbt.putInt("CloudSize", this.cloudSize);
-        nbt.putBoolean("SporeBomb", this.sporeBomb);
-        nbt.putBoolean("AttackPlayers", this.haveCreepiesAttackPlayersOnly);
+        nbt.putBoolean("SpawnCloudInstantly", this.spawnCloudInstantly);
+        nbt.putBoolean("AttackPlayersOnly", this.creepiesAttackPlayersOnly);
     }
 
     @Override
@@ -97,8 +97,8 @@ public class SporeCloudEntity extends ThrowableEntity implements IEntityAddition
 
         this.cloudId = nbt.hasUniqueId("CloudEntity") ? nbt.getUniqueId("CloudEntity") : null;
         this.cloudSize = nbt.getInt("CloudSize");
-        this.sporeBomb = nbt.getBoolean("SporeBomb");
-        this.haveCreepiesAttackPlayersOnly = nbt.getBoolean("AttackPlayers");
+        this.spawnCloudInstantly = nbt.getBoolean("SpawnCloudInstantly");
+        this.creepiesAttackPlayersOnly = nbt.getBoolean("AttackPlayersOnly");
     }
 
     @Override
@@ -124,7 +124,7 @@ public class SporeCloudEntity extends ThrowableEntity implements IEntityAddition
     public void tick() {
         super.tick();
 
-        if (!this.world.isRemote() && this.sporeBomb && this.cloudId == null && this.cloudEntity == null)
+        if (!this.world.isRemote() && this.spawnCloudInstantly)
             this.spawnAreaEffectCloud(this.getPosX(), this.getPosY(), this.getPosZ());
 
         if (this.cloudId != null || this.hit)
@@ -148,7 +148,9 @@ public class SporeCloudEntity extends ThrowableEntity implements IEntityAddition
                 double zPos = aoe.getPosZRandom(0.2D);
                 BlockPos pos = new BlockPos(xPos, this.getPosY(), zPos);
                 List<AxisAlignedBB> blockShapes = this.world.getBlockState(pos).getShape(this.world, pos).toBoundingBoxList();
-
+                //wait this will just be one block lol
+                
+                //TODO this doesn't work for shit, fix it
                 boolean flag = true;
                 for (AxisAlignedBB box : blockShapes) {
                     if (box.intersects(aoe.getBoundingBox()) && this.world.getBlockState(pos).isSuffocating(this.world, pos)) {
@@ -163,11 +165,15 @@ public class SporeCloudEntity extends ThrowableEntity implements IEntityAddition
                         return;
 
                     creepie.setLocationAndAngles(xPos, aoe.getPosY(), zPos, 0.0F, 0.0F);
-
+                    
                     Entity thrower = this.func_234616_v_();
-                    if (thrower != null && (!(thrower instanceof LivingEntity) || !((LivingEntity) thrower).isPotionActive(Effects.INVISIBILITY)))
-                        creepie.setOwnerId(thrower.getUniqueID());
+                    if (thrower instanceof LivingEntity) {
+                        if (!((LivingEntity) thrower).isPotionActive(Effects.INVISIBILITY)) 
+                            creepie.setOwnerId(thrower.getUniqueID());
+                    }
+                    creepie.attackPlayersOnly = this.creepiesAttackPlayersOnly();
                     this.world.addEntity(creepie);
+
                 }
             }
 
@@ -190,8 +196,8 @@ public class SporeCloudEntity extends ThrowableEntity implements IEntityAddition
         this.cloudSize = cloudSize;
     }
 
-    public void setSporeBomb(boolean sporeBomb) {
-        this.sporeBomb = sporeBomb;
+    public void setSpawnCloudInstantly(boolean spawnCloudInstantly) {
+        this.spawnCloudInstantly = spawnCloudInstantly;
     }
 
     @Override
@@ -204,11 +210,11 @@ public class SporeCloudEntity extends ThrowableEntity implements IEntityAddition
         this.hit = buf.readBoolean();
     }
 
-    public boolean haveCreepiesAttackPlayersOnly() {
-        return haveCreepiesAttackPlayersOnly;
+    public boolean creepiesAttackPlayersOnly() {
+        return creepiesAttackPlayersOnly;
     }
 
-    public void setHaveCreepiesAttackPlayersOnly(boolean haveCreepiesAttackPlayersOnly) {
-        this.haveCreepiesAttackPlayersOnly = haveCreepiesAttackPlayersOnly;
+    public void creepiesAttackPlayersOnly(boolean haveCreepiesAttackPlayersOnly) {
+        this.creepiesAttackPlayersOnly = haveCreepiesAttackPlayersOnly;
     }
 }

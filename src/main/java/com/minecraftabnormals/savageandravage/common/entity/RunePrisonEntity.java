@@ -25,8 +25,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class RunePrisonEntity extends Entity {
-    private static final DataParameter<Integer> TICKS_TILL_REMOVE = EntityDataManager.createKey(BurningBannerEntity.class, DataSerializers.VARINT);
-    private static final DataParameter<Optional<BlockPos>> BLOCK_POS = EntityDataManager.createKey(BurningBannerEntity.class, DataSerializers.OPTIONAL_BLOCK_POS);
+    private static final DataParameter<Integer> TICKS_TILL_REMOVE = EntityDataManager.createKey(RunePrisonEntity.class, DataSerializers.VARINT);
+    private static final DataParameter<Optional<BlockPos>> BLOCK_POS = EntityDataManager.createKey(RunePrisonEntity.class, DataSerializers.OPTIONAL_BLOCK_POS);
     private int currentFrame = 0;
     private boolean isBackwardsFrameCycle = false;
 
