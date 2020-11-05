@@ -6,6 +6,7 @@ import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 import com.minecraftabnormals.savageandravage.core.registry.SRItems;
 import com.teamabnormals.abnormals_core.core.utils.ItemStackUtils;
 
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
@@ -49,8 +50,8 @@ public class CleaverOfBeheadingItem extends SwordItem {
 
 	@SubscribeEvent
 	public static void onExecutionerCleaverKill(LivingDeathEvent event) {
-		if (event.getSource().getTrueSource() instanceof PlayerEntity && event.getEntity() instanceof PlayerEntity) {
-			PlayerEntity wielder = (PlayerEntity) event.getSource().getTrueSource();
+		if (event.getEntity() instanceof PlayerEntity) {
+			LivingEntity wielder = (LivingEntity) event.getSource().getTrueSource();
 			PlayerEntity targetPlayer = (PlayerEntity) event.getEntity();
 			World world = wielder.world;
 

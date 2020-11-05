@@ -50,8 +50,10 @@ import net.minecraft.entity.monster.SlimeEntity;
 import net.minecraft.entity.monster.ZoglinEntity;
 import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.monster.piglin.PiglinEntity;
+import net.minecraft.entity.passive.CatEntity;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
+import net.minecraft.entity.passive.OcelotEntity;
 import net.minecraft.entity.passive.ParrotEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -123,6 +125,16 @@ public class SREvents {
         if (event.getEntity() instanceof CreeperEntity && !SRConfig.COMMON.creeperExplosionsDestroyBlocks.get()) {
             CreeperEntity creeper = (CreeperEntity) event.getEntity();
             creeper.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(creeper, IronGolemEntity.class, true));
+        }
+        
+        if (event.getEntity() instanceof CatEntity) {
+        	CatEntity cat = (CatEntity) event.getEntity();
+            cat.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(cat, CreepieEntity.class, false));
+        }
+        
+        if (event.getEntity() instanceof OcelotEntity) {
+        	OcelotEntity ocelot = (OcelotEntity) event.getEntity();
+        	ocelot.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(ocelot, CreepieEntity.class, false));
         }
 
         if (event.getEntity() instanceof AbstractVillagerEntity) {

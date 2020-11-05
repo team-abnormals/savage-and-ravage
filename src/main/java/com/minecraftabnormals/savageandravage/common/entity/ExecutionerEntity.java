@@ -40,7 +40,8 @@ public class ExecutionerEntity extends VindicatorEntity {
 				.createMutableAttribute(Attributes.MOVEMENT_SPEED, (double) 0.30F)
 				.createMutableAttribute(Attributes.FOLLOW_RANGE, 14.0D)
 				.createMutableAttribute(Attributes.MAX_HEALTH, 35.0D)
-				.createMutableAttribute(Attributes.ATTACK_DAMAGE, 7.0D);
+				.createMutableAttribute(Attributes.ATTACK_DAMAGE, 7.0D)
+				.createMutableAttribute(Attributes.ARMOR, 3.0D);
 	}
 
 	@Override
