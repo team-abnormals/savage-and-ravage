@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "savageandravage:item/cleaver_of_beheading"
+  }
+}

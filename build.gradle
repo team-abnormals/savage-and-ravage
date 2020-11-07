@@ -39,6 +39,7 @@ minecraft {
             workingDirectory project.file('run')
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
+            property 'mixin.env.disableRefMap', 'true'
             arg "-mixin.config=savageandravage.mixins.json"
             mods {
                 savageandravage {
@@ -50,6 +51,7 @@ minecraft {
             workingDirectory project.file('run')
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
+            property 'mixin.env.disableRefMap', 'true'
             arg "-mixin.config=savageandravage.mixins.json"
             mods {
                 savageandravage {
@@ -73,13 +75,13 @@ minecraft {
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.16.1-32.0.72'
-    implementation fg.deobf("curse.maven:abnormals-core:3017821")
+    implementation fg.deobf("curse.maven:abnormals-core:3091840")
 }
 
 jar {
     manifest {
         attributes([
-        	"Specification-Title": "Savage & Ravage",
+        	  "Specification-Title": "Savage & Ravage",
             "Specification-Vendor": "Team Abnormals",
             "Specification-Version": "1",
             "Implementation-Title": project.name,

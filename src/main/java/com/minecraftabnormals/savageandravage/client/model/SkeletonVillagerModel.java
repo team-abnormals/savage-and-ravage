@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.minecraftabnormals.savageandravage.common.entity.SkeletonVillagerEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
-
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.model.ModelHelper;
 import net.minecraft.client.renderer.model.ModelRenderer;

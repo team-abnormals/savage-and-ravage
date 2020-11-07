@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-import com.minecraftabnormals.savageandravage.common.entity.goals.ConditionalNearestAttackableTargetGoal;
 import com.minecraftabnormals.savageandravage.common.entity.goals.CreepieSwellGoal;
 import com.minecraftabnormals.savageandravage.common.entity.goals.FollowMobOwnerGoal;
 import com.minecraftabnormals.savageandravage.common.entity.goals.MobOwnerHurtByTargetGoal;
@@ -38,6 +37,7 @@ import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.CatEntity;
 import net.minecraft.entity.passive.OcelotEntity;
+import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -70,7 +70,7 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
     private static final DataParameter<Boolean> IGNITED = EntityDataManager.createKey(CreepieEntity.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Optional<UUID>> OWNER_UUID = EntityDataManager.createKey(CreepieEntity.class, DataSerializers.OPTIONAL_UNIQUE_ID);
     private static final DataParameter<Boolean> CONVERTING = EntityDataManager.createKey(CreepieEntity.class, DataSerializers.BOOLEAN);
-    public boolean spawnedFromSporeBomb;
+    public boolean attackPlayersOnly;
     public int lastActiveTime;
     public int timeSinceIgnited;
     public int fuseTime = 30;
@@ -93,33 +93,41 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
         this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, OcelotEntity.class, 6.0F, 1.0D, 1.2D));
         this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, CatEntity.class, 6.0F, 1.0D, 1.2D));
         this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0D, false));
-        this.goalSelector.addGoal(3, new FollowMobOwnerGoal(this, 1.0D, 2.0F, 20.0F, false));
+        this.goalSelector.addGoal(3, new FollowMobOwnerGoal(this, 1.0D, 2.0F, 20.0F));
         this.goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 0.8D));
         this.goalSelector.addGoal(6, new LookAtGoal(this, PlayerEntity.class, 8.0F));
         this.goalSelector.addGoal(6, new LookRandomlyGoal(this));
         this.targetSelector.addGoal(2, new MobOwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new MobOwnerHurtTargetGoal(this));
         this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(1, new ConditionalNearestAttackableTargetGoal(this, true));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<MobEntity>(this, MobEntity.class, false) {
             @Override
             public boolean shouldExecute() {
-                return super.shouldExecute() && ((CreepieEntity)goalOwner).spawnedFromSporeBomb && !(this.nearestTarget instanceof CreepieEntity);
+                return super.shouldExecute()
+                        && ((CreepieEntity) goalOwner).getOwnerId() == null
+                        && !(this.nearestTarget instanceof CreepieEntity)
+                        && !(this.nearestTarget instanceof CreeperEntity)
+                        && !((CreepieEntity)goalOwner).attackPlayersOnly;
+            }
+        });
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<PlayerEntity>(this, PlayerEntity.class, false) {
+            @Override
+            public boolean shouldExecute() {
+                return super.shouldExecute() && ((CreepieEntity) goalOwner).getOwnerId() == null;
+
             }
         });
     }
- 	
+
     public static AttributeModifierMap.MutableAttribute registerAttributes() {
-    	return MonsterEntity.func_233666_p_()
-    			.createMutableAttribute(Attributes.MAX_HEALTH, 5.0)
-    			.createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.35D);
+        return MonsterEntity.func_233666_p_()
+                .createMutableAttribute(Attributes.MAX_HEALTH, 5.0)
+                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.35D);
     }
 
-    /**
-     * The maximum height from where the entity is allowed to jump (used in pathfinder)
-     */
+    @Override
     public int getMaxFallHeight() {
-        return this.getAttackTarget() == null ? 3 : 3 + (int)(this.getHealth() - 1.0F);
+        return this.getAttackTarget() == null ? 3 : 3 + (int) (this.getHealth() - 1.0F);
     }
 
     @Override
@@ -134,14 +142,14 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
 
     public boolean onLivingFall(float distance, float damageMultiplier) {
         boolean flag = super.onLivingFall(distance, damageMultiplier);
-        this.timeSinceIgnited = (int)((float)this.timeSinceIgnited + distance * 1.5F);
+        this.timeSinceIgnited = (int) ((float) this.timeSinceIgnited + distance * 1.5F);
         if (this.timeSinceIgnited > this.fuseTime - 5) {
             this.timeSinceIgnited = this.fuseTime - 5;
         }
 
         return flag;
     }
-    
+
     @Nullable
     @Override
     public ILivingEntityData onInitialSpawn(IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
@@ -150,7 +158,7 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
     }
 
     @Override
-    protected void registerData(){
+    protected void registerData() {
         super.registerData();
         this.dataManager.register(STATE, -1);
         this.dataManager.register(IGNITED, false);
@@ -167,16 +175,18 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
         compound.putInt("Age", this.getGrowingAge());
         compound.putInt("ForcedAge", this.forcedAge);
         compound.putInt("ConversionTime", this.isConverting() ? this.conversionTime : -1);
-        compound.putShort("Fuse", (short)this.fuseTime);
-        compound.putByte("ExplosionRadius", (byte)this.explosionRadius);
+        compound.putShort("Fuse", (short) this.fuseTime);
+        compound.putByte("ExplosionRadius", (byte) this.explosionRadius);
         compound.putBoolean("ignited", this.hasIgnited());
-        compound.putBoolean("SporeBomb", this.spawnedFromSporeBomb);
+        compound.putBoolean("AttackPlayersOnly", this.attackPlayersOnly);
     }
 
     @Override
     public void readAdditional(CompoundNBT compound) {
         super.readAdditional(compound);
-        this.fuseTime = compound.getShort("Fuse");
+        if (compound.contains("Fuse", 99)) {
+            this.fuseTime = compound.getShort("Fuse");
+        }
         this.explosionRadius = compound.getByte("ExplosionRadius");
         this.setGrowingAge(compound.getInt("Age"));
         this.forcedAge = compound.getInt("ForcedAge");
@@ -187,75 +197,59 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
         if (compound.hasUniqueId("OwnerUUID")) {
             this.setOwnerId(compound.getUniqueId("OwnerUUID"));
         }
-        this.spawnedFromSporeBomb = compound.getBoolean("SporeBomb");
+        this.attackPlayersOnly = compound.getBoolean("AttackPlayersOnly");
     }
 
+    @Override
     public ItemStack getPickedResult(RayTraceResult target) {
         return new ItemStack(Items.CREEPER_SPAWN_EGG);
     }
 
     @Override
-    protected float getStandingEyeHeight(Pose poseIn, EntitySize sizeIn){
-        return sizeIn.height * 0.50F;
+    protected float getStandingEyeHeight(Pose poseIn, EntitySize sizeIn) {
+        return sizeIn.height * 0.8F;
     }
 
-    /**
-     * The age value may be negative or positive or zero. If it's negative, it get's incremented on each tick, if it's
-     * positive, it get's decremented each tick. Don't confuse this with EntityLiving.getAge. With a negative value the
-     * Entity is considered a child.
-     */
+    @Override
     public int getGrowingAge() {
-        if (this.world.isRemote) {
+        if (this.world.isRemote()) {
             return this.growingAge < 0 ? -1 : 1;
         } else {
             return this.growingAge;
         }
     }
 
-    /**
-     * Increases this entity's age, optionally updating {@link #forcedAge}. If the entity is an adult (if the entity's
-     * age is greater than or equal to 0) then the entity's age will be set to {@link #forcedAge}.
-     */
-    private void ageUp(int growthSeconds, boolean updateForcedAge) {
+    private void ageUp(int growthSeconds) {
         int i = this.getGrowingAge();
         i = i + growthSeconds * 20;
         if (i > 0) {
             i = 0;
         }
 
-        int j = 0/*i - i*/;
         this.setGrowingAge(i);
-        if (updateForcedAge) {
-            this.forcedAge += j; //TODO see if this is needed since j seems to always equal 0
-            if (this.forcedAgeTimer == 0) {
-                this.forcedAgeTimer = 40;
-            }
+        if (this.forcedAgeTimer == 0) {
+            this.forcedAgeTimer = 40;
         }
 
         if (this.getGrowingAge() == 0) {
             this.setGrowingAge(this.forcedAge);
         }
-
     }
 
-    /**
-     * The age value may be negative or positive or zero. If it's negative, it get's incremented on each tick, if it's
-     * positive, it get's decremented each tick. With a negative value the Entity is considered a child.
-     */
+    @Override
     public void setGrowingAge(int age) {
         int i = this.growingAge;
         this.growingAge = age;
         if (i < 0 && age >= 0 || i >= 0 && age < 0) {
             this.onGrowingIntoCreeper();
         }
-
     }
 
     /**
      * Creates an explosion as determined by this creeper's power and explosion radius.
      */
-	protected void explode() {
-        if (!this.world.isRemote) {
+    protected void explode() {
+        if (!this.world.isRemote()) {
             Explosion.Mode explosion$mode = Explosion.Mode.NONE;
             float chargedModifier = 1.0F;
             this.dead = true;
@@ -263,16 +257,12 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
             this.remove();
             this.spawnLingeringCloud();
         }
-
     }
 
-    /**
-     * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
-     * use this to react to sunlight and start to burn.
-     */
+    @Override
     public void livingTick() {
         super.livingTick();
-        if (this.world.isRemote) {
+        if (this.world.isRemote()) {
             if (this.forcedAgeTimer > 0) {
                 if (this.forcedAgeTimer % 4 == 0) {
                     this.world.addParticle(ParticleTypes.HAPPY_VILLAGER, this.getPosXRandom(1.0D), this.getPosYRandom() + 0.5D, this.getPosZRandom(1.0D), 0.0D, 0.0D, 0.0D);
@@ -292,20 +282,21 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
         }
 
     }
-    
+
+    @Override
     protected float getSoundPitch() {
         return (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.5F;
-     }
+    }
 
-     @Override
+    @Override
     protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
         return SRSounds.CREEPIE_HURT.get();
-     }
+    }
 
-     @Override
-     protected SoundEvent getDeathSound() {
+    @Override
+    protected SoundEvent getDeathSound() {
         return SRSounds.CREEPIE_DEATH.get();
-     }
+    }
 
     /**
      * Called to update the entity's position/logic.
@@ -319,7 +310,7 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
             }
             int i = this.getCreeperState();
             if (i > 0 && this.timeSinceIgnited == 0) {
-               this.playSound(SRSounds.CREEPIE_PRIMED.get(), this.getSoundVolume(), this.getSoundPitch());
+                this.playSound(SRSounds.CREEPIE_PRIMED.get(), this.getSoundVolume(), this.getSoundPitch());
             }
             this.timeSinceIgnited += i;
             if (this.timeSinceIgnited < 0) {
@@ -331,18 +322,19 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
                 this.explode();
             }
             if (this.isConverting()) {
-                if(!this.world.isRemote) {
+                if (!this.world.isRemote) {
                     this.conversionTime--;
                     if (this.conversionTime <= 0) {
                         this.finishConversion((ServerWorld) this.world);
                     }
                 }
-                this.world.addParticle(SRParticles.CREEPER_SPORES.get(), this.getPosX() -0.5d + (double)(this.rand.nextFloat()), this.getPosY()+0.5d, this.getPosZ() -0.5d + (double)(this.rand.nextFloat()), 0.0D, (double)(this.rand.nextFloat() / 5.0F), 0.0D);
+                this.world.addParticle(SRParticles.CREEPER_SPORES.get(), this.getPosX() - 0.5d + (double) (this.rand.nextFloat()), this.getPosY() + 0.5d, this.getPosZ() - 0.5d + (double) (this.rand.nextFloat()), 0.0D, (this.rand.nextFloat() / 5.0F), 0.0D);
             }
         }
         super.tick();
     }
 
+    @Override
     public boolean attackEntityAsMob(Entity entityIn) {
         return true;
     }
@@ -351,25 +343,22 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
     public ActionResultType func_230254_b_(PlayerEntity player, Hand hand) {
         ItemStack itemstack = player.getHeldItem(hand);
         if (itemstack.getItem() == Items.BONE_MEAL) {
-            if (this.isNotCreeper()) {
+            if (this.getGrowingAge() < 0) {
                 this.consumeItemFromStack(player, itemstack);
-                player.swing(hand, true); //this makes the player's hand swing
-                this.ageUp((int)((float)(-this.getGrowingAge() / 20) * 0.1F), true);
+                this.ageUp((int) ((float) (-this.getGrowingAge() / 20) * 0.1F));
                 return ActionResultType.SUCCESS;
             }
         }
         if (itemstack.getItem() == Items.FLINT_AND_STEEL) {
             this.world.playSound(player, this.getPosX(), this.getPosY(), this.getPosZ(), SoundEvents.ITEM_FLINTANDSTEEL_USE, this.getSoundCategory(), 1.0F, this.rand.nextFloat() * 0.4F + 0.8F);
-            if (!this.world.isRemote) {
+            if (!this.world.isRemote()) {
                 this.ignite();
-                itemstack.damageItem(1, player, (p_213625_1_) -> {
-                    p_213625_1_.sendBreakAnimation(hand);
-                });
+                itemstack.damageItem(1, player, (p_213625_1_) -> p_213625_1_.sendBreakAnimation(hand));
             }
 
             return ActionResultType.SUCCESS;
         } else {
-        	return ActionResultType.FAIL;
+            return ActionResultType.FAIL;
         }
     }
 
@@ -378,7 +367,7 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
      */
     @OnlyIn(Dist.CLIENT)
     public float getCreeperFlashIntensity(float partialTicks) {
-        return MathHelper.lerp(partialTicks, (float)this.lastActiveTime, (float)this.timeSinceIgnited) / (float)(this.fuseTime - 2);
+        return MathHelper.lerp(partialTicks, (float) this.lastActiveTime, (float) this.timeSinceIgnited) / (float) (this.fuseTime - 2);
     }
 
     /**
@@ -411,9 +400,9 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
             areaeffectcloudentity.setRadiusOnUse(-0.5F);
             areaeffectcloudentity.setWaitTime(10);
             areaeffectcloudentity.setDuration(areaeffectcloudentity.getDuration() / 2);
-            areaeffectcloudentity.setRadiusPerTick(-areaeffectcloudentity.getRadius() / (float)areaeffectcloudentity.getDuration());
+            areaeffectcloudentity.setRadiusPerTick(-areaeffectcloudentity.getRadius() / (float) areaeffectcloudentity.getDuration());
 
-            for(EffectInstance effectinstance : collection) {
+            for (EffectInstance effectinstance : collection) {
                 areaeffectcloudentity.addEffect(new EffectInstance(effectinstance));
             }
 
@@ -426,7 +415,7 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
      * Decreases ItemStack size by one
      */
     private void consumeItemFromStack(PlayerEntity player, ItemStack stack) {
-        if (!player.abilities.isCreativeMode) {
+        if (!player.isCreative()) {
             stack.shrink(1);
         }
     }
@@ -436,64 +425,58 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
      * an adult)
      */
     private void onGrowingIntoCreeper() {
-        if (!this.world.isRemote) {
-            this.startConverting(this.rand.nextInt(80)+160); //10 seconds before it converts
+        if (!this.world.isRemote()) {
+            this.startConverting(this.rand.nextInt(80) + 160); //10 seconds before it converts
         }
     }
 
-    /**
-     * Checks if the age timer is negative
-     */
-    private boolean isNotCreeper() {
-        return this.getGrowingAge() < 0;
-    }
-
     @Override
-    public boolean isChild(){
-        return true;
-    }
-
     public boolean canBeLeashedTo(PlayerEntity player) {
         return (!this.getLeashed() && this.getOwnerId() != null);
     }
 
-
+    @Override
     @Nullable
     public UUID getOwnerId() {
-        return this.dataManager.get(OWNER_UUID).orElse((UUID)null);
+        return this.dataManager.get(OWNER_UUID).orElse(null);
     }
 
+    @Override
     public void setOwnerId(@Nullable UUID ownerId) {
         this.dataManager.set(OWNER_UUID, Optional.ofNullable(ownerId));
     }
 
+    @Override
     @Nullable
     public LivingEntity getOwner() {
-        if(!world.isRemote) { //TODO: this is experimental, if anything breaks by being only on the client, a packet is needed
+        if (!this.world.isRemote()) { //TODO: this is experimental, if anything breaks by being only on the client, a packet is needed
             UUID uuid = this.getOwnerId();
-            return uuid == null ? null : (LivingEntity)((ServerWorld)this.world).getEntityByUuid(uuid);
+            if (uuid == null)
+                return null;
+            Entity entity = ((ServerWorld) this.world).getEntityByUuid(uuid);
+            return entity instanceof LivingEntity ? (LivingEntity) entity : null;
         }
         return null;
     }
 
+    @Override
     public boolean canAttack(LivingEntity target) {
-        return !this.isOwner(target) && super.canAttack(target); /*this was originally this.isOwner(target) ? false : super.canAttack(target), change back if this breaks*/
+        return target != this.getOwner() && super.canAttack(target);
     }
 
-    private boolean isOwner(LivingEntity entityIn) {
-        return entityIn == this.getOwner();
-    }
-
-
+    @Override
     public boolean shouldAttackEntity(LivingEntity target, LivingEntity owner) {
-        if (target instanceof CreepieEntity) {
-            CreepieEntity creepieEntity = (CreepieEntity) target;
-            return creepieEntity.getOwner() != owner;
-        } else if (target instanceof PlayerEntity && owner instanceof PlayerEntity && !((PlayerEntity)owner).canAttackPlayer((PlayerEntity)target)) {
-            return false;
-        } else {
-            return true;
+        boolean shouldAttack = true;
+        if (target instanceof IOwnableMob) {
+            shouldAttack = ((IOwnableMob)target).getOwner() != owner;
         }
+        else if (target instanceof TameableEntity) {
+            shouldAttack = ((TameableEntity)target).getOwner() != owner;
+        }
+        else if (target instanceof PlayerEntity && owner instanceof PlayerEntity) {
+            shouldAttack = ((PlayerEntity) owner).canAttackPlayer((PlayerEntity) target);
+        }
+        return shouldAttack;
     }
 
     public boolean isConverting() {
@@ -503,15 +486,18 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
     /**
      * Starts conversion of this zombie villager to a villager
      */
-    private void startConverting( int conversionTimeIn) {
+    private void startConverting(int conversionTimeIn) {
         this.conversionTime = conversionTimeIn;
         this.getDataManager().set(CONVERTING, true);
-        if(this.isServerWorld()) this.playSound(SRSounds.CREEPIE_BEGIN_CONVERSION.get(),1.0F,1.0F);
+        if (this.isServerWorld()) this.playSound(SRSounds.CREEPIE_BEGIN_CONVERSION.get(), 1.0F, 1.0F);
         //this.world.setEntityState(this, (byte)16);
     }
 
     private void finishConversion(ServerWorld world) {
         CreeperEntity creeperEntity = EntityType.CREEPER.create(this.world);
+        if (creeperEntity == null)
+            return;
+
         creeperEntity.copyLocationAndAnglesFrom(this);
         creeperEntity.onInitialSpawn(this.world, this.world.getDifficultyForLocation(creeperEntity.getPosition()), SpawnReason.CONVERSION, null, null);
         this.dead = true;
@@ -525,52 +511,42 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
         if (this.isNoDespawnRequired()) {
             creeperEntity.enablePersistence();
         }
-        if(this.getLeashed()) {
-            creeperEntity.setLeashHolder(this.getLeashHolder(), true);
+        if (this.getLeashed()) {
+            if(this.getLeashHolder() != null) creeperEntity.setLeashHolder(this.getLeashHolder(), true);
             this.clearLeashed(true, false);
         }
 
-        if(this.getRidingEntity() != null) {
+        if (this.getRidingEntity() != null) {
             creeperEntity.startRiding(this.getRidingEntity());
         }
         creeperEntity.setInvulnerable(this.isInvulnerable());
         creeperEntity.setHealth(creeperEntity.getMaxHealth());
         this.world.addEntity(creeperEntity);
-        if(this.isServerWorld()) this.playSound(SRSounds.CREEPIE_GROW.get(),1.0F,1.0F);
+        if (this.isServerWorld()) this.playSound(SRSounds.CREEPIE_GROW.get(), 1.0F, 1.0F);
     }
 
+    @Override
     public Team getTeam() {
-        if (this.getOwnerId()!=null) {
-            LivingEntity livingentity = this.getOwner();
-            if (livingentity != null) {
-                return livingentity.getTeam();
-            }
-        }
-
+        LivingEntity owner = this.getOwner();
+        if (owner != null)
+            return owner.getTeam();
         return super.getTeam();
     }
 
-    /**
-     * Returns whether this Entity is on the same team as the given Entity.
-     */
+    @Override
     public boolean isOnSameTeam(Entity entityIn) {
-        if (this.getOwnerId()!=null) {
-            LivingEntity livingentity = this.getOwner();
-            if (entityIn == livingentity) {
-                return true;
-            }
+        LivingEntity owner = this.getOwner();
+        if (entityIn == owner)
+            return true;
 
-            if (livingentity != null) {
-                return livingentity.isOnSameTeam(entityIn);
-            }
-        }
+        if (owner != null)
+            return owner.isOnSameTeam(entityIn);
 
         return super.isOnSameTeam(entityIn);
     }
 
     @Override
-    public IPacket<?> createSpawnPacket()
-    {
+    public IPacket<?> createSpawnPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 }

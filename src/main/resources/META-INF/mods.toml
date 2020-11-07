@@ -8,7 +8,7 @@ license="https://github.com/minecraftabnormals/Savage-and-Ravage/blob/master/LIC
     version="${file.jarVersion}"
     displayName="Savage & Ravage"
     logoFile="logo.png"
-    authors="Farcr, Bagel, ComedyArbiter and TallestRed"
+    authors="Farcr, Bagel, abigailfails and TallestRed"
     credits="MCVinnyQ, for some of the ideas used here, and SmellyModder, for contributing code."
     description='''A mod that improves and expands on illagers through new structures, enemies and challenges.'''
 
@@ -29,6 +29,6 @@ license="https://github.com/minecraftabnormals/Savage-and-Ravage/blob/master/LIC
 [[dependencies.savageandravage]]
     modId="abnormals_core"
     mandatory=true
-    versionRange="[2.0.1,)"
+    versionRange="[2.0.7,)"
     ordering="AFTER"
     side="BOTH"

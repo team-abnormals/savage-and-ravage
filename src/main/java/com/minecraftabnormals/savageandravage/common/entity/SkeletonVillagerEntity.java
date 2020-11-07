@@ -1,31 +1,13 @@
 package com.minecraftabnormals.savageandravage.common.entity;
 
-import java.util.Map;
-
-import javax.annotation.Nullable;
-
 import com.google.common.collect.Maps;
 import com.minecraftabnormals.savageandravage.common.entity.goals.ImprovedCrossbowGoal;
 import com.minecraftabnormals.savageandravage.core.registry.SRItems;
-
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.CreatureAttribute;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ICrossbowUser;
-import net.minecraft.entity.ILivingEntityData;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.ai.goal.AvoidEntityGoal;
-import net.minecraft.entity.ai.goal.FleeSunGoal;
-import net.minecraft.entity.ai.goal.HurtByTargetGoal;
-import net.minecraft.entity.ai.goal.LookAtGoal;
-import net.minecraft.entity.ai.goal.LookRandomlyGoal;
-import net.minecraft.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
-import net.minecraft.entity.ai.goal.RestrictSunGoal;
-import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
+import net.minecraft.entity.*;
+import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.AbstractSkeletonEntity;
 import net.minecraft.entity.monster.SpiderEntity;
@@ -50,21 +32,27 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
+import java.util.Map;
+
 public class SkeletonVillagerEntity extends AbstractSkeletonEntity implements ICrossbowUser {
     private static final DataParameter<Boolean> DATA_CHARGING_STATE = EntityDataManager.createKey(SkeletonVillagerEntity.class, DataSerializers.BOOLEAN);
     private final ImprovedCrossbowGoal<SkeletonVillagerEntity> aiCrossBow = new ImprovedCrossbowGoal<SkeletonVillagerEntity>(this, 1.0D, 8.0F, 5.0D);
     private final MeleeAttackGoal aiMelee = new MeleeAttackGoal(this, 1.2D, false) {
+        @Override
         public void resetTask() {
             super.resetTask();
             SkeletonVillagerEntity.this.setAggroed(false);
         }
 
+        @Override
         public void startExecuting() {
             super.startExecuting();
             SkeletonVillagerEntity.this.setAggroed(true);
         }
     };
 
+    @Override
     public CreatureAttribute getCreatureAttribute() {
         return CreatureAttribute.UNDEAD;
     }
@@ -105,18 +93,22 @@ public class SkeletonVillagerEntity extends AbstractSkeletonEntity implements IC
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, AbstractVillagerEntity.class, true));
     }
 
+    @Override
     protected SoundEvent getAmbientSound() {
         return SoundEvents.ENTITY_SKELETON_AMBIENT;
     }
 
+    @Override
     protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
         return SoundEvents.ENTITY_SKELETON_HURT;
     }
 
+    @Override
     protected SoundEvent getDeathSound() {
         return SoundEvents.ENTITY_SKELETON_DEATH;
     }
 
+    @Override
     protected SoundEvent getStepSound() {
         return SoundEvents.ENTITY_SKELETON_STEP;
     }
@@ -126,13 +118,14 @@ public class SkeletonVillagerEntity extends AbstractSkeletonEntity implements IC
         this.dataManager.set(DATA_CHARGING_STATE, trueorfalse);
     }
 
+    @Override
     public ItemStack getPickedResult(RayTraceResult target) {
         return new ItemStack(SRItems.SKELETON_VILLAGER_SPAWN_EGG.get());
     }
 
+    @Override
     @Nullable
-    public ILivingEntityData onInitialSpawn(IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason,
-            @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+    public ILivingEntityData onInitialSpawn(IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
         this.setEquipmentBasedOnDifficulty(difficultyIn);
         this.setEnchantmentBasedOnDifficulty(difficultyIn);
         if (worldIn.getRandom().nextInt(100) == 0) {
@@ -144,6 +137,7 @@ public class SkeletonVillagerEntity extends AbstractSkeletonEntity implements IC
         return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }
 
+    @Override
     protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty) {
         ItemStack itemstack = new ItemStack(Items.CROSSBOW);
         if (this.rand.nextInt(300) == 0) {
@@ -154,6 +148,7 @@ public class SkeletonVillagerEntity extends AbstractSkeletonEntity implements IC
         this.setItemStackToSlot(EquipmentSlotType.MAINHAND, itemstack);
     }
 
+    @Override
     protected void registerData() {
         super.registerData();
         this.dataManager.register(DATA_CHARGING_STATE, false);

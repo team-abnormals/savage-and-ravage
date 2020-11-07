@@ -2,7 +2,6 @@ package com.minecraftabnormals.savageandravage.client.render;
 
 import com.minecraftabnormals.savageandravage.common.entity.MischiefArrowEntity;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
-
 import net.minecraft.client.renderer.entity.ArrowRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.util.ResourceLocation;
@@ -13,6 +12,7 @@ public class MischiefArrowRenderer extends ArrowRenderer<MischiefArrowEntity> {
       super(manager);
    }
 
+   @Override
    public ResourceLocation getEntityTexture(MischiefArrowEntity entity) {
       return new ResourceLocation(SavageAndRavage.MODID, "textures/entity/projectiles/mischief_arrow.png");
    }
