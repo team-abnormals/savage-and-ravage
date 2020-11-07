@@ -121,7 +121,7 @@ public class BurningBannerEntity extends Entity implements IEntityAdditionalSpaw
                         offender.removeActivePotionEffect(Effects.BAD_OMEN);
 
                     if (!this.world.getGameRules().getBoolean(GameRules.DISABLE_RAIDS))
-                        offender.addPotionEffect(new EffectInstance(Effects.BAD_OMEN, 120000, MathHelper.clamp(effect == null ? 0 : effect.getAmplifier() + 1, 0, 5), false, false, true));
+                        offender.addPotionEffect(new EffectInstance(Effects.BAD_OMEN, 120000, MathHelper.clamp(effect == null ? 0 : effect.getAmplifier() + 1, 0, 4, false, false, true));
                 }
                 this.world.removeBlock(bannerPos, false);
             }
