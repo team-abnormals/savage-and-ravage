@@ -5,7 +5,6 @@ import com.minecraftabnormals.savageandravage.common.entity.*;
 import com.minecraftabnormals.savageandravage.common.entity.block.SporeBombEntity;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 import com.teamabnormals.abnormals_core.core.utils.RegistryHelper;
-
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
@@ -68,7 +67,7 @@ public class SREntities {
 
     public static void registerSpawns(Biome biome) {
         if (BiomeDictionary.hasType(biome, Type.OVERWORLD) && isSpawnableBiome(biome)) {
-            biome.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(SKELETON_VILLAGER.get(), 5, 5, 5));
+            biome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(SKELETON_VILLAGER.get(), 5, 5, 5));
         }
     }
 
