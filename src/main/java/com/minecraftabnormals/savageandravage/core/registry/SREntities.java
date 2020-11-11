@@ -62,12 +62,19 @@ public class SREntities {
 
     public static void registerEntitySpawns() {
         EntitySpawnPlacementRegistry.register(SKELETON_VILLAGER.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::canMonsterSpawnInLight);
+        EntitySpawnPlacementRegistry.register(EXECUTIONER.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::canMonsterSpawnInLight);
+        EntitySpawnPlacementRegistry.register(ICEOLOGER.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, IceologerEntity::canIceologerSpawn);
+
         ForgeRegistries.BIOMES.getValues().forEach(SREntities::registerSpawns);
     }
 
     public static void registerSpawns(Biome biome) {
         if (BiomeDictionary.hasType(biome, Type.OVERWORLD) && isSpawnableBiome(biome)) {
-            biome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(SKELETON_VILLAGER.get(), 5, 5, 5));
+            biome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(SKELETON_VILLAGER.get(), 5, 1, 1));
+        }
+
+        if (biome.getCategory() == Biome.Category.ICY || biome.getCategory() == Biome.Category.EXTREME_HILLS) {
+            biome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(ICEOLOGER.get(), 10, 1, 1));
         }
     }
 
