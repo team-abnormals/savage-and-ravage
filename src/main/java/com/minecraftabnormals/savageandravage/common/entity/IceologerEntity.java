@@ -159,7 +159,6 @@ public class IceologerEntity extends SpellcastingIllagerEntity {
 		return SoundEvents.ENTITY_EVOKER_CAST_SPELL;
 	}
 
-	// Shouldn't have to do this, SpawnEggItem is supposed to have a mapping for all entities with spawn eggs
 	@Override
 	public ItemStack getPickedResult(RayTraceResult target) {
 		return new ItemStack(SRItems.ICEOLOGER_SPAWN_EGG.get());
@@ -189,6 +188,11 @@ public class IceologerEntity extends SpellcastingIllagerEntity {
 	@Override
 	public CreatureAttribute getCreatureAttribute() {
 		return CreatureAttribute.ILLAGER;
+	}
+
+	@Override
+	public boolean canBeLeader() {
+		return true;
 	}
 
 	public static boolean canIceologerSpawn(EntityType<? extends IceologerEntity> patrollerType, IWorld worldIn, SpawnReason reason, BlockPos pos, Random random) {
