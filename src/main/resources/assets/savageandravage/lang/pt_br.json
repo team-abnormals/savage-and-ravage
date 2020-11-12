@@ -11,7 +11,6 @@
 	"block.savageandravage.blast_proof_slab": "Laje à prova de explosões",
 	"block.savageandravage.blast_proof_stairs": "Escadas à prova de explosões",
 	"block.savageandravage.blast_proof_vertical_slab": "Laje à prova de explosões vertical",
-		
 	"block.savageandravage.creeper_spore_sack": "Saco de esporos de creeper",
 	"block.savageandravage.spore_bomb": "Bomba de esporos",
 	
@@ -21,6 +20,9 @@
 	"item.savageandravage.griefer_leggings": "Calças de griefer",
 	"item.savageandravage.griefer_boots": "Botas de griefer",
 	
+	"item.savageandravage.wand_of_freezing": "Varinha de congelamento",
+  	"item.savageandravage.cleaver_of_beheading": "Cutelo de decapitamento",
+	
 	"item.savageandravage.creeper_spores": "Esporos de creeper",
 	"item.savageandravage.mischief_arrow": "Flecha travessa",
 	
@@ -29,19 +31,30 @@
 	
 	"entity.savageandravage.skeleton_villager": "Aldeão esqueleto",
 	"entity.savageandravage.griefer": "Griefer",
-	"entity.savageandravage.creeper_spore_cloud": "Nuvem de esporos de creeper",
 	"entity.savageandravage.creepie": "Creepie",
+	"entity.savageandravage.spore_cloud": "Nuvem de esporos",
 	"entity.savageandravage.spore_bomb": "Bomba de esporos",
 	"entity.savageandravage.rune_prison": "Prisão de runas",
 	"entity.savageandravage.burning_banner": "Estandarte queimando",
 	"entity.savageandravage.mischief_arrow": "Flecha travessa",
+	"entity.savageandravage.executioner": "Executor",
+  	"entity.savageandravage.iceologer": "Glaciólogo",
+  	"entity.savageandravage.ice_chunk": "Pedaço de gelo",
+  	"entity.savageandravage.ice_cloud": "Nuvem de gelo",
 	
 	"effect.savageandravage.growing": "Crescimento",
 	"effect.savageandravage.shrinking": "Encolhimento",
+	"effect.savageandravage.frostbite": "Queimadura de gelo",
 	
 	"attribute.name.generic.explosive_damage_reduction": "Redução de dano explosivo",
 	
-    "savageandravage:subtitles.creepie.hurt": "Creepie ferido",
+	"advancements.story.griefer_armor.title": "Dinamite com um raio laser",
+  	"advancements.story.griefer_armor.description": "Obtenha um conjunto completo de armadura griefer",
+  
+  	"advancements.adventure.relic_collector.title": "Coletor de rélicas",
+  	"advancements.adventure.relic_collector.description": "Obtenha um totem da imortalidade, cutelo de decapitamento e varinha de congelamento",
+	
+    	"savageandravage:subtitles.creepie.hurt": "Creepie ferido",
 	"savageandravage:subtitles.creepie.death": "Creepie morre",
 	"savageandravage:subtitles.creepie.fuse": "Creepie sibilando",
 	"savageandravage:subtitles.creepie.convert": "Creepie começa a se converter",
@@ -49,9 +62,6 @@
 	"savageandravage:subtitles.runed_gloomy_tiles.activated": "Azulejos sombrios rúnicos ativam",
 	"savageandravage:subtitles.generic.growth_success": "Crescimento sucede",
 	"savageandravage:subtitles.generic.growth_failure": "Crescimento falha",
-
-	"advancements.story.griefer_armor.title": "Dinamite com um raio laser",
-	"advancements.story.griefer_armor.description": "Obtenha um conjunto completo de armadura griefer",
 	
 	"item.minecraft.potion.effect.growth": "Poção de crescimento",
 	"item.minecraft.potion.effect.growth_long": "Poção de crescimento",
