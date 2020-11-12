@@ -135,7 +135,7 @@ public class SREvents {
 
     @SubscribeEvent
     public static void onExplosion(ExplosionEvent.Detonate event) {
-        if (event.getExplosion().getExplosivePlacedBy().getType() == EntityType.CREEPER) {
+        if (event.getExplosion().getExplosivePlacedBy() != null && event.getExplosion().getExplosivePlacedBy().getType() == EntityType.CREEPER) {
             if (SRConfig.COMMON.creeperExplosionsSpawnCreepies.get()) {
                 CreeperEntity creeper = (CreeperEntity) event.getExplosion().getExplosivePlacedBy();
                 SporeCloudEntity spores = SREntities.SPORE_CLOUD.get().create(event.getWorld());
