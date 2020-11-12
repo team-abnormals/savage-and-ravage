@@ -103,14 +103,13 @@ public class SREvents {
 
     @SubscribeEvent
     public static void onLivingDrops(LivingDropsEvent event) {
-        //TODO can this not just be a loot table? check with tallest
         if (event.getEntity() instanceof CreeperEntity) {
             CreeperEntity creeper = (CreeperEntity) event.getEntity();
             if (event.getSource().isExplosion() && SRConfig.COMMON.creepersDropSporesAfterExplosionDeath.get()) {
                 creeper.entityDropItem(new ItemStack(SRItems.CREEPER_SPORES.get(), 1 + creeper.world.rand.nextInt(3)));
             }
         }
-        // kinda messy rn will clean it up later
+
         else if (event.getEntity() instanceof PillagerEntity) {
             PillagerEntity pillager = (PillagerEntity) event.getEntity();
             if (pillager.isServerWorld() && ((ServerWorld) pillager.getEntityWorld()).findRaid(pillager.getPosition()) != null) {
@@ -136,7 +135,7 @@ public class SREvents {
 
     @SubscribeEvent
     public static void onExplosion(ExplosionEvent.Detonate event) {
-        if (event.getExplosion().getExplosivePlacedBy() instanceof CreeperEntity && !(event.getExplosion().getExplosivePlacedBy() instanceof CreepieEntity)) {
+        if (event.getExplosion().getExplosivePlacedBy().getType() == EntityType.CREEPER) {
             if (SRConfig.COMMON.creeperExplosionsSpawnCreepies.get()) {
                 CreeperEntity creeper = (CreeperEntity) event.getExplosion().getExplosivePlacedBy();
                 SporeCloudEntity spores = SREntities.SPORE_CLOUD.get().create(event.getWorld());
