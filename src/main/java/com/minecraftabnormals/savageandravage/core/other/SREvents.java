@@ -103,7 +103,7 @@ public class SREvents {
 
     @SubscribeEvent
     public static void onLivingDrops(LivingDropsEvent event) {
-        if (event.getEntity() instanceof CreeperEntity) {
+        if (event.getEntity().getType() == EntityType.CREEPER) {
             CreeperEntity creeper = (CreeperEntity) event.getEntity();
             if (event.getSource().isExplosion() && SRConfig.COMMON.creepersDropSporesAfterExplosionDeath.get()) {
                 creeper.entityDropItem(new ItemStack(SRItems.CREEPER_SPORES.get(), 1 + creeper.world.rand.nextInt(3)));
