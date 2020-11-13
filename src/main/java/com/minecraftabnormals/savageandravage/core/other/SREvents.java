@@ -188,19 +188,23 @@ public class SREvents {
 
     @SubscribeEvent
     public static void onInteractWithEntity(PlayerInteractEvent.EntityInteract event) {
-        Item heldItem = event.getItemStack().getItem();
+        ItemStack stack = event.getItemStack();
         Entity target = event.getTarget();
-        if (target instanceof CreeperEntity && heldItem == Items.CREEPER_SPAWN_EGG) {
-            CreepieEntity creepieEntity = new CreepieEntity(SREntities.CREEPIE.get(), event.getWorld());
-            creepieEntity.copyLocationAndAnglesFrom(target);
-            if (event.getItemStack().hasDisplayName()) {
-                creepieEntity.setCustomName(event.getItemStack().getDisplayName());
+        if (target.getType() == EntityType.CREEPER && stack.getItem() == Items.CREEPER_SPAWN_EGG) {
+            World world = event.getWorld();
+            CreepieEntity creepie = SREntities.CREEPIE.get().create(world);
+            if (creepie != null) {
+                creepie.copyLocationAndAnglesFrom(target);
+                if (stack.hasDisplayName()) {
+                    creepie.setCustomName(stack.getDisplayName());
+                }
+                if (!event.getPlayer().isCreative()) {
+                    stack.shrink(1);
+                }
+                world.addEntity(creepie);
+                event.setCancellationResult(ActionResultType.func_233537_a_(world.isRemote()));
+                event.setCanceled(true);
             }
-            if (!event.getPlayer().abilities.isCreativeMode) {
-                event.getItemStack().shrink(1);
-            }
-            event.getPlayer().swingArm(event.getHand());
-            event.getWorld().addEntity(creepieEntity);
         }
     }
 
