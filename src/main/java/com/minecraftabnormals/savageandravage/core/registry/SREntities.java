@@ -36,7 +36,7 @@ public class SREntities {
     public static final RegistryObject<EntityType<MischiefArrowEntity>> MISCHIEF_ARROW = HELPER.createEntity("mischief_arrow", MischiefArrowEntity::new, MischiefArrowEntity::new, EntityClassification.MISC, 0.5F, 0.5F);
 
     public static final RegistryObject<EntityType<SkeletonVillagerEntity>> SKELETON_VILLAGER = HELPER.createLivingEntity("skeleton_villager", SkeletonVillagerEntity::new, EntityClassification.MONSTER, 0.6F, 1.99F);
-    public static final RegistryObject<EntityType<BurningBannerEntity>> BURNING_BANNER = ENTITIES.register("burning_banner", () -> EntityType.Builder.<BurningBannerEntity>create(BurningBannerEntity::new, EntityClassification.MISC).immuneToFire().size(1.0F, 2.0F).build("savageandravage:burning_banner"));
+    public static final RegistryObject<EntityType<BurningBannerEntity>> BURNING_BANNER = ENTITIES.register("burning_banner", () -> EntityType.Builder.<BurningBannerEntity>create(BurningBannerEntity::new, EntityClassification.MISC).immuneToFire().size(1.0F, 2.0F).disableSummoning().build("savageandravage:burning_banner"));
     public static final RegistryObject<EntityType<RunePrisonEntity>> RUNE_PRISON = ENTITIES.register("rune_prison", () -> EntityType.Builder.<RunePrisonEntity>create(RunePrisonEntity::new, EntityClassification.MISC).immuneToFire().size(1.35F, 0.7F).build("savageandravage:rune_prison"));
     public static final RegistryObject<EntityType<ExecutionerEntity>> EXECUTIONER = ENTITIES.register("executioner", () -> EntityType.Builder.create(ExecutionerEntity::new, EntityClassification.MONSTER).size(0.6F, 1.95F).func_233606_a_(8).build(SavageAndRavage.MODID + ":executioner"));
 
@@ -78,8 +78,8 @@ public class SREntities {
         }
     }
 
-    /*
-     * This is  a terrible implementation and should only be used until a better one is found - Abigail
+    /**
+     * @author abigailfails - This is  a terrible implementation and should only be used until a better one is devised
      * */
     private static boolean isSpawnableBiome(Biome biome) {
         return biome.getCategory() == Biome.Category.MUSHROOM

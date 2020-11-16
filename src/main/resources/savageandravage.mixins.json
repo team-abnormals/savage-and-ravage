@@ -5,7 +5,8 @@
   "minVersion": "0.8",
   "refmap": "savageandravage.refmap.json",
   "mixins": [
-    "AbstractRaiderEntityMixin"
+    "AbstractRaiderEntityMixin",
+    "BannerItemMixin"
   ],
   "injectors": {
     "defaultRequire": 1
