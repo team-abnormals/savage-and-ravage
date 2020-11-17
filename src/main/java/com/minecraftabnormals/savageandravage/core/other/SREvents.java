@@ -331,7 +331,7 @@ public class SREvents {
                 }
                 if (affected.isServerWorld()) {
                     ((ServerWorld) affected.world).spawnParticle(canChange ? (shouldSetChild ? ParticleTypes.TOTEM_OF_UNDYING : ParticleTypes.HAPPY_VILLAGER) : ParticleTypes.LARGE_SMOKE, affected.getPosXRandom(0.3D), affected.getPosYRandom() - 0.1D, affected.getPosZRandom(0.3D), canChange ? 40 : 20, 0.3D, 0.6D, 0.3D, canChange ? 0.2D : 0.01D);
-                    affected.playSound(canChange ? SRSounds.GROWTH_MODIFICATION_SUCCESS.get() : SRSounds.GROWTH_MODIFICATION_FAILURE.get(), 1.0F, 1.0F);
+                    affected.playSound(canChange ? SRSounds.ENTITY_GENERIC_GROWTH_SUCCESS.get() : SRSounds.ENTITY_GENERIC_GROWTH_FAILURE.get(), 1.0F, 1.0F);
                 }
             }
         }

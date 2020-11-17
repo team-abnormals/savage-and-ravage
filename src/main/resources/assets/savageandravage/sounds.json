@@ -1,116 +1,101 @@
 {
   "entity.creepie.hurt": {
-  "category" : "hostile",
    "sounds": [
-     "savageandravage:entity/creepie/hurt1",
-     "savageandravage:entity/creepie/hurt2",
-     "savageandravage:entity/creepie/hurt3",
-     "savageandravage:entity/creepie/hurt4"
+     "savageandravage:mob/creepie/hurt1",
+     "savageandravage:mob/creepie/hurt2",
+     "savageandravage:mob/creepie/hurt3",
+     "savageandravage:mob/creepie/hurt4"
     ],
-    "subtitle": "subtitles.savageandravage.creepie.hurt"
+    "subtitle": "subtitles.savageandravage.entity.creepie.hurt"
    },
   "entity.creepie.death": {
-  "category" : "hostile",
    "sounds": [
-     "savageandravage:entity/creepie/death"
+     "savageandravage:mob/creepie/death"
     ],
-    "subtitle": "subtitles.savageandravage.creepie.death"
+    "subtitle": "subtitles.savageandravage.entity.creepie.death"
    },
   "entity.creepie.primed": {
-  "category" : "hostile",
    "sounds": [
-     "savageandravage:entity/creepie/fuse"
+     "savageandravage:mob/creepie/fuse"
     ],
-    "subtitle": "subtitles.savageandravage.creepie.fuse"
+    "subtitle": "subtitles.savageandravage.entity.creepie.fuse"
    },
     "entity.creepie.convert": {
-    "category" : "hostile",
     "sounds": [
       "mob/zombie/remedy"
     ],
-    "subtitle": "subtitles.savageandravage.creepie.convert"
+    "subtitle": "subtitles.savageandravage.entity.creepie.convert"
   },
   "entity.creepie.grow": {
-  "category" : "hostile",
   "sounds": [
     "mob/zombie/infect"
   ],
-  "subtitle": "subtitles.savageandravage.creepie.grow"
+  "subtitle": "subtitles.savageandravage.entity.creepie.grow"
   },
   "entity.iceologer.ambient": {
-    "category" : "hostile",
     "sounds": [
-      "savageandravage:entity/iceologer/idle1",
-      "savageandravage:entity/iceologer/idle2",
-      "savageandravage:entity/iceologer/idle3"
+      "savageandravage:mob/iceologer/idle1",
+      "savageandravage:mob/iceologer/idle2",
+      "savageandravage:mob/iceologer/idle3"
     ],
-    "subtitle": "subtitles.savageandravage.iceologer.ambient"
+    "subtitle": "subtitles.savageandravage.entity.iceologer.ambient"
   },
   "entity.iceologer.hurt": {
-    "category" : "hostile",
     "sounds": [
-      "savageandravage:entity/iceologer/hurt1",
-      "savageandravage:entity/iceologer/hurt2"
+      "savageandravage:mob/iceologer/hurt1",
+      "savageandravage:mob/iceologer/hurt2"
     ],
-    "subtitle": "subtitles.savageandravage.iceologer.hurt"
+    "subtitle": "subtitles.savageandravage.entity.iceologer.hurt"
   },
   "entity.iceologer.death": {
-    "category" : "hostile",
     "sounds": [
-      "savageandravage:entity/iceologer/death"
+      "savageandravage:mob/iceologer/death"
     ],
-    "subtitle": "subtitles.savageandravage.iceologer.death"
+    "subtitle": "subtitles.savageandravage.entity.iceologer.death"
   },
   "entity.iceologer.celebrate": {
-    "category" : "hostile",
     "sounds": [
       "mob/evocation_illager/celebrate"
     ],
-    "subtitle": "subtitles.savageandravage.iceologer.celebrate"
+    "subtitle": "subtitles.savageandravage.entity.iceologer.celebrate"
   },
   "entity.iceologer.cast_spell": {
-    "category" : "hostile",
     "sounds": [
       "mob/evocation_illager/cast1",
       "mob/evocation_illager/cast2"
     ],
-    "subtitle": "subtitles.savageandravage.iceologer.cast_spell"
+    "subtitle": "subtitles.savageandravage.entity.iceologer.cast_spell"
   },
-  "entity.generic.cast_spell": {
-    "category": "neutral",
+  "entity.player.cast_spell": {
     "sounds": [
       "mob/evocation_illager/cast1",
       "mob/evocation_illager/cast2"
     ],
-    "subtitle": "subtitles.savageandravage.generic.cast_spell"
+    "subtitle": "subtitles.savageandravage.entity.player.cast_spell"
   },
   "entity.generic.growth_success": {
-    "category": "neutral",
     "sounds": [
       "mob/zombie/unfect"
     ],
-    "subtitle": "subtitles.savageandravage.generic.growth_success"
+    "subtitle": "subtitles.savageandravage.entity.generic.growth_success"
   },
   "entity.generic.growth_failure": {
-    "category": "neutral",
     "sounds": [
       "mob/zombie/infect"
     ],
-    "subtitle": "subtitles.savageandravage.generic.growth_failure"
+    "subtitle": "subtitles.savageandravage.entity.generic.growth_failure"
   },
   "entity.creeper_spores.throw": {
-    "category": "neutral",
     "sounds": [
       "random/bow"
     ],
     "subtitle": "subtitles.savageandravage.entity.creeper_spores.throw"
   },
-  "block.runed_gloomy_tiles.activated": {
-    "category": "hostile",
+  "block.runed_gloomy_tiles.activate": {
     "sounds": [
       "mob/evocation_illager/prepare_attack1",
       "mob/evocation_illager/prepare_attack2"
     ],
-    "subtitle": "subtitles.savageandravage.runed_gloomy_tiles.activated"
+    "subtitle": "subtitles.savageandravage.block.runed_gloomy_tiles.activate"
   }
 }

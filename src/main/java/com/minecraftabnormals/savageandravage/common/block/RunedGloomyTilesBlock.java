@@ -27,7 +27,7 @@ public class RunedGloomyTilesBlock extends ChiseledGloomyTilesBlock {
         BlockState state = world.getBlockState(pos);
         if (!state.get(POWERED) && shouldTrigger(entity)) {
             world.setBlockState(pos, state.with(POWERED, true));
-            world.playSound(null, pos, SRSounds.RUNES_ACTIVATED.get(), SoundCategory.HOSTILE, 1.0F, 1.0F);
+            world.playSound(null, pos, SRSounds.BLOCK_RUNED_GLOOMY_TILES_ACTIVATE.get(), SoundCategory.BLOCKS, 1.0F, 1.0F);
             EvokerFangsEntity evokerFangs = EntityType.EVOKER_FANGS.create(world);
             if (evokerFangs != null) {
                 evokerFangs.setLocationAndAngles(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 0.0F, 0.0F);
