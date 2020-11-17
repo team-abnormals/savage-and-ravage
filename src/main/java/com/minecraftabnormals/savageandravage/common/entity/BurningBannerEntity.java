@@ -246,5 +246,6 @@ public class BurningBannerEntity extends Entity implements IEntityAdditionalSpaw
             this.burningBoxRotation = getBurningBoxRotation(state);
         }
     }
+
 }
 

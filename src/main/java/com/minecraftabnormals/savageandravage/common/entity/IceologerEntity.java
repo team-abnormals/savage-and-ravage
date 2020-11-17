@@ -1,6 +1,7 @@
 package com.minecraftabnormals.savageandravage.common.entity;
 
 import com.minecraftabnormals.savageandravage.core.registry.SRItems;
+import com.minecraftabnormals.savageandravage.core.registry.SRSounds;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
@@ -136,27 +137,27 @@ public class IceologerEntity extends SpellcastingIllagerEntity {
 
 	@Override
 	protected SoundEvent getAmbientSound() {
-		return SoundEvents.ENTITY_EVOKER_AMBIENT;
+		return SRSounds.ICEOLOGER_AMBIENT.get();
 	}
 
 	@Override
 	protected SoundEvent getDeathSound() {
-		return SoundEvents.ENTITY_EVOKER_DEATH;
+		return SRSounds.ICEOLOGER_DEATH.get();
 	}
 
 	@Override
 	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-		return SoundEvents.ENTITY_EVOKER_HURT;
+		return SRSounds.ICEOLOGER_HURT.get();
 	}
 
 	@Override
 	public SoundEvent getRaidLossSound() {
-		return SoundEvents.ENTITY_EVOKER_CELEBRATE;
+		return SRSounds.ICEOLOGER_CELEBRATE.get();
 	}
 
 	@Override
 	public SoundEvent getSpellSound() {
-		return SoundEvents.ENTITY_EVOKER_CAST_SPELL;
+		return SRSounds.ICEOLOGER_CAST_SPELL.get();
 	}
 
 	@Override

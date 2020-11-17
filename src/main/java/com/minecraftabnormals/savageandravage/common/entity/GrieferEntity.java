@@ -2,6 +2,7 @@ package com.minecraftabnormals.savageandravage.common.entity;
 
 import com.minecraftabnormals.savageandravage.common.item.CreeperSporesItem;
 import com.minecraftabnormals.savageandravage.core.registry.SRItems;
+import com.minecraftabnormals.savageandravage.core.registry.SRSounds;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
@@ -234,7 +235,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
             creeperSpores.shoot(d1, d2 + (double) f, d3, 1.6F, 12.0F);
             creeperSpores.setCloudSize(creeperSpores.world.rand.nextInt(50) == 0 ? 0 : 1 + creeperSpores.world.rand.nextInt(3));
             this.swingArm(getActiveHand());
-            this.playSound(SoundEvents.ENTITY_EGG_THROW, 1.0F, 1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
+            this.playSound(SRSounds.CREEPER_SPORES_THROW.get(), 1.0F, 1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
             this.world.addEntity(creeperSpores);
             this.faceEntity(target, 30.0F, 30.0F);
             this.creeperSporeStacks--;
