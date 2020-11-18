@@ -137,27 +137,27 @@ public class IceologerEntity extends SpellcastingIllagerEntity {
 
 	@Override
 	protected SoundEvent getAmbientSound() {
-		return SRSounds.ICEOLOGER_AMBIENT.get();
+		return SRSounds.ENTITY_ICEOLOGER_AMBIENT.get();
 	}
 
 	@Override
 	protected SoundEvent getDeathSound() {
-		return SRSounds.ICEOLOGER_DEATH.get();
+		return SRSounds.ENTITY_ICEOLOGER_DEATH.get();
 	}
 
 	@Override
 	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-		return SRSounds.ICEOLOGER_HURT.get();
+		return SRSounds.ENTITY_ICEOLOGER_HURT.get();
 	}
 
 	@Override
 	public SoundEvent getRaidLossSound() {
-		return SRSounds.ICEOLOGER_CELEBRATE.get();
+		return SRSounds.ENTITY_ICEOLOGER_CELEBRATE.get();
 	}
 
 	@Override
 	public SoundEvent getSpellSound() {
-		return SRSounds.ICEOLOGER_CAST_SPELL.get();
+		return SRSounds.ENTITY_ICEOLOGER_CAST_SPELL.get();
 	}
 
 	@Override

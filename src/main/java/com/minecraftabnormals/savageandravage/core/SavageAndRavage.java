@@ -27,28 +27,28 @@ public class SavageAndRavage {
     public static final RegistryHelper REGISTRY_HELPER = new RegistryHelper(MODID);
 
     public SavageAndRavage() {
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        REGISTRY_HELPER.getDeferredBlockRegister().register(modEventBus);
-        REGISTRY_HELPER.getDeferredItemRegister().register(modEventBus);
-        REGISTRY_HELPER.getDeferredEntityRegister().register(modEventBus);
-        REGISTRY_HELPER.getDeferredTileEntityRegister().register(modEventBus);
+        REGISTRY_HELPER.getDeferredBlockRegister().register(bus);
+        REGISTRY_HELPER.getDeferredItemRegister().register(bus);
+        REGISTRY_HELPER.getDeferredEntityRegister().register(bus);
+        REGISTRY_HELPER.getDeferredTileEntityRegister().register(bus);
+        REGISTRY_HELPER.getDeferredSoundRegister().register(bus);
 
-        SREntities.ENTITIES.register(modEventBus);
-        SRParticles.PARTICLES.register(modEventBus);
-        SRSounds.SOUNDS.register(modEventBus);
-        SREffects.EFFECTS.register(modEventBus);
-        SREffects.POTIONS.register(modEventBus);
-        SRAttributes.ATTRIBUTES.register(modEventBus);
+        SREntities.ENTITIES.register(bus);
+        SRParticles.PARTICLES.register(bus);
+        SREffects.EFFECTS.register(bus);
+        SREffects.POTIONS.register(bus);
+        SRAttributes.ATTRIBUTES.register(bus);
 
         MinecraftForge.EVENT_BUS.register(this);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, SRConfig.COMMON_SPEC);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, SRConfig.CLIENT_SPEC);
-        modEventBus.addListener(this::commonSetup);
+        bus.addListener(this::commonSetup);
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-            modEventBus.addListener(this::clientSetup);
-            modEventBus.addListener(EventPriority.LOWEST, this::registerItemColors);
-            modEventBus.addListener(this::registerModels);
+            bus.addListener(this::clientSetup);
+            bus.addListener(EventPriority.LOWEST, this::registerItemColors);
+            bus.addListener(this::registerModels);
         });
     }
 

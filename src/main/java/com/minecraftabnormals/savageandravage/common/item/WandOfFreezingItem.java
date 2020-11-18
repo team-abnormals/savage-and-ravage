@@ -49,7 +49,7 @@ public class WandOfFreezingItem extends Item {
 
         if (result.getType() != RayTraceResult.Type.MISS || entityraytraceresult != null) {
             stack.damageItem(1, player, p -> p.sendBreakAnimation(hand));
-            world.playSound(player, player.getPosition(), SRSounds.PLAYER_CAST_SPELL.get(), SoundCategory.PLAYERS, 1.0f, 1.0f);
+            world.playSound(player, player.getPosition(), SRSounds.ENTITY_PLAYER_CAST_SPELL.get(), SoundCategory.PLAYERS, 1.0f, 1.0f);
 
             player.getCooldownTracker().setCooldown(this, 20);
             if (!world.isRemote()) {
