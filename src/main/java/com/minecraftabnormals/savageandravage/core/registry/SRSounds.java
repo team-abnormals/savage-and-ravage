@@ -2,12 +2,11 @@ package com.minecraftabnormals.savageandravage.core.registry;
 
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 import com.teamabnormals.abnormals_core.core.utils.RegistryHelper;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.fml.RegistryObject;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.fml.common.Mod;
 
+@Mod.EventBusSubscriber(modid = SavageAndRavage.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class SRSounds {
     public static final RegistryHelper HELPER = SavageAndRavage.REGISTRY_HELPER;
 
