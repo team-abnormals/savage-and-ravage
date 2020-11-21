@@ -3,6 +3,7 @@ package com.minecraftabnormals.savageandravage.core.other;
 import com.minecraftabnormals.savageandravage.common.effect.GrowingEffect;
 import com.minecraftabnormals.savageandravage.common.effect.ShrinkingEffect;
 import com.minecraftabnormals.savageandravage.common.entity.*;
+import com.minecraftabnormals.savageandravage.common.entity.block.SporeBombEntity;
 import com.minecraftabnormals.savageandravage.common.entity.goals.AvoidGrieferOwnedCreepiesGoal;
 import com.minecraftabnormals.savageandravage.common.entity.goals.ImprovedCrossbowGoal;
 import com.minecraftabnormals.savageandravage.common.item.PottableItem;
@@ -36,11 +37,10 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.stats.Stats;
-import net.minecraft.tileentity.BannerTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -135,18 +135,29 @@ public class SREvents {
 
     @SubscribeEvent
     public static void onExplosion(ExplosionEvent.Detonate event) {
-        if (event.getExplosion().getExplosivePlacedBy() != null && event.getExplosion().getExplosivePlacedBy().getType() == EntityType.CREEPER) {
-            if (SRConfig.COMMON.creeperExplosionsSpawnCreepies.get()) {
-                CreeperEntity creeper = (CreeperEntity) event.getExplosion().getExplosivePlacedBy();
-                SporeCloudEntity spores = SREntities.SPORE_CLOUD.get().create(event.getWorld());
+        World world = event.getWorld();
+        Explosion explosion = event.getExplosion();
+        if (explosion.getExplosivePlacedBy() != null) {
+            if (explosion.getExplosivePlacedBy().getType() == EntityType.CREEPER && shouldSpawnCreepies()) {
+                CreeperEntity creeper = (CreeperEntity) explosion.getExplosivePlacedBy();
+                SporeCloudEntity spores = SREntities.SPORE_CLOUD.get().create(world);
                 if (spores == null)
                     return;
-
                 spores.setSpawnCloudInstantly(true);
                 spores.creepiesAttackPlayersOnly(true);
                 spores.setCloudSize(creeper.isCharged() ? (int) (creeper.getHealth() / 4) : (int) (creeper.getHealth() / 5));
                 spores.copyLocationAndAnglesFrom(creeper);
                 creeper.world.addEntity(spores);
+            }
+        }
+        if (explosion.getExploder() != null && explosion.getExploder().getType() == SREntities.SPORE_BOMB.get()) {
+            for (BlockPos pos : event.getAffectedBlocks()) {
+                if(world.getBlockState(pos).getBlock() == SRBlocks.SPORE_BOMB.get()) {
+                    world.removeBlock(pos, false);
+                    SporeBombEntity sporebomb = new SporeBombEntity(world, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, explosion.getExplosivePlacedBy());
+                    sporebomb.setFuse((short) (world.getRandom().nextInt(sporebomb.getFuse() / 4) + sporebomb.getFuse() / 8));
+                    world.addEntity(sporebomb);
+                }
             }
         }
 
@@ -160,6 +171,15 @@ public class SREvents {
             }
         }
         event.getAffectedEntities().removeAll(safeItems);
+    }
+
+    private static Boolean shouldSpawnCreepies() {
+        boolean shouldSpawn = false;
+        if(SRConfig.COMMON.creeperExplosionsSpawnCreepies.get()) {
+            shouldSpawn = SRConfig.COMMON.overrideCreepieSpawnCondition.get()
+            || ModList.get().isLoaded("caverns_and_chasms");
+        }
+        return shouldSpawn;
     }
 
     @SubscribeEvent
@@ -238,11 +258,9 @@ public class SREvents {
             if (!event.getPlayer().isCreative()) stack.shrink(1);
             event.setCancellationResult(ActionResultType.SUCCESS);
             event.setCanceled(true);
-        } else if (isValidBannerPos(event)) {
-            TileEntity te = world.getTileEntity(pos);
+        } else if (isValidBannerPos(world, pos)) {
             boolean isFlintAndSteel = stack.getItem() instanceof FlintAndSteelItem;
-
-            if (te instanceof BannerTileEntity && (isFlintAndSteel || stack.getItem() instanceof FireChargeItem)) {
+            if ((isFlintAndSteel || stack.getItem() instanceof FireChargeItem)) {
                 SoundEvent sound = isFlintAndSteel ? SoundEvents.ITEM_FLINTANDSTEEL_USE : SoundEvents.ITEM_FIRECHARGE_USE;
                 float pitch = isFlintAndSteel ? new Random().nextFloat() * 0.4F + 0.8F : (new Random().nextFloat() - new Random().nextFloat()) * 0.2F + 1.0F;
                 world.playSound(player, pos, sound, SoundCategory.BLOCKS, 1.0F, pitch);
@@ -267,10 +285,8 @@ public class SREvents {
 			entity.removePotionEffect(SREffects.FROSTBITE.get());
     }
 
-    private static boolean isValidBannerPos(PlayerInteractEvent event) {
+    public static boolean isValidBannerPos(World world, BlockPos pos) {
         boolean isValid = false;
-        BlockPos pos = event.getPos();
-        World world = event.getWorld();
         if (world.getBlockState(pos).getBlock() instanceof AbstractBannerBlock) {
             if (world.getEntitiesWithinAABB(BurningBannerEntity.class, new AxisAlignedBB(pos)).isEmpty()) {
                 isValid = true;
