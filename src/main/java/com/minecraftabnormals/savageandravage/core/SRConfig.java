@@ -7,13 +7,17 @@ import org.apache.commons.lang3.tuple.Pair;
 public class SRConfig {
 
     public static class Common {
+        public final ConfigValue<Boolean> creeperExplosionsDestroyBlocks;
         public final ConfigValue<Boolean> creeperExplosionsSpawnCreepies;
         public final ConfigValue<Boolean> creepersDropSporesAfterExplosionDeath;
 
         public Common(ForgeConfigSpec.Builder builder) {
+            creeperExplosionsDestroyBlocks = builder
+                    .translation(makeTranslation("creeperExplosionsDestroyBlocks"))
+                    .define("Creeper explosions destroy blocks", false);
             creeperExplosionsSpawnCreepies = builder
                     .translation(makeTranslation("creeperExplosionsSpawnCreepies"))
-                    .define("Creeper explosions spawn creepies", false);
+                    .define("Creeper explosions spawn creepies", true);
             creepersDropSporesAfterExplosionDeath = builder
                     .translation(makeTranslation("creepersDropSporesAfterExplosionDeath"))
                     .define("Creepers drop Creeper Spores after they die from an explosion", true);
