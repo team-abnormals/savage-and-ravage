@@ -174,12 +174,7 @@ public class SREvents {
     }
 
     private static Boolean shouldSpawnCreepies() {
-        boolean shouldSpawn = false;
-        if(SRConfig.COMMON.creeperExplosionsSpawnCreepies.get()) {
-            shouldSpawn = SRConfig.COMMON.overrideCreepieSpawnCondition.get()
-            || ModList.get().isLoaded("caverns_and_chasms");
-        }
-        return shouldSpawn;
+        return (SRConfig.COMMON.creeperExplosionsSpawnCreepies.get());
     }
 
     @SubscribeEvent

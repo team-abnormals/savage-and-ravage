@@ -8,16 +8,12 @@ public class SRConfig {
 
     public static class Common {
         public final ConfigValue<Boolean> creeperExplosionsSpawnCreepies;
-        public final ConfigValue<Boolean> overrideCreepieSpawnCondition;
         public final ConfigValue<Boolean> creepersDropSporesAfterExplosionDeath;
 
         public Common(ForgeConfigSpec.Builder builder) {
             creeperExplosionsSpawnCreepies = builder
                     .translation(makeTranslation("creeperExplosionsSpawnCreepies"))
-                    .define("Creeper explosions spawn creepies if Caverns & Chasms is installed", true);
-            overrideCreepieSpawnCondition = builder
-                    .translation(makeTranslation("overrideCreepieSpawnCondition"))
-                    .define("Ignore whether Caverns & Chasms is installed", false);
+                    .define("Creeper explosions spawn creepies", false);
             creepersDropSporesAfterExplosionDeath = builder
                     .translation(makeTranslation("creepersDropSporesAfterExplosionDeath"))
                     .define("Creepers drop Creeper Spores after they die from an explosion", true);
