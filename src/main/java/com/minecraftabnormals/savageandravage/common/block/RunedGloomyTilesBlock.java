@@ -39,26 +39,17 @@ public class RunedGloomyTilesBlock extends ChiseledGloomyTilesBlock {
         }
     }
 
-    private boolean shouldTrigger(Entity entity) {
-        boolean isValidEntity = false;
+    public static boolean shouldTrigger(Entity entity) {
         if(entity instanceof LivingEntity) {
             if (!EntityTypeTags.RAIDERS.contains(entity.getType())) {
                 if (entity instanceof PlayerEntity) {
-                    if (!((PlayerEntity) entity).isCreative() && !entity.isSpectator()) {
-                        isValidEntity = true;
-                    }
+                    return !((PlayerEntity) entity).isCreative() && !entity.isSpectator();
                 } else if (entity instanceof IOwnableMob) {
-                    isValidEntity = true;
                     LivingEntity owner = ((IOwnableMob) entity).getOwner();
-                    if (owner != null && EntityTypeTags.RAIDERS.contains(owner.getType())) {
-                        isValidEntity = false;
-                    }
-                } else if (!(entity instanceof ArmorStandEntity)) {
-                    isValidEntity = true;
-                }
+                    return owner == null || !EntityTypeTags.RAIDERS.contains(owner.getType());
+                } else return !(entity instanceof ArmorStandEntity);
             }
         }
-        return isValidEntity;
+        return false;
     }
-
 }
