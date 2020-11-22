@@ -56,10 +56,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Mod.EventBusSubscriber(modid = SavageAndRavage.MODID)
 public class SREvents {
@@ -290,20 +287,15 @@ public class SREvents {
 	}
 
 	public static boolean isValidBannerPos(World world, BlockPos pos) {
-		boolean isValid = false;
 		if (world.getBlockState(pos).getBlock() instanceof AbstractBannerBlock) {
-			if (world.getEntitiesWithinAABB(BurningBannerEntity.class, new AxisAlignedBB(pos)).isEmpty()) {
-				isValid = true;
-			} else {
-				List<BurningBannerEntity> burningBanners = world.getEntitiesWithinAABB(BurningBannerEntity.class, new AxisAlignedBB(pos));
-				isValid = true;
-				for (BurningBannerEntity burningBanner : burningBanners) {
-					if (burningBanner.getBannerPosition() != null && burningBanner.getBannerPosition().equals(pos))
-						isValid = false;
+			List<BurningBannerEntity> burningBanners = world.getEntitiesWithinAABB(BurningBannerEntity.class, new AxisAlignedBB(pos));
+			for (BurningBannerEntity burningBanner : burningBanners) {
+				if (Objects.equals(burningBanner.getBannerPosition(), pos)) {
+					return false;
 				}
 			}
 		}
-		return isValid;
+		return true;
 	}
 
 	@SubscribeEvent
@@ -360,7 +352,13 @@ public class SREvents {
 
 	public static boolean checkBooflo(LivingEntity affected, boolean isBabyPotion) {
 		if (ModList.get().isLoaded("endergetic")) {
-			return ((!isBabyPotion && affected.getType() == ForgeRegistries.ENTITIES.getValue(new ResourceLocation("endergetic:booflo_baby")) || affected.getType() == ForgeRegistries.ENTITIES.getValue(new ResourceLocation("endergetic:booflo_adolescent")) || (isBabyPotion && affected.getType() == ForgeRegistries.ENTITIES.getValue(new ResourceLocation("endergetic:booflo")))));
+			if (affected.getType() == ForgeRegistries.ENTITIES.getValue(new ResourceLocation("endergetic:booflo"))) {
+				return isBabyPotion;
+			}
+			else if (affected.getType() == ForgeRegistries.ENTITIES.getValue(new ResourceLocation("endergetic:booflo_baby"))) {
+				return !isBabyPotion;
+			}
+			else return affected.getType() == ForgeRegistries.ENTITIES.getValue(new ResourceLocation("endergetic:booflo_adolescent"));
 		}
 		return false;
 	}

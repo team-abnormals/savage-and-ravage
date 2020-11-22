@@ -100,11 +100,9 @@ public class RunePrisonEntity extends Entity {
         }
 
         List<LivingEntity> intersectingEntityList = this.world.getEntitiesWithinAABB(LivingEntity.class, this.getBoundingBox());
-        if (!intersectingEntityList.isEmpty()) {
-            for (LivingEntity livingEntity : intersectingEntityList) {
-                if (livingEntity.canBeHitWithPotion() && RunedGloomyTilesBlock.shouldTrigger(livingEntity)) {
-                    livingEntity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 20, 2));
-                }
+        for (LivingEntity livingEntity : intersectingEntityList) {
+            if (livingEntity.canBeHitWithPotion() && RunedGloomyTilesBlock.shouldTrigger(livingEntity)) {
+                livingEntity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 20, 2));
             }
         }
 
