@@ -6,40 +6,65 @@
 	"block.savageandravage.chiseled_gloomy_tiles": "Kaiverrettu synkkätiili",
 	"block.savageandravage.gloomy_tile_vertical_slab": "Pystysuora synkkätiililaatta",
 	"block.savageandravage.runed_gloomy_tiles": "Riimutettu synkkätiili",
-	"entity.savageandravage.rune_prison": "Riimuansa",
-	"entity.savageandravage.burning_banner": "Palava viiri",
 
-	"item.savageandravage.blast_proof_plating": "Räjähdyksenkestävä pinnoite",
 	"block.savageandravage.blast_proof_plates": "Räjähdyksenkestäviä levyjä",
 	"block.savageandravage.blast_proof_slab": "Räjähdyksenkestävä laatta",
 	"block.savageandravage.blast_proof_stairs": "Räjähdyksenkestävät portaat",
 	"block.savageandravage.blast_proof_vertical_slab": "Pystysuora räjähdyksenkestävä laatta",
+	"block.savageandravage.creeper_spore_sack": "Säkki creeper-itiöitä",
+	"block.savageandravage.spore_bomb": "Itiöpommi",
+	
+	"item.savageandravage.blast_proof_plating": "Räjähdyksenkestävä pinnoite",
 	"item.savageandravage.griefer_helmet": "Rettelöitsijän kypärä",
 	"item.savageandravage.griefer_chestplate": "Rettelöitsijän panssari",
 	"item.savageandravage.griefer_leggings": "Rettelöitsijän housut",
 	"item.savageandravage.griefer_boots": "Rettelöitsijän saappaat",
 	
+	"item.savageandravage.wand_of_freezing": "Jäädyttäjän sauva",
+	"item.savageandravage.cleaver_of_beheading": "Pyövelin veitsi",
+	
 	"item.savageandravage.creeper_spores": "Creeper-itiöt",
-	"block.savageandravage.creeper_spore_sack": "Creeper-itiösäkki",
-	"block.savageandravage.spore_bomb": "Itiöpommi",
-	"entity.savageandravage.creeper_spore_cloud": "Creeper-itiöpilvi",
-	"entity.savageandravage.creepie": "Creepie",
-	"entity.savageandravage.spore_bomb": "Itiöpommi",
-	"savageandravage:subtitles.creepie.hurt": "Creepie vahingoittuu",
-	"savageandravage:subtitles.creepie.death": "Creepie kuolee",
-	"savageandravage:subtitles.creepie.fuse": "Creepie sihisee",
-	"savageandravage:subtitles.creepie.convert": "Creepie alkaa muuntautua",
-	"savageandravage:subtitles.creepie.grow": "Creepie kasvaa Creeper",
-	"savageandravage:subtitles.runed_gloomy_tiles.activated": "Riimutettu synkkätiili aktivoituu",
-	"savageandravage:subtitles.generic.growth_success": "Kasvu onnistuu",
-	"savageandravage:subtitles.generic.growth_failure": "Kasvu epäonnistuu",
-
-	"entity.savageandravage.skeleton_villager": "Luurankokyläläinen",
-	"entity.savageandravage.griefer": "Rettelöitsijä",
+	"item.savageandravage.mischief_arrow": "Kiusanuoli",
+	
 	"item.savageandravage.skeleton_villager_spawn_egg": "Luo luurankokyläläinen",
 	"item.savageandravage.griefer_spawn_egg": "Luo rettelöitsijä",
+	"item.savageandravage.executioner_spawn_egg": "Luo pyöveli",
+	"item.savageandravage.iceologer_spawn_egg": "Luo jäädyttäjä",
+		
+	"entity.savageandravage.skeleton_villager": "Luurankokyläläinen",
+	"entity.savageandravage.griefer": "Rettelöitsijä",
+	"entity.savageandravage.creepie": "Creepie",
+	"entity.savageandravage.spore_cloud": "Itiöpilvi",
+	"entity.savageandravage.spore_bomb": "Itiöpommi",
+	"entity.savageandravage.rune_prison": "Riimuansa",
+	"entity.savageandravage.burning_banner": "Palava viiri",
+	"entity.savageandravage.mischief_arrow": "Kiusanuoli",
+	"entity.savageandravage.executioner": "Pyöveli",
+	"entity.savageandravage.iceologer": "Jäädyttäjä",
+	"entity.savageandravage.ice_chunk": "Jäälohkare",
+	"entity.savageandravage.ice_cloud": "Jääpilvi",
     
 	"effect.savageandravage.growing": "Kasvaminen",
+	"effect.savageandravage.shrinking": "Nuorentuminen",
+	"effect.savageandravage.frostbite": "Paleltuminen",
+	
+	"attribute.name.generic.explosive_damage_reduction": "Räjähdyksenkestävyys",
+
+	"advancements.story.griefer_armor.title": "Dynamite with a Laser Beam",
+	"advancements.story.griefer_armor.description": "Hanki kokonainen rettelöitsijän haarniska",
+	
+	"advancements.adventure.relic_collector.title": "Jäännöstenkerääjä",
+	"advancements.adventure.relic_collector.description": "Hanki kuolemattomuuden toteemi, pyövelin veitsi ja jäädyttäjän sauva",
+	
+	"subtitles.savageandravage.creepie.hurt": "Creepie vahingoittuu",
+	"subtitles.savageandravage.creepie.death": "Creepie kuolee",
+	"subtitles.savageandravage.creepie.fuse": "Creepie sihisee",
+	"subtitles.savageandravage.creepie.convert": "Creepie alkaa muuntautua",
+	"subtitles.savageandravage.creepie.grow": "Creepie kasvaa Creeper",
+	"subtitles.savageandravage.runed_gloomy_tiles.activated": "Riimutettu synkkätiili aktivoituu",
+	"subtitles.savageandravage.generic.growth_success": "Kasvu onnistuu",
+	"subtitles.savageandravage.generic.growth_failure": "Kasvu epäonnistuu",
+	
 	"item.minecraft.potion.effect.growth": "Kasvamisen taikajuoma",
 	"item.minecraft.potion.effect.growth_long": "Kasvamisen taikajuoma",
 	"item.minecraft.splash_potion.effect.growth": "Roiskahtava kasvamisen taikajuoma",
@@ -48,7 +73,6 @@
 	"item.minecraft.lingering_potion.effect.growth_long": "Viipyvä kasvamisen taikajuoma",
 	"item.minecraft.tipped_arrow.effect.growth": "Kasvamisen nuoli",
 	"item.minecraft.tipped_arrow.effect.growth_long": "Kasvamisen nuoli",
-	"effect.savageandravage.shrinking": "Nuorentuminen",
 	"item.minecraft.potion.effect.youth": "Nuoruuden taikajuoma",
 	"item.minecraft.potion.effect.youth_long": "Nuoruuden taikajuoma",
 	"item.minecraft.splash_potion.effect.youth": "Roiskahtava nuoruuden taikajuoma",
@@ -58,9 +82,5 @@
 	"item.minecraft.tipped_arrow.effect.youth": "Nuoruuden nuoli",
 	"item.minecraft.tipped_arrow.effect.youth_long": "Nuoruuden nuoli",
 	
-	"attribute.name.generic.explosive_damage_reduction": "Räjähdyksenkestävyys",
-
-	"advancements.story.griefer_armor.title": "Dynamite with a Laser Beam",
-	"advancements.story.griefer_armor.description": "Saa kokonainen rettelöitsijän haarniska",
 	"advancements.adventure.voluntary_exile.description": "Sytytä pahaenteinen viiri tuleen.\nKylien välttelemistä kannattaa harkita toistaiseksi..."
 }

@@ -1,63 +1,101 @@
 {
- "entity.creepie.hurt": {
-  "category" : "hostile",
+  "entity.creepie.hurt": {
    "sounds": [
-     "savageandravage:entity/creepie/creepie_hurt1",
-     "savageandravage:entity/creepie/creepie_hurt2",
-     "savageandravage:entity/creepie/creepie_hurt3",
-     "savageandravage:entity/creepie/creepie_hurt4"
+     "savageandravage:mob/creepie/hurt1",
+     "savageandravage:mob/creepie/hurt2",
+     "savageandravage:mob/creepie/hurt3",
+     "savageandravage:mob/creepie/hurt4"
     ],
-    "subtitle": "subtitles.savageandravage.creepie.hurt"
+    "subtitle": "subtitles.savageandravage.entity.creepie.hurt"
    },
   "entity.creepie.death": {
-  "category" : "hostile",
    "sounds": [
-     "savageandravage:entity/creepie/creepie_death"
+     "savageandravage:mob/creepie/death"
     ],
-    "subtitle": "subtitles.savageandravage.creepie.death"
+    "subtitle": "subtitles.savageandravage.entity.creepie.death"
    },
- "entity.creepie.primed": {
-  "category" : "hostile",
+  "entity.creepie.primed": {
    "sounds": [
-     "savageandravage:entity/creepie/creepie_fuse"
+     "savageandravage:mob/creepie/fuse"
     ],
-    "subtitle": "subtitles.savageandravage.creepie.fuse"
+    "subtitle": "subtitles.savageandravage.entity.creepie.fuse"
    },
-  "entity.creepie.convert": {
-    "category" : "hostile",
+    "entity.creepie.convert": {
     "sounds": [
       "mob/zombie/remedy"
     ],
-    "subtitle": "subtitles.savageandravage.creepie.convert"
+    "subtitle": "subtitles.savageandravage.entity.creepie.convert"
   },
   "entity.creepie.grow": {
-  "category" : "hostile",
   "sounds": [
     "mob/zombie/infect"
   ],
-  "subtitle": "subtitles.savageandravage.creepie.grow"
-},
-
-  "block.runed_gloomy_tiles.activated": {
-    "category": "hostile",
+  "subtitle": "subtitles.savageandravage.entity.creepie.grow"
+  },
+  "entity.iceologer.ambient": {
     "sounds": [
-      "minecraft:mob/evocation_illager/prepare_attack1",
-      "minecraft:mob/evocation_illager/prepare_attack2"
+      "savageandravage:mob/iceologer/idle1",
+      "savageandravage:mob/iceologer/idle2",
+      "savageandravage:mob/iceologer/idle3"
     ],
-    "subtitle": "subtitles.savageandravage.runed_gloomy_tiles.activated"
+    "subtitle": "subtitles.savageandravage.entity.iceologer.ambient"
+  },
+  "entity.iceologer.hurt": {
+    "sounds": [
+      "savageandravage:mob/iceologer/hurt1",
+      "savageandravage:mob/iceologer/hurt2"
+    ],
+    "subtitle": "subtitles.savageandravage.entity.iceologer.hurt"
+  },
+  "entity.iceologer.death": {
+    "sounds": [
+      "savageandravage:mob/iceologer/death"
+    ],
+    "subtitle": "subtitles.savageandravage.entity.iceologer.death"
+  },
+  "entity.iceologer.celebrate": {
+    "sounds": [
+      "mob/evocation_illager/celebrate"
+    ],
+    "subtitle": "subtitles.savageandravage.entity.iceologer.celebrate"
+  },
+  "entity.iceologer.cast_spell": {
+    "sounds": [
+      "mob/evocation_illager/cast1",
+      "mob/evocation_illager/cast2"
+    ],
+    "subtitle": "subtitles.savageandravage.entity.iceologer.cast_spell"
+  },
+  "entity.player.cast_spell": {
+    "sounds": [
+      "mob/evocation_illager/cast1",
+      "mob/evocation_illager/cast2"
+    ],
+    "subtitle": "subtitles.savageandravage.entity.player.cast_spell"
   },
   "entity.generic.growth_success": {
-    "category": "neutral",
     "sounds": [
       "mob/zombie/unfect"
     ],
-    "subtitle": "subtitles.savageandravage.generic.growth_success"
+    "subtitle": "subtitles.savageandravage.entity.generic.growth_success"
   },
   "entity.generic.growth_failure": {
-    "category": "neutral",
     "sounds": [
       "mob/zombie/infect"
     ],
-    "subtitle": "subtitles.savageandravage.generic.growth_failure"
+    "subtitle": "subtitles.savageandravage.entity.generic.growth_failure"
+  },
+  "entity.creeper_spores.throw": {
+    "sounds": [
+      "random/bow"
+    ],
+    "subtitle": "subtitles.savageandravage.entity.creeper_spores.throw"
+  },
+  "block.runed_gloomy_tiles.activate": {
+    "sounds": [
+      "mob/evocation_illager/prepare_attack1",
+      "mob/evocation_illager/prepare_attack2"
+    ],
+    "subtitle": "subtitles.savageandravage.block.runed_gloomy_tiles.activate"
   }
 }

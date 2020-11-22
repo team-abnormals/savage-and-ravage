@@ -27,7 +27,7 @@ public class RunedGloomyTilesBlock extends ChiseledGloomyTilesBlock {
         BlockState state = world.getBlockState(pos);
         if (!state.get(POWERED) && shouldTrigger(entity)) {
             world.setBlockState(pos, state.with(POWERED, true));
-            world.playSound(null, pos, SRSounds.RUNES_ACTIVATED.get(), SoundCategory.HOSTILE, 1.0F, 1.0F);
+            world.playSound(null, pos, SRSounds.BLOCK_RUNED_GLOOMY_TILES_ACTIVATE.get(), SoundCategory.BLOCKS, 1.0F, 1.0F);
             EvokerFangsEntity evokerFangs = EntityType.EVOKER_FANGS.create(world);
             if (evokerFangs != null) {
                 evokerFangs.setLocationAndAngles(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 0.0F, 0.0F);
@@ -39,26 +39,17 @@ public class RunedGloomyTilesBlock extends ChiseledGloomyTilesBlock {
         }
     }
 
-    private boolean shouldTrigger(Entity entity) {
-        boolean isValidEntity = false;
+    public static boolean shouldTrigger(Entity entity) {
         if(entity instanceof LivingEntity) {
             if (!EntityTypeTags.RAIDERS.contains(entity.getType())) {
                 if (entity instanceof PlayerEntity) {
-                    if (!((PlayerEntity) entity).isCreative() && !entity.isSpectator()) {
-                        isValidEntity = true;
-                    }
+                    return !((PlayerEntity) entity).isCreative() && !entity.isSpectator();
                 } else if (entity instanceof IOwnableMob) {
-                    isValidEntity = true;
                     LivingEntity owner = ((IOwnableMob) entity).getOwner();
-                    if (owner != null && EntityTypeTags.RAIDERS.contains(owner.getType())) {
-                        isValidEntity = false;
-                    }
-                } else if (!(entity instanceof ArmorStandEntity)) {
-                    isValidEntity = true;
-                }
+                    return owner == null || !EntityTypeTags.RAIDERS.contains(owner.getType());
+                } else return !(entity instanceof ArmorStandEntity);
             }
         }
-        return isValidEntity;
+        return false;
     }
-
 }

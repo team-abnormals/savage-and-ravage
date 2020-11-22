@@ -39,8 +39,7 @@ import net.minecraft.entity.passive.CatEntity;
 import net.minecraft.entity.passive.OcelotEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.datasync.DataParameter;
@@ -290,12 +289,12 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-        return SRSounds.CREEPIE_HURT.get();
+        return SRSounds.ENTITY_CREEPIE_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SRSounds.CREEPIE_DEATH.get();
+        return SRSounds.ENTITY_CREEPIE_DEATH.get();
     }
 
     /**
@@ -310,7 +309,7 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
             }
             int i = this.getCreeperState();
             if (i > 0 && this.timeSinceIgnited == 0) {
-                this.playSound(SRSounds.CREEPIE_PRIMED.get(), this.getSoundVolume(), this.getSoundPitch());
+                this.playSound(SRSounds.ENTITY_CREEPIE_PRIMED.get(), this.getSoundVolume(), this.getSoundPitch());
             }
             this.timeSinceIgnited += i;
             if (this.timeSinceIgnited < 0) {
@@ -489,7 +488,7 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
     private void startConverting(int conversionTimeIn) {
         this.conversionTime = conversionTimeIn;
         this.getDataManager().set(CONVERTING, true);
-        if (this.isServerWorld()) this.playSound(SRSounds.CREEPIE_BEGIN_CONVERSION.get(), 1.0F, 1.0F);
+        if (this.isServerWorld()) this.playSound(SRSounds.ENTITY_CREEPIE_CONVERT.get(), 1.0F, 1.0F);
         //this.world.setEntityState(this, (byte)16);
     }
 
@@ -522,7 +521,7 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
         creeperEntity.setInvulnerable(this.isInvulnerable());
         creeperEntity.setHealth(creeperEntity.getMaxHealth());
         this.world.addEntity(creeperEntity);
-        if (this.isServerWorld()) this.playSound(SRSounds.CREEPIE_GROW.get(), 1.0F, 1.0F);
+        if (this.isServerWorld()) this.playSound(SRSounds.ENTITY_CREEPIE_GROW.get(), 1.0F, 1.0F);
     }
 
     @Override

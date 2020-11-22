@@ -1,6 +1,7 @@
 package com.minecraftabnormals.savageandravage.common.item;
 
 import com.minecraftabnormals.savageandravage.common.entity.IceChunkEntity;
+import com.minecraftabnormals.savageandravage.core.registry.SRSounds;
 import com.teamabnormals.abnormals_core.core.utils.ItemStackUtils;
 
 import net.minecraft.entity.LivingEntity;
@@ -14,7 +15,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -49,7 +49,7 @@ public class WandOfFreezingItem extends Item {
 
         if (result.getType() != RayTraceResult.Type.MISS || entityraytraceresult != null) {
             stack.damageItem(1, player, p -> p.sendBreakAnimation(hand));
-            world.playSound(player, player.getPosition(), SoundEvents.ENTITY_EVOKER_CAST_SPELL, SoundCategory.PLAYERS, 1.0f, 1.0f);
+            world.playSound(player, player.getPosition(), SRSounds.ENTITY_PLAYER_CAST_SPELL.get(), SoundCategory.PLAYERS, 1.0f, 1.0f);
 
             player.getCooldownTracker().setCooldown(this, 20);
             if (!world.isRemote()) {

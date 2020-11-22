@@ -17,7 +17,7 @@ public class SRConfig {
                     .define("Creeper explosions destroy blocks", false);
             creeperExplosionsSpawnCreepies = builder
                     .translation(makeTranslation("creeperExplosionsSpawnCreepies"))
-                    .define("Creeper explosions spawn Creepies", true);
+                    .define("Creeper explosions spawn creepies", true);
             creepersDropSporesAfterExplosionDeath = builder
                     .translation(makeTranslation("creepersDropSporesAfterExplosionDeath"))
                     .define("Creepers drop Creeper Spores after they die from an explosion", true);

@@ -6,7 +6,6 @@ import com.minecraftabnormals.savageandravage.core.registry.SREntities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.IPacket;
@@ -15,7 +14,6 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
-import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -102,11 +100,9 @@ public class RunePrisonEntity extends Entity {
         }
 
         List<LivingEntity> intersectingEntityList = this.world.getEntitiesWithinAABB(LivingEntity.class, this.getBoundingBox());
-        if (!intersectingEntityList.isEmpty()) {
-            for (LivingEntity livingEntity : intersectingEntityList) {
-                if (livingEntity.canBeHitWithPotion() && !(EntityTypeTags.RAIDERS.contains(livingEntity.getType())) && (!(livingEntity instanceof PlayerEntity) || !((PlayerEntity) livingEntity).isCreative())) {
-                    livingEntity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 20, 2));
-                }
+        for (LivingEntity livingEntity : intersectingEntityList) {
+            if (livingEntity.canBeHitWithPotion() && RunedGloomyTilesBlock.shouldTrigger(livingEntity)) {
+                livingEntity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 20, 2));
             }
         }
 

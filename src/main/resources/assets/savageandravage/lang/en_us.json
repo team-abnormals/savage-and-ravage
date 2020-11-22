@@ -52,19 +52,26 @@
   
   "advancements.story.griefer_armor.title": "Dynamite with a Laser Beam",
   "advancements.story.griefer_armor.description": "Get a full suit of Griefer armor",
-  
   "advancements.adventure.relic_collector.title": "Relic Collector",
   "advancements.adventure.relic_collector.description": "Obtain a Totem of Undying, Cleaver of Beheading, and Wand of Freezing",
-  
-  "subtitles.savageandravage.creepie.hurt": "Creepie hurts",
-  "subtitles.savageandravage.creepie.death": "Creepie dies",
-  "subtitles.savageandravage.creepie.fuse": "Creepie hisses",
-  "subtitles.savageandravage.creepie.convert": "Creepie starts converting",
-  "subtitles.savageandravage.creepie.grow": "Creepie grows into Creeper",
-  "subtitles.savageandravage.runed_gloomy_tiles.activated": "Runed Gloomy Tiles activate",
-  "subtitles.savageandravage.generic.growth_success": "Growth succeeds",
-  "subtitles.savageandravage.generic.growth_failure": "Growth fails",
-  
+  "advancements.adventure.voluntary_exile.description": "Set fire to an Ominous Banner.\nMaybe consider staying away from villages for the time being...",
+
+  "subtitles.savageandravage.entity.creepie.hurt": "Creepie hurts",
+  "subtitles.savageandravage.entity.creepie.death": "Creepie dies",
+  "subtitles.savageandravage.entity.creepie.fuse": "Creepie hisses",
+  "subtitles.savageandravage.entity.creepie.convert": "Creepie converts",
+  "subtitles.savageandravage.entity.creepie.grow": "Creepie grows",
+  "subtitles.savageandravage.entity.iceologer.ambient": "Iceologer murmurs",
+  "subtitles.savageandravage.entity.iceologer.hurt": "Iceologer hurts",
+  "subtitles.savageandravage.entity.iceologer.death": "Iceologer dies",
+  "subtitles.savageandravage.entity.iceologer.celebrate": "Iceologer cheers",
+  "subtitles.savageandravage.entity.iceologer.cast_spell": "Iceologer casts spell",
+  "subtitles.savageandravage.entity.player.cast_spell": "Player casts spell",
+  "subtitles.savageandravage.entity.generic.growth_success": "Growth succeeds",
+  "subtitles.savageandravage.entity.generic.growth_failure": "Growth fails",
+  "subtitles.savageandravage.entity.creeper_spores.throw": "Creeper spores fly",
+  "subtitles.savageandravage.block.runed_gloomy_tiles.activate": "Runed Gloomy Tiles activate",
+
   "item.minecraft.potion.effect.growth": "Potion of Growth",
   "item.minecraft.potion.effect.growth_long": "Potion of Growth",
   "item.minecraft.splash_potion.effect.growth": "Splash Potion of Growth",
@@ -80,7 +87,5 @@
   "item.minecraft.lingering_potion.effect.youth": "Lingering Potion of Youth",
   "item.minecraft.lingering_potion.effect.youth_long": "Lingering Potion of Youth",
   "item.minecraft.tipped_arrow.effect.youth": "Arrow of Youth",
-  "item.minecraft.tipped_arrow.effect.youth_long": "Arrow of Youth",
-  
-  "advancements.adventure.voluntary_exile.description": "Set fire to an Ominous Banner.\nMaybe consider staying away from villages for the time being..."
+  "item.minecraft.tipped_arrow.effect.youth_long": "Arrow of Youth"
 }

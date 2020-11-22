@@ -57,7 +57,7 @@ public class BurningBannerEntity extends Entity implements IEntityAdditionalSpaw
     public BurningBannerEntity(World world, BlockPos pos, PlayerEntity player) {
         super(SREntities.BURNING_BANNER.get(), world);
         this.setBannerPosition(pos);
-        this.setOffenderId(player.getUniqueID());
+        if (player != null) this.setOffenderId(player.getUniqueID());
         BlockState state = world.getBlockState(pos);
         this.setPosition(pos.getX() + 0.5, pos.getY() - (state.getBlock() instanceof WallBannerBlock ? 1 : 0), pos.getZ() + 0.5);
         this.burningBox = getBurningBox(state);
@@ -110,11 +110,8 @@ public class BurningBannerEntity extends Entity implements IEntityAdditionalSpaw
                 this.playSound(this.world.getTileEntity(bannerPos) instanceof BannerTileEntity ? SoundEvents.BLOCK_FIRE_AMBIENT : SoundEvents.BLOCK_FIRE_EXTINGUISH, 2F, this.world.getRandom().nextFloat() * 0.4F + 0.8F);
             } else if (this.getTicksTillRemove() == 10) {
                 this.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH, 2F, this.world.getRandom().nextFloat() * 0.4F + 0.8F);
-                if (isOminousBanner(this.world, bannerPos) && ((ServerWorld) this.world).findRaid(bannerPos) == null) {
-                    PlayerEntity offender = this.getOffender();
-                    if (offender == null)
-                        return;
-
+                PlayerEntity offender = this.getOffender();
+                if (offender != null && isOminousBanner(this.world, bannerPos) && ((ServerWorld) this.world).findRaid(bannerPos) == null) {
                     SRTriggers.BURN_BANNER.trigger((ServerPlayerEntity) offender);
                     EffectInstance effect = offender.getActivePotionEffect(Effects.BAD_OMEN);
                     if (effect != null)
@@ -246,5 +243,6 @@ public class BurningBannerEntity extends Entity implements IEntityAdditionalSpaw
             this.burningBoxRotation = getBurningBoxRotation(state);
         }
     }
+
 }
 
