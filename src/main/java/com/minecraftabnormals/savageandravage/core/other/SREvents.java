@@ -214,7 +214,7 @@ public class SREvents {
 	public static void onInteractWithEntity(PlayerInteractEvent.EntityInteract event) {
 		ItemStack stack = event.getItemStack();
 		Entity target = event.getTarget();
-		if (target.getType() == EntityType.CREEPER && stack.getItem() == Items.CREEPER_SPAWN_EGG) {
+		if (target.getType() == EntityType.CREEPER || target.getType() == SREntities.CREEPIE.get() && stack.getItem() == Items.CREEPER_SPAWN_EGG) {
 			World world = event.getWorld();
 			CreepieEntity creepie = SREntities.CREEPIE.get().create(world);
 			if (creepie != null) {
