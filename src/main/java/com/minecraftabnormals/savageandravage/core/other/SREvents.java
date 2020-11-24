@@ -56,7 +56,10 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Random;
 
 @Mod.EventBusSubscriber(modid = SavageAndRavage.MODID)
 public class SREvents {
@@ -290,12 +293,13 @@ public class SREvents {
 		if (world.getBlockState(pos).getBlock() instanceof AbstractBannerBlock) {
 			List<BurningBannerEntity> burningBanners = world.getEntitiesWithinAABB(BurningBannerEntity.class, new AxisAlignedBB(pos));
 			for (BurningBannerEntity burningBanner : burningBanners) {
-				if (Objects.equals(burningBanner.getBannerPosition(), pos)) {
+				if (burningBanner.getBannerPosition() != null && burningBanner.getBannerPosition().equals(pos)) {
 					return false;
 				}
 			}
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 	@SubscribeEvent
