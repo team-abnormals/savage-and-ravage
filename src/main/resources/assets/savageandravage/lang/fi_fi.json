@@ -7,7 +7,7 @@
 	"block.savageandravage.gloomy_tile_vertical_slab": "Pystysuora synkkätiililaatta",
 	"block.savageandravage.runed_gloomy_tiles": "Riimutettu synkkätiili",
 
-	"block.savageandravage.blast_proof_plates": "Räjähdyksenkestäviä levyjä",
+	"block.savageandravage.blast_proof_plates": "Räjähdyksenkestävät levyt",
 	"block.savageandravage.blast_proof_slab": "Räjähdyksenkestävä laatta",
 	"block.savageandravage.blast_proof_stairs": "Räjähdyksenkestävät portaat",
 	"block.savageandravage.blast_proof_vertical_slab": "Pystysuora räjähdyksenkestävä laatta",
@@ -52,18 +52,25 @@
 
 	"advancements.story.griefer_armor.title": "Dynamite with a Laser Beam",
 	"advancements.story.griefer_armor.description": "Hanki kokonainen rettelöitsijän haarniska",
-	
 	"advancements.adventure.relic_collector.title": "Jäännöstenkerääjä",
 	"advancements.adventure.relic_collector.description": "Hanki kuolemattomuuden toteemi, pyövelin veitsi ja jäädyttäjän sauva",
+	"advancements.adventure.voluntary_exile.description": "Sytytä pahaenteinen viiri tuleen.\nKylien välttelemistä kannattaa harkita toistaiseksi...",
 	
 	"subtitles.savageandravage.creepie.hurt": "Creepie vahingoittuu",
 	"subtitles.savageandravage.creepie.death": "Creepie kuolee",
 	"subtitles.savageandravage.creepie.fuse": "Creepie sihisee",
 	"subtitles.savageandravage.creepie.convert": "Creepie alkaa muuntautua",
 	"subtitles.savageandravage.creepie.grow": "Creepie kasvaa Creeper",
-	"subtitles.savageandravage.runed_gloomy_tiles.activated": "Riimutettu synkkätiili aktivoituu",
+	"subtitles.savageandravage.entity.iceologer.ambient": "Jäädyttäjä mumisee",
+	"subtitles.savageandravage.entity.iceologer.hurt": "Jäädyttäjä vahingoittuu",
+	"subtitles.savageandravage.entity.iceologer.death": "Jäädyttäjä kuolee",
+	"subtitles.savageandravage.entity.iceologer.celebrate": "Jäädyttäjä hurraa",
+	"subtitles.savageandravage.entity.iceologer.cast_spell": "Jäädyttäjä loihtii",
+	"subtitles.savageandravage.entity.player.cast_spell": "Pelaaja loihtii",
 	"subtitles.savageandravage.generic.growth_success": "Kasvu onnistuu",
 	"subtitles.savageandravage.generic.growth_failure": "Kasvu epäonnistuu",
+  "subtitles.savageandravage.entity.creeper_spores.throw": "Creeper-itiöt lentävät",
+	"subtitles.savageandravage.runed_gloomy_tiles.activated": "Riimutettu synkkätiili aktivoituu",
 	
 	"item.minecraft.potion.effect.growth": "Kasvamisen taikajuoma",
 	"item.minecraft.potion.effect.growth_long": "Kasvamisen taikajuoma",
@@ -80,7 +87,5 @@
 	"item.minecraft.lingering_potion.effect.youth": "Viipyvä nuoruuden taikajuoma",
 	"item.minecraft.lingering_potion.effect.youth_long": "Viipyvä nuoruuden taikajuoma",
 	"item.minecraft.tipped_arrow.effect.youth": "Nuoruuden nuoli",
-	"item.minecraft.tipped_arrow.effect.youth_long": "Nuoruuden nuoli",
-	
-	"advancements.adventure.voluntary_exile.description": "Sytytä pahaenteinen viiri tuleen.\nKylien välttelemistä kannattaa harkita toistaiseksi..."
+	"item.minecraft.tipped_arrow.effect.youth_long": "Nuoruuden nuoli"
 }
