@@ -52,18 +52,25 @@
 
   "advancements.story.griefer_armor.title": "Dinamita con un rayo láser",
   "advancements.story.griefer_armor.description": "Conseguí una armadura de alborotador completa",
-
   "advancements.adventure.relic_collector.title": "Coleccionista de reliquias",
   "advancements.adventure.relic_collector.description": "Obtené un tótem de inmortalidad, una cuchilla de decapitación y una varita de congelación",
+  "advancements.adventure.voluntary_exile.description": "Prendé fuego a un estandarte ominoso.\nY a lo mejor te conviente alejarte de las aldeas por el momento...",
 
-  "savageandravage:subtitles.creepie.hurt": "Creepie herido",
-  "savageandravage:subtitles.creepie.death": "Creepie muere",
-  "savageandravage:subtitles.creepie.fuse": "Siseo de creepie",
-  "savageandravage:subtitles.creepie.convert": "Creepie se transforma",
-  "savageandravage:subtitles.creepie.grow": "Creepie crece en un creeper",
-  "savageandravage:subtitles.runed_gloomy_tiles.activated": "Azulejos sombríos rúnicos activados",
-  "savageandravage:subtitles.generic.growth_success": "Maduración exitosa",
-  "savageandravage:subtitles.generic.growth_failure": "Maduración fallida",
+  "savageandravage:subtitles.entity.creepie.hurt": "Creepie herido",
+  "savageandravage:subtitles.entity.creepie.death": "Creepie muere",
+  "savageandravage:subtitles.entity.creepie.fuse": "Siseo de creepie",
+  "savageandravage:subtitles.entity.creepie.convert": "Creepie se transforma",
+  "savageandravage:subtitles.entity.creepie.grow": "Creepie madura",
+  "subtitles.savageandravage.entity.iceologer.ambient": "Murmuro de friólogo",
+  "subtitles.savageandravage.entity.iceologer.hurt": "Friólogo herido",
+  "subtitles.savageandravage.entity.iceologer.death": "Friólogo muere",
+  "subtitles.savageandravage.entity.iceologer.celebrate": "Friólogo festeja",
+  "subtitles.savageandravage.entity.iceologer.cast_spell": "Friólogo lanza un hechizo",
+  "subtitles.savageandravage.entity.generic.cast_spell": "Un hechizo es lanzado",
+  "savageandravage:subtitles.entity.generic.growth_success": "Maduración exitosa",
+  "savageandravage:subtitles.entity.generic.growth_failure": "Maduración fallida",
+  "subtitles.savageandravage.entity.creeper_spores.throw": "Esporas de creeper vuelan",
+  "savageandravage:subtitles.block.runed_gloomy_tiles.activate": "Azulejos sombríos rúnicos activados",
 
   "item.minecraft.potion.effect.growth": "Poción de maduración",
   "item.minecraft.potion.effect.growth_long": "Poción de maduración",
@@ -80,7 +87,5 @@
   "item.minecraft.lingering_potion.effect.youth": "Poción persistente de juventud",
   "item.minecraft.lingering_potion.effect.youth_long": "Poción persistente de juventud",
   "item.minecraft.tipped_arrow.effect.youth": "Flecha de juventud",
-  "item.minecraft.tipped_arrow.effect.youth_long": "Flecha de juventud",
-
-  "advancements.adventure.voluntary_exile.description": "Prendé fuego a un estandarte ominoso.\nY a lo mejor te conviente alejarte de las aldeas por el momento..."
+  "item.minecraft.tipped_arrow.effect.youth_long": "Flecha de juventud"
 }
