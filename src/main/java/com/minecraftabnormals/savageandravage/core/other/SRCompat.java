@@ -1,6 +1,6 @@
 package com.minecraftabnormals.savageandravage.core.other;
 
-import com.minecraftabnormals.savageandravage.common.dispenser.FlintAndSteelItemBehavior;
+import com.minecraftabnormals.savageandravage.common.dispenser.FlintSteelDispenseBehavior;
 import com.minecraftabnormals.savageandravage.common.entity.MischiefArrowEntity;
 import com.minecraftabnormals.savageandravage.common.entity.SporeCloudEntity;
 import com.minecraftabnormals.savageandravage.common.entity.block.SporeBombEntity;
@@ -62,6 +62,6 @@ public class SRCompat {
         for (Item banner : banners) {
             DispenserBlock.registerDispenseBehavior(banner, ArmorItem.DISPENSER_BEHAVIOR);
         }
-        DispenserBlock.registerDispenseBehavior(Items.FLINT_AND_STEEL, new FlintAndSteelItemBehavior((DefaultDispenseItemBehavior) DispenserBlock.DISPENSE_BEHAVIOR_REGISTRY.get(Items.FLINT_AND_STEEL)));
+        DispenserBlock.registerDispenseBehavior(Items.FLINT_AND_STEEL, new FlintSteelDispenseBehavior());
     }
 }
