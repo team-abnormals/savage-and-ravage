@@ -20,6 +20,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
+@SuppressWarnings("deprecation")
 @Mod(SavageAndRavage.MODID)
 public class SavageAndRavage {
 
@@ -40,6 +41,7 @@ public class SavageAndRavage {
         SREffects.EFFECTS.register(bus);
         SREffects.POTIONS.register(bus);
         SRAttributes.ATTRIBUTES.register(bus);
+        SRGeneration.FEATURES.register(bus);
 
         MinecraftForge.EVENT_BUS.register(this);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, SRConfig.COMMON_SPEC);
@@ -66,6 +68,7 @@ public class SavageAndRavage {
             SREntities.registerEntitySpawns();
             SREntities.registerAttributes();
             SREntities.registerWaveMembers();
+            SRGeneration.registerGeneration();
             SRCompat.registerFlammables();
             SRCompat.registerDispenserBehaviors();
         });
