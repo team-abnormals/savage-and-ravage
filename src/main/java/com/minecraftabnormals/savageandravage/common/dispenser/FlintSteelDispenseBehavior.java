@@ -8,6 +8,7 @@ import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.dispenser.IDispenseItemBehavior;
 import net.minecraft.dispenser.OptionalDispenseBehavior;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
@@ -15,12 +16,12 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class FlintAndSteelItemBehavior extends OptionalDispenseBehavior {
+public class FlintSteelDispenseBehavior extends OptionalDispenseBehavior {
 
-    private IDispenseItemBehavior originalBehavior;
+    private final IDispenseItemBehavior originalBehavior;
 
-    public FlintAndSteelItemBehavior (DefaultDispenseItemBehavior behavior) {
-        this.originalBehavior = behavior;
+    public FlintSteelDispenseBehavior() {
+        this.originalBehavior = DispenserBlock.DISPENSE_BEHAVIOR_REGISTRY.get(Items.FLINT_AND_STEEL);
     }
 
     /**
