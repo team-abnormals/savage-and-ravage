@@ -1,11 +1,5 @@
 package com.minecraftabnormals.savageandravage.common.entity;
 
-import java.util.Collection;
-import java.util.Optional;
-import java.util.UUID;
-
-import javax.annotation.Nullable;
-
 import com.minecraftabnormals.savageandravage.common.entity.goals.CreepieSwellGoal;
 import com.minecraftabnormals.savageandravage.common.entity.goals.FollowMobOwnerGoal;
 import com.minecraftabnormals.savageandravage.common.entity.goals.MobOwnerHurtByTargetGoal;
@@ -13,33 +7,18 @@ import com.minecraftabnormals.savageandravage.common.entity.goals.MobOwnerHurtTa
 import com.minecraftabnormals.savageandravage.core.registry.SRParticles;
 import com.minecraftabnormals.savageandravage.core.registry.SRSounds;
 import com.teamabnormals.abnormals_core.core.library.api.IAgeableEntity;
-
-import net.minecraft.entity.AreaEffectCloudEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntitySize;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ILivingEntityData;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.Pose;
-import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.AvoidEntityGoal;
-import net.minecraft.entity.ai.goal.HurtByTargetGoal;
-import net.minecraft.entity.ai.goal.LookAtGoal;
-import net.minecraft.entity.ai.goal.LookRandomlyGoal;
-import net.minecraft.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
-import net.minecraft.entity.ai.goal.SwimGoal;
-import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
+import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.CatEntity;
 import net.minecraft.entity.passive.OcelotEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.*;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.datasync.DataParameter;
@@ -48,11 +27,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.scoreboard.Team;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.util.*;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.DifficultyInstance;
@@ -64,6 +39,11 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
 
+import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.UUID;
+
 public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeableEntity {
     private static final DataParameter<Integer> STATE = EntityDataManager.createKey(CreepieEntity.class, DataSerializers.VARINT);
     private static final DataParameter<Boolean> IGNITED = EntityDataManager.createKey(CreepieEntity.class, DataSerializers.BOOLEAN);
@@ -74,7 +54,7 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
     public int timeSinceIgnited;
     public int fuseTime = 30;
     private float explosionRadius;
-    private int growingAge = -24000;
+    private int growingAge;
     private int forcedAge;
     private int forcedAgeTimer;
     private int conversionTime;
@@ -82,7 +62,7 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
     public CreepieEntity(EntityType<? extends CreepieEntity> type, World worldIn) {
         super(type, worldIn);
         this.explosionRadius = 1.2f;
-        this.experienceValue = 2;
+        this.experienceValue = 0;
     }
 
     @Override

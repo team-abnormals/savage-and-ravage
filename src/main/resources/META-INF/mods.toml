@@ -1,7 +1,7 @@
 modLoader="javafml"
 loaderVersion="[32,)"
-issueTrackerURL="http://https://github.com/minecraftabnormals/Savage-and-Ravage/issues"
-license="https://github.com/minecraftabnormals/Savage-and-Ravage/blob/master/LICENSE.txt"
+issueTrackerURL="https://github.com/team-abnormals/savage-and-ravage/issues"
+license="https://github.com/team-abnormals/savage-and-ravage/blob/master/LICENSE.txt"
 
 [[mods]]
     modId="savageandravage"

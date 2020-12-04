@@ -211,20 +211,18 @@ public class SREvents {
 	public static void onInteractWithEntity(PlayerInteractEvent.EntityInteract event) {
 		ItemStack stack = event.getItemStack();
 		Entity target = event.getTarget();
-		if (target.getType() == EntityType.CREEPER && stack.getItem() == Items.CREEPER_SPAWN_EGG) {
-			World world = event.getWorld();
-			CreepieEntity creepie = SREntities.CREEPIE.get().create(world);
-			if (creepie != null) {
-				creepie.copyLocationAndAnglesFrom(target);
-				if (stack.hasDisplayName()) {
-					creepie.setCustomName(stack.getDisplayName());
+		if (target.getType() == EntityType.CREEPER || target.getType() == SREntities.CREEPIE.get()) {
+			if (stack.getItem() == Items.CREEPER_SPAWN_EGG) {
+				World world = event.getWorld();
+				CreepieEntity creepie = SREntities.CREEPIE.get().create(world);
+				if (creepie != null) {
+					creepie.copyLocationAndAnglesFrom(target);
+					if (stack.hasDisplayName()) creepie.setCustomName(stack.getDisplayName());
+					if (!event.getPlayer().isCreative()) stack.shrink(1);
+					world.addEntity(creepie);
+					event.setCancellationResult(ActionResultType.func_233537_a_(world.isRemote()));
+					event.setCanceled(true);
 				}
-				if (!event.getPlayer().isCreative()) {
-					stack.shrink(1);
-				}
-				world.addEntity(creepie);
-				event.setCancellationResult(ActionResultType.func_233537_a_(world.isRemote()));
-				event.setCanceled(true);
 			}
 		}
 	}
@@ -287,15 +285,9 @@ public class SREvents {
 	}
 
 	public static boolean isValidBannerPos(World world, BlockPos pos) {
-		if (world.getBlockState(pos).getBlock() instanceof AbstractBannerBlock) {
-			List<BurningBannerEntity> burningBanners = world.getEntitiesWithinAABB(BurningBannerEntity.class, new AxisAlignedBB(pos));
-			for (BurningBannerEntity burningBanner : burningBanners) {
-				if (Objects.equals(burningBanner.getBannerPosition(), pos)) {
-					return false;
-				}
-			}
-		}
-		return true;
+		if (!(world.getBlockState(pos).getBlock() instanceof AbstractBannerBlock)) return false;
+		List<BurningBannerEntity> banners = world.getEntitiesWithinAABB(BurningBannerEntity.class, new AxisAlignedBB(pos));
+		return banners.stream().noneMatch(b -> Objects.equals(b.getBannerPosition(), pos));
 	}
 
 	@SubscribeEvent
