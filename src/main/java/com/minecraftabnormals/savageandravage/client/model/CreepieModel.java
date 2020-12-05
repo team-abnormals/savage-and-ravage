@@ -12,6 +12,7 @@ import net.minecraft.util.math.MathHelper;
  */
 public class CreepieModel extends SegmentedModel<CreepieEntity> {
 	public ModelRenderer head;
+	public ModelRenderer sprout;
 	public ModelRenderer body;
 	public ModelRenderer leg1;
 	public ModelRenderer leg2;
@@ -24,6 +25,11 @@ public class CreepieModel extends SegmentedModel<CreepieEntity> {
 		this.head = new ModelRenderer(this, 0, 0);
 		this.head.setRotationPoint(0.0F, 6.0F, 0.0F);
 		this.head.addBox(-4.0F, -8.0F, -4.0F, 8, 8, 8, 2.0F);
+		this.sprout = new ModelRenderer(this, 48, 16);
+		this.sprout.setRotationPoint(0.0F, 6.0F, 0.0F);
+		this.head.addChild(this.sprout);
+		this.sprout.addBox(0.0F, -24.0F, -4.0F, 0.0F, 8.0F, 8.0F, 0.0F);
+		this.sprout.addBox(-4.0F, -24.0F, 0.0F, 8.0F, 8.0F, 0.0F, 0.0F);
 		this.body = new ModelRenderer(this, 16, 16);
 		this.body.setRotationPoint(0.0F, 6.0F, 0.0F);
 		this.body.addBox(-4.0F, 0.0F, -2.0F, 8, 12, 4, 0.0F);
@@ -54,15 +60,6 @@ public class CreepieModel extends SegmentedModel<CreepieEntity> {
 	@Override
 	public Iterable<ModelRenderer> getParts() {
 		return ImmutableList.of(this.leg4, this.head, this.body, this.leg1, this.leg3, this.leg2);
-	}
-
-	/**
-	 * This is a helper function from Tabula to set the rotation of model parts
-	 */
-	public void setRotateAngle(ModelRenderer modelRenderer, float x, float y, float z) {
-		modelRenderer.rotateAngleX = x;
-		modelRenderer.rotateAngleY = y;
-		modelRenderer.rotateAngleZ = z;
 	}
 }
 

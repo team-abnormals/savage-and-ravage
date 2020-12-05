@@ -60,6 +60,7 @@ import java.util.*;
 
 @Mod.EventBusSubscriber(modid = SavageAndRavage.MODID)
 public class SREvents {
+	private static final Method setSize = ObfuscationReflectionHelper.findMethod(SlimeEntity.class, "func_70799_a", int.class, boolean.class);
 
 	@SubscribeEvent
 	public static void onLivingSpawned(EntityJoinWorldEvent event) {
@@ -307,7 +308,6 @@ public class SREvents {
 					int size = slime.getSlimeSize();
 					if (shouldSetChild ? size > 1 : size < 3) {
 						canChange = true;
-						Method setSize = ObfuscationReflectionHelper.findMethod(SlimeEntity.class, "func_70799_a", int.class, boolean.class);
 						setSize.invoke(slime, (size + (shouldSetChild ? (size < 4 ? -1 : -2) : (size < 2 ? 1 : 2))), false);
 					}
 				} else if (checkBooflo(affected, shouldSetChild))
