@@ -66,5 +66,6 @@ public class ExecutionerEntity extends VindicatorEntity {
 		}
 
 		this.setItemStackToSlot(EquipmentSlotType.MAINHAND, itemstack);
+		this.inventoryHandsDropChances[EquipmentSlotType.MAINHAND.getIndex()] = 0.5F;
 	}
 }
