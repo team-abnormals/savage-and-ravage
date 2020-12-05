@@ -26,12 +26,18 @@ public class SRConfig {
 
     public static class Client {
         public final ConfigValue<Boolean> creepiesGrowLargerOnExplosion;
+        public final ConfigValue<Boolean> creepieSprout;
 
         public Client(ForgeConfigSpec.Builder builder) {
             this.creepiesGrowLargerOnExplosion = builder
-                    .comment("If true, creepies grow significantly larger when they explode.")
-                    .translation(makeTranslation("creepieGoBigWhenBoom"))
+                    .comment("If true, creepies grow significantly larger when they explode")
+                    .translation(makeTranslation("creepiesGrowLargerOnExplosion"))
                     .define("Creepies grow larger on explosion", false);
+
+            this.creepieSprout = builder
+                    .comment("If true, creepies have a sprout on their head")
+                    .translation(makeTranslation("creepieSprout"))
+                    .define("Creepie sprout", true);
         }
     }
 
