@@ -472,10 +472,10 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
         //this.world.setEntityState(this, (byte)16);
     }
 
-    private void finishConversion(ServerWorld world) {
+    private LivingEntity finishConversion(ServerWorld world) {
         CreeperEntity creeperEntity = EntityType.CREEPER.create(this.world);
         if (creeperEntity == null)
-            return;
+            return null;
 
         creeperEntity.copyLocationAndAnglesFrom(this);
         creeperEntity.onInitialSpawn(world, this.world.getDifficultyForLocation(creeperEntity.getPosition()), SpawnReason.CONVERSION, null, null);
@@ -502,6 +502,7 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
         creeperEntity.setHealth(creeperEntity.getMaxHealth());
         this.world.addEntity(creeperEntity);
         if (this.isServerWorld()) this.playSound(SRSounds.ENTITY_CREEPIE_GROW.get(), 1.0F, 1.0F);
+        return creeperEntity;
     }
 
     @Override
@@ -546,7 +547,10 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
 
     @Override
     public LivingEntity attemptAging(boolean isGrowing) {
-        this.setGrowingAge(0);
+        if (isGrowing) {
+            this.growingAge = 0;
+            if(!this.world.isRemote) return this.finishConversion((ServerWorld) this.world);
+        }
         return this;
     }
 }
