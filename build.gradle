@@ -1,45 +1,44 @@
 buildscript {
     repositories {
-        maven { url = 'https://files.minecraftforge.net/maven' }
+        maven { url = "https://files.minecraftforge.net/maven" }
         jcenter()
         mavenCentral()
-        maven { url = 'https://dist.creeper.host/Sponge/maven' }
+        maven { url = "https://dist.creeper.host/Sponge/maven" }
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
-        classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
+        classpath group: "net.minecraftforge.gradle", name: "ForgeGradle", version: "3.+", changing: true
+        classpath group: "org.spongepowered", name: "mixingradle", version: "0.7-SNAPSHOT"
     }
 }
 
 plugins {
-  id "com.wynprice.cursemaven" version "2.1.1"
+    id "com.wynprice.cursemaven" version "2.1.1"
 }
 
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
-apply plugin: 'org.spongepowered.mixin'
+apply plugin: "net.minecraftforge.gradle"
+apply plugin: "eclipse"
+apply plugin: "maven-publish"
+apply plugin: "org.spongepowered.mixin"
 
 mixin {
     add sourceSets.main, "savageandravage.refmap.json"
 }
 
-version = '2.1.1'
-group = 'com.minecraftabnormals'
-archivesBaseName = 'Savage-and-Ravage-1.16.1'
+version = "2.2.0"
+group = "com.minecraftabnormals"
+archivesBaseName = "Savage-and-Ravage-1.16.1"
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = "1.8"
 
 minecraft {
-    mappings channel: 'snapshot', version: '20200723-1.16.1'    
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-
+    mappings channel: "snapshot", version: "20200723-1.16.1"
+    accessTransformer = file("src/main/resources/META-INF/accesstransformer.cfg")
     runs {
         client {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
-            property 'mixin.env.disableRefMap', 'true'
+            workingDirectory project.file("run")
+            property "forge.logging.markers", "SCAN,REGISTRIES,REGISTRYDUMP"
+            property "forge.logging.console.level", "debug"
+            property "mixin.env.disableRefMap", "true"
             arg "-mixin.config=savageandravage.mixins.json"
             mods {
                 savageandravage {
@@ -48,10 +47,10 @@ minecraft {
             }
         }
         server {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
-            property 'mixin.env.disableRefMap', 'true'
+            workingDirectory project.file("run")
+            property "forge.logging.markers", "SCAN,REGISTRIES,REGISTRYDUMP"
+            property "forge.logging.console.level", "debug"
+            property "mixin.env.disableRefMap", "true"
             arg "-mixin.config=savageandravage.mixins.json"
             mods {
                 savageandravage {
@@ -59,11 +58,11 @@ minecraft {
                 }
             }
         }
-		data {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
-            args '--mod', 'savageandravage', '--all', '--output', file('src/generated/resources/')
+        data {
+            workingDirectory project.file("run")
+            property "forge.logging.markers", "SCAN,REGISTRIES,REGISTRYDUMP"
+            property "forge.logging.console.level", "debug"
+            args "--mod", "savageandravage", "--all", "--output", file("src/generated/resources/")
             mods {
                 savageandravage {
                     source sourceSets.main
@@ -74,21 +73,21 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.16.1-32.0.72'
+    minecraft "net.minecraftforge:forge:1.16.1-32.0.72"
     implementation fg.deobf("curse.maven:abnormals-core:3091840")
 }
 
 jar {
     manifest {
         attributes([
-        	  "Specification-Title": "Savage & Ravage",
-            "Specification-Vendor": "Team Abnormals",
-            "Specification-Version": "1",
-            "Implementation-Title": project.name,
-            "Implementation-Version": "${version}",
-            "Implementation-Vendor": "Team Abnormals",
-            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-            "MixinConfigs": "savageandravage.mixins.json"
+                "Specification-Title"     : "Savage & Ravage",
+                "Specification-Vendor"    : "Team Abnormals",
+                "Specification-Version"   : "1",
+                "Implementation-Title"    : project.name,
+                "Implementation-Version"  : "${version}",
+                "Implementation-Vendor"   : "Team Abnormals",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                "MixinConfigs"            : "savageandravage.mixins.json"
         ])
     }
 }
