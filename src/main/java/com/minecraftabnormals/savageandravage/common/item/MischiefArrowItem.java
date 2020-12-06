@@ -1,8 +1,7 @@
 package com.minecraftabnormals.savageandravage.common.item;
 
+import com.minecraftabnormals.abnormals_core.core.util.item.ItemStackUtil;
 import com.minecraftabnormals.savageandravage.common.entity.MischiefArrowEntity;
-import com.teamabnormals.abnormals_core.core.utils.ItemStackUtils;
-
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
@@ -31,6 +30,6 @@ public class MischiefArrowItem extends ArrowItem {
 
     @Override
     public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-        ItemStackUtils.fillAfterItemForGroup(this.asItem(), Items.SPECTRAL_ARROW, group, items);
+        ItemStackUtil.fillAfterItemForGroup(this.asItem(), Items.SPECTRAL_ARROW, group, items);
     }
 }

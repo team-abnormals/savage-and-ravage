@@ -80,7 +80,7 @@ public class GrieferModel extends BipedModel<GrieferEntity> {
             float f1 = 1.0F - (float)MathHelper.abs(10 - 2 * entityIn.getKickTicks()) / 10.0F;
             this.bipedRightLeg.rotateAngleX = MathHelper.lerp(f1, 0.0F, -1.40F);
         }
-        if (entityIn.func_213656_en()) // party rockers in the hou
+        if (entityIn.getCelebrating()) // party rockers in the hou
         {
             this.bipedHead.rotateAngleX = MathHelper.cos(ageInTicks * 0.6662F) * 0.05F;
             this.bipedLeftArm.rotationPointZ = 0.0F;

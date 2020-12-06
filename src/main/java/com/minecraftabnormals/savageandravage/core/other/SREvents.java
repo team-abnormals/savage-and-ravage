@@ -1,5 +1,6 @@
 package com.minecraftabnormals.savageandravage.core.other;
 
+import com.minecraftabnormals.abnormals_core.core.api.IAgeableEntity;
 import com.minecraftabnormals.savageandravage.common.effect.GrowingEffect;
 import com.minecraftabnormals.savageandravage.common.effect.ShrinkingEffect;
 import com.minecraftabnormals.savageandravage.common.entity.*;
@@ -37,9 +38,13 @@ import net.minecraft.stats.Stats;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.MobSpawnInfo;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
@@ -47,12 +52,11 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.event.entity.living.PotionEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -61,6 +65,19 @@ import java.util.*;
 @Mod.EventBusSubscriber(modid = SavageAndRavage.MODID)
 public class SREvents {
 	private static final Method setSize = ObfuscationReflectionHelper.findMethod(SlimeEntity.class, "func_70799_a", int.class, boolean.class);
+
+	@SubscribeEvent
+	public static void onLoadBiome(BiomeLoadingEvent event) {
+		if (event.getName() != null) {
+			RegistryKey<Biome> key = RegistryKey.getOrCreateKey(Registry.BIOME_KEY, event.getName());
+			if (BiomeDictionary.hasType(key, BiomeDictionary.Type.OVERWORLD) && SREntities.canHostilesSpawn(event.getName())) {
+				event.getSpawns().withSpawner(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(SREntities.SKELETON_VILLAGER.get(), 5, 1, 1));
+			}
+			if (event.getCategory() == Biome.Category.ICY || event.getCategory() == Biome.Category.EXTREME_HILLS) {
+				event.getSpawns().withSpawner(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(SREntities.SKELETON_VILLAGER.get(), 8, 1, 1));
+			}
+		}
+	}
 
 	@SubscribeEvent
 	public static void onLivingSpawned(EntityJoinWorldEvent event) {
@@ -292,34 +309,33 @@ public class SREvents {
 	}
 
 	@SubscribeEvent
-	public static void onPotionExpire(PotionEvent.PotionExpiryEvent event) throws InvocationTargetException, IllegalAccessException {
-		LivingEntity affected = event.getEntityLiving();
-		boolean shouldSetChild = false;
-		int growingAgeValue = 0;
+	public static void onPotionExpire(PotionEvent.PotionExpiryEvent event) {
 		if (event.getPotionEffect() != null) {
-			if (event.getPotionEffect().getPotion() instanceof ShrinkingEffect) {
-				shouldSetChild = true;
-				growingAgeValue = -24000;
-			}
+			LivingEntity affected = event.getEntityLiving();
+			boolean shouldSetChild = event.getPotionEffect().getPotion() instanceof ShrinkingEffect;
 			if (event.getPotionEffect().getPotion() instanceof GrowingEffect || shouldSetChild) {
 				boolean canChange = false;
-				if (affected instanceof SlimeEntity) {
+				if(affected instanceof IAgeableEntity && ((IAgeableEntity) affected).canAge(!shouldSetChild)) {
+					((IAgeableEntity) affected).attemptAging(!shouldSetChild);
+				}
+				else if (affected instanceof SlimeEntity) {
 					SlimeEntity slime = (SlimeEntity) affected;
 					int size = slime.getSlimeSize();
 					if (shouldSetChild ? size > 1 : size < 3) {
 						canChange = true;
-						setSize.invoke(slime, (size + (shouldSetChild ? (size < 4 ? -1 : -2) : (size < 2 ? 1 : 2))), false);
+						try {
+							setSize.invoke(slime, (size + (shouldSetChild ? (size < 4 ? -1 : -2) : (size < 2 ? 1 : 2))), false);
+						} catch (IllegalAccessException | InvocationTargetException e) {
+							throw new RuntimeException("Invoking setSize failed. Something has gone horribly wrong with Savage & Ravage!");
+						}
 					}
-				} else if (checkBooflo(affected, shouldSetChild))
-					canChange = true;
+				}
 				else if (shouldSetChild != affected.isChild()) {
 					canChange = true;
 					if (affected instanceof AgeableEntity && !(affected instanceof ParrotEntity))
-						((AgeableEntity) affected).setGrowingAge(growingAgeValue);
+						((AgeableEntity) affected).setGrowingAge(shouldSetChild ? -24000 : 0);
 					else if (shouldSetChild && affected instanceof CreeperEntity)
 						convertCreeper((CreeperEntity) affected);
-					else if (!shouldSetChild && affected instanceof CreepieEntity)
-						((CreepieEntity) affected).setGrowingAge(growingAgeValue);
 					else if (affected instanceof ZombieEntity || affected instanceof PiglinEntity || affected instanceof ZoglinEntity)
 						((MobEntity) affected).setChild(shouldSetChild);
 					else
@@ -342,26 +358,12 @@ public class SREvents {
 		}
 	}
 
-	public static boolean checkBooflo(LivingEntity affected, boolean isBabyPotion) {
-		if (ModList.get().isLoaded("endergetic")) {
-			if (affected.getType() == ForgeRegistries.ENTITIES.getValue(new ResourceLocation("endergetic:booflo"))) {
-				return isBabyPotion;
-			}
-			else if (affected.getType() == ForgeRegistries.ENTITIES.getValue(new ResourceLocation("endergetic:booflo_baby"))) {
-				return !isBabyPotion;
-			}
-			else return affected.getType() == ForgeRegistries.ENTITIES.getValue(new ResourceLocation("endergetic:booflo_adolescent"));
-		}
-		return false;
-	}
-
 	public static void convertCreeper(CreeperEntity creeper) {
 		CreepieEntity creepie = SREntities.CREEPIE.get().create(creeper.world);
 		if (creepie == null)
 			return;
 
 		creepie.copyLocationAndAnglesFrom(creeper.getEntity());
-		creepie.onInitialSpawn(creeper.world, creeper.world.getDifficultyForLocation(new BlockPos(creepie.getPositionVec())), SpawnReason.CONVERSION, null, null);
 		creeper.remove();
 		creepie.setNoAI(creeper.isAIDisabled());
 		if (creeper.hasCustomName()) {

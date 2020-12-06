@@ -1,14 +1,14 @@
 package com.minecraftabnormals.savageandravage.core.registry;
 
+import com.minecraftabnormals.abnormals_core.core.util.registry.SoundSubRegistryHelper;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
-import com.teamabnormals.abnormals_core.core.utils.RegistryHelper;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = SavageAndRavage.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class SRSounds {
-    public static final RegistryHelper HELPER = SavageAndRavage.REGISTRY_HELPER;
+    public static final SoundSubRegistryHelper HELPER = SavageAndRavage.REGISTRY_HELPER.getSoundSubHelper();
 
     public static final RegistryObject<SoundEvent> ENTITY_CREEPIE_HURT = HELPER.createSoundEvent("entity.creepie.hurt");
     public static final RegistryObject<SoundEvent> ENTITY_CREEPIE_DEATH = HELPER.createSoundEvent("entity.creepie.death");

@@ -1,9 +1,8 @@
 package com.minecraftabnormals.savageandravage.common.item;
 
+import com.minecraftabnormals.abnormals_core.core.util.item.ItemStackUtil;
 import com.minecraftabnormals.savageandravage.common.entity.IceChunkEntity;
 import com.minecraftabnormals.savageandravage.core.registry.SRSounds;
-import com.teamabnormals.abnormals_core.core.utils.ItemStackUtils;
-
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileHelper;
@@ -15,11 +14,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.*;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
@@ -71,6 +66,6 @@ public class WandOfFreezingItem extends Item {
     
     @Override
     public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-        ItemStackUtils.fillAfterItemForGroup(this.asItem(), Items.TOTEM_OF_UNDYING, group, items);
+        ItemStackUtil.fillAfterItemForGroup(this.asItem(), Items.TOTEM_OF_UNDYING, group, items);
     }
 }

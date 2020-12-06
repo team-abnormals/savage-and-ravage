@@ -1,12 +1,12 @@
 package com.minecraftabnormals.savageandravage.common.entity;
 
+import com.minecraftabnormals.abnormals_core.core.api.IAgeableEntity;
 import com.minecraftabnormals.savageandravage.common.entity.goals.CreepieSwellGoal;
 import com.minecraftabnormals.savageandravage.common.entity.goals.FollowMobOwnerGoal;
 import com.minecraftabnormals.savageandravage.common.entity.goals.MobOwnerHurtByTargetGoal;
 import com.minecraftabnormals.savageandravage.common.entity.goals.MobOwnerHurtTargetGoal;
 import com.minecraftabnormals.savageandravage.core.registry.SRParticles;
 import com.minecraftabnormals.savageandravage.core.registry.SRSounds;
-import com.teamabnormals.abnormals_core.core.library.api.IAgeableEntity;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
@@ -32,7 +32,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.Explosion;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
@@ -131,9 +131,9 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
 
     @Nullable
     @Override
-    public ILivingEntityData onInitialSpawn(IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+    public ILivingEntityData onInitialSpawn(IServerWorld world, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
         this.growingAge = -24000;
-        return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+        return super.onInitialSpawn(world, difficultyIn, reason, spawnDataIn, dataTag);
     }
 
     @Override
@@ -189,7 +189,7 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
         return sizeIn.height * 0.8F;
     }
 
-    @Override
+    //@Override
     public int getGrowingAge() {
         if (this.world.isRemote()) {
             return this.growingAge < 0 ? -1 : 1;
@@ -215,7 +215,7 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
         }
     }
 
-    @Override
+    //@Override
     public void setGrowingAge(int age) {
         int i = this.growingAge;
         this.growingAge = age;
@@ -478,7 +478,7 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
             return;
 
         creeperEntity.copyLocationAndAnglesFrom(this);
-        creeperEntity.onInitialSpawn(this.world, this.world.getDifficultyForLocation(creeperEntity.getPosition()), SpawnReason.CONVERSION, null, null);
+        creeperEntity.onInitialSpawn(world, this.world.getDifficultyForLocation(creeperEntity.getPosition()), SpawnReason.CONVERSION, null, null);
         this.dead = true;
         this.remove();
         creeperEntity.setNoAI(this.isAIDisabled());
@@ -527,5 +527,26 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
     @Override
     public IPacket<?> createSpawnPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
+    }
+
+    @Override
+    public boolean hasGrowthProgress() {
+        return true;
+    }
+
+    @Override
+    public void resetGrowthProgress() {
+        this.setGrowingAge(-24000);
+    }
+
+    @Override
+    public boolean canAge(boolean isGrowing) {
+        return isGrowing;
+    }
+
+    @Override
+    public LivingEntity attemptAging(boolean isGrowing) {
+        this.setGrowingAge(0);
+        return this;
     }
 }

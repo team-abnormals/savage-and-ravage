@@ -1,31 +1,25 @@
 package com.minecraftabnormals.savageandravage.common.item;
 
-import java.util.UUID;
-
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import com.minecraftabnormals.abnormals_core.core.util.item.ItemStackUtil;
 import com.minecraftabnormals.savageandravage.client.model.GrieferArmorModel;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 import com.minecraftabnormals.savageandravage.core.registry.SRAttributes;
 import com.minecraftabnormals.savageandravage.core.registry.SRItems;
-import com.teamabnormals.abnormals_core.core.utils.ItemStackUtils;
-
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.IArmorMaterial;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.item.*;
 import net.minecraft.util.LazyValue;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import java.util.UUID;
 
 public class GrieferArmorItem extends ArmorItem {
 
@@ -69,7 +63,7 @@ public class GrieferArmorItem extends ArmorItem {
         	fill = SRItems.GRIEFER_CHESTPLATE.get();
         if (item == SRItems.GRIEFER_BOOTS.get()) 
         	fill = SRItems.GRIEFER_LEGGINGS.get();
-        ItemStackUtils.fillAfterItemForGroup(this.asItem(), fill, group, items);
+        ItemStackUtil.fillAfterItemForGroup(this.asItem(), fill, group, items);
     }
 
     @Override

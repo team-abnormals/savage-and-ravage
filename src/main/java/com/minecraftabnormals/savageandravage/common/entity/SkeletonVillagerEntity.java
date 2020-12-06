@@ -29,7 +29,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -37,7 +37,7 @@ import java.util.Map;
 
 public class SkeletonVillagerEntity extends AbstractSkeletonEntity implements ICrossbowUser {
     private static final DataParameter<Boolean> DATA_CHARGING_STATE = EntityDataManager.createKey(SkeletonVillagerEntity.class, DataSerializers.BOOLEAN);
-    private final ImprovedCrossbowGoal<SkeletonVillagerEntity> aiCrossBow = new ImprovedCrossbowGoal<SkeletonVillagerEntity>(this, 1.0D, 8.0F, 5.0D);
+    private final ImprovedCrossbowGoal<SkeletonVillagerEntity> aiCrossBow = new ImprovedCrossbowGoal<>(this, 1.0D, 8.0F, 5.0D);
     private final MeleeAttackGoal aiMelee = new MeleeAttackGoal(this, 1.2D, false) {
         @Override
         public void resetTask() {
@@ -123,9 +123,9 @@ public class SkeletonVillagerEntity extends AbstractSkeletonEntity implements IC
         return new ItemStack(SRItems.SKELETON_VILLAGER_SPAWN_EGG.get());
     }
 
-    @Override
     @Nullable
-    public ILivingEntityData onInitialSpawn(IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+    @Override
+    public ILivingEntityData onInitialSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
         this.setEquipmentBasedOnDifficulty(difficultyIn);
         this.setEnchantmentBasedOnDifficulty(difficultyIn);
         if (worldIn.getRandom().nextInt(100) == 0) {

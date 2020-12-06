@@ -1,15 +1,13 @@
 package com.minecraftabnormals.savageandravage.core;
 
+import com.minecraftabnormals.abnormals_core.core.util.registry.RegistryHelper;
 import com.minecraftabnormals.savageandravage.client.render.IceChunkRenderer;
 import com.minecraftabnormals.savageandravage.core.other.SRCompat;
 import com.minecraftabnormals.savageandravage.core.registry.*;
-import com.teamabnormals.abnormals_core.core.utils.RegistryHelper;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.DistExecutor;
@@ -29,11 +27,10 @@ public class SavageAndRavage {
     public SavageAndRavage() {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        REGISTRY_HELPER.getDeferredBlockRegister().register(bus);
-        REGISTRY_HELPER.getDeferredItemRegister().register(bus);
-        REGISTRY_HELPER.getDeferredEntityRegister().register(bus);
-        REGISTRY_HELPER.getDeferredTileEntityRegister().register(bus);
-        REGISTRY_HELPER.getDeferredSoundRegister().register(bus);
+        REGISTRY_HELPER.getBlockSubHelper().register(bus);
+        REGISTRY_HELPER.getItemSubHelper().register(bus);
+        REGISTRY_HELPER.getEntitySubHelper().register(bus);
+        REGISTRY_HELPER.getSoundSubHelper().register(bus);
 
         SREntities.ENTITIES.register(bus);
         SRParticles.PARTICLES.register(bus);
@@ -47,13 +44,8 @@ public class SavageAndRavage {
         bus.addListener(this::commonSetup);
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
             bus.addListener(this::clientSetup);
-            bus.addListener(EventPriority.LOWEST, this::registerItemColors);
             bus.addListener(this::registerModels);
         });
-    }
-
-    private void registerItemColors(ColorHandlerEvent.Item event) {
-        REGISTRY_HELPER.processSpawnEggColors(event);
     }
 
     private void registerModels(ModelRegistryEvent event) {

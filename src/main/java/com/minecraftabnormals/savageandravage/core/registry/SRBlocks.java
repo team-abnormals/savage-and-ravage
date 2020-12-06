@@ -1,19 +1,15 @@
 package com.minecraftabnormals.savageandravage.core.registry;
 
+import com.minecraftabnormals.abnormals_core.common.blocks.AbnormalsStairsBlock;
+import com.minecraftabnormals.abnormals_core.common.blocks.VerticalSlabBlock;
+import com.minecraftabnormals.abnormals_core.core.util.registry.BlockSubRegistryHelper;
 import com.minecraftabnormals.savageandravage.common.block.ChiseledGloomyTilesBlock;
 import com.minecraftabnormals.savageandravage.common.block.PottedCreeperSporesBlock;
 import com.minecraftabnormals.savageandravage.common.block.RunedGloomyTilesBlock;
 import com.minecraftabnormals.savageandravage.common.block.SporeBombBlock;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 import com.minecraftabnormals.savageandravage.core.other.SRProperties;
-import com.teamabnormals.abnormals_core.common.blocks.AbnormalsStairsBlock;
-import com.teamabnormals.abnormals_core.common.blocks.VerticalSlabBlock;
-import com.teamabnormals.abnormals_core.core.utils.RegistryHelper;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.SlabBlock;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.WallBlock;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.item.ItemGroup;
@@ -23,7 +19,7 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = SavageAndRavage.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class SRBlocks {
 
-    public static final RegistryHelper HELPER = SavageAndRavage.REGISTRY_HELPER;
+    public static final BlockSubRegistryHelper HELPER = SavageAndRavage.REGISTRY_HELPER.getBlockSubHelper();
 
     public static final RegistryObject<Block> GLOOMY_TILES = HELPER.createBlock("gloomy_tiles", () -> new Block(SRProperties.GLOOMY_TILES), ItemGroup.BUILDING_BLOCKS);
     public static final RegistryObject<Block> CHISELED_GLOOMY_TILES = HELPER.createBlock("chiseled_gloomy_tiles", () -> new ChiseledGloomyTilesBlock(SRProperties.LIGHTABLE_GLOOMY_TILES), ItemGroup.BUILDING_BLOCKS);public static final RegistryObject<Block> GLOOMY_TILE_STAIRS = HELPER.createBlock("gloomy_tile_stairs", () -> new AbnormalsStairsBlock(GLOOMY_TILES.get().getDefaultState(), SRProperties.GLOOMY_TILES), ItemGroup.BUILDING_BLOCKS);
@@ -32,8 +28,8 @@ public class SRBlocks {
     public static final RegistryObject<Block> GLOOMY_TILE_VERTICAL_SLAB = HELPER.createCompatBlock("quark", "gloomy_tile_vertical_slab", () -> new VerticalSlabBlock(SRProperties.GLOOMY_TILES), ItemGroup.BUILDING_BLOCKS);
     public static final RegistryObject<Block> RUNED_GLOOMY_TILES = HELPER.createBlock("runed_gloomy_tiles", () -> new RunedGloomyTilesBlock(SRProperties.LIGHTABLE_GLOOMY_TILES), ItemGroup.BUILDING_BLOCKS);
 
-    public static final RegistryObject<Block> BLAST_PROOF_PLATES = HELPER.createBlock("blast_proof_plates", () -> new Block(SRProperties.BLAST_PROOF_PLATES), ItemGroup.BUILDING_BLOCKS);
-    public static final RegistryObject<Block> BLAST_PROOF_STAIRS = HELPER.createBlock("blast_proof_stairs", () -> new AbnormalsStairsBlock(BLAST_PROOF_PLATES.get().getDefaultState(), SRProperties.BLAST_PROOF_PLATES), ItemGroup.BUILDING_BLOCKS);
+    public static final RegistryObject<Block> BLAST_PROBOF_PLATES = HELPER.createBlock("blast_proof_plates", () -> new Block(SRProperties.BLAST_PROOF_PLATES), ItemGroup.BUILDING_BLOCKS);
+    public static final RegistryObject<Block> BLAST_PROOF_STAIRS = HELPER.createBlock("blast_proof_stairs", () -> new AbnormalsStairsBlock(BLAST_PROBOF_PLATES.get().getDefaultState(), SRProperties.BLAST_PROOF_PLATES), ItemGroup.BUILDING_BLOCKS);
     public static final RegistryObject<Block> BLAST_PROOF_SLAB = HELPER.createBlock("blast_proof_slab", () -> new SlabBlock(SRProperties.BLAST_PROOF_PLATES), ItemGroup.BUILDING_BLOCKS);
     public static final RegistryObject<Block> BLAST_PROOF_VERTICAL_SLAB = HELPER.createCompatBlock("quark", "blast_proof_vertical_slab", () -> new VerticalSlabBlock(SRProperties.BLAST_PROOF_PLATES), ItemGroup.BUILDING_BLOCKS);
 
