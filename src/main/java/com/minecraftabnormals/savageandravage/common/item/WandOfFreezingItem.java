@@ -1,6 +1,6 @@
 package com.minecraftabnormals.savageandravage.common.item;
 
-import com.minecraftabnormals.abnormals_core.core.util.item.ItemStackUtil;
+import com.minecraftabnormals.abnormals_core.core.util.item.filling.TargetedItemGroupFiller;
 import com.minecraftabnormals.savageandravage.common.entity.IceChunkEntity;
 import com.minecraftabnormals.savageandravage.core.registry.SRSounds;
 import net.minecraft.entity.LivingEntity;
@@ -22,7 +22,7 @@ import net.minecraft.world.World;
  * @author Ocelot
  */
 public class WandOfFreezingItem extends Item {
-
+    private static final TargetedItemGroupFiller FILLER = new TargetedItemGroupFiller(() -> Items.TOTEM_OF_UNDYING);
     private static final double RAYTRACE_DISTANCE = 16;
 
     public WandOfFreezingItem(Properties properties) {
@@ -63,9 +63,9 @@ public class WandOfFreezingItem extends Item {
 
         return ActionResult.resultPass(stack);
     }
-    
+
     @Override
     public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-        ItemStackUtil.fillAfterItemForGroup(this.asItem(), Items.TOTEM_OF_UNDYING, group, items);
+        FILLER.fillItem(this, group, items);
     }
 }

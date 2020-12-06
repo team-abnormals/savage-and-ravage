@@ -38,13 +38,9 @@ import net.minecraft.stats.Stats;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.MobSpawnInfo;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
@@ -52,7 +48,6 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.event.entity.living.PotionEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -65,19 +60,6 @@ import java.util.*;
 @Mod.EventBusSubscriber(modid = SavageAndRavage.MODID)
 public class SREvents {
 	private static final Method setSize = ObfuscationReflectionHelper.findMethod(SlimeEntity.class, "func_70799_a", int.class, boolean.class);
-
-	@SubscribeEvent
-	public static void onLoadBiome(BiomeLoadingEvent event) {
-		if (event.getName() != null) {
-			RegistryKey<Biome> key = RegistryKey.getOrCreateKey(Registry.BIOME_KEY, event.getName());
-			if (BiomeDictionary.hasType(key, BiomeDictionary.Type.OVERWORLD) && SREntities.canHostilesSpawn(event.getName())) {
-				event.getSpawns().withSpawner(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(SREntities.SKELETON_VILLAGER.get(), 5, 1, 1));
-			}
-			if (event.getCategory() == Biome.Category.ICY || event.getCategory() == Biome.Category.EXTREME_HILLS) {
-				event.getSpawns().withSpawner(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(SREntities.SKELETON_VILLAGER.get(), 8, 1, 1));
-			}
-		}
-	}
 
 	@SubscribeEvent
 	public static void onLivingSpawned(EntityJoinWorldEvent event) {

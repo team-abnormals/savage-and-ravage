@@ -390,19 +390,12 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
 
     }
 
-    /**
-     * Decreases ItemStack size by one
-     */
     private void consumeItemFromStack(PlayerEntity player, ItemStack stack) {
         if (!player.isCreative()) {
             stack.shrink(1);
         }
     }
 
-    /**
-     * This is called when Entity's growing age timer reaches 0 (negative values are considered as a child, positive as
-     * an adult)
-     */
     private void onGrowingIntoCreeper() {
         if (!this.world.isRemote()) {
             this.startConverting(this.rand.nextInt(80) + 160); //10 seconds before it converts

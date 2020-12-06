@@ -55,21 +55,6 @@ public class SREntities {
 		RenderingRegistry.registerEntityRenderingHandler(EXECUTIONER.get(), ExecutionerRenderer::new);
 	}
 
-	public static void registerEntitySpawns() {
-		EntitySpawnPlacementRegistry.register(SKELETON_VILLAGER.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::canMonsterSpawnInLight);
-		EntitySpawnPlacementRegistry.register(EXECUTIONER.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::canMonsterSpawnInLight);
-		EntitySpawnPlacementRegistry.register(ICEOLOGER.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, IceologerEntity::canIceologerSpawn);
-	}
-
-	public static boolean canHostilesSpawn(ResourceLocation biomeName) {
-		Biome biome = ForgeRegistries.BIOMES.getValue(biomeName);
-		if(biome != null) return
-			!(biome.getCategory() == Biome.Category.MUSHROOM ||
-			biome.getCategory() == Biome.Category.NONE ||
-			biome == ForgeRegistries.BIOMES.getValue(new ResourceLocation("biomesoplenty:rainbow_valley")));
-		return true;
-	}
-
 	public static void registerAttributes() {
 		GlobalEntityTypeAttributes.put(CREEPIE.get(), CreepieEntity.registerAttributes().create());
 		GlobalEntityTypeAttributes.put(GRIEFER.get(), GrieferEntity.registerAttributes().create());

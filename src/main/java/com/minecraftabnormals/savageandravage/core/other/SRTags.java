@@ -6,6 +6,5 @@ import net.minecraft.tags.ITag.INamedTag;
 import net.minecraft.tags.ItemTags;
 
 public class SRTags {
-
-    public static final INamedTag<Item> BLAST_PROOF_ITEMS = ItemTags.makeWrapperTag(SavageAndRavage.MODID + ":blast_proof_items");
+	public static final INamedTag<Item> BLAST_PROOF_ITEMS = ItemTags.makeWrapperTag(SavageAndRavage.MODID + ":blast_proof_items");
 }

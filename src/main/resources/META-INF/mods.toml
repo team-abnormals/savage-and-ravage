@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[35,)"
+loaderVersion = "[32,)"
 issueTrackerURL = "https://github.com/team-abnormals/savage-and-ravage/issues"
 license = "https://github.com/team-abnormals/savage-and-ravage/blob/main/LICENSE.txt"
 
@@ -15,16 +15,16 @@ license = "https://github.com/team-abnormals/savage-and-ravage/blob/main/LICENSE
     '''
 
 [[dependencies.savageandravage]]
-    modId = "forge"
+    modId = "minecraft"
     mandatory = true
-    versionRange = "[35.1.0,)"
+    versionRange = "[1.16.3,1.17)"
     ordering = "NONE"
     side = "BOTH"
 
 [[dependencies.savageandravage]]
-    modId = "minecraft"
+    modId = "forge"
     mandatory = true
-    versionRange = "[1.16.4]"
+    versionRange = "[34.1.42,)"
     ordering = "NONE"
     side = "BOTH"
 
