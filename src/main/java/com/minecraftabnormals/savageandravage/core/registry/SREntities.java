@@ -73,7 +73,7 @@ public class SREntities {
 		}
 
 		if (biome.getCategory() == Biome.Category.ICY || biome.getCategory() == Biome.Category.EXTREME_HILLS) {
-			biome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(ICEOLOGER.get(), 10, 1, 1));
+			biome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(ICEOLOGER.get(), 8, 1, 1));
 		}
 	}
 
