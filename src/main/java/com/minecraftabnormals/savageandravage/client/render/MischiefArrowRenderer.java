@@ -14,6 +14,6 @@ public class MischiefArrowRenderer extends ArrowRenderer<MischiefArrowEntity> {
 
    @Override
    public ResourceLocation getEntityTexture(MischiefArrowEntity entity) {
-      return new ResourceLocation(SavageAndRavage.MODID, "textures/entity/projectiles/mischief_arrow.png");
+      return new ResourceLocation(SavageAndRavage.MOD_ID, "textures/entity/projectiles/mischief_arrow.png");
    }
 }

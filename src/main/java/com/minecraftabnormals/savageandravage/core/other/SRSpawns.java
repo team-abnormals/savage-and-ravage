@@ -22,7 +22,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.lang.reflect.Method;
 
-@Mod.EventBusSubscriber(modid = SavageAndRavage.MODID)
+@Mod.EventBusSubscriber(modid = SavageAndRavage.MOD_ID)
 public class SRSpawns {
 
 	public static void registerEntitySpawns() {

@@ -20,7 +20,7 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-@EventBusSubscriber(modid = SavageAndRavage.MODID)
+@EventBusSubscriber(modid = SavageAndRavage.MOD_ID)
 public class CleaverOfBeheadingItem extends SwordItem {
 	private static final TargetedItemGroupFiller FILLER = new TargetedItemGroupFiller(() -> Items.TOTEM_OF_UNDYING);
 	private final float attackDamage;

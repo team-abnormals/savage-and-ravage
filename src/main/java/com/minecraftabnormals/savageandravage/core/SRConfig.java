@@ -42,7 +42,7 @@ public class SRConfig {
     }
 
     private static String makeTranslation(String name) {
-        return SavageAndRavage.MODID + ".config." + name;
+        return SavageAndRavage.MOD_ID + ".config." + name;
     }
 
     public static final ForgeConfigSpec COMMON_SPEC;

@@ -57,7 +57,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
-@Mod.EventBusSubscriber(modid = SavageAndRavage.MODID)
+@Mod.EventBusSubscriber(modid = SavageAndRavage.MOD_ID)
 public class SREvents {
 	private static final Method setSize = ObfuscationReflectionHelper.findMethod(SlimeEntity.class, "func_70799_a", int.class, boolean.class);
 

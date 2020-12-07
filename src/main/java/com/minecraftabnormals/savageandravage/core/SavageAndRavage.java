@@ -19,10 +19,10 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
-@Mod(SavageAndRavage.MODID)
+@Mod(SavageAndRavage.MOD_ID)
 public class SavageAndRavage {
-	public static final String MODID = "savageandravage";
-	public static final RegistryHelper REGISTRY_HELPER = new RegistryHelper(MODID);
+	public static final String MOD_ID = "savageandravage";
+	public static final RegistryHelper REGISTRY_HELPER = new RegistryHelper(MOD_ID);
 
 	public SavageAndRavage() {
 		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();

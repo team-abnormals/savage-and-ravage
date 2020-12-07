@@ -9,7 +9,7 @@ import net.minecraftforge.fml.common.Mod;
 /**
  * @author - SmellyModder(Luke Tonon)
  */
-@Mod.EventBusSubscriber(modid = SavageAndRavage.MODID)
+@Mod.EventBusSubscriber(modid = SavageAndRavage.MOD_ID)
 public class SRTriggers {
-    public static final EmptyTrigger BURN_BANNER = CriteriaTriggers.register(new EmptyTrigger(new ResourceLocation(SavageAndRavage.MODID, "burn_banner")));
+    public static final EmptyTrigger BURN_BANNER = CriteriaTriggers.register(new EmptyTrigger(new ResourceLocation(SavageAndRavage.MOD_ID, "burn_banner")));
 }

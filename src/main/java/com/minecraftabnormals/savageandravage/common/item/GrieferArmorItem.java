@@ -37,7 +37,7 @@ public class GrieferArmorItem extends ArmorItem {
 
 	@Override
 	public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
-		return SavageAndRavage.MODID + ":textures/models/armor/griefer_armor.png";
+		return SavageAndRavage.MOD_ID + ":textures/models/armor/griefer_armor.png";
 	}
 
 	@Override
