@@ -70,7 +70,7 @@ public class SREvents {
 				pillager.goalSelector.removeGoal(crossbowGoal);
 				pillager.goalSelector.addGoal(3, aiCrossBow);
 			});
-			if (event.getWorld().rand.nextInt(100) == 0 && !event.getWorld().isRemote) {
+			if (event.getWorld().rand.nextInt(100) == 0 && !event.getWorld().isRemote()) {
 				pillager.setItemStackToSlot(EquipmentSlotType.OFFHAND, createRocket());
 				pillager.setActiveHand(Hand.OFF_HAND);
 				pillager.setDropChance(EquipmentSlotType.OFFHAND, 2.0F);
@@ -219,6 +219,7 @@ public class SREvents {
 					creepie.copyLocationAndAnglesFrom(target);
 					if (stack.hasDisplayName()) creepie.setCustomName(stack.getDisplayName());
 					if (!event.getPlayer().isCreative()) stack.shrink(1);
+					creepie.attackPlayersOnly = true;
 					world.addEntity(creepie);
 					event.setCancellationResult(ActionResultType.func_233537_a_(world.isRemote()));
 					event.setCanceled(true);
