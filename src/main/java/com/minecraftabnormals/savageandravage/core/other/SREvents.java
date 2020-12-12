@@ -116,7 +116,7 @@ public class SREvents {
 			}
 		} else if (event.getEntity() instanceof PillagerEntity) {
 			PillagerEntity pillager = (PillagerEntity) event.getEntity();
-			if (pillager.isServerWorld() && ((ServerWorld) pillager.getEntityWorld()).findRaid(pillager.getPosition()) != null) {
+			if (pillager.world.isRemote() && ((ServerWorld) pillager.getEntityWorld()).findRaid(pillager.getPosition()) != null) {
 				pillager.entityDropItem(new ItemStack(Items.EMERALD, pillager.world.rand.nextInt(2)));
 				if (pillager.world.rand.nextDouble() < 0.05D) {
 					pillager.entityDropItem(new ItemStack(Items.EMERALD, 4 + pillager.world.rand.nextInt(1)));
@@ -291,6 +291,7 @@ public class SREvents {
 		return banners.stream().noneMatch(b -> Objects.equals(b.getBannerPosition(), pos));
 	}
 
+	//TODO refactor, probably a lot of redundancy here
 	@SubscribeEvent
 	public static void onPotionExpire(PotionEvent.PotionExpiryEvent event) {
 		if (event.getPotionEffect() != null) {
@@ -300,6 +301,7 @@ public class SREvents {
 				boolean canChange = false;
 				if(affected instanceof IAgeableEntity && ((IAgeableEntity) affected).canAge(!shouldSetChild)) {
 					((IAgeableEntity) affected).attemptAging(!shouldSetChild);
+					canChange = true;
 				}
 				else if (affected instanceof SlimeEntity) {
 					SlimeEntity slime = (SlimeEntity) affected;
@@ -333,7 +335,7 @@ public class SREvents {
 					effectInstance = new EffectInstance(shouldSetChild ? Effects.INSTANT_DAMAGE : Effects.INSTANT_HEALTH, 1, 1);
 					effectInstance.getPotion().affectEntity(null, null, affected, effectInstance.getAmplifier(), 1.0D);
 				}
-				if (affected.isServerWorld()) {
+				if (!affected.world.isRemote()) {
 					((ServerWorld) affected.world).spawnParticle(canChange ? (shouldSetChild ? ParticleTypes.TOTEM_OF_UNDYING : ParticleTypes.HAPPY_VILLAGER) : ParticleTypes.LARGE_SMOKE, affected.getPosXRandom(0.3D), affected.getPosYRandom() - 0.1D, affected.getPosZRandom(0.3D), canChange ? 40 : 20, 0.3D, 0.6D, 0.3D, canChange ? 0.2D : 0.01D);
 					affected.playSound(canChange ? SRSounds.ENTITY_GENERIC_GROWTH_SUCCESS.get() : SRSounds.ENTITY_GENERIC_GROWTH_FAILURE.get(), 1.0F, 1.0F);
 				}

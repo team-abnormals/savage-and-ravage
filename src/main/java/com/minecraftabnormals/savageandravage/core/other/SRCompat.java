@@ -13,16 +13,17 @@ import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.dispenser.IPosition;
 import net.minecraft.dispenser.ProjectileDispenseBehavior;
 import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.item.*;
+import net.minecraft.item.ArmorItem;
+import net.minecraft.item.BannerItem;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.Collection;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class SRCompat {
 
@@ -56,10 +57,7 @@ public class SRCompat {
                 return stack;
             }
         });
-        Collection<Item> banners = ForgeRegistries.ITEMS.getEntries().stream().map(Map.Entry::getValue).filter(i -> i instanceof BannerItem).collect(Collectors.toSet());
-        for (Item banner : banners) {
-            DispenserBlock.registerDispenseBehavior(banner, ArmorItem.DISPENSER_BEHAVIOR);
-        }
+        ForgeRegistries.ITEMS.getEntries().stream().map(Map.Entry::getValue).filter(i -> i instanceof BannerItem).forEach(i -> DispenserBlock.registerDispenseBehavior(i, ArmorItem.DISPENSER_BEHAVIOR));
         DispenserBlock.registerDispenseBehavior(Items.FLINT_AND_STEEL, new FlintSteelDispenseBehavior());
     }
 }
