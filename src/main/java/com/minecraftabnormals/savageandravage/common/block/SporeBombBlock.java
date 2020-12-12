@@ -1,7 +1,7 @@
 package com.minecraftabnormals.savageandravage.common.block;
 
+import com.minecraftabnormals.abnormals_core.core.util.item.ItemStackUtil;
 import com.minecraftabnormals.savageandravage.common.entity.block.SporeBombEntity;
-import com.teamabnormals.abnormals_core.core.utils.ItemStackUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.TNTBlock;
@@ -47,8 +47,8 @@ public class SporeBombBlock extends TNTBlock {
 
     @Override
     public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-        if (ItemStackUtils.isInGroup(this.asItem(), group)) {
-            int targetIndex = ItemStackUtils.findIndexOfItem(Items.TNT, items);
+        if (ItemStackUtil.isInGroup(this.asItem(), group)) {
+            int targetIndex = ItemStackUtil.findIndexOfItem(Items.TNT, items);
             if (targetIndex != -1) {
                 items.add(targetIndex + 1, new ItemStack(this));
             } else {

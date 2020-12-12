@@ -1,5 +1,6 @@
 package com.minecraftabnormals.savageandravage.core.other;
 
+import com.minecraftabnormals.abnormals_core.core.api.IAgeableEntity;
 import com.minecraftabnormals.savageandravage.common.effect.GrowingEffect;
 import com.minecraftabnormals.savageandravage.common.effect.ShrinkingEffect;
 import com.minecraftabnormals.savageandravage.common.entity.*;
@@ -49,16 +50,14 @@ import net.minecraftforge.event.entity.living.PotionEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
-@Mod.EventBusSubscriber(modid = SavageAndRavage.MODID)
+@Mod.EventBusSubscriber(modid = SavageAndRavage.MOD_ID)
 public class SREvents {
 	private static final Method setSize = ObfuscationReflectionHelper.findMethod(SlimeEntity.class, "func_70799_a", int.class, boolean.class);
 
@@ -71,7 +70,7 @@ public class SREvents {
 				pillager.goalSelector.removeGoal(crossbowGoal);
 				pillager.goalSelector.addGoal(3, aiCrossBow);
 			});
-			if (event.getWorld().rand.nextInt(100) == 0 && !event.getWorld().isRemote) {
+			if (event.getWorld().rand.nextInt(100) == 0 && !event.getWorld().isRemote()) {
 				pillager.setItemStackToSlot(EquipmentSlotType.OFFHAND, createRocket());
 				pillager.setActiveHand(Hand.OFF_HAND);
 				pillager.setDropChance(EquipmentSlotType.OFFHAND, 2.0F);
@@ -117,7 +116,7 @@ public class SREvents {
 			}
 		} else if (event.getEntity() instanceof PillagerEntity) {
 			PillagerEntity pillager = (PillagerEntity) event.getEntity();
-			if (pillager.isServerWorld() && ((ServerWorld) pillager.getEntityWorld()).findRaid(pillager.getPosition()) != null) {
+			if (pillager.world.isRemote() && ((ServerWorld) pillager.getEntityWorld()).findRaid(pillager.getPosition()) != null) {
 				pillager.entityDropItem(new ItemStack(Items.EMERALD, pillager.world.rand.nextInt(2)));
 				if (pillager.world.rand.nextDouble() < 0.05D) {
 					pillager.entityDropItem(new ItemStack(Items.EMERALD, 4 + pillager.world.rand.nextInt(1)));
@@ -220,6 +219,7 @@ public class SREvents {
 					creepie.copyLocationAndAnglesFrom(target);
 					if (stack.hasDisplayName()) creepie.setCustomName(stack.getDisplayName());
 					if (!event.getPlayer().isCreative()) stack.shrink(1);
+					creepie.attackPlayersOnly = true;
 					world.addEntity(creepie);
 					event.setCancellationResult(ActionResultType.func_233537_a_(world.isRemote()));
 					event.setCanceled(true);
@@ -291,35 +291,36 @@ public class SREvents {
 		return banners.stream().noneMatch(b -> Objects.equals(b.getBannerPosition(), pos));
 	}
 
+	//TODO refactor, probably a lot of redundancy here
 	@SubscribeEvent
-	public static void onPotionExpire(PotionEvent.PotionExpiryEvent event) throws InvocationTargetException, IllegalAccessException {
-		LivingEntity affected = event.getEntityLiving();
-		boolean shouldSetChild = false;
-		int growingAgeValue = 0;
+	public static void onPotionExpire(PotionEvent.PotionExpiryEvent event) {
 		if (event.getPotionEffect() != null) {
-			if (event.getPotionEffect().getPotion() instanceof ShrinkingEffect) {
-				shouldSetChild = true;
-				growingAgeValue = -24000;
-			}
+			LivingEntity affected = event.getEntityLiving();
+			boolean shouldSetChild = event.getPotionEffect().getPotion() instanceof ShrinkingEffect;
 			if (event.getPotionEffect().getPotion() instanceof GrowingEffect || shouldSetChild) {
 				boolean canChange = false;
-				if (affected instanceof SlimeEntity) {
+				if(affected instanceof IAgeableEntity && ((IAgeableEntity) affected).canAge(!shouldSetChild)) {
+					((IAgeableEntity) affected).attemptAging(!shouldSetChild);
+					canChange = true;
+				}
+				else if (affected instanceof SlimeEntity) {
 					SlimeEntity slime = (SlimeEntity) affected;
 					int size = slime.getSlimeSize();
 					if (shouldSetChild ? size > 1 : size < 3) {
 						canChange = true;
-						setSize.invoke(slime, (size + (shouldSetChild ? (size < 4 ? -1 : -2) : (size < 2 ? 1 : 2))), false);
+						try {
+							setSize.invoke(slime, (size + (shouldSetChild ? (size < 4 ? -1 : -2) : (size < 2 ? 1 : 2))), false);
+						} catch (IllegalAccessException | InvocationTargetException e) {
+							throw new RuntimeException("Invoking setSize failed. Something has gone horribly wrong with Savage & Ravage!");
+						}
 					}
-				} else if (checkBooflo(affected, shouldSetChild))
-					canChange = true;
+				}
 				else if (shouldSetChild != affected.isChild()) {
 					canChange = true;
 					if (affected instanceof AgeableEntity && !(affected instanceof ParrotEntity))
-						((AgeableEntity) affected).setGrowingAge(growingAgeValue);
+						((AgeableEntity) affected).setGrowingAge(shouldSetChild ? -24000 : 0);
 					else if (shouldSetChild && affected instanceof CreeperEntity)
 						convertCreeper((CreeperEntity) affected);
-					else if (!shouldSetChild && affected instanceof CreepieEntity)
-						((CreepieEntity) affected).setGrowingAge(growingAgeValue);
 					else if (affected instanceof ZombieEntity || affected instanceof PiglinEntity || affected instanceof ZoglinEntity)
 						((MobEntity) affected).setChild(shouldSetChild);
 					else
@@ -334,25 +335,12 @@ public class SREvents {
 					effectInstance = new EffectInstance(shouldSetChild ? Effects.INSTANT_DAMAGE : Effects.INSTANT_HEALTH, 1, 1);
 					effectInstance.getPotion().affectEntity(null, null, affected, effectInstance.getAmplifier(), 1.0D);
 				}
-				if (affected.isServerWorld()) {
+				if (!affected.world.isRemote()) {
 					((ServerWorld) affected.world).spawnParticle(canChange ? (shouldSetChild ? ParticleTypes.TOTEM_OF_UNDYING : ParticleTypes.HAPPY_VILLAGER) : ParticleTypes.LARGE_SMOKE, affected.getPosXRandom(0.3D), affected.getPosYRandom() - 0.1D, affected.getPosZRandom(0.3D), canChange ? 40 : 20, 0.3D, 0.6D, 0.3D, canChange ? 0.2D : 0.01D);
 					affected.playSound(canChange ? SRSounds.ENTITY_GENERIC_GROWTH_SUCCESS.get() : SRSounds.ENTITY_GENERIC_GROWTH_FAILURE.get(), 1.0F, 1.0F);
 				}
 			}
 		}
-	}
-
-	public static boolean checkBooflo(LivingEntity affected, boolean isBabyPotion) {
-		if (ModList.get().isLoaded("endergetic")) {
-			if (affected.getType() == ForgeRegistries.ENTITIES.getValue(new ResourceLocation("endergetic:booflo"))) {
-				return isBabyPotion;
-			}
-			else if (affected.getType() == ForgeRegistries.ENTITIES.getValue(new ResourceLocation("endergetic:booflo_baby"))) {
-				return !isBabyPotion;
-			}
-			else return affected.getType() == ForgeRegistries.ENTITIES.getValue(new ResourceLocation("endergetic:booflo_adolescent"));
-		}
-		return false;
 	}
 
 	public static void convertCreeper(CreeperEntity creeper) {
@@ -361,7 +349,6 @@ public class SREvents {
 			return;
 
 		creepie.copyLocationAndAnglesFrom(creeper.getEntity());
-		creepie.onInitialSpawn(creeper.world, creeper.world.getDifficultyForLocation(new BlockPos(creepie.getPositionVec())), SpawnReason.CONVERSION, null, null);
 		creeper.remove();
 		creepie.setNoAI(creeper.isAIDisabled());
 		if (creeper.hasCustomName()) {

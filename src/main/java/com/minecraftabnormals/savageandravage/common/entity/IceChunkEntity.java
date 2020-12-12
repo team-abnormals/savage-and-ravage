@@ -1,12 +1,7 @@
 package com.minecraftabnormals.savageandravage.common.entity;
 
-import java.util.UUID;
-
-import javax.annotation.Nullable;
-
 import com.minecraftabnormals.savageandravage.core.registry.SREffects;
 import com.minecraftabnormals.savageandravage.core.registry.SREntities;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
@@ -22,13 +17,15 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
+
+import javax.annotation.Nullable;
+import java.util.UUID;
 
 /**
  * @author Ocelot
@@ -119,7 +116,7 @@ public class IceChunkEntity extends Entity implements IEntityAdditionalSpawnData
             this.setTarget(null);
         }
 
-        RayTraceResult raytraceresult = ProjectileHelper.func_234618_a_(this, entity -> !entity.isSpectator() && entity.isAlive() && entity.canBeCollidedWith() && !entity.noClip, RayTraceContext.BlockMode.COLLIDER);
+        RayTraceResult raytraceresult = ProjectileHelper.func_234618_a_(this, entity -> !entity.isSpectator() && entity.isAlive() && entity.canBeCollidedWith() && !entity.noClip);
         if (raytraceresult.getType() != RayTraceResult.Type.MISS) {
             this.onImpact(raytraceresult);
         }

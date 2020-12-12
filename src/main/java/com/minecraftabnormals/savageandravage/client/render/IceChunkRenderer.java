@@ -23,8 +23,8 @@ import java.util.Random;
  */
 public class IceChunkRenderer extends EntityRenderer<IceChunkEntity> {
 
-    public static final ResourceLocation MODEL_LOCATION = new ResourceLocation(SavageAndRavage.MODID, "entity/ice_chunk");
-    public static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation(SavageAndRavage.MODID, "textures/entity/ice_chunk.png");
+    public static final ResourceLocation MODEL_LOCATION = new ResourceLocation(SavageAndRavage.MOD_ID, "entity/ice_chunk");
+    public static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation(SavageAndRavage.MOD_ID, "textures/entity/ice_chunk.png");
 
     public IceChunkRenderer(EntityRendererManager renderManager) {
         super(renderManager);

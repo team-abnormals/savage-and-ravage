@@ -1,14 +1,15 @@
 package com.minecraftabnormals.savageandravage.core.registry;
 
+import com.minecraftabnormals.abnormals_core.common.advancement.EmptyTrigger;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
-import com.teamabnormals.abnormals_core.common.advancement.EmptyTrigger;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = SavageAndRavage.MODID)
+/**
+ * @author - SmellyModder(Luke Tonon)
+ */
+@Mod.EventBusSubscriber(modid = SavageAndRavage.MOD_ID)
 public class SRTriggers {
-
-    public static final EmptyTrigger BURN_BANNER = CriteriaTriggers.register(new EmptyTrigger(new ResourceLocation(SavageAndRavage.MODID, "burn_banner")));
-
+    public static final EmptyTrigger BURN_BANNER = CriteriaTriggers.register(new EmptyTrigger(new ResourceLocation(SavageAndRavage.MOD_ID, "burn_banner")));
 }

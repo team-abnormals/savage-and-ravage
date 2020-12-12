@@ -12,7 +12,6 @@ import net.minecraft.client.renderer.entity.layers.HeldItemLayer;
 import net.minecraft.util.ResourceLocation;
 
 public class SkeletonVillagerRenderer extends MobRenderer<SkeletonVillagerEntity, SkeletonVillagerModel> {
-
     private static final ResourceLocation SKELETON_VILLAGER_TEXTURES = new ResourceLocation("savageandravage:textures/entity/skeleton_villager.png");
 
     public SkeletonVillagerRenderer(EntityRendererManager manager) {
