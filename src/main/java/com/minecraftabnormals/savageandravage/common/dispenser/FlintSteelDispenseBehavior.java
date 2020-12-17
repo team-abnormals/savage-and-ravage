@@ -36,7 +36,7 @@ public class FlintSteelDispenseBehavior extends OptionalDispenseBehavior {
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
-        if(SREvents.isValidBannerPos(source.getWorld(),blockpos)) {
+        if(SREvents.isValidBurningBannerPos(source.getWorld(),blockpos)) {
             world.addEntity(new BurningBannerEntity(world, blockpos, null));
             this.setSuccessful(true);
             if (stack.attemptDamageItem(1, world.rand, null)) {
