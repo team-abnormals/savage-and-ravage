@@ -59,7 +59,7 @@ import java.util.*;
 
 @Mod.EventBusSubscriber(modid = SavageAndRavage.MOD_ID)
 public class SREvents {
-	private static final Method setSize = ObfuscationReflectionHelper.findMethod(SlimeEntity.class, "func_70799_a", int.class, boolean.class);
+	public static final Method setSize = ObfuscationReflectionHelper.findMethod(SlimeEntity.class, "func_70799_a", int.class, boolean.class);
 
 	@SubscribeEvent
 	public static void onLivingSpawned(EntityJoinWorldEvent event) {

@@ -54,7 +54,7 @@ public class BurningBannerEntity extends Entity implements IEntityAdditionalSpaw
         this.burningBoxRotation = 0;
     }
 
-    public BurningBannerEntity(World world, BlockPos pos, PlayerEntity player) {
+    public BurningBannerEntity(World world, BlockPos pos, @Nullable PlayerEntity player) {
         super(SREntities.BURNING_BANNER.get(), world);
         this.setBannerPosition(pos);
         if (player != null) this.setOffenderId(player.getUniqueID());
