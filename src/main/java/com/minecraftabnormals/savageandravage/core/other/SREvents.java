@@ -59,7 +59,7 @@ import java.util.*;
 
 @Mod.EventBusSubscriber(modid = SavageAndRavage.MOD_ID)
 public class SREvents {
-	private static final Method setSize = ObfuscationReflectionHelper.findMethod(SlimeEntity.class, "func_70799_a", int.class, boolean.class);
+	public static final Method setSize = ObfuscationReflectionHelper.findMethod(SlimeEntity.class, "func_70799_a", int.class, boolean.class);
 
 	@SubscribeEvent
 	public static void onLivingSpawned(EntityJoinWorldEvent event) {
@@ -258,7 +258,7 @@ public class SREvents {
 			if (!event.getPlayer().isCreative()) stack.shrink(1);
 			event.setCancellationResult(ActionResultType.SUCCESS);
 			event.setCanceled(true);
-		} else if (isValidBannerPos(world, pos)) {
+		} else if (isValidBurningBannerPos(world, pos)) {
 			boolean isFlintAndSteel = stack.getItem() instanceof FlintAndSteelItem;
 			if ((isFlintAndSteel || stack.getItem() instanceof FireChargeItem)) {
 				SoundEvent sound = isFlintAndSteel ? SoundEvents.ITEM_FLINTANDSTEEL_USE : SoundEvents.ITEM_FIRECHARGE_USE;
@@ -285,10 +285,16 @@ public class SREvents {
 			entity.removePotionEffect(SREffects.FROSTBITE.get());
 	}
 
-	public static boolean isValidBannerPos(World world, BlockPos pos) {
-		if (!(world.getBlockState(pos).getBlock() instanceof AbstractBannerBlock)) return false;
-		List<BurningBannerEntity> banners = world.getEntitiesWithinAABB(BurningBannerEntity.class, new AxisAlignedBB(pos));
-		return banners.stream().noneMatch(b -> Objects.equals(b.getBannerPosition(), pos));
+	public static boolean isValidBurningBannerPos(World world, BlockPos pos) {
+		if (world.getBlockState(pos).getBlock() instanceof AbstractBannerBlock) {
+			List<BurningBannerEntity> banners = world.getEntitiesWithinAABB(BurningBannerEntity.class, new AxisAlignedBB(pos));
+			boolean noBurningBanners = true;
+			for (BurningBannerEntity banner : banners) {
+				if (Objects.equals(banner.getBannerPosition(), pos)) noBurningBanners = false;
+			}
+			return noBurningBanners;
+		}
+		return false;
 	}
 
 	//TODO refactor, probably a lot of redundancy here
