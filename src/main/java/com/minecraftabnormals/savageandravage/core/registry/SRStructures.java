@@ -1,4 +1,4 @@
-package com.minecraftabnormals.savageandravage.core.registry;
+/*package com.minecraftabnormals.savageandravage.core.registry;
 
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 import com.google.common.collect.ImmutableList;
@@ -39,8 +39,8 @@ public class SRStructures {
      * @author bageldotjpg
      *
      * This is a hack that only works for this specific situation, reuse not recommended
-     * */
-    @SuppressWarnings("deprecation")
+     * *//*
+    //@SuppressWarnings("deprecation")
     private static void addToPool(ResourceLocation pool, ResourceLocation toAdd, int weight) {
         JigsawPattern old = JigsawManager.REGISTRY.get(pool);
         List<JigsawPiece> shuffled = old.getShuffledPieces(new Random());
@@ -53,4 +53,4 @@ public class SRStructures {
         JigsawManager.REGISTRY.register(new JigsawPattern(pool, something, newPieces, JigsawPattern.PlacementBehaviour.RIGID));
     }
 
-}
+}*/
