@@ -19,9 +19,9 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 
     @Override
     public boolean generate(ISeedReader reader, ChunkGenerator generator, Random rand, BlockPos pos, NoFeatureConfig config) {
-        //TODO make this actually place an enclosure, maybe handle pillager outpost detection because placement bad?
-        //BlockPos newPos = new BlockPos(pos.getX(), generator.getGroundHeight(), pos.getZ());
-         for(int i=0; i<20; i++) {
+        //TODO make this actually place an enclosure, along with choosing a location
+        //pos.offset isn't working properly for cardinals
+        for(int i=0; i<20; i++) {
             reader.setBlockState(pos, Blocks.DIAMOND_BLOCK.getDefaultState(), 16);
             pos = pos.offset(Direction.UP);
         }
