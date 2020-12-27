@@ -1,12 +1,13 @@
 package com.minecraftabnormals.savageandravage.core.other;
 
 import com.minecraftabnormals.abnormals_core.core.util.DataUtil;
-import com.minecraftabnormals.savageandravage.common.dispenser.FlintSteelDispenseBehavior;
+import com.minecraftabnormals.savageandravage.common.entity.BurningBannerEntity;
 import com.minecraftabnormals.savageandravage.common.entity.MischiefArrowEntity;
 import com.minecraftabnormals.savageandravage.common.entity.SporeCloudEntity;
 import com.minecraftabnormals.savageandravage.common.entity.block.SporeBombEntity;
 import com.minecraftabnormals.savageandravage.core.registry.SRBlocks;
 import com.minecraftabnormals.savageandravage.core.registry.SRItems;
+import net.minecraft.block.DirectionalBlock;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.dispenser.IBlockSource;
@@ -57,7 +58,18 @@ public class SRCompat {
                 return stack;
             }
         });
-        ForgeRegistries.ITEMS.getEntries().stream().map(Map.Entry::getValue).filter(i -> i instanceof BannerItem).forEach(i -> DispenserBlock.registerDispenseBehavior(i, ArmorItem.DISPENSER_BEHAVIOR));
-        DispenserBlock.registerDispenseBehavior(Items.FLINT_AND_STEEL, new FlintSteelDispenseBehavior());
+        ForgeRegistries.ITEMS.getEntries().stream().map(Map.Entry::getValue).filter(i -> i instanceof BannerItem).forEach(i -> DataUtil.registerAlternativeDispenseBehavior(i, ArmorItem::func_226626_a_, ArmorItem.DISPENSER_BEHAVIOR));
+        DataUtil.registerAlternativeDispenseBehavior(Items.FLINT_AND_STEEL, (source, stack) -> SREvents.isValidBurningBannerPos(source.getWorld(), source.getBlockPos().offset(source.getBlockState().get(DirectionalBlock.FACING))), new DefaultDispenseItemBehavior() {
+            @Override
+            protected ItemStack dispenseStack(IBlockSource source, ItemStack stack) {
+                World world = source.getWorld();
+                BlockPos blockpos = source.getBlockPos().offset(source.getBlockState().get(DispenserBlock.FACING));
+                world.addEntity(new BurningBannerEntity(world, blockpos, null));
+                if (stack.attemptDamageItem(1, world.rand, null)) {
+                    stack.setCount(0);
+                }
+                return stack;
+            }
+        });
     }
 }
