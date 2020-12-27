@@ -36,6 +36,8 @@ public class SavageAndRavage {
 		SRParticles.PARTICLES.register(bus);
 		SREffects.EFFECTS.register(bus);
 		SREffects.POTIONS.register(bus);
+		SRGeneration.FEATURES.register(bus);
+		SRGeneration.PLACEMENTS.register(bus);
 		SRAttributes.ATTRIBUTES.register(bus);
 
 		MinecraftForge.EVENT_BUS.register(this);
@@ -58,6 +60,8 @@ public class SavageAndRavage {
 		DeferredWorkQueue.runLater(() -> {
 			SREffects.registerBrewingRecipes();
 			SRGeneration.registerEntitySpawns();
+			SRGeneration.registerPools();
+			SRGeneration.registerBiomeModifications();
 			SREntities.registerAttributes();
 			SREntities.registerWaveMembers();
 			SRCompat.registerFlammables();

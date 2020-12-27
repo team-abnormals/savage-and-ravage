@@ -1,36 +1,68 @@
 package com.minecraftabnormals.savageandravage.common.generation;
 
 import com.mojang.serialization.Codec;
+import net.minecraft.util.SharedSeedRandom;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.WorldDecoratingHelper;
+import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.placement.NoPlacementConfig;
 import net.minecraft.world.gen.placement.Placement;
+import net.minecraft.world.gen.settings.StructureSeparationSettings;
 
 import java.util.Random;
 import java.util.stream.Stream;
 
 public class EnclosurePlacement extends Placement<NoPlacementConfig> {
+    //the thread safety here doesn't seem to be causing freeze, but that's only because it hasn't been reached yet
+    //private static final Hashtable<BlockPos, Long> GENERATED_POSITIONS = new Hashtable<>();
 
     public EnclosurePlacement(Codec<NoPlacementConfig> configCodec) {
         super(configCodec);
     }
 
+    //TODO checks for other pillager outpost decorations and caves
     @Override
     public Stream<BlockPos> getPositions(WorldDecoratingHelper helper, Random rand, NoPlacementConfig config, BlockPos pos) {
-        //this doesn't do the nearest thing, it requires you to loop through block posses manually - is there an equivalent function?
-        /*BlockPos nearestOutpostPos = Structure.PILLAGER_OUTPOST.func_236388_a_(helper.field_242889_a.getWorld(),);
-        if(nearestOutpostPos != null && positionsWithinRange(nearestOutpostPos, pos, 20, 50)) {
-            //is there going to be a reliable way to check for other outposts or do i just have to do a probability thing?
-            //maybe the feature itself can store a position and there's a way to get that?
-            return Stream.of(pos);
-            this dot already generated equals true??
-        }*/
+        if(rand.nextInt(50)==0) {
+            long seed = helper.field_242889_a.getSeed();
+            StructureSeparationSettings settings = helper.chunkGenerator.func_235957_b_().func_236197_a_(Structure.PILLAGER_OUTPOST);
+            if (settings != null) {
+                ChunkPos chunk = new ChunkPos(pos);
+                BlockPos outpost = Structure.PILLAGER_OUTPOST.getChunkPosForStructure(settings, seed, new SharedSeedRandom(seed), chunk.x, chunk.z).asBlockPos();
+                int xDiff = Math.abs(outpost.getX() - pos.getX());
+                int zDiff = Math.abs(outpost.getZ() - pos.getZ());
+                if (xDiff < 50 && zDiff < 50 && xDiff > 16 && zDiff > 16) {
+                    int x = pos.getX() - 5 + rand.nextInt(10);
+                    int z = pos.getZ() - 5 + rand.nextInt(10);
+                    return Stream.of(new BlockPos(x, helper.func_242893_a(Heightmap.Type.WORLD_SURFACE_WG, x, z), z));
+                }
+            }
+        }
         return Stream.empty();
     }
 
-    //TODO need a way to check for if another feature has generated without infinite recursion - maybe a custom method?
+    /*//TODO this logic is wrong.
+    private boolean checkPreviousGeneration(BlockPos pos, long seed) {
+        if(!GENERATED_POSITIONS.containsKey(pos)) {
+            GENERATED_POSITIONS.put(pos, seed);
+            return true;
+        } else return GENERATED_POSITIONS.get(pos) != seed;
+    }*/
 
-    private boolean positionsWithinRange(BlockPos centre, BlockPos external, double minimum, double maximum) {
-        return centre.withinDistance(external, maximum) && !centre.withinDistance(external, minimum);
-    }
+       /*private BlockPos nearestOutpostPos(ChunkGenerator chunkGenerator, long seed, SharedSeedRandom random, int originalX, int originalZ) {
+        StructureSeparationSettings settings = chunkGenerator.func_235957_b_().func_236197_a_(Structure.PILLAGER_OUTPOST);
+        if (settings != null){
+            for (int x = originalX - 2; x <= originalX + 2; x++) {
+                for (int z = originalZ - 2; z <= originalZ + 2; ++z) {
+                    ChunkPos outpostPos = Structure.PILLAGER_OUTPOST.getChunkPosForStructure(settings, seed, random, x, z);
+                    if (x == outpostPos.x && z == outpostPos.z) {
+                        return outpostPos.asBlockPos();
+                    }
+                }
+            }
+        }
+        return null;
+    }*/
 }
