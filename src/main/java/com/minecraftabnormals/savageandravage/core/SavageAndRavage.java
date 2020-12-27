@@ -37,7 +37,6 @@ public class SavageAndRavage {
 		SREffects.EFFECTS.register(bus);
 		SREffects.POTIONS.register(bus);
 		SRGeneration.FEATURES.register(bus);
-		SRGeneration.PLACEMENTS.register(bus);
 		SRAttributes.ATTRIBUTES.register(bus);
 
 		MinecraftForge.EVENT_BUS.register(this);

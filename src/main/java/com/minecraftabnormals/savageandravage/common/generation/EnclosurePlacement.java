@@ -1,3 +1,4 @@
+/*
 package com.minecraftabnormals.savageandravage.common.generation;
 
 import com.mojang.serialization.Codec;
@@ -22,7 +23,6 @@ public class EnclosurePlacement extends Placement<NoPlacementConfig> {
         super(configCodec);
     }
 
-    //TODO checks for other pillager outpost decorations and caves
     @Override
     public Stream<BlockPos> getPositions(WorldDecoratingHelper helper, Random rand, NoPlacementConfig config, BlockPos pos) {
         if(rand.nextInt(50)==0) {
@@ -43,15 +43,19 @@ public class EnclosurePlacement extends Placement<NoPlacementConfig> {
         return Stream.empty();
     }
 
-    /*//TODO this logic is wrong.
-    private boolean checkPreviousGeneration(BlockPos pos, long seed) {
+    */
+/*/
+/*TO DO this logic is wrong.*/
+/*  private boolean checkPreviousGeneration(BlockPos pos, long seed) {
         if(!GENERATED_POSITIONS.containsKey(pos)) {
             GENERATED_POSITIONS.put(pos, seed);
             return true;
         } else return GENERATED_POSITIONS.get(pos) != seed;
-    }*/
+    }*//*
 
-       /*private BlockPos nearestOutpostPos(ChunkGenerator chunkGenerator, long seed, SharedSeedRandom random, int originalX, int originalZ) {
+
+       */
+/*private BlockPos nearestOutpostPos(ChunkGenerator chunkGenerator, long seed, SharedSeedRandom random, int originalX, int originalZ) {
         StructureSeparationSettings settings = chunkGenerator.func_235957_b_().func_236197_a_(Structure.PILLAGER_OUTPOST);
         if (settings != null){
             for (int x = originalX - 2; x <= originalX + 2; x++) {
@@ -64,5 +68,7 @@ public class EnclosurePlacement extends Placement<NoPlacementConfig> {
             }
         }
         return null;
-    }*/
+    }*//*
+
 }
+*/

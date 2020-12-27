@@ -5,6 +5,7 @@ import com.minecraftabnormals.abnormals_core.common.world.modification.BiomeModi
 import com.minecraftabnormals.abnormals_core.common.world.modification.BiomeModificationPredicates;
 import com.minecraftabnormals.abnormals_core.common.world.modification.BiomeSpawnsModifier;
 import com.minecraftabnormals.savageandravage.common.entity.IceologerEntity;
+import com.minecraftabnormals.savageandravage.common.generation.EnclosureFeature;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 import com.minecraftabnormals.savageandravage.core.registry.SREntities;
 import com.mojang.datafixers.util.Pair;
@@ -15,19 +16,20 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.jigsaw.JigsawPattern;
 import net.minecraft.world.gen.feature.jigsaw.JigsawPatternRegistry;
-import net.minecraft.world.gen.feature.jigsaw.JigsawPiece;
-import net.minecraft.world.gen.placement.Placement;
+import net.minecraft.world.gen.feature.jigsaw.SingleJigsawPiece;
 import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class SRGeneration {
 	public static final DeferredRegister<Feature<?>> FEATURES = DeferredRegister.create(ForgeRegistries.FEATURES, SavageAndRavage.MOD_ID);
-	public static final DeferredRegister<Placement<?>> PLACEMENTS = DeferredRegister.create(ForgeRegistries.DECORATORS, SavageAndRavage.MOD_ID);
+	//public static final DeferredRegister<Placement<?>> PLACEMENTS = DeferredRegister.create(ForgeRegistries.DECORATORS, SavageAndRavage.MOD_ID);
 
-	//public static final RegistryObject<Feature<NoFeatureConfig>> CREEPER_ENCLOSURE = FEATURES.register("creeper_enclosure", () -> new EnclosureFeature(NoFeatureConfig.field_236558_a_));
+	public static final RegistryObject<Feature<NoFeatureConfig>> CREEPER_ENCLOSURE = FEATURES.register("creeper_enclosure", () -> new EnclosureFeature(NoFeatureConfig.field_236558_a_));
 	//public static final RegistryObject<Placement<NoPlacementConfig>> CREEPER_ENCLOSURE_PLACEMENT = PLACEMENTS.register("creeper_enclosure_placement", () -> new EnclosurePlacement(NoPlacementConfig.CODEC));
 
 	public static void registerEntitySpawns() {
@@ -38,16 +40,16 @@ public class SRGeneration {
 
 	//TODO work out why structure voids are getting replaced with air blocks that act like structure voids !
 	public static void registerPools() {
-		JigsawPatternRegistry.func_244094_a(new JigsawPattern(new ResourceLocation(SavageAndRavage.MOD_ID, "enclosure/enclosures"	), new ResourceLocation("empty"), ImmutableList.of(Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":enclosure/enclosures/enclosure1"), 1)), JigsawPattern.PlacementBehaviour.TERRAIN_MATCHING));
-		JigsawPatternRegistry.func_244094_a(new JigsawPattern(new ResourceLocation(SavageAndRavage.MOD_ID, "enclosure/cages"	), new ResourceLocation("empty"), ImmutableList.of(Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":enclosure/decorations/cages/cage1"), 1), Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":enclosure/decorations/cages/cage2"), 1), Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":enclosure/decorations/cages/cage3"), 1)), JigsawPattern.PlacementBehaviour.RIGID));
-		JigsawPatternRegistry.func_244094_a(new JigsawPattern(new ResourceLocation(SavageAndRavage.MOD_ID, "enclosure/chests"	), new ResourceLocation("empty"), ImmutableList.of(Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":enclosure/decorations/chests/chest1"), 1), Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":enclosure/decorations/chests/chest2"), 1), Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":enclosure/decorations/chests/chest3"), 1)), JigsawPattern.PlacementBehaviour.RIGID));
-		JigsawPatternRegistry.func_244094_a(new JigsawPattern(new ResourceLocation(SavageAndRavage.MOD_ID, "enclosure/creepers"	), new ResourceLocation("empty"), ImmutableList.of(Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":enclosure/spawns/creepers/creeper1"), 1), Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":enclosure/spawns/creepers/creeper2"), 1), Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":enclosure/spawns/creepers/creeper3"), 1), Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":enclosure/spawns/creepers/creeper4"), 1), Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":enclosure/spawns/creepers/creeper5"), 1), Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":enclosure/spawns/creepers/creeper6"), 1)), JigsawPattern.PlacementBehaviour.RIGID));
-		JigsawPatternRegistry.func_244094_a(new JigsawPattern(new ResourceLocation(SavageAndRavage.MOD_ID, "enclosure/creepies"	), new ResourceLocation("empty"), ImmutableList.of(Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":enclosure/spawns/creepies/creepie1"), 1), Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":enclosure/spawns/creepies/creepie2"), 1), Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":enclosure/spawns/creepies/creepie3"), 1), Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":enclosure/spawns/creepies/creepie4"), 1), Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":enclosure/spawns/creepies/creepie5"), 1), Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":enclosure/spawns/creepies/creepie6"), 1)), JigsawPattern.PlacementBehaviour.RIGID));
-		JigsawPatternRegistry.func_244094_a(new JigsawPattern(new ResourceLocation(SavageAndRavage.MOD_ID, "enclosure/griefers"	), new ResourceLocation("empty"), ImmutableList.of(Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":enclosure/spawns/griefer"), 1)), JigsawPattern.PlacementBehaviour.RIGID));
+		JigsawPatternRegistry.func_244094_a(new JigsawPattern(new ResourceLocation(SavageAndRavage.MOD_ID, "enclosure/enclosures"	), new ResourceLocation("empty"), ImmutableList.of(Pair.of(JigsawPiece.func_242845_a(CREEPER_ENCLOSURE.get().withConfiguration(NoFeatureConfig.field_236559_b_)), 1)), JigsawPattern.PlacementBehaviour.RIGID));
+		JigsawPatternRegistry.func_244094_a(new JigsawPattern(new ResourceLocation(SavageAndRavage.MOD_ID, "enclosure/cages"	), new ResourceLocation("empty"), ImmutableList.of(Pair.of(JigsawPiece.func_242859_b(SavageAndRavage.MOD_ID + ":enclosure/decorations/cages/cage1"), 1), Pair.of(JigsawPiece.func_242859_b(SavageAndRavage.MOD_ID + ":enclosure/decorations/cages/cage2"), 1), Pair.of(JigsawPiece.func_242859_b(SavageAndRavage.MOD_ID + ":enclosure/decorations/cages/cage3"), 1)), JigsawPattern.PlacementBehaviour.TERRAIN_MATCHING));
+		JigsawPatternRegistry.func_244094_a(new JigsawPattern(new ResourceLocation(SavageAndRavage.MOD_ID, "enclosure/chests"	), new ResourceLocation("empty"), ImmutableList.of(Pair.of(JigsawPiece.func_242859_b(SavageAndRavage.MOD_ID + ":enclosure/decorations/chests/chest1"), 1), Pair.of(JigsawPiece.func_242859_b(SavageAndRavage.MOD_ID + ":enclosure/decorations/chests/chest2"), 1), Pair.of(JigsawPiece.func_242859_b(SavageAndRavage.MOD_ID + ":enclosure/decorations/chests/chest3"), 1)), JigsawPattern.PlacementBehaviour.TERRAIN_MATCHING));
+		//JigsawPatternRegistry.func_244094_a(new JigsawPattern(new ResourceLocation(SavageAndRavage.MOD_ID, "enclosure/creepers"	), new ResourceLocation("empty"), ImmutableList.of(Pair.of(JigsawPiece.func_242859_b(SavageAndRavage.MOD_ID + ":enclosure/spawns/creepers/creeper1"), 1), Pair.of(JigsawPiece.func_242859_b(SavageAndRavage.MOD_ID + ":enclosure/spawns/creepers/creeper2"), 1), Pair.of(JigsawPiece.func_242859_b(SavageAndRavage.MOD_ID + ":enclosure/spawns/creepers/creeper3"), 1), Pair.of(JigsawPiece.func_242859_b(SavageAndRavage.MOD_ID + ":enclosure/spawns/creepers/creeper4"), 1), Pair.of(JigsawPiece.func_242859_b(SavageAndRavage.MOD_ID + ":enclosure/spawns/creepers/creeper5"), 1), Pair.of(JigsawPiece.func_242859_b(SavageAndRavage.MOD_ID + ":enclosure/spawns/creepers/creeper6"), 1)), JigsawPattern.PlacementBehaviour.RIGID));
+		//JigsawPatternRegistry.func_244094_a(new JigsawPattern(new ResourceLocation(SavageAndRavage.MOD_ID, "enclosure/creepies"	), new ResourceLocation("empty"), ImmutableList.of(Pair.of(JigsawPiece.func_242859_b(SavageAndRavage.MOD_ID + ":enclosure/spawns/creepies/creepie1"), 1), Pair.of(JigsawPiece.func_242859_b(SavageAndRavage.MOD_ID + ":enclosure/spawns/creepies/creepie2"), 1), Pair.of(JigsawPiece.func_242859_b(SavageAndRavage.MOD_ID + ":enclosure/spawns/creepies/creepie3"), 1), Pair.of(JigsawPiece.func_242859_b(SavageAndRavage.MOD_ID + ":enclosure/spawns/creepies/creepie4"), 1), Pair.of(JigsawPiece.func_242859_b(SavageAndRavage.MOD_ID + ":enclosure/spawns/creepies/creepie5"), 1), Pair.of(JigsawPiece.func_242859_b(SavageAndRavage.MOD_ID + ":enclosure/spawns/creepies/creepie6"), 1)), JigsawPattern.PlacementBehaviour.RIGID));
+		//JigsawPatternRegistry.func_244094_a(new JigsawPattern(new ResourceLocation(SavageAndRavage.MOD_ID, "enclosure/griefers"	), new ResourceLocation("empty"), ImmutableList.of(Pair.of(JigsawPiece.func_242859_b(SavageAndRavage.MOD_ID + ":enclosure/spawns/griefer"), 1)), JigsawPattern.PlacementBehaviour.RIGID));
 
 	}
 
-	//TODO add target decoration to pool?
+	//TODO add target decoration to pool, redstone feature on spore bomb cage
 
 	public static void registerBiomeModifications() {
 		BiomeModificationManager manager = BiomeModificationManager.INSTANCE;
