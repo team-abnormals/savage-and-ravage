@@ -18,26 +18,26 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(IronGolemEntity.class)
 public abstract class IronGolemEntityMixin extends GolemEntity {
 
-    private IronGolemEntityMixin(EntityType<? extends GolemEntity> entity, World world) {
-        super(entity, world);
-    }
+	private IronGolemEntityMixin(EntityType<? extends GolemEntity> entity, World world) {
+		super(entity, world);
+	}
 
-    @Shadow
-    public abstract boolean isPlayerCreated();
+	@Shadow
+	public abstract boolean isPlayerCreated();
 
-    @Inject(at = @At("HEAD"), method = "collideWithEntity(Lnet/minecraft/entity/Entity;)V", cancellable = true)
-    public void collideWithEntity(Entity entity, CallbackInfo ci) {
-        if (entity instanceof IMob && this.getRNG().nextInt(20) == 0) {
-            this.setAttackTarget((LivingEntity) entity);
-        }
-        super.collideWithEntity(entity);
-    }
+	@Inject(at = @At("HEAD"), method = "collideWithEntity(Lnet/minecraft/entity/Entity;)V", cancellable = true)
+	public void collideWithEntity(Entity entity, CallbackInfo ci) {
+		if (entity instanceof IMob && this.getRNG().nextInt(20) == 0) {
+			this.setAttackTarget((LivingEntity) entity);
+		}
+		super.collideWithEntity(entity);
+	}
 
-    @Inject(at = @At("RETURN"), method = "canAttack(Lnet/minecraft/entity/EntityType;)Z", cancellable = true)
-    public void canAttack(EntityType<?> typeIn, CallbackInfoReturnable<Boolean> ci) {
-        if (this.isPlayerCreated() && typeIn == EntityType.PLAYER || SRConfig.COMMON.creeperExplosionsDestroyBlocks.get() && typeIn == EntityType.CREEPER) {
-            ci.setReturnValue(false);
-        }
-        ci.setReturnValue(super.canAttack(typeIn));
-    }
+	@Inject(at = @At("RETURN"), method = "canAttack(Lnet/minecraft/entity/EntityType;)Z", cancellable = true)
+	public void canAttack(EntityType<?> typeIn, CallbackInfoReturnable<Boolean> ci) {
+		if (this.isPlayerCreated() && typeIn == EntityType.PLAYER || SRConfig.COMMON.creeperExplosionsDestroyBlocks.get() && typeIn == EntityType.CREEPER) {
+			ci.setReturnValue(false);
+		}
+		ci.setReturnValue(super.canAttack(typeIn));
+	}
 }

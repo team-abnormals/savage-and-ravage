@@ -16,32 +16,32 @@ import net.minecraft.world.server.ServerWorld;
 
 public class ShrinkingEffect extends Effect {
 
-    public ShrinkingEffect() {
-        super(EffectType.NEUTRAL, 10400767);
-    }
+	public ShrinkingEffect() {
+		super(EffectType.NEUTRAL, 10400767);
+	}
 
-    @Override
-    public void performEffect(LivingEntity entity, int amplifier) {
-        if (!entity.world.isRemote()) {
-            boolean canShrink = false;
-            if (entity instanceof IAgeableEntity && ((IAgeableEntity) entity).canAge(false)) canShrink = true;
-            else if (entity instanceof SlimeEntity && ((SlimeEntity) entity).getSlimeSize() > 1) canShrink = true;
-            else if (!entity.isChild()) canShrink =
-                    (entity instanceof AgeableEntity && !(entity instanceof ParrotEntity)) ||
-                    entity instanceof CreeperEntity ||
-                    entity instanceof ZombieEntity ||
-                    entity instanceof ZoglinEntity ||
-                    entity instanceof PiglinEntity;
-            if (canShrink && entity.getRNG().nextInt(3) == 0) {
-                ((ServerWorld) entity.world).spawnParticle(ParticleTypes.TOTEM_OF_UNDYING, entity.getPosXRandom(0.3D), entity.getPosYRandom(), entity.getPosZRandom(0.3D), 1, 0.3D, 0.3D, 0.3D, 0.2D);
-            }
-        }
-    }
+	@Override
+	public void performEffect(LivingEntity entity, int amplifier) {
+		if (!entity.world.isRemote()) {
+			boolean canShrink = false;
+			if (entity instanceof IAgeableEntity && ((IAgeableEntity) entity).canAge(false)) canShrink = true;
+			else if (entity instanceof SlimeEntity && ((SlimeEntity) entity).getSlimeSize() > 1) canShrink = true;
+			else if (!entity.isChild()) canShrink =
+					(entity instanceof AgeableEntity && !(entity instanceof ParrotEntity)) ||
+							entity instanceof CreeperEntity ||
+							entity instanceof ZombieEntity ||
+							entity instanceof ZoglinEntity ||
+							entity instanceof PiglinEntity;
+			if (canShrink && entity.getRNG().nextInt(3) == 0) {
+				((ServerWorld) entity.world).spawnParticle(ParticleTypes.TOTEM_OF_UNDYING, entity.getPosXRandom(0.3D), entity.getPosYRandom(), entity.getPosZRandom(0.3D), 1, 0.3D, 0.3D, 0.3D, 0.2D);
+			}
+		}
+	}
 
-    @Override
-    public boolean isReady(int duration, int amplifier) {
-        return true;
-    }
+	@Override
+	public boolean isReady(int duration, int amplifier) {
+		return true;
+	}
 
 }
 

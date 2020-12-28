@@ -3,73 +3,39 @@ package com.minecraftabnormals.savageandravage.core.other;
 import com.minecraftabnormals.abnormals_core.core.api.IAgeableEntity;
 import com.minecraftabnormals.savageandravage.common.effect.GrowingEffect;
 import com.minecraftabnormals.savageandravage.common.effect.ShrinkingEffect;
-import com.minecraftabnormals.savageandravage.common.entity.BurningBannerEntity;
-import com.minecraftabnormals.savageandravage.common.entity.CreepieEntity;
-import com.minecraftabnormals.savageandravage.common.entity.ExecutionerEntity;
-import com.minecraftabnormals.savageandravage.common.entity.GrieferEntity;
-import com.minecraftabnormals.savageandravage.common.entity.IOwnableMob;
-import com.minecraftabnormals.savageandravage.common.entity.IceologerEntity;
-import com.minecraftabnormals.savageandravage.common.entity.SkeletonVillagerEntity;
-import com.minecraftabnormals.savageandravage.common.entity.SporeCloudEntity;
+import com.minecraftabnormals.savageandravage.common.entity.*;
 import com.minecraftabnormals.savageandravage.common.entity.block.SporeBombEntity;
 import com.minecraftabnormals.savageandravage.common.entity.goals.AvoidGrieferOwnedCreepiesGoal;
 import com.minecraftabnormals.savageandravage.common.entity.goals.ImprovedCrossbowGoal;
 import com.minecraftabnormals.savageandravage.common.item.PottableItem;
 import com.minecraftabnormals.savageandravage.core.SRConfig;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
-import com.minecraftabnormals.savageandravage.core.registry.SRAttributes;
-import com.minecraftabnormals.savageandravage.core.registry.SRBlocks;
-import com.minecraftabnormals.savageandravage.core.registry.SREffects;
-import com.minecraftabnormals.savageandravage.core.registry.SREntities;
-import com.minecraftabnormals.savageandravage.core.registry.SRItems;
-import com.minecraftabnormals.savageandravage.core.registry.SRSounds;
+import com.minecraftabnormals.savageandravage.core.registry.*;
 import net.minecraft.block.AbstractBannerBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.AgeableEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.ai.goal.RangedCrossbowAttackGoal;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
-import net.minecraft.entity.monster.CreeperEntity;
-import net.minecraft.entity.monster.IMob;
-import net.minecraft.entity.monster.PillagerEntity;
-import net.minecraft.entity.monster.ShulkerEntity;
-import net.minecraft.entity.monster.SlimeEntity;
-import net.minecraft.entity.monster.ZoglinEntity;
-import net.minecraft.entity.monster.ZombieEntity;
+import net.minecraft.entity.monster.*;
 import net.minecraft.entity.monster.piglin.PiglinEntity;
-import net.minecraft.entity.passive.CatEntity;
-import net.minecraft.entity.passive.GolemEntity;
-import net.minecraft.entity.passive.IronGolemEntity;
-import net.minecraft.entity.passive.OcelotEntity;
-import net.minecraft.entity.passive.ParrotEntity;
+import net.minecraft.entity.passive.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.FireChargeItem;
-import net.minecraft.item.FireworkRocketItem;
-import net.minecraft.item.FlintAndSteelItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
@@ -92,7 +58,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 
 @Mod.EventBusSubscriber(modid = SavageAndRavage.MOD_ID)
@@ -330,14 +295,14 @@ public class SREvents {
 			List<BurningBannerEntity> banners = world.getEntitiesWithinAABB(BurningBannerEntity.class, new AxisAlignedBB(pos));
 			boolean noBurningBanners = true;
 			for (BurningBannerEntity banner : banners) {
-				if (Objects.equals(banner.getBannerPosition(), pos)) noBurningBanners = false;
+				if (banner.getBannerPosition() != null && banner.getBannerPosition().equals(pos))
+					noBurningBanners = false;
 			}
 			return noBurningBanners;
 		}
 		return false;
 	}
 
-	//TODO refactor, probably a lot of redundancy here
 	@SubscribeEvent
 	public static void onPotionExpire(PotionEvent.PotionExpiryEvent event) {
 		if (event.getPotionEffect() != null) {
@@ -345,11 +310,10 @@ public class SREvents {
 			boolean shouldSetChild = event.getPotionEffect().getPotion() instanceof ShrinkingEffect;
 			if (event.getPotionEffect().getPotion() instanceof GrowingEffect || shouldSetChild) {
 				boolean canChange = false;
-				if(affected instanceof IAgeableEntity && ((IAgeableEntity) affected).canAge(!shouldSetChild)) {
+				if (affected instanceof IAgeableEntity && ((IAgeableEntity) affected).canAge(!shouldSetChild)) {
 					((IAgeableEntity) affected).attemptAging(!shouldSetChild);
 					canChange = true;
-				}
-				else if (affected instanceof SlimeEntity) {
+				} else if (affected instanceof SlimeEntity) {
 					SlimeEntity slime = (SlimeEntity) affected;
 					int size = slime.getSlimeSize();
 					if (shouldSetChild ? size > 1 : size < 3) {
@@ -360,8 +324,7 @@ public class SREvents {
 							throw new RuntimeException("Invoking setSize failed. Something has gone horribly wrong with Savage & Ravage!");
 						}
 					}
-				}
-				else if (shouldSetChild != affected.isChild()) {
+				} else if (shouldSetChild != affected.isChild()) {
 					canChange = true;
 					if (affected instanceof AgeableEntity && !(affected instanceof ParrotEntity))
 						((AgeableEntity) affected).setGrowingAge(shouldSetChild ? -24000 : 0);

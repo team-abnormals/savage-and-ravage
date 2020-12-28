@@ -7,13 +7,13 @@ import java.util.UUID;
 
 public interface IOwnableMob {
 
-    @Nullable
-    LivingEntity getOwner();
+	@Nullable
+	LivingEntity getOwner();
 
-    @Nullable
-    UUID getOwnerId();
+	@Nullable
+	UUID getOwnerId();
 
-    void setOwnerId(@Nullable UUID uuid);
+	void setOwnerId(@Nullable UUID uuid);
 
-    boolean shouldAttackEntity(LivingEntity target, LivingEntity owner);
+	boolean shouldAttackEntity(LivingEntity target, LivingEntity owner);
 }

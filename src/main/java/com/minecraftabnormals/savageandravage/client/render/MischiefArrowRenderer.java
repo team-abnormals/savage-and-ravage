@@ -8,12 +8,12 @@ import net.minecraft.util.ResourceLocation;
 
 public class MischiefArrowRenderer extends ArrowRenderer<MischiefArrowEntity> {
 
-   public MischiefArrowRenderer(EntityRendererManager manager) {
-      super(manager);
-   }
+	public MischiefArrowRenderer(EntityRendererManager manager) {
+		super(manager);
+	}
 
-   @Override
-   public ResourceLocation getEntityTexture(MischiefArrowEntity entity) {
-      return new ResourceLocation(SavageAndRavage.MOD_ID, "textures/entity/projectiles/mischief_arrow.png");
-   }
+	@Override
+	public ResourceLocation getEntityTexture(MischiefArrowEntity entity) {
+		return new ResourceLocation(SavageAndRavage.MOD_ID, "textures/entity/projectiles/mischief_arrow.png");
+	}
 }
