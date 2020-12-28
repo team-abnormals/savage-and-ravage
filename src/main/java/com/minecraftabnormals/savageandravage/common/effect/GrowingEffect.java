@@ -15,29 +15,29 @@ import net.minecraft.world.server.ServerWorld;
 
 public class GrowingEffect extends Effect {
 
-    public GrowingEffect() {
-        super(EffectType.BENEFICIAL, 8247444);
-    }
+	public GrowingEffect() {
+		super(EffectType.BENEFICIAL, 8247444);
+	}
 
-    @Override
-    public void performEffect(LivingEntity entity, int amplifier) {
-        if (!entity.world.isRemote()) {
-            boolean canGrow = false;
-            if (entity instanceof IAgeableEntity && ((IAgeableEntity) entity).canAge(true)) canGrow = true;
-            else if (entity instanceof SlimeEntity && ((SlimeEntity) entity).getSlimeSize() < 3) canGrow = true;
-            else if (entity.isChild()) canGrow =
-                    (entity instanceof AgeableEntity && !(entity instanceof ParrotEntity)) ||
-                    entity instanceof ZombieEntity ||
-                    entity instanceof ZoglinEntity ||
-                    entity instanceof PiglinEntity;
-            if (canGrow && entity.getRNG().nextInt(3) == 0)
-                ((ServerWorld) entity.world).spawnParticle(ParticleTypes.HAPPY_VILLAGER, entity.getPosXRandom(0.3D), entity.getPosYRandom(), entity.getPosZRandom(0.3D), 1, 0.3D, 0.3D, 0.3D, 1.0D);
-        }
-    }
+	@Override
+	public void performEffect(LivingEntity entity, int amplifier) {
+		if (!entity.world.isRemote()) {
+			boolean canGrow = false;
+			if (entity instanceof IAgeableEntity && ((IAgeableEntity) entity).canAge(true)) canGrow = true;
+			else if (entity instanceof SlimeEntity && ((SlimeEntity) entity).getSlimeSize() < 3) canGrow = true;
+			else if (entity.isChild()) canGrow =
+					(entity instanceof AgeableEntity && !(entity instanceof ParrotEntity)) ||
+							entity instanceof ZombieEntity ||
+							entity instanceof ZoglinEntity ||
+							entity instanceof PiglinEntity;
+			if (canGrow && entity.getRNG().nextInt(3) == 0)
+				((ServerWorld) entity.world).spawnParticle(ParticleTypes.HAPPY_VILLAGER, entity.getPosXRandom(0.3D), entity.getPosYRandom(), entity.getPosZRandom(0.3D), 1, 0.3D, 0.3D, 0.3D, 1.0D);
+		}
+	}
 
-    @Override
-    public boolean isReady(int duration, int amplifier) {
-        return true;
-    }
+	@Override
+	public boolean isReady(int duration, int amplifier) {
+		return true;
+	}
 
 }

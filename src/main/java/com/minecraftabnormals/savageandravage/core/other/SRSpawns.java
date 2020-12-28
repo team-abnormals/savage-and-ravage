@@ -6,7 +6,6 @@ import com.minecraftabnormals.savageandravage.core.registry.SREntities;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.monster.SlimeEntity;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
@@ -17,10 +16,7 @@ import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.ForgeRegistries;
-
-import java.lang.reflect.Method;
 
 @Mod.EventBusSubscriber(modid = SavageAndRavage.MOD_ID)
 public class SRSpawns {
@@ -47,7 +43,7 @@ public class SRSpawns {
 
 	public static boolean canHostilesSpawn(ResourceLocation biomeName) {
 		Biome biome = ForgeRegistries.BIOMES.getValue(biomeName);
-		if(biome != null) return
+		if (biome != null) return
 				!(biome.getCategory() == Biome.Category.MUSHROOM ||
 						biome.getCategory() == Biome.Category.NONE ||
 						biome == ForgeRegistries.BIOMES.getValue(new ResourceLocation("biomesoplenty", "rainbow_valley")));

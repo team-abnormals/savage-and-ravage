@@ -12,11 +12,11 @@ import javax.annotation.Nullable;
  */
 public interface PottableItem {
 
-    /**
-     * @param direction The direction that the pot should face, ignore if not directional
-     * @return The potted state or <code>null</code> if there is no potted state
-     */
-    @Nullable
-    BlockState getPottedState(Direction direction);
+	/**
+	 * @param direction The direction that the pot should face, ignore if not directional
+	 * @return The potted state or <code>null</code> if there is no potted state
+	 */
+	@Nullable
+	BlockState getPottedState(Direction direction);
 
 }

@@ -1,10 +1,7 @@
 package com.minecraftabnormals.savageandravage.common.entity;
 
-import java.util.Map;
-
 import com.google.common.collect.Maps;
 import com.minecraftabnormals.savageandravage.core.registry.SRItems;
-
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
@@ -20,6 +17,8 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraft.world.raid.Raid;
+
+import java.util.Map;
 
 public class ExecutionerEntity extends VindicatorEntity {
 

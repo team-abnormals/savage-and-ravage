@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.model.ModelHelper;
@@ -96,12 +95,12 @@ public class ExecutionerModel extends BipedModel<VindicatorEntity> {
 		super.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 		AbstractIllagerEntity.ArmPose illagerArmPose = entityIn.getArmPose();
 		switch (illagerArmPose) {
-		case ATTACKING:
-			if (!entityIn.getHeldItemMainhand().isEmpty())
-				ModelHelper.func_239103_a_(this.bipedRightArm, this.bipedLeftArm, entityIn, this.swingProgress, ageInTicks);
-			break;
-		default:
-			break;
+			case ATTACKING:
+				if (!entityIn.getHeldItemMainhand().isEmpty())
+					ModelHelper.func_239103_a_(this.bipedRightArm, this.bipedLeftArm, entityIn, this.swingProgress, ageInTicks);
+				break;
+			default:
+				break;
 		}
 
 		boolean isCrossed = illagerArmPose == AbstractIllagerEntity.ArmPose.CROSSED;

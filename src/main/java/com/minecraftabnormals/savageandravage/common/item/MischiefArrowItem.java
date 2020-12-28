@@ -13,24 +13,24 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 
 public class MischiefArrowItem extends ArrowItem {
-    private static final TargetedItemGroupFiller FILLER = new TargetedItemGroupFiller(() -> Items.SPECTRAL_ARROW);
+	private static final TargetedItemGroupFiller FILLER = new TargetedItemGroupFiller(() -> Items.SPECTRAL_ARROW);
 
-    public MischiefArrowItem(Properties builder) {
-        super(builder);
-    }
+	public MischiefArrowItem(Properties builder) {
+		super(builder);
+	}
 
-    @Override
-    public AbstractArrowEntity createArrow(World world, ItemStack stack, LivingEntity shooter) {
-        return new MischiefArrowEntity(world, shooter);
-    }
+	@Override
+	public AbstractArrowEntity createArrow(World world, ItemStack stack, LivingEntity shooter) {
+		return new MischiefArrowEntity(world, shooter);
+	}
 
-    @Override
-    public boolean isInfinite(ItemStack stack, ItemStack bow, PlayerEntity player) {
-        return false;
-    }
+	@Override
+	public boolean isInfinite(ItemStack stack, ItemStack bow, PlayerEntity player) {
+		return false;
+	}
 
-    @Override
-    public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-        FILLER.fillItem(this, group, items);
-    }
+	@Override
+	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
+		FILLER.fillItem(this, group, items);
+	}
 }

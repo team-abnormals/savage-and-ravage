@@ -23,48 +23,48 @@ import java.util.Random;
  */
 public class IceChunkRenderer extends EntityRenderer<IceChunkEntity> {
 
-    public static final ResourceLocation MODEL_LOCATION = new ResourceLocation(SavageAndRavage.MOD_ID, "entity/ice_chunk");
-    public static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation(SavageAndRavage.MOD_ID, "textures/entity/ice_chunk.png");
+	public static final ResourceLocation MODEL_LOCATION = new ResourceLocation(SavageAndRavage.MOD_ID, "entity/ice_chunk");
+	public static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation(SavageAndRavage.MOD_ID, "textures/entity/ice_chunk.png");
 
-    public IceChunkRenderer(EntityRendererManager renderManager) {
-        super(renderManager);
-    }
+	public IceChunkRenderer(EntityRendererManager renderManager) {
+		super(renderManager);
+	}
 
-    @Override
-    public void render(IceChunkEntity entity, float entityYaw, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLight) {
-        matrixStack.push();
-        matrixStack.translate(-0.5, 0, -0.5);
+	@Override
+	public void render(IceChunkEntity entity, float entityYaw, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLight) {
+		matrixStack.push();
+		matrixStack.translate(-0.5, 0, -0.5);
 
-        IBakedModel model = Minecraft.getInstance().getModelManager().getModel(MODEL_LOCATION);
-        renderModel(model, buffer.getBuffer(RenderType.getSolid()), matrixStack, packedLight);
-        matrixStack.pop();
+		IBakedModel model = Minecraft.getInstance().getModelManager().getModel(MODEL_LOCATION);
+		renderModel(model, buffer.getBuffer(RenderType.getSolid()), matrixStack, packedLight);
+		matrixStack.pop();
 
-        super.render(entity, entityYaw, partialTicks, matrixStack, buffer, packedLight);
-    }
+		super.render(entity, entityYaw, partialTicks, matrixStack, buffer, packedLight);
+	}
 
-    @Override
-    public ResourceLocation getEntityTexture(IceChunkEntity entity) {
-        return TEXTURE_LOCATION;
-    }
+	@Override
+	public ResourceLocation getEntityTexture(IceChunkEntity entity) {
+		return TEXTURE_LOCATION;
+	}
 
-    /**
-     * <p>Snippet from Sonar</p>
-     * Renders the specified model into the provided buffer.
-     *
-     * @param model       The model to render
-     * @param builder     The builder to put the model into
-     * @param matrixStack The stack of transformations to move elements
-     * @param packedLight The packed uv into the light texture the parts should be rendered at
-     */
-    private static void renderModel(IBakedModel model, IVertexBuilder builder, MatrixStack matrixStack, int packedLight) {
-        Random random = new Random(42L);
-        for (Direction direction : Direction.values()) {
-            for (BakedQuad quad : model.getQuads(null, direction, random, EmptyModelData.INSTANCE)) {
-                builder.addQuad(matrixStack.getLast(), quad, 1, 1, 1, packedLight, OverlayTexture.NO_OVERLAY);
-            }
-        }
-        for (BakedQuad quad : model.getQuads(null, null, random, EmptyModelData.INSTANCE)) {
-            builder.addQuad(matrixStack.getLast(), quad, 1, 1, 1, packedLight, OverlayTexture.NO_OVERLAY);
-        }
-    }
+	/**
+	 * <p>Snippet from Sonar</p>
+	 * Renders the specified model into the provided buffer.
+	 *
+	 * @param model       The model to render
+	 * @param builder     The builder to put the model into
+	 * @param matrixStack The stack of transformations to move elements
+	 * @param packedLight The packed uv into the light texture the parts should be rendered at
+	 */
+	private static void renderModel(IBakedModel model, IVertexBuilder builder, MatrixStack matrixStack, int packedLight) {
+		Random random = new Random(42L);
+		for (Direction direction : Direction.values()) {
+			for (BakedQuad quad : model.getQuads(null, direction, random, EmptyModelData.INSTANCE)) {
+				builder.addQuad(matrixStack.getLast(), quad, 1, 1, 1, packedLight, OverlayTexture.NO_OVERLAY);
+			}
+		}
+		for (BakedQuad quad : model.getQuads(null, null, random, EmptyModelData.INSTANCE)) {
+			builder.addQuad(matrixStack.getLast(), quad, 1, 1, 1, packedLight, OverlayTexture.NO_OVERLAY);
+		}
+	}
 }
