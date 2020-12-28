@@ -50,11 +50,11 @@
   
   "attribute.name.generic.explosive_damage_reduction": "폭발 피해 감소",
   
-  "advancements.story.griefer_armor.title": "다이너마이트와 레이저 빔처럼",
-  "advancements.story.griefer_armor.description": "그리퍼 갑옷 풀 세트를 입으세요",
-  "advancements.adventure.relic_collector.title": "유물 수집가",
-  "advancements.adventure.relic_collector.description": "불사의 토템, 참수용 대검, 그리고 얼음지팡이를 얻으세요",
-  "advancements.adventure.voluntary_exile.description": "불길한 현수막에 불을 붙이세요.\n당분간 마을에서 떨어져 있는 게 좋을지도 몰라요...",
+  "advancements.savageandravage.story.griefer_armor.title": "다이너마이트와 레이저 빔처럼",
+  "advancements.savageandravage.story.griefer_armor.description": "그리퍼 갑옷 풀 세트를 입으세요",
+  "advancements.savageandravage.adventure.relic_collector.title": "유물 수집가",
+  "advancements.savageandravage.adventure.relic_collector.description": "불사의 토템, 참수용 대검, 그리고 얼음지팡이를 얻으세요",
+  "advancements.savageandravage.adventure.voluntary_exile.description": "불길한 현수막에 불을 붙이세요.\n당분간 마을에서 떨어져 있는 게 좋을지도 몰라요...",
 
   "subtitles.savageandravage.entity.creepie.hurt": "크리피가 상처를 입음",
   "subtitles.savageandravage.entity.creepie.death": "크리피가 죽음",

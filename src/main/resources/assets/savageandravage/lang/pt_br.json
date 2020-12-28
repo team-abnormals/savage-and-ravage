@@ -48,11 +48,11 @@
 	
 	"attribute.name.generic.explosive_damage_reduction": "Redução de dano explosivo",
 	
-	"advancements.story.griefer_armor.title": "Dinamite com um raio laser",
-  	"advancements.story.griefer_armor.description": "Obtenha um conjunto completo de armadura griefer",
+	"advancements.savageandravage.story.griefer_armor.title": "Dinamite com um raio laser",
+  	"advancements.savageandravage.story.griefer_armor.description": "Obtenha um conjunto completo de armadura griefer",
   
-  	"advancements.adventure.relic_collector.title": "Coletor de rélicas",
-  	"advancements.adventure.relic_collector.description": "Obtenha um totem da imortalidade, cutelo de decapitamento e varinha de congelamento",
+  	"advancements.savageandravage.adventure.relic_collector.title": "Coletor de rélicas",
+  	"advancements.savageandravage.adventure.relic_collector.description": "Obtenha um totem da imortalidade, cutelo de decapitamento e varinha de congelamento",
 	
 	"subtitles.savageandravage.entity.creepie.hurt": "Creepie ferido",
 	"subtitles.savageandravage.entity.creepie.death": "Creepie morre",
@@ -80,5 +80,5 @@
 	"item.minecraft.tipped_arrow.effect.youth": "Flecha de juventude",
 	"item.minecraft.tipped_arrow.effect.youth_long": "Flecha de juventude",
 
-	"advancements.adventure.voluntary_exile.description": "Ateie fogo a um estandarte sinistro.\nTalvez seja melhor ficar longe de vilas por enquanto..."
+	"advancements.savageandravage.adventure.voluntary_exile.description": "Ateie fogo a um estandarte sinistro.\nTalvez seja melhor ficar longe de vilas por enquanto..."
 }

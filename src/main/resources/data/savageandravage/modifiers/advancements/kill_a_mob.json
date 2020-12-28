@@ -1,0 +1,101 @@
+{
+  "advancement": "minecraft:adventure/kill_a_mob",
+  "modifiers": [
+    {
+      "type": "indexed_requirements",
+      "config": {
+        "mode": "modify",
+        "index": 0,
+        "criteria": {
+          "savageandravage:creepie": {
+            "trigger": "minecraft:player_killed_entity",
+            "conditions": {
+              "entity": [
+                {
+                  "condition": "minecraft:entity_properties",
+                  "predicate": {
+                    "type": "savageandravage:creepie"
+                  },
+                  "entity": "this"
+                }
+              ]
+            }
+          },
+          "savageandravage:skeleton_villager": {
+            "trigger": "minecraft:player_killed_entity",
+            "conditions": {
+              "entity": [
+                {
+                  "condition": "minecraft:entity_properties",
+                  "predicate": {
+                    "type": "savageandravage:skeleton_villager"
+                  },
+                  "entity": "this"
+                }
+              ]
+            }
+          },
+          "savageandravage:griefer": {
+            "trigger": "minecraft:player_killed_entity",
+            "conditions": {
+              "entity": [
+                {
+                  "condition": "minecraft:entity_properties",
+                  "predicate": {
+                    "type": "savageandravage:griefer"
+                  },
+                  "entity": "this"
+                }
+              ]
+            }
+          },
+          "savageandravage:executioner": {
+            "trigger": "minecraft:player_killed_entity",
+            "conditions": {
+              "entity": [
+                {
+                  "condition": "minecraft:entity_properties",
+                  "predicate": {
+                    "type": "savageandravage:executioner"
+                  },
+                  "entity": "this"
+                }
+              ]
+            }
+          },
+          "savageandravage:iceologer": {
+            "trigger": "minecraft:player_killed_entity",
+            "conditions": {
+              "entity": [
+                {
+                  "condition": "minecraft:entity_properties",
+                  "predicate": {
+                    "type": "savageandravage:iceologer"
+                  },
+                  "entity": "this"
+                }
+              ]
+            }
+          }
+        },
+        "requirements": [
+          [
+            "savageandravage:creepie"
+          ],
+          [
+            "savageandravage:skeleton_villager"
+          ],
+          [
+            "savageandravage:griefer"
+          ],
+          [
+            "savageandravage:executioner"
+          ],
+          [
+            "savageandravage:iceologer"
+          ]
+        ]
+      }
+    }
+  ]
+}
