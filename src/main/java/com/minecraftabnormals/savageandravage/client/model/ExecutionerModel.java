@@ -49,8 +49,8 @@ public class ExecutionerModel extends BipedModel<VindicatorEntity> {
 		closedRightArm = new ModelRenderer(this);
 		closedRightArm.setRotationPoint(0.0F, 0.0F, 0.0F);
 		closedArms.addChild(closedRightArm);
-		closedRightArm.setTextureOffset(48, 12).addBox(4.0F, -2.0F, -2.0F, 4.0F, 8.0F, 4.0F, 0.0F, false);
-		closedRightArm.setTextureOffset(40, 0).addBox(4.0F, -3.0F, -2.5F, 6.0F, 7.0F, 5.0F, 0.0F, false);
+		closedRightArm.setTextureOffset(48, 12).addBox(4.0F, -2.0F, -2.0F, 4.0F, 8.0F, 4.0F, 0.0F, true);
+		closedRightArm.setTextureOffset(40, 0).addBox(4.0F, -3.0F, -2.5F, 6.0F, 7.0F, 5.0F, 0.0F, true);
 
 		closedLeftArm = new ModelRenderer(this);
 		closedLeftArm.setRotationPoint(0.0F, 0.0F, 0.0F);
@@ -61,8 +61,8 @@ public class ExecutionerModel extends BipedModel<VindicatorEntity> {
 		bipedRightArm = new ModelRenderer(this);
 		bipedRightArm.setRotationPoint(4.0F, 2.0F, 0.0F);
 		setRotationAngle(bipedRightArm, 0.0F, 0.0F, -0.0436F);
-		bipedRightArm.setTextureOffset(48, 48).addBox(-3.5F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.0F, false);
-		bipedRightArm.setTextureOffset(40, 0).addBox(-4.5F, -2.5F, -2.5F, 6.0F, 7.0F, 5.0F, 0.0F, false);
+		bipedRightArm.setTextureOffset(48, 48).addBox(-3.5F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.0F, true);
+		bipedRightArm.setTextureOffset(40, 0).addBox(-4.5F, -2.5F, -2.5F, 6.0F, 7.0F, 5.0F, 0.0F, true);
 
 		bipedLeftArm = new ModelRenderer(this);
 		bipedLeftArm.setRotationPoint(-4.0F, 2.0F, 0.0F);
@@ -72,8 +72,8 @@ public class ExecutionerModel extends BipedModel<VindicatorEntity> {
 
 		bipedRightLeg = new ModelRenderer(this);
 		bipedRightLeg.setRotationPoint(1.9F, 12.0F, 0.0F);
-		bipedRightLeg.setTextureOffset(32, 48).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.0F, false);
-		bipedRightLeg.setTextureOffset(30, 12).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.0F, false);
+		bipedRightLeg.setTextureOffset(32, 48).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.0F, true);
+		bipedRightLeg.setTextureOffset(30, 12).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.0F, true);
 
 		bipedLeftLeg = new ModelRenderer(this);
 		bipedLeftLeg.setRotationPoint(-1.9F, 12.0F, 0.0F);
