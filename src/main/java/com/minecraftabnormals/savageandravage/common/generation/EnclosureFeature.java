@@ -2,18 +2,25 @@ package com.minecraftabnormals.savageandravage.common.generation;
 
 import com.minecraftabnormals.savageandravage.common.entity.CreepieEntity;
 import com.minecraftabnormals.savageandravage.common.entity.GrieferEntity;
+import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 import com.minecraftabnormals.savageandravage.core.registry.SRBlocks;
 import com.minecraftabnormals.savageandravage.core.registry.SREntities;
 import com.mojang.serialization.Codec;
 
 import javafx.util.Pair;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.FenceBlock;
+import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.HorizontalFaceBlock;
+import net.minecraft.block.SixWayBlock;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.monster.CreeperEntity;
+import net.minecraft.tileentity.LockableLootTileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ISeedReader;
 import net.minecraft.world.gen.ChunkGenerator;
@@ -26,7 +33,7 @@ import java.util.Random;
 
 public class EnclosureFeature extends Feature<NoFeatureConfig> {
     private static final Direction[] horizontalDirections = new Direction[]{Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
-    private final boolean shouldCreateWoolMarkers = false; //debug feature, remove on actual release
+    private final boolean shouldCreateWoolMarkers = false; //TODO debug feature, remove on actual release
 
     public EnclosureFeature(Codec<NoFeatureConfig> featureConfigCodec) {
         super(featureConfigCodec);
@@ -36,42 +43,40 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
     public boolean generate(ISeedReader reader, ChunkGenerator generator, Random rand, BlockPos centerPos, NoFeatureConfig config) {
         int minY = centerPos.getY()-(4+rand.nextInt(2)); //the lowest y to use when making the pit
         centerPos = findSuitablePosition(reader, centerPos, minY, rand);
-        if (centerPos == null) return false;
-        //(These position arrays use the surface as their Y level - the air block above the ground)
-        ArrayList<BlockPos> holePositions = new ArrayList<>(); //the positions for the hole - i.e. which x and z values are to be cut out
-        ArrayList<BlockPos> edgePositions = new ArrayList<>(); //positions at the edge of the hole, where 'drop-offs' might be placed
-        //Adding the 'starting positions' - the center and its neighbours
-        holePositions.add(centerPos);
-        for (Direction dir : horizontalDirections) {
-            edgePositions.add(centerPos.offset(dir));
+        if (centerPos != null) {
+            //(These position arrays use the surface as their Y level - the air block above the ground)
+            ArrayList<BlockPos> holePositions = new ArrayList<>(); //Positions at the hole - i.e. which x and z values are to be cut out
+            ArrayList<BlockPos> edgePositions = new ArrayList<>(); //positions at the edge of the hole, where 'drop-offs' might be placed
+            ArrayList<BlockPos> outlinePositions; //Positions for fences to be placed on or the griefer to spawn
+            //Adding the 'starting positions' - the center and its neighbours
+            holePositions.add(centerPos);
+            for (Direction dir : horizontalDirections) {
+                edgePositions.add(centerPos.offset(dir));
+            }
+            for (int i = 0; i <= 5 + rand.nextInt(5); i++) { //Iterations randomised for variety
+                edgePositions = expandHole(edgePositions, holePositions, centerPos, reader, rand);
+            }
+            generateEdges(edgePositions, holePositions, reader, rand);
+            outlinePositions = findOutlines(edgePositions, holePositions, reader, rand);
+            generateHole(holePositions, minY, reader, rand);
+            ArrayList<BlockPos> clearOutlinePositions = generateFences(outlinePositions, reader, rand);
+            for (BlockPos outlinePos : outlinePositions) {
+                fixFenceConnections(reader, outlinePos);
+            }
+            if (!clearOutlinePositions.isEmpty()) {
+                GrieferEntity griefer = SREntities.GRIEFER.get().create(reader.getWorld());
+                if (griefer != null) {
+                    BlockPos grieferPos = clearOutlinePositions.get(rand.nextInt(clearOutlinePositions.size())).toMutable(); //put the griefer at a random location on the edge of the hole
+                    griefer.setLocationAndAngles(grieferPos.getX(), grieferPos.getY(), grieferPos.getZ(), 0, 0);
+                    griefer.onInitialSpawn(reader, reader.getDifficultyForLocation(grieferPos), SpawnReason.CHUNK_GENERATION, null, null);
+                    reader.addEntity(griefer);
+                }
+            }
+            //Placing the decoration structures
+            generateDecorations(getDecorationStarts(outlinePositions, edgePositions, holePositions, reader), reader, rand);
+            return true;
         }
-        for (int i = 0; i <= 5+rand.nextInt(5); i++) { //Iterations randomised for variety
-            edgePositions = expandHole(edgePositions, holePositions, centerPos, reader, rand);
-        }
-        //Positions for fences to be placed on or griefers to spawn on
-        edgePositions = updateAndGenerateEdges(edgePositions, holePositions, reader, rand);
-        ArrayList<BlockPos> outlinePositions = findOutlines(edgePositions, holePositions, reader, rand);
-        generateHole(holePositions, minY, reader, rand);
-        //New array set because generateFences removes positions from outlinePositions
-        ArrayList<BlockPos> nonFenceOutlines = generateFences(outlinePositions, reader, rand);
-        ArrayList<BlockPos> allPositions = new ArrayList<>();
-        allPositions.addAll(outlinePositions);
-        allPositions.addAll(edgePositions);
-        allPositions.addAll(holePositions);
-        for (BlockPos outlinePos : allPositions) {
-            reader.getBlockState(outlinePos).updateNeighbours(reader, outlinePos, 3); //fixes fence connections
-        }
-        GrieferEntity griefer = SREntities.GRIEFER.get().create(reader.getWorld());
-        if (griefer != null && !nonFenceOutlines.isEmpty()) {
-            BlockPos grieferPos = nonFenceOutlines.get(rand.nextInt(nonFenceOutlines.size())).toMutable(); //put the griefer at a random location on the edge of the hole
-            griefer.setLocationAndAngles(grieferPos.getX(), grieferPos.getY(), grieferPos.getZ(), 0, 0);
-            griefer.onInitialSpawn(reader, reader.getDifficultyForLocation(grieferPos), SpawnReason.CHUNK_GENERATION, null, null);
-            reader.addEntity(griefer);
-        }
-        //Placing the decorations (disabled because broken)
-        /*ArrayList<Pair<Direction, BlockPos>> potentialDecorationStarts = getDecorationStarts(edgePositions, allOutlinePositions, holePositions, reader);
-        generateDecorations(potentialDecorationStarts, reader, rand);*/
-        return true;
+        return false;
     }
 
     /**
@@ -167,24 +172,14 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
     /**
      * Generates the blocks at drop off positions, updating the edge positions with the failed drop offs
      * */
-    private ArrayList<BlockPos> updateAndGenerateEdges(ArrayList<BlockPos> edgePositions, ArrayList<BlockPos> holePositions, ISeedReader reader, Random rand) {
-        BlockPos.Mutable currentPos = new BlockPos.Mutable();
-        ArrayList<BlockPos> newEdgePositions = new ArrayList<>(edgePositions);
+    private void generateEdges(ArrayList<BlockPos> edgePositions, ArrayList<BlockPos> holePositions, ISeedReader reader, Random rand) {
         for (BlockPos edgePos : edgePositions) {
             if (rand.nextFloat() < 0.6f) { //Randomised to make the hole look a bit more natural
                 reader.setBlockState(edgePos.offset(Direction.DOWN), Blocks.AIR.getDefaultState(), 3);
-            } /*else { //doesn't seem to work very well, come back if necessary
-                newEdgePositions.remove(edgePos);
-                for (Direction dir : horizontalDirections) {
-                    currentPos.setPos(edgePos.offset(dir));
-                    if (holePositions.contains(currentPos.toMutable())) {
-                        holePositions.remove(currentPos);
-                        newEdgePositions.add(currentPos.toImmutable());
-                    }
-                }
-            }*/
+                reader.setBlockState(edgePos, Blocks.AIR.getDefaultState(), 3);
+                reader.setBlockState(edgePos.offset(Direction.UP), Blocks.AIR.getDefaultState(), 3);
+            }
         }
-        return newEdgePositions;
     }
 
     private ArrayList<BlockPos> findOutlines(ArrayList<BlockPos> edgePositions, ArrayList<BlockPos> holePositions, ISeedReader reader, Random rand) {
@@ -194,15 +189,15 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
             //The rotate y stuff is used to get diagonal neighbours, is there a better way?
             for (Direction dir : horizontalDirections) {
                 currentPos.setPos(edgePos.offset(dir));
-                if(!edgePositions.contains(currentPos) && !holePositions.contains(currentPos)) {
+                if(!edgePositions.contains(currentPos) && !holePositions.contains(currentPos) && !(reader.getBlockState(currentPos).isOpaqueCube(reader, currentPos))) {
                     outlinePositions.add(currentPos.toImmutable()); //Needs to be cloned
                 }
                 currentPos.setPos(currentPos.offset(dir.rotateY()));
-                if(!edgePositions.contains(currentPos) && !holePositions.contains(currentPos)) {
+                if(!edgePositions.contains(currentPos) && !holePositions.contains(currentPos) && !(reader.getBlockState(currentPos).isOpaqueCube(reader, currentPos))) {
                     outlinePositions.add(currentPos.toImmutable());
                 }
             }
-            if (shouldCreateWoolMarkers) reader.setBlockState(edgePos.offset(Direction.UP, 3), Blocks.RED_WOOL.getDefaultState(), 3); //test to show where posses are
+            if (shouldCreateWoolMarkers) reader.setBlockState(edgePos.offset(Direction.UP, 6), Blocks.RED_WOOL.getDefaultState(), 3); //test to show where posses are
         }
         return outlinePositions;
     }
@@ -212,10 +207,10 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
      * */
     private void generateHole(ArrayList<BlockPos> holePositions, int minY, ISeedReader reader, Random rand) {
         for (BlockPos holePos : holePositions) {
-            if (shouldCreateWoolMarkers) reader.setBlockState(holePos.offset(Direction.UP, 3), Blocks.LIGHT_BLUE_WOOL.getDefaultState(), 3); //test to show where posses are
+            if (shouldCreateWoolMarkers) reader.setBlockState(holePos.offset(Direction.UP, 5), Blocks.LIGHT_BLUE_WOOL.getDefaultState(), 3); //test to show where posses are
             BlockPos.Mutable currentPos = new BlockPos.Mutable();
             currentPos.setPos(holePos);
-            for(int i=minY; i<holePos.getY(); i++) { //holePos.getY() is the block 1 above the surface, so < is used
+            for(int i=minY; i<holePos.getY()+2; i++) { //holePos.getY() is the block 1 above the surface, so < is used
                 currentPos.setY(i);
                 if (i == minY) {
                     reader.setBlockState(currentPos, Blocks.COARSE_DIRT.getDefaultState(), 3);
@@ -243,24 +238,21 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
      * Takes in an arraylist of positions of the outline around the hole, and generates fences at them.
      * Returns the outlines excluding fence positions
      * */
-    //TODO way to stop fences from angling directly away from the hole? ideally solve problem when generating drop offs
     private ArrayList<BlockPos> generateFences(ArrayList<BlockPos> outlinePositions, ISeedReader reader, Random rand) {
-        BlockPos.Mutable currentPos = new BlockPos.Mutable();
-        BlockPos.Mutable potentialSecond = new BlockPos.Mutable();
+        BlockPos.Mutable secondFencePos = new BlockPos.Mutable();
         ArrayList<BlockPos> nonFenceOutlines = new ArrayList<>(outlinePositions);
         if (!nonFenceOutlines.isEmpty()) {
             for (BlockPos firstFencePos : outlinePositions) {
-                if (shouldCreateWoolMarkers) reader.setBlockState(firstFencePos.offset(Direction.UP, 3), Blocks.MAGENTA_WOOL.getDefaultState(), 3); //test to show where posses are
-                if (rand.nextFloat() < 0.2f) {
+                if (shouldCreateWoolMarkers) reader.setBlockState(firstFencePos.offset(Direction.UP, 7), Blocks.MAGENTA_WOOL.getDefaultState(), 3); //test to show where posses are
+                if (rand.nextFloat() < 0.25f) {
                     for (Direction dir : horizontalDirections) {
-                        currentPos.setPos(firstFencePos.offset(dir));
-                        if (nonFenceOutlines.contains(currentPos) && reader.getBlockState(currentPos.offset(Direction.DOWN)).isOpaqueCube(reader, currentPos.offset(Direction.DOWN))) {
-                            potentialSecond.setPos(currentPos);
+                        secondFencePos.setPos(firstFencePos.offset(dir));
+                        if (nonFenceOutlines.contains(secondFencePos) && reader.getBlockState(secondFencePos.offset(Direction.DOWN)).isOpaqueCube(reader, secondFencePos.offset(Direction.DOWN))) {
                             reader.setBlockState(firstFencePos, Blocks.SPRUCE_FENCE.getDefaultState(), 3);
-                            reader.setBlockState(currentPos, Blocks.SPRUCE_FENCE.getDefaultState(), 3);
+                            reader.setBlockState(secondFencePos, Blocks.SPRUCE_FENCE.getDefaultState(), 3);
                             //Removed so that the griefer doesn't spawn in a fence. Also prevents redundant placement.
                             nonFenceOutlines.remove(firstFencePos);
-                            nonFenceOutlines.remove(currentPos);
+                            nonFenceOutlines.remove(secondFencePos);
                             break;
                         }
                     }
@@ -271,39 +263,65 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
     }
 
     /**
+     * Fixes fence connections between the block at pos and its neighbors
+     * */
+    private void fixFenceConnections(ISeedReader reader, BlockPos pos) {
+        BlockState originalState = reader.getBlockState(pos);
+        if (originalState.getBlock() instanceof FenceBlock) {
+            BlockPos.Mutable neighborPos = new BlockPos.Mutable();
+            for (Direction dir : horizontalDirections) {
+                neighborPos.setPos(pos.offset(dir));
+                BlockState neighborState = reader.getBlockState(neighborPos);
+                if (neighborState.getBlock() instanceof FenceBlock) {
+                    originalState = originalState.with(SixWayBlock.FACING_TO_PROPERTY_MAP.get(dir), true);
+                    neighborState = neighborState.with(SixWayBlock.FACING_TO_PROPERTY_MAP.get(dir.getOpposite()), true);
+                    reader.setBlockState(pos, originalState, 3);
+                    reader.setBlockState(neighborPos.toImmutable(), neighborState, 3);
+                }
+            }
+        }
+    }
+
+    /**
      * Finds valid positions to place decorations from
      * */
-    //TODO work out a distance check to prevent intersection, also the fuck is going on with the direction?
-    private ArrayList<Pair<Direction, BlockPos>> getDecorationStarts(ArrayList<BlockPos> edgePositions, ArrayList<BlockPos> fencePositions, ArrayList<BlockPos> holePositions, ISeedReader reader) {
-        //collecting available decoration positions. might break
+    private ArrayList<Pair<Direction ,BlockPos>> getDecorationStarts(ArrayList<BlockPos> outlinePositions, ArrayList<BlockPos> edgePositions, ArrayList<BlockPos> holePositions, ISeedReader reader) {
         BlockPos.Mutable currentPos = new BlockPos.Mutable();
         ArrayList<Pair<Direction, BlockPos>> decorationStarts = new ArrayList<>();
-        for (BlockPos edgePos : edgePositions) {
-            for (Direction dir : horizontalDirections) { //checks area beyond the fence to see if it is empty
-                currentPos.setPos(edgePos.offset(dir, 4));
-                if (!fencePositions.contains(currentPos) && !edgePositions.contains(currentPos) && !holePositions.contains(currentPos)) {
-                    boolean isClear = true;
-                    //Directional offset might be buggy
-                    int minX = currentPos.offset(dir.rotateY(), 2).offset(dir.getOpposite()).getX();
-                    int minZ = currentPos.offset(dir.rotateY(), 2).offset(dir.getOpposite()).getZ();
-                    currentPos.setPos(currentPos.offset(dir, 4).offset(dir.rotateYCCW(), 2));
-                    int maxX = currentPos.getX();
-                    int maxZ = currentPos.getZ();
-                    for (int x = minX; x <= maxX && isClear; x++) {
-                        for (int z = minZ; z <= maxZ && isClear; z++) {
-                            for (int y = edgePos.getY() - 1; y <= edgePos.getY() + 1; y++) {
-                                currentPos.setPos(x, y, z);
-                                if (((y >= edgePos.getY()) == reader.getBlockState(currentPos).isOpaqueCube(reader, currentPos)) || fencePositions.contains(currentPos) || edgePositions.contains(currentPos) || holePositions.contains(currentPos)) {
+        for (BlockPos outlinePos : outlinePositions) {
+            for (Direction dir : horizontalDirections) {
+                currentPos.setPos(outlinePos.offset(dir));
+                if (!outlinePositions.contains(currentPos) && !edgePositions.contains(currentPos)) {
+                    currentPos.setPos(currentPos.offset(dir));
+                    if (isSurfacePositionClear(reader, currentPos) && !outlinePositions.contains(currentPos) && !edgePositions.contains(currentPos)) {
+                        BlockPos start = currentPos.toImmutable();
+                        boolean isClear = true;
+                        currentPos.setPos(start.offset(dir.rotateYCCW(),2));
+                        BlockPos.Mutable mainForwardPos = currentPos.toMutable();
+                        for (int i = 0; i < 5 && isClear; i++) {
+                            for (int j = 0; j < 5 && isClear; j++) {
+                                if (!isSurfacePositionClear(reader, currentPos) || reader.getBlockState(currentPos).isOpaqueCube(reader, currentPos) || outlinePositions.contains(currentPos) || edgePositions.contains(currentPos) || holePositions.contains(currentPos)) {
                                     isClear = false;
+                                } else {
+                                    BlockPos.Mutable checkingPos = new BlockPos.Mutable();
+                                    for (Direction subDir : horizontalDirections) {
+                                        checkingPos.setPos(currentPos.offset(subDir));
+                                        if (reader.getBlockState(checkingPos).isOpaqueCube(reader, checkingPos) || outlinePositions.contains(checkingPos) || edgePositions.contains(checkingPos) || holePositions.contains(checkingPos)) {
+                                            isClear = false;
+                                            break;
+                                        }
+                                    }
                                 }
+                                currentPos.setPos(currentPos.offset(dir.rotateY()));
                             }
+                            mainForwardPos.setPos(mainForwardPos.offset(dir));
+                            currentPos.setPos(mainForwardPos);
                         }
-                    }
-                    if (isClear) {
-                        currentPos.setPos(edgePos.offset(dir, 4));
-                        decorationStarts.add(new Pair<>(dir, currentPos));
-                        if (shouldCreateWoolMarkers)
-                            reader.setBlockState(currentPos.offset(Direction.UP, 4), Blocks.ORANGE_WOOL.getDefaultState(), 3); //test !
+                        if (isClear) {
+                            decorationStarts.add(new Pair<>(dir, start));
+                            if (shouldCreateWoolMarkers)
+                                reader.setBlockState(start.offset(Direction.UP, 8), Blocks.MAGENTA_GLAZED_TERRACOTTA.getDefaultState().with(HorizontalBlock.HORIZONTAL_FACING, dir.getOpposite()), 3); //test !
+                        }
                     }
                 }
             }
@@ -311,112 +329,166 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
         return decorationStarts;
     }
 
-
     /**
      * Chooses positions from a potential decoration positions list and generates decorations
      * */
-    //TODO make these actually place at the right positions in the array
     private void generateDecorations(ArrayList<Pair<Direction, BlockPos>> potentialStarts, ISeedReader reader, Random rand) {
         BlockPos.Mutable currentPos = new BlockPos.Mutable();
-        if (!potentialStarts.isEmpty()) {
-            for (int i = 0; i < 3; i++) {
-                Pair<Direction, BlockPos> positionInfo = potentialStarts.get((potentialStarts.size()/4)*(i+1)); //ideally makes the positions different enough
-                currentPos.setPos(positionInfo.getValue());
-                Direction dir = positionInfo.getKey();
-                BlockPos[][] decorationPositions = new BlockPos[5][5]; //first bracket for along, second for ahead
-                //Caching decoration locations to make it easier to set blockstates
+        int decorationIndex = 0;
+        BlockPos[] decorationCenters = new BlockPos[3];
+        while (decorationIndex < 3 && !potentialStarts.isEmpty()) {
+            Pair<Direction, BlockPos> positionInfo = potentialStarts.get(rand.nextInt(potentialStarts.size()));
+            currentPos.setPos(positionInfo.getValue());
+            Direction dir = positionInfo.getKey();
+            BlockPos[][] decorationPositions = new BlockPos[5][5]; //first bracket for along, second for ahead
+            //Caching decoration locations to make it easier to set blockstates
+            currentPos.setPos(currentPos.offset(dir.rotateYCCW(), 2));
+            BlockPos.Mutable mainForwardPos = currentPos.toMutable();
+            for (int i = 0; i < 5; i++) {
                 for (int j = 0; j < 5; j++) {
-                    for (int k = 0; k < 5; k++) {
-                        if (k<2) {
-                            decorationPositions[k][j] =  currentPos.offset(dir.rotateYCCW(), 2 - k);
-                        } else if (k==2) {
-                            decorationPositions[k][j] = currentPos;
-                        } else {
-                            decorationPositions[k][j] = currentPos.offset(dir.rotateY(), k - 2);
-                        }
-                        if (shouldCreateWoolMarkers) {
-                            reader.setBlockState(decorationPositions[k][j].offset(Direction.UP, 5), k==2 && j==0? Blocks.CYAN_WOOL.getDefaultState() : Blocks.BLUE_WOOL.getDefaultState(), 3); //test !
-                        }
+                    if (j == 2 && i == 2) {
+                        decorationCenters[decorationIndex] = currentPos.toImmutable();
                     }
-                    currentPos.setPos(currentPos.offset(dir));
+                    decorationPositions[j][i] = currentPos.toImmutable();
+                    if (shouldCreateWoolMarkers) {
+                        reader.setBlockState(decorationPositions[j][i].offset(Direction.UP, 9), j == 2 && i == 0 ? Blocks.MAGENTA_GLAZED_TERRACOTTA.getDefaultState().with(HorizontalBlock.HORIZONTAL_FACING, dir.getOpposite()) : Blocks.BLUE_WOOL.getDefaultState(), 3); //test !
+                    }
+                    currentPos.setPos(currentPos.offset(dir.rotateY()));
                 }
-                //Placing the decorations
-                if (i < 2) {
-                    switch (rand.nextInt(3)) {
-                        case 0:
-                            //big cage with spore bomb
-                            for (int j = 0; j < 6; j++) {
-                                if (j == 0 || j == 4) {
-                                    for (int k = 0; k < 5; k++) {
-                                        reader.setBlockState(decorationPositions[k][j], Blocks.OAK_FENCE.getDefaultState(), 3);
-                                        reader.setBlockState(decorationPositions[k][j].offset(Direction.UP), Blocks.OAK_FENCE.getDefaultState(), 3);
-                                        if (j == 4) {
-                                            reader.setBlockState(decorationPositions[2][j], Blocks.OAK_PLANKS.getDefaultState(), 3);
+                mainForwardPos.setPos(mainForwardPos.offset(dir));
+                currentPos.setPos(mainForwardPos);
+            }
+            //Placing the decorations
+            boolean doesNotIntersect = true;
+            if (decorationIndex > 0) {
+                currentPos.setPos(decorationCenters[decorationIndex]);
+                for (int i = 0; i < decorationIndex; i++) {
+                    if (Math.abs(currentPos.getX() - decorationCenters[i].getX()) <= 5 && Math.abs(currentPos.getZ() - decorationCenters[i].getZ()) <= 5) {
+                        doesNotIntersect = false;
+                        break;
+                    }
+                }
+            }
+            potentialStarts.remove(positionInfo);
+            if (doesNotIntersect) {
+                if (decorationIndex == 0) {
+                        switch (rand.nextInt(ModList.get().isLoaded("quark") ? 3 : 2)) { //Only uses creeper spore sack decoration if quark is loaeded
+                            case 0:
+                                //Crafting table decoration
+                                for (int i=0; i<=1; i++) {
+                                    for (int j=1; j<=2; j++) {
+                                        currentPos.setPos(decorationPositions[j][i]);
+                                        reader.setBlockState(currentPos, Blocks.CRAFTING_TABLE.getDefaultState(), 3);
+                                        currentPos.setPos(currentPos.offset(Direction.UP));
+                                        if(i==1 && j==2) {
+                                            reader.setBlockState(currentPos, Blocks.CHEST.getDefaultState().with(HorizontalBlock.HORIZONTAL_FACING, dir), 3);
+                                            LockableLootTileEntity.setLootTable(reader, rand, currentPos, new ResourceLocation(SavageAndRavage.MOD_ID, "chests/enclosure"));
+                                        } else {
+                                            reader.setBlockState(currentPos, Blocks.CRAFTING_TABLE.getDefaultState(), 3);
                                         }
                                     }
-                                } else if (j == 5) {
+                                }
+                                break;
+                            case 1:
+                                //Blast proof plates decoration
+                                for (int i=0; i<3; i++) {
+                                    if (i==0) {
+                                        BlockState stairsState = SRBlocks.BLAST_PROOF_STAIRS.get().getDefaultState().with(HorizontalBlock.HORIZONTAL_FACING, dir);
+                                        reader.setBlockState(decorationPositions[1][i], stairsState, 3);
+                                        reader.setBlockState(decorationPositions[2][i], stairsState, 3);
+                                        reader.setBlockState(decorationPositions[3][i], stairsState, 3);
+                                    } else if (i==1) {
+                                        reader.setBlockState(decorationPositions[1][i], SRBlocks.BLAST_PROOF_STAIRS.get().getDefaultState().with(HorizontalBlock.HORIZONTAL_FACING, dir.rotateY()), 3);
+                                        reader.setBlockState(decorationPositions[2][i], SRBlocks.BLAST_PROOF_PLATES.get().getDefaultState(), 3);
+                                        reader.setBlockState(decorationPositions[2][i].offset(Direction.UP), Blocks.CHEST.getDefaultState().with(HorizontalBlock.HORIZONTAL_FACING, dir), 3);
+                                        LockableLootTileEntity.setLootTable(reader, rand, decorationPositions[2][i].offset(Direction.UP), new ResourceLocation(SavageAndRavage.MOD_ID, "chests/enclosure"));
+                                        reader.setBlockState(decorationPositions[3][i], SRBlocks.BLAST_PROOF_STAIRS.get().getDefaultState().with(HorizontalBlock.HORIZONTAL_FACING, dir.rotateYCCW()), 3);
+                                    } else {
+                                        BlockState stairsState = SRBlocks.BLAST_PROOF_STAIRS.get().getDefaultState().with(HorizontalBlock.HORIZONTAL_FACING, dir.getOpposite());
+                                        reader.setBlockState(decorationPositions[1][i], stairsState, 3);
+                                        reader.setBlockState(decorationPositions[2][i], stairsState, 3);
+                                        reader.setBlockState(decorationPositions[3][i], stairsState, 3);
+                                    }
+                                }
+                                break;
+                            case 2:
+                                //Creeper spore sack decoration
+                                reader.setBlockState(decorationPositions[2][0], SRBlocks.CREEPER_SPORE_SACK.get().getDefaultState(), 3);
+                                reader.setBlockState(decorationPositions[3][0], Blocks.CHEST.getDefaultState().with(HorizontalBlock.HORIZONTAL_FACING, dir), 3);
+                                LockableLootTileEntity.setLootTable(reader, rand, decorationPositions[3][0], new ResourceLocation(SavageAndRavage.MOD_ID, "chests/enclosure"));
+                        }
+                    } else {
+                        switch (rand.nextInt(3)) {
+                            case 0:
+                                //big cage with spore bomb
+                                for (int i = 0; i < 6; i++) {
+                                    if (i == 0 || i == 4) {
+                                        for (int j = 0; j < 5; j++) {
+                                            reader.setBlockState(decorationPositions[j][i], Blocks.OAK_FENCE.getDefaultState(), 3);
+                                            reader.setBlockState(decorationPositions[j][i].offset(Direction.UP), Blocks.OAK_FENCE.getDefaultState(), 3);
+                                            if (i == 4) {
+                                                reader.setBlockState(decorationPositions[2][i], Blocks.OAK_PLANKS.getDefaultState(), 3);
+                                            }
+                                        }
+                                    } else if (i == 5) {
                                         reader.setBlockState(decorationPositions[2][4].offset(dir), Blocks.OAK_BUTTON.getDefaultState().with(HorizontalFaceBlock.HORIZONTAL_FACING, dir), 3);
-                                } else {
-                                    reader.setBlockState(decorationPositions[0][j], Blocks.OAK_FENCE.getDefaultState(), 3);
-                                    reader.setBlockState(decorationPositions[0][j].offset(Direction.UP), Blocks.OAK_FENCE.getDefaultState(), 3);
-                                    reader.setBlockState(decorationPositions[4][j], Blocks.OAK_FENCE.getDefaultState(), 3);
-                                    reader.setBlockState(decorationPositions[4][j].offset(Direction.UP), Blocks.OAK_FENCE.getDefaultState(), 3);
-                                    if (j == 3) {
-                                        reader.setBlockState(decorationPositions[2][j], SRBlocks.SPORE_BOMB.get().getDefaultState(), 3);
+                                    } else {
+                                        reader.setBlockState(decorationPositions[0][i], Blocks.OAK_FENCE.getDefaultState(), 3);
+                                        reader.setBlockState(decorationPositions[0][i].offset(Direction.UP), Blocks.OAK_FENCE.getDefaultState(), 3);
+                                        reader.setBlockState(decorationPositions[4][i], Blocks.OAK_FENCE.getDefaultState(), 3);
+                                        reader.setBlockState(decorationPositions[4][i].offset(Direction.UP), Blocks.OAK_FENCE.getDefaultState(), 3);
+                                        if (i == 3) {
+                                            reader.setBlockState(decorationPositions[2][i], SRBlocks.SPORE_BOMB.get().getDefaultState(), 3);
+                                        }
                                     }
                                 }
-                            }
-                            break;
-                        case 1:
-                            //medium cage;
-                            for (int j = 0; j < 4; j++) {
-                                if (j > 0 && j < 3) {
-                                    reader.setBlockState(decorationPositions[1][j], Blocks.OAK_FENCE.getDefaultState(), 3);
-                                    reader.setBlockState(decorationPositions[1][j].offset(Direction.UP), Blocks.OAK_FENCE.getDefaultState(), 3);
-                                    reader.setBlockState(decorationPositions[4][j], Blocks.OAK_FENCE.getDefaultState(), 3);
-                                    reader.setBlockState(decorationPositions[4][j].offset(Direction.UP), Blocks.OAK_FENCE.getDefaultState(), 3);
-                                    CreeperEntity creeper = EntityType.CREEPER.create(reader.getWorld());
-                                    if (creeper != null) {
-                                        currentPos.setPos(decorationPositions[2 + rand.nextInt(2)][j]);
-                                        creeper.setLocationAndAngles(currentPos.getX(), currentPos.getY(), currentPos.getZ(), 0, 0);
-                                        creeper.onInitialSpawn(reader, reader.getDifficultyForLocation(currentPos), SpawnReason.CHUNK_GENERATION, null, null);
-                                        reader.addEntity(creeper);
-                                    }
-                                } else {
-                                    for (int k = 1; k < 5; k++) {
-                                        reader.setBlockState(decorationPositions[k][j], Blocks.OAK_FENCE.getDefaultState(), 3);
-                                        reader.setBlockState(decorationPositions[k][j].offset(Direction.UP), Blocks.OAK_FENCE.getDefaultState(), 3);
-                                    }
-                                }
-                            }
-                            break;
-                        case 2:
-                            for (int j = 0; j < 3; j++) {
-                                if (j == 1) {
-                                    reader.setBlockState(decorationPositions[1][j], Blocks.OAK_FENCE.getDefaultState(), 3);
-                                    reader.setBlockState(decorationPositions[1][j].offset(Direction.UP), Blocks.OAK_FENCE.getDefaultState(), 3);
-                                    reader.setBlockState(decorationPositions[3][j], Blocks.OAK_FENCE.getDefaultState(), 3);
-                                    reader.setBlockState(decorationPositions[3][j].offset(Direction.UP), Blocks.OAK_FENCE.getDefaultState(), 3);
-                                } else {
-                                    for (int k = 1; k < 4; k++) {
-                                        reader.setBlockState(decorationPositions[k][j], Blocks.OAK_FENCE.getDefaultState(), 3);
-                                        reader.setBlockState(decorationPositions[k][j].offset(Direction.UP), Blocks.OAK_FENCE.getDefaultState(), 3);
+                                break;
+                            case 1:
+                                //medium cage;
+                                for (int i = 0; i < 4; i++) {
+                                    if (i > 0 && i < 3) {
+                                        reader.setBlockState(decorationPositions[1][i], Blocks.OAK_FENCE.getDefaultState(), 3);
+                                        reader.setBlockState(decorationPositions[1][i].offset(Direction.UP), Blocks.OAK_FENCE.getDefaultState(), 3);
+                                        reader.setBlockState(decorationPositions[4][i], Blocks.OAK_FENCE.getDefaultState(), 3);
+                                        reader.setBlockState(decorationPositions[4][i].offset(Direction.UP), Blocks.OAK_FENCE.getDefaultState(), 3);
+                                        CreeperEntity creeper = EntityType.CREEPER.create(reader.getWorld());
+                                        if (creeper != null) {
+                                            currentPos.setPos(decorationPositions[2 + rand.nextInt(2)][i]);
+                                            creeper.setLocationAndAngles(currentPos.getX(), currentPos.getY(), currentPos.getZ(), 0, 0);
+                                            creeper.onInitialSpawn(reader, reader.getDifficultyForLocation(currentPos), SpawnReason.CHUNK_GENERATION, null, null);
+                                            reader.addEntity(creeper);
+                                        }
+                                    } else {
+                                        for (int j = 1; j < 5; j++) {
+                                            reader.setBlockState(decorationPositions[j][i], Blocks.OAK_FENCE.getDefaultState(), 3);
+                                            reader.setBlockState(decorationPositions[j][i].offset(Direction.UP), Blocks.OAK_FENCE.getDefaultState(), 3);
+                                        }
                                     }
                                 }
-                            }
-                    }
-                } else {
-                    switch (rand.nextInt(ModList.get().isLoaded("quark") ? 3 : 2)) { //Only uses creeper spore sack decoration if quark is loaeded
-                        case 0:
-                            //crafting tables
-                            break;
-                        case 1:
-                            //blast proof plates
-                            break;
-                        case 2:
-                            //creeper spore sack
-
-                    }
+                                break;
+                            case 2:
+                                //small cage
+                                for (int i = 0; i < 3; i++) {
+                                    if (i == 1) {
+                                        reader.setBlockState(decorationPositions[1][i], Blocks.OAK_FENCE.getDefaultState(), 3);
+                                        reader.setBlockState(decorationPositions[1][i].offset(Direction.UP), Blocks.OAK_FENCE.getDefaultState(), 3);
+                                        reader.setBlockState(decorationPositions[3][i], Blocks.OAK_FENCE.getDefaultState(), 3);
+                                        reader.setBlockState(decorationPositions[3][i].offset(Direction.UP), Blocks.OAK_FENCE.getDefaultState(), 3);
+                                        CreeperEntity creeper = EntityType.CREEPER.create(reader.getWorld());
+                                        if (creeper != null) {
+                                            currentPos.setPos(decorationPositions[2][i]);
+                                            creeper.setLocationAndAngles(currentPos.getX(), currentPos.getY(), currentPos.getZ(), 0, 0);
+                                            creeper.onInitialSpawn(reader, reader.getDifficultyForLocation(currentPos), SpawnReason.CHUNK_GENERATION, null, null);
+                                            reader.addEntity(creeper);
+                                        }
+                                    } else {
+                                        for (int j = 1; j < 4; j++) {
+                                            reader.setBlockState(decorationPositions[j][i], Blocks.OAK_FENCE.getDefaultState(), 3);
+                                            reader.setBlockState(decorationPositions[j][i].offset(Direction.UP), Blocks.OAK_FENCE.getDefaultState(), 3);
+                                        }
+                                    }
+                                }
+                        }
                 }
                 for (BlockPos[] positions : decorationPositions) {
                     for (BlockPos position : positions) {
@@ -424,6 +496,7 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
                         reader.getBlockState(position.offset(Direction.UP)).updateNeighbours(reader, position.offset(Direction.UP), 3); //fixes fence connections
                     }
                 }
+                decorationIndex++;
             }
         }
     }
