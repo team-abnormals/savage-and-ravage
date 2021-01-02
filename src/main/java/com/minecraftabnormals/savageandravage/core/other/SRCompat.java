@@ -1,5 +1,6 @@
 package com.minecraftabnormals.savageandravage.core.other;
 
+import com.minecraftabnormals.abnormals_core.core.util.BlockUtil;
 import com.minecraftabnormals.abnormals_core.core.util.DataUtil;
 import com.minecraftabnormals.savageandravage.common.entity.BurningBannerEntity;
 import com.minecraftabnormals.savageandravage.common.entity.MischiefArrowEntity;
@@ -7,19 +8,21 @@ import com.minecraftabnormals.savageandravage.common.entity.SporeCloudEntity;
 import com.minecraftabnormals.savageandravage.common.entity.block.SporeBombEntity;
 import com.minecraftabnormals.savageandravage.core.registry.SRBlocks;
 import com.minecraftabnormals.savageandravage.core.registry.SRItems;
-import net.minecraft.block.DirectionalBlock;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.dispenser.IPosition;
 import net.minecraft.dispenser.ProjectileDispenseBehavior;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.BannerItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -58,13 +61,12 @@ public class SRCompat {
 				return stack;
 			}
 		});
-		ForgeRegistries.ITEMS.getEntries().stream().map(Map.Entry::getValue).filter(i -> i instanceof BannerItem).forEach(i -> DataUtil.registerAlternativeDispenseBehavior(i, ArmorItem::func_226626_a_, ArmorItem.DISPENSER_BEHAVIOR));
-		DataUtil.registerAlternativeDispenseBehavior(Items.FLINT_AND_STEEL, (source, stack) -> SREvents.isValidBurningBannerPos(source.getWorld(), source.getBlockPos().offset(source.getBlockState().get(DirectionalBlock.FACING))), new DefaultDispenseItemBehavior() {
+		ForgeRegistries.ITEMS.getEntries().stream().map(Map.Entry::getValue).filter(i -> i instanceof BannerItem).forEach(i -> DataUtil.registerAlternativeDispenseBehavior(i, (source, stack) -> !source.getWorld().getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(BlockUtil.offsetPos(source)), EntityPredicates.NOT_SPECTATING.and(new EntityPredicates.ArmoredMob(stack))).isEmpty(), ArmorItem.DISPENSER_BEHAVIOR));
+		DataUtil.registerAlternativeDispenseBehavior(Items.FLINT_AND_STEEL, (source, stack) -> SREvents.isValidBurningBannerPos(source.getWorld(), BlockUtil.offsetPos(source)), new DefaultDispenseItemBehavior() {
 			@Override
 			protected ItemStack dispenseStack(IBlockSource source, ItemStack stack) {
 				World world = source.getWorld();
-				BlockPos blockpos = source.getBlockPos().offset(source.getBlockState().get(DispenserBlock.FACING));
-				world.addEntity(new BurningBannerEntity(world, blockpos, null));
+				world.addEntity(new BurningBannerEntity(world, BlockUtil.offsetPos(source), null));
 				if (stack.attemptDamageItem(1, world.rand, null)) {
 					stack.setCount(0);
 				}

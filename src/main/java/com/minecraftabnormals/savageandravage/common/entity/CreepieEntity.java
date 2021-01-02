@@ -20,7 +20,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -35,7 +34,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -90,7 +88,6 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
 			@Override
 			public boolean shouldExecute() {
 				return super.shouldExecute() && ((CreepieEntity) goalOwner).getOwnerId() == null;
-
 			}
 		});
 	}
@@ -496,11 +493,6 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
 			return owner.isOnSameTeam(entityIn);
 
 		return super.isOnSameTeam(entityIn);
-	}
-
-	@Override
-	public IPacket<?> createSpawnPacket() {
-		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 
 	@Override
