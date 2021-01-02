@@ -32,10 +32,8 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
         super(featureConfigCodec);
     }
 
-    //Should be split into methods, but the weird chunk out of bounds problem prevents that
     @Override
     public boolean generate(ISeedReader reader, ChunkGenerator generator, Random rand, BlockPos centerPos, NoFeatureConfig config) {
-        //Randomising the centre position for variety
         int minY = centerPos.getY()-(4+rand.nextInt(2)); //the lowest y to use when making the pit
         centerPos = findSuitablePosition(reader, centerPos, minY, rand);
         if (centerPos == null) return false;
@@ -51,11 +49,16 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
             edgePositions = expandHole(edgePositions, holePositions, centerPos, reader, rand);
         }
         //Positions for fences to be placed on or griefers to spawn on
-        ArrayList<BlockPos> outlinePositions = processEdges(edgePositions, holePositions, reader, rand);
+        edgePositions = updateAndGenerateEdges(edgePositions, holePositions, reader, rand);
+        ArrayList<BlockPos> outlinePositions = findOutlines(edgePositions, holePositions, reader, rand);
         generateHole(holePositions, minY, reader, rand);
         //New array set because generateFences removes positions from outlinePositions
         ArrayList<BlockPos> nonFenceOutlines = generateFences(outlinePositions, reader, rand);
-        for (BlockPos outlinePos : outlinePositions) {
+        ArrayList<BlockPos> allPositions = new ArrayList<>();
+        allPositions.addAll(outlinePositions);
+        allPositions.addAll(edgePositions);
+        allPositions.addAll(holePositions);
+        for (BlockPos outlinePos : allPositions) {
             reader.getBlockState(outlinePos).updateNeighbours(reader, outlinePos, 3); //fixes fence connections
         }
         GrieferEntity griefer = SREntities.GRIEFER.get().create(reader.getWorld());
@@ -131,7 +134,7 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
                     if (!holePositions.contains(currentPos)) {
                         if (!edgePositions.contains(currentPos)) {
                             if(isSurfacePositionClear(reader, currentPos)) {
-                                validPotentialPositions.add(currentPos.toMutable());
+                                validPotentialPositions.add(currentPos.toImmutable());
                             } else {
                                 isNothingBlocking = false;
                                 break;
@@ -162,9 +165,29 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
     }
 
     /**
-     * Generates the blocks at drop off positions and places their outlines into an array which is returned
+     * Generates the blocks at drop off positions, updating the edge positions with the failed drop offs
      * */
-    private ArrayList<BlockPos> processEdges(ArrayList<BlockPos> edgePositions, ArrayList<BlockPos> holePositions, ISeedReader reader, Random rand) {
+    private ArrayList<BlockPos> updateAndGenerateEdges(ArrayList<BlockPos> edgePositions, ArrayList<BlockPos> holePositions, ISeedReader reader, Random rand) {
+        BlockPos.Mutable currentPos = new BlockPos.Mutable();
+        ArrayList<BlockPos> newEdgePositions = new ArrayList<>(edgePositions);
+        for (BlockPos edgePos : edgePositions) {
+            if (rand.nextFloat() < 0.6f) { //Randomised to make the hole look a bit more natural
+                reader.setBlockState(edgePos.offset(Direction.DOWN), Blocks.AIR.getDefaultState(), 3);
+            } /*else { //doesn't seem to work very well, come back if necessary
+                newEdgePositions.remove(edgePos);
+                for (Direction dir : horizontalDirections) {
+                    currentPos.setPos(edgePos.offset(dir));
+                    if (holePositions.contains(currentPos.toMutable())) {
+                        holePositions.remove(currentPos);
+                        newEdgePositions.add(currentPos.toImmutable());
+                    }
+                }
+            }*/
+        }
+        return newEdgePositions;
+    }
+
+    private ArrayList<BlockPos> findOutlines(ArrayList<BlockPos> edgePositions, ArrayList<BlockPos> holePositions, ISeedReader reader, Random rand) {
         BlockPos.Mutable currentPos = new BlockPos.Mutable();
         ArrayList<BlockPos> outlinePositions = new ArrayList<>();
         for (BlockPos edgePos : edgePositions) {
@@ -178,9 +201,6 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
                 if(!edgePositions.contains(currentPos) && !holePositions.contains(currentPos)) {
                     outlinePositions.add(currentPos.toImmutable());
                 }
-            }
-            if(rand.nextFloat()<0.6f) { //Randomised to make the hole look a bit more natural
-                reader.setBlockState(edgePos.offset(Direction.DOWN), Blocks.AIR.getDefaultState(), 3);
             }
             if (shouldCreateWoolMarkers) reader.setBlockState(edgePos.offset(Direction.UP, 3), Blocks.RED_WOOL.getDefaultState(), 3); //test to show where posses are
         }
@@ -223,8 +243,10 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
      * Takes in an arraylist of positions of the outline around the hole, and generates fences at them.
      * Returns the outlines excluding fence positions
      * */
+    //TODO way to stop fences from angling directly away from the hole? ideally solve problem when generating drop offs
     private ArrayList<BlockPos> generateFences(ArrayList<BlockPos> outlinePositions, ISeedReader reader, Random rand) {
         BlockPos.Mutable currentPos = new BlockPos.Mutable();
+        BlockPos.Mutable potentialSecond = new BlockPos.Mutable();
         ArrayList<BlockPos> nonFenceOutlines = new ArrayList<>(outlinePositions);
         if (!nonFenceOutlines.isEmpty()) {
             for (BlockPos firstFencePos : outlinePositions) {
@@ -233,6 +255,7 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
                     for (Direction dir : horizontalDirections) {
                         currentPos.setPos(firstFencePos.offset(dir));
                         if (nonFenceOutlines.contains(currentPos) && reader.getBlockState(currentPos.offset(Direction.DOWN)).isOpaqueCube(reader, currentPos.offset(Direction.DOWN))) {
+                            potentialSecond.setPos(currentPos);
                             reader.setBlockState(firstFencePos, Blocks.SPRUCE_FENCE.getDefaultState(), 3);
                             reader.setBlockState(currentPos, Blocks.SPRUCE_FENCE.getDefaultState(), 3);
                             //Removed so that the griefer doesn't spawn in a fence. Also prevents redundant placement.
