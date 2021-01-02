@@ -35,15 +35,6 @@ public class MischiefArrowEntity extends AbstractArrowEntity {
 		super(SREntities.MISCHIEF_ARROW.get(), shooter, worldIn);
 	}
 
-	private void setOwner(CreepieEntity creepie) {
-		Entity owner = this.func_234616_v_();
-		if (owner == null)
-			return;
-
-		if (!(owner instanceof LivingEntity) || ((LivingEntity) owner).isPotionActive(Effects.INVISIBILITY))
-			creepie.setOwnerId(owner.getUniqueID());
-	}
-
 	@Override
 	protected void func_230299_a_(BlockRayTraceResult result) {
 		super.func_230299_a_(result);
@@ -52,7 +43,12 @@ public class MischiefArrowEntity extends AbstractArrowEntity {
 
 			CreepieEntity creepie = SREntities.CREEPIE.get().create(world);
 			creepie.setLocationAndAngles(this.getPosX(), this.getPosY(), this.getPosZ(), 0.0F, 0.0F);
-			this.setOwner(creepie);
+
+			Entity thrower = this.func_234616_v_();
+			if (thrower instanceof LivingEntity) {
+				if (!((LivingEntity) thrower).isPotionActive(Effects.INVISIBILITY))
+					creepie.setOwnerId(thrower.getUniqueID());
+			}
 
 			this.world.addEntity(creepie);
 			this.finished = true;
@@ -68,7 +64,12 @@ public class MischiefArrowEntity extends AbstractArrowEntity {
 				return;
 
 			creepie.setLocationAndAngles(this.getPosX(), this.getPosY(), this.getPosZ(), 0.0F, 0.0F);
-			this.setOwner(creepie);
+
+			Entity thrower = this.func_234616_v_();
+			if (thrower instanceof LivingEntity) {
+				if (!((LivingEntity) thrower).isPotionActive(Effects.INVISIBILITY))
+					creepie.setOwnerId(thrower.getUniqueID());
+			}
 
 			if (result.getEntity() instanceof LivingEntity) {
 				creepie.setAttackTarget((LivingEntity) result.getEntity());

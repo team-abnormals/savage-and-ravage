@@ -34,8 +34,7 @@ public class SRItems {
 	public static final RegistryObject<AbnormalsSpawnEggItem> EXECUTIONER_SPAWN_EGG = HELPER.createSpawnEggItem("executioner", SREntities.EXECUTIONER::get, 0x8E9393, 0x6F484C);
 
 	public static void registerItemProperties() {
-		// Shouldn't these be under your mod id? - Ocelot
-		ItemModelsProperties.registerProperty(Items.CROSSBOW, new ResourceLocation("mischief_arrow"), (stack, world, entity) -> entity != null && CrossbowItem.isCharged(stack) && CrossbowItem.hasChargedProjectile(stack, SRItems.MISCHIEF_ARROW.get()) ? 1.0F : 0.0F);
-		ItemModelsProperties.registerProperty(Items.CROSSBOW, new ResourceLocation("spectral_arrow"), (stack, world, entity) -> entity != null && CrossbowItem.isCharged(stack) && CrossbowItem.hasChargedProjectile(stack, Items.SPECTRAL_ARROW) ? 1.0F : 0.0F);
+		ItemModelsProperties.registerProperty(Items.CROSSBOW, new ResourceLocation(SavageAndRavage.MOD_ID, "mischief_arrow"), (stack, world, entity) -> entity != null && CrossbowItem.isCharged(stack) && CrossbowItem.hasChargedProjectile(stack, SRItems.MISCHIEF_ARROW.get()) ? 1.0F : 0.0F);
+		ItemModelsProperties.registerProperty(Items.CROSSBOW, new ResourceLocation(SavageAndRavage.MOD_ID, "spectral_arrow"), (stack, world, entity) -> entity != null && CrossbowItem.isCharged(stack) && CrossbowItem.hasChargedProjectile(stack, Items.SPECTRAL_ARROW) ? 1.0F : 0.0F);
 	}
 }
