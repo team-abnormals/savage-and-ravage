@@ -33,6 +33,7 @@ import java.util.Random;
 
 public class EnclosureFeature extends Feature<NoFeatureConfig> {
     private static final Direction[] horizontalDirections = new Direction[]{Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
+    private BlockPos originalStartPos;
 
     public EnclosureFeature(Codec<NoFeatureConfig> featureConfigCodec) {
         super(featureConfigCodec);
@@ -41,6 +42,7 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
     @Override
     public boolean generate(ISeedReader reader, ChunkGenerator generator, Random rand, BlockPos centerPos, NoFeatureConfig config) {
         int minY = centerPos.getY()-(4+rand.nextInt(2)); //the lowest y to use when making the pit
+        originalStartPos = centerPos;
         centerPos = findSuitablePosition(reader, centerPos, minY, rand);
         if (centerPos != null) {
             //(These position arrays use the surface as their Y level - the air block above the ground)
@@ -96,7 +98,7 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
                             but true for underground positions (where y>=centerPos.getY() is false), so this has the effect
                             of checking that the area is 'clear'
                             */
-                            if ((y >= centerPos.getY()) == reader.getBlockState(pos).isOpaqueCube(reader, pos)) {
+                            if (((y >= centerPos.getY()) == reader.getBlockState(pos).isOpaqueCube(reader, pos)) || Math.abs(originalStartPos.getX()-pos.getX()) > 11 || Math.abs(originalStartPos.getZ()-pos.getZ()) > 11) {
                                 areaClear = false;
                             }
                         }
@@ -115,8 +117,13 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
      * Like isAreaClear, but it only checks one position and two y levels - ground and the block above
      * */
     private boolean isSurfacePositionClear(ISeedReader reader, BlockPos pos) {
-        if (!(reader.getBlockState(pos).isOpaqueCube(reader, pos))) {
-            return reader.getBlockState(pos.offset(Direction.DOWN)).isOpaqueCube(reader, pos.offset(Direction.DOWN));
+        /*This is a quick fix to stop decorations from intersecting outposts. It's not ideal as it restricts decoration positions
+        decoration positions in certain directions where they shouldn't be restricted. If enclosure placement could be
+        deferred until the other jigsaw blocks are placed, this would be obsolete.*/
+        if(Math.abs(originalStartPos.getX()-pos.getX()) < 12 && Math.abs(originalStartPos.getZ()-pos.getZ()) < 12) {
+            if (!(reader.getBlockState(pos).isOpaqueCube(reader, pos))) {
+                return reader.getBlockState(pos.offset(Direction.DOWN)).isOpaqueCube(reader, pos.offset(Direction.DOWN));
+            }
         }
         return false;
     }
@@ -301,7 +308,7 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
                                 BlockPos.Mutable mainForwardPos = currentPos.toMutable();
                                 for (int i = 0; i < 5 && isClear; i++) {
                                     for (int j = 0; j < 5 && isClear; j++) {
-                                        if (!isSurfacePositionClear(reader, currentPos) || reader.getBlockState(currentPos).isOpaqueCube(reader, currentPos)) {
+                                        if (!isSurfacePositionClear(reader, currentPos)) {
                                             isClear = false;
                                         } else if (outlinePositions.contains(currentPos) || edgePositions.contains(currentPos) || holePositions.contains(currentPos)) {
                                             isClear = false;
