@@ -292,35 +292,49 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
             for (Direction dir : horizontalDirections) {
                 currentPos.setPos(outlinePos.offset(dir));
                 if (!outlinePositions.contains(currentPos) && !edgePositions.contains(currentPos)) {
-                    currentPos.setPos(currentPos.offset(dir));
-                    if (isSurfacePositionClear(reader, currentPos) && !outlinePositions.contains(currentPos) && !edgePositions.contains(currentPos)) {
-                        BlockPos start = currentPos.toImmutable();
-                        boolean isClear = true;
-                        currentPos.setPos(start.offset(dir.rotateYCCW(),2));
-                        BlockPos.Mutable mainForwardPos = currentPos.toMutable();
-                        for (int i = 0; i < 5 && isClear; i++) {
-                            for (int j = 0; j < 5 && isClear; j++) {
-                                if (!isSurfacePositionClear(reader, currentPos) || reader.getBlockState(currentPos).isOpaqueCube(reader, currentPos) || outlinePositions.contains(currentPos) || edgePositions.contains(currentPos) || holePositions.contains(currentPos)) {
-                                    isClear = false;
-                                } else {
-                                    BlockPos.Mutable checkingPos = new BlockPos.Mutable();
-                                    for (Direction subDir : horizontalDirections) {
-                                        checkingPos.setPos(currentPos.offset(subDir));
-                                        if (reader.getBlockState(checkingPos).isOpaqueCube(reader, checkingPos) || outlinePositions.contains(checkingPos) || edgePositions.contains(checkingPos) || holePositions.contains(checkingPos)) {
+                    //tries to allow positions at the diagonal sides of holes by trying again if the position arrays contain a thing
+                    for(int attempts=0; attempts<4; attempts++) {
+                        currentPos.setPos(currentPos.offset(dir));
+                        if (!outlinePositions.contains(currentPos) && !edgePositions.contains(currentPos)) {
+                            if (isSurfacePositionClear(reader, currentPos)) {
+                                boolean shouldTryAgain = false;
+                                BlockPos start = currentPos.toImmutable();
+                                boolean isClear = true;
+                                currentPos.setPos(start.offset(dir.rotateYCCW(), 2));
+                                BlockPos.Mutable mainForwardPos = currentPos.toMutable();
+                                for (int i = 0; i < 5 && isClear; i++) {
+                                    for (int j = 0; j < 5 && isClear; j++) {
+                                        if (!isSurfacePositionClear(reader, currentPos) || reader.getBlockState(currentPos).isOpaqueCube(reader, currentPos)) {
                                             isClear = false;
-                                            break;
+                                        } else if (outlinePositions.contains(currentPos) || edgePositions.contains(currentPos) || holePositions.contains(currentPos)) {
+                                            isClear = false;
+                                            shouldTryAgain = true;
+                                        } else {
+                                            BlockPos.Mutable checkingPos = new BlockPos.Mutable();
+                                            for (Direction subDir : horizontalDirections) {
+                                                checkingPos.setPos(currentPos.offset(subDir));
+                                                if (reader.getBlockState(checkingPos).isOpaqueCube(reader, checkingPos)) {
+                                                    isClear = false;
+                                                    break;
+                                                } else if (outlinePositions.contains(checkingPos) || edgePositions.contains(checkingPos) || holePositions.contains(checkingPos)) {
+                                                    isClear = false;
+                                                    shouldTryAgain = true;
+                                                    break;
+                                                }
+                                            }
                                         }
+                                        currentPos.setPos(currentPos.offset(dir.rotateY()));
                                     }
+                                    mainForwardPos.setPos(mainForwardPos.offset(dir));
+                                    currentPos.setPos(mainForwardPos);
                                 }
-                                currentPos.setPos(currentPos.offset(dir.rotateY()));
+                                if (isClear) {
+                                    decorationStarts.add(new Pair<>(dir, start));
+                                    if (shouldCreateWoolMarkers)
+                                        reader.setBlockState(start.offset(Direction.UP, 8), Blocks.MAGENTA_GLAZED_TERRACOTTA.getDefaultState().with(HorizontalBlock.HORIZONTAL_FACING, dir.getOpposite()), 3); //test !
+                                }
+                                if (!shouldTryAgain) break;
                             }
-                            mainForwardPos.setPos(mainForwardPos.offset(dir));
-                            currentPos.setPos(mainForwardPos);
-                        }
-                        if (isClear) {
-                            decorationStarts.add(new Pair<>(dir, start));
-                            if (shouldCreateWoolMarkers)
-                                reader.setBlockState(start.offset(Direction.UP, 8), Blocks.MAGENTA_GLAZED_TERRACOTTA.getDefaultState().with(HorizontalBlock.HORIZONTAL_FACING, dir.getOpposite()), 3); //test !
                         }
                     }
                 }
