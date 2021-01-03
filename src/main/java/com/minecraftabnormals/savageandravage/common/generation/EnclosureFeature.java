@@ -33,7 +33,6 @@ import java.util.Random;
 
 public class EnclosureFeature extends Feature<NoFeatureConfig> {
     private static final Direction[] horizontalDirections = new Direction[]{Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
-    private final boolean shouldCreateWoolMarkers = false; //TODO debug feature, remove on actual release
 
     public EnclosureFeature(Codec<NoFeatureConfig> featureConfigCodec) {
         super(featureConfigCodec);
@@ -56,8 +55,8 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
             for (int i = 0; i <= 5 + rand.nextInt(5); i++) { //Iterations randomised for variety
                 edgePositions = expandHole(edgePositions, holePositions, centerPos, reader, rand);
             }
-            generateEdges(edgePositions, holePositions, reader, rand);
-            outlinePositions = findOutlines(edgePositions, holePositions, reader, rand);
+            generateEdges(edgePositions, reader, rand);
+            outlinePositions = findOutlines(edgePositions, holePositions, reader);
             generateHole(holePositions, minY, reader, rand);
             ArrayList<BlockPos> clearOutlinePositions = generateFences(outlinePositions, reader, rand);
             for (BlockPos outlinePos : outlinePositions) {
@@ -172,7 +171,7 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
     /**
      * Generates the blocks at drop off positions, updating the edge positions with the failed drop offs
      * */
-    private void generateEdges(ArrayList<BlockPos> edgePositions, ArrayList<BlockPos> holePositions, ISeedReader reader, Random rand) {
+    private void generateEdges(ArrayList<BlockPos> edgePositions, ISeedReader reader, Random rand) {
         for (BlockPos edgePos : edgePositions) {
             if (rand.nextFloat() < 0.6f) { //Randomised to make the hole look a bit more natural
                 reader.setBlockState(edgePos.offset(Direction.DOWN), Blocks.AIR.getDefaultState(), 3);
@@ -182,7 +181,8 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
         }
     }
 
-    private ArrayList<BlockPos> findOutlines(ArrayList<BlockPos> edgePositions, ArrayList<BlockPos> holePositions, ISeedReader reader, Random rand) {
+    private ArrayList<BlockPos> findOutlines(ArrayList<BlockPos> edgePositions, ArrayList<BlockPos> holePositions, ISeedReader reader
+    ) {
         BlockPos.Mutable currentPos = new BlockPos.Mutable();
         ArrayList<BlockPos> outlinePositions = new ArrayList<>();
         for (BlockPos edgePos : edgePositions) {
@@ -197,7 +197,6 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
                     outlinePositions.add(currentPos.toImmutable());
                 }
             }
-            if (shouldCreateWoolMarkers) reader.setBlockState(edgePos.offset(Direction.UP, 6), Blocks.RED_WOOL.getDefaultState(), 3); //test to show where posses are
         }
         return outlinePositions;
     }
@@ -207,7 +206,6 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
      * */
     private void generateHole(ArrayList<BlockPos> holePositions, int minY, ISeedReader reader, Random rand) {
         for (BlockPos holePos : holePositions) {
-            if (shouldCreateWoolMarkers) reader.setBlockState(holePos.offset(Direction.UP, 5), Blocks.LIGHT_BLUE_WOOL.getDefaultState(), 3); //test to show where posses are
             BlockPos.Mutable currentPos = new BlockPos.Mutable();
             currentPos.setPos(holePos);
             for(int i=minY; i<holePos.getY()+2; i++) { //holePos.getY() is the block 1 above the surface, so < is used
@@ -243,7 +241,6 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
         ArrayList<BlockPos> nonFenceOutlines = new ArrayList<>(outlinePositions);
         if (!nonFenceOutlines.isEmpty()) {
             for (BlockPos firstFencePos : outlinePositions) {
-                if (shouldCreateWoolMarkers) reader.setBlockState(firstFencePos.offset(Direction.UP, 7), Blocks.MAGENTA_WOOL.getDefaultState(), 3); //test to show where posses are
                 if (rand.nextFloat() < 0.25f) {
                     for (Direction dir : horizontalDirections) {
                         secondFencePos.setPos(firstFencePos.offset(dir));
@@ -330,8 +327,6 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
                                 }
                                 if (isClear) {
                                     decorationStarts.add(new Pair<>(dir, start));
-                                    if (shouldCreateWoolMarkers)
-                                        reader.setBlockState(start.offset(Direction.UP, 8), Blocks.MAGENTA_GLAZED_TERRACOTTA.getDefaultState().with(HorizontalBlock.HORIZONTAL_FACING, dir.getOpposite()), 3); //test !
                                 }
                                 if (!shouldTryAgain) break;
                             }
@@ -364,9 +359,6 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
                         decorationCenters[decorationIndex] = currentPos.toImmutable();
                     }
                     decorationPositions[j][i] = currentPos.toImmutable();
-                    if (shouldCreateWoolMarkers) {
-                        reader.setBlockState(decorationPositions[j][i].offset(Direction.UP, 9), j == 2 && i == 0 ? Blocks.MAGENTA_GLAZED_TERRACOTTA.getDefaultState().with(HorizontalBlock.HORIZONTAL_FACING, dir.getOpposite()) : Blocks.BLUE_WOOL.getDefaultState(), 3); //test !
-                    }
                     currentPos.setPos(currentPos.offset(dir.rotateY()));
                 }
                 mainForwardPos.setPos(mainForwardPos.offset(dir));
@@ -386,7 +378,7 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
             potentialStarts.remove(positionInfo);
             if (doesNotIntersect) {
                 if (decorationIndex == 0) {
-                        switch (rand.nextInt(ModList.get().isLoaded("quark") ? 3 : 2)) { //Only uses creeper spore sack decoration if quark is loaeded
+                        switch (rand.nextInt(ModList.get().isLoaded("quark") ? 3 : 2)) { //Only uses creeper spore sack decoration if quark is loaded
                             case 0:
                                 //Crafting table decoration
                                 for (int i=0; i<=1; i++) {
