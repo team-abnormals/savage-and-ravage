@@ -3,8 +3,12 @@ package com.minecraftabnormals.savageandravage.core;
 import com.minecraftabnormals.abnormals_core.core.util.registry.RegistryHelper;
 import com.minecraftabnormals.savageandravage.client.render.IceChunkRenderer;
 import com.minecraftabnormals.savageandravage.core.other.SRCompat;
-import com.minecraftabnormals.savageandravage.core.other.SRSpawns;
-import com.minecraftabnormals.savageandravage.core.registry.*;
+import com.minecraftabnormals.savageandravage.core.other.SRGeneration;
+import com.minecraftabnormals.savageandravage.core.registry.SRAttributes;
+import com.minecraftabnormals.savageandravage.core.registry.SREffects;
+import com.minecraftabnormals.savageandravage.core.registry.SREntities;
+import com.minecraftabnormals.savageandravage.core.registry.SRItems;
+import com.minecraftabnormals.savageandravage.core.registry.SRParticles;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
@@ -32,6 +36,7 @@ public class SavageAndRavage {
 		SRParticles.PARTICLES.register(bus);
 		SREffects.EFFECTS.register(bus);
 		SREffects.POTIONS.register(bus);
+		SRGeneration.FEATURES.register(bus);
 		SRAttributes.ATTRIBUTES.register(bus);
 
 		MinecraftForge.EVENT_BUS.register(this);
@@ -53,7 +58,9 @@ public class SavageAndRavage {
 	private void commonSetup(FMLCommonSetupEvent event) {
 		DeferredWorkQueue.runLater(() -> {
 			SREffects.registerBrewingRecipes();
-			SRSpawns.registerEntitySpawns();
+			SRGeneration.registerEntitySpawns();
+			SRGeneration.registerPools();
+			SRGeneration.registerBiomeModifications();
 			SREntities.registerAttributes();
 			SREntities.registerWaveMembers();
 			SRCompat.registerFlammables();
