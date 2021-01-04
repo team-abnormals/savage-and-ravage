@@ -10,6 +10,7 @@ public class SRConfig {
 		public final ConfigValue<Boolean> creeperExplosionsDestroyBlocks;
 		public final ConfigValue<Boolean> creeperExplosionsSpawnCreepies;
 		public final ConfigValue<Boolean> creepersDropSporesAfterExplosionDeath;
+		public final ConfigValue<Boolean> creepieExplosionsDestroyBlocks;
 
 		public Common(ForgeConfigSpec.Builder builder) {
 			creeperExplosionsDestroyBlocks = builder
@@ -21,6 +22,10 @@ public class SRConfig {
 			creepersDropSporesAfterExplosionDeath = builder
 					.translation(makeTranslation("creepersDropSporesAfterExplosionDeath"))
 					.define("Creepers drop Creeper Spores after they die from an explosion", true);
+			creepieExplosionsDestroyBlocks = builder
+					.translation(makeTranslation("creepieExplosionsDestroyBlocks"))
+					.comment("(Not officially supported)")
+					.define("Creepie explosions destroy blocks", false);
 		}
 	}
 

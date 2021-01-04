@@ -5,6 +5,7 @@ import com.minecraftabnormals.savageandravage.common.entity.goals.CreepieSwellGo
 import com.minecraftabnormals.savageandravage.common.entity.goals.FollowMobOwnerGoal;
 import com.minecraftabnormals.savageandravage.common.entity.goals.MobOwnerHurtByTargetGoal;
 import com.minecraftabnormals.savageandravage.common.entity.goals.MobOwnerHurtTargetGoal;
+import com.minecraftabnormals.savageandravage.core.SRConfig;
 import com.minecraftabnormals.savageandravage.core.registry.SRParticles;
 import com.minecraftabnormals.savageandravage.core.registry.SRSounds;
 import net.minecraft.entity.*;
@@ -206,10 +207,10 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
 	 */
 	protected void explode() {
 		if (!this.world.isRemote()) {
-			Explosion.Mode explosion$mode = Explosion.Mode.NONE;
+			Explosion.Mode mode = SRConfig.COMMON.creepieExplosionsDestroyBlocks.get() ? Explosion.Mode.DESTROY : Explosion.Mode.NONE;
 			float chargedModifier = 1.0F;
 			this.dead = true;
-			this.world.createExplosion(this, this.getPosX(), this.getPosY(), this.getPosZ(), this.explosionRadius * chargedModifier, explosion$mode);
+			this.world.createExplosion(this, this.getPosX(), this.getPosY(), this.getPosZ(), this.explosionRadius * chargedModifier, mode);
 			this.remove();
 			this.spawnLingeringCloud();
 		}
