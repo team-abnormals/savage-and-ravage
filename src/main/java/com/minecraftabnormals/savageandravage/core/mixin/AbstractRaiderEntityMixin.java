@@ -1,5 +1,6 @@
 package com.minecraftabnormals.savageandravage.core.mixin;
 
+import com.minecraftabnormals.savageandravage.core.SRConfig;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.monster.AbstractRaiderEntity;
 import net.minecraft.entity.monster.PatrollerEntity;
@@ -22,7 +23,9 @@ public abstract class AbstractRaiderEntityMixin extends PatrollerEntity {
 
 	@Inject(method = "onDeath", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/GameRules;getBoolean(Lnet/minecraft/world/GameRules$RuleKey;)Z", shift = At.Shift.AFTER), cancellable = true)
 	private void cancelBadOmenEffect(DamageSource source, CallbackInfo info) {
-		super.onDeath(source);
-		info.cancel();
+		if (SRConfig.COMMON.noBadOmenOnDeath.get()) {
+			super.onDeath(source);
+			info.cancel();
+		}
 	}
 }

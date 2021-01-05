@@ -11,43 +11,40 @@ public class SRConfig {
 		public final ConfigValue<Boolean> creeperExplosionsSpawnCreepies;
 		public final ConfigValue<Boolean> creepersDropSporesAfterExplosionDeath;
 		public final ConfigValue<Boolean> creepieExplosionsDestroyBlocks;
+		public final ConfigValue<Boolean> noBadOmenOnDeath;
 
 		public Common(ForgeConfigSpec.Builder builder) {
-			creeperExplosionsDestroyBlocks = builder
-					.translation(makeTranslation("creeperExplosionsDestroyBlocks"))
-					.define("Creeper explosions destroy blocks", true);
-			creeperExplosionsSpawnCreepies = builder
-					.translation(makeTranslation("creeperExplosionsSpawnCreepies"))
-					.define("Creeper explosions spawn creepies", false);
-			creepersDropSporesAfterExplosionDeath = builder
-					.translation(makeTranslation("creepersDropSporesAfterExplosionDeath"))
-					.define("Creepers drop Creeper Spores after they die from an explosion", true);
-			creepieExplosionsDestroyBlocks = builder
-					.translation(makeTranslation("creepieExplosionsDestroyBlocks"))
-					.comment("(Not officially supported)")
-					.define("Creepie explosions destroy blocks", false);
+			builder.push("entities");
+
+			builder.push("creepers");
+			creeperExplosionsDestroyBlocks = builder.define("Creeper explosions destroy blocks", true);
+			creeperExplosionsSpawnCreepies = builder.define("Creeper explosions spawn creepies", false);
+			creepersDropSporesAfterExplosionDeath = builder.define("Creepers drop Creeper Spores after they die from an explosion", true);
+			creepieExplosionsDestroyBlocks = builder.define("Creepie explosions destroy blocks", false);
+			builder.pop();
+
+			builder.push("illagers");
+			noBadOmenOnDeath = builder
+					.comment("Illagers with banners will no longer give Bad Omen when you kill them", "Instead, you will have to place and burn the banner that they drop with flint and steel")
+					.define("Illagers no longer give Bad Omen when killed", false);
+			builder.pop();
+
+			builder.pop();
+
+
 		}
 	}
 
 	public static class Client {
-		public final ConfigValue<Boolean> creepiesGrowLargerOnExplosion;
 		public final ConfigValue<Boolean> creepieSprout;
 
 		public Client(ForgeConfigSpec.Builder builder) {
-			this.creepiesGrowLargerOnExplosion = builder
-					.comment("If true, creepies grow significantly larger when they explode")
-					.translation(makeTranslation("creepiesGrowLargerOnExplosion"))
-					.define("Creepies grow larger on explosion", false);
-
-			this.creepieSprout = builder
-					.comment("If true, creepies have a sprout on their head")
-					.translation(makeTranslation("creepieSprout"))
-					.define("Creepie sprout", true);
+			builder.push("entities");
+			builder.push("creepers");
+			this.creepieSprout = builder.define("Creepies have a sprout on their head", true);
+			builder.pop();
+			builder.pop();
 		}
-	}
-
-	private static String makeTranslation(String name) {
-		return SavageAndRavage.MOD_ID + ".config." + name;
 	}
 
 	public static final ForgeConfigSpec COMMON_SPEC;
