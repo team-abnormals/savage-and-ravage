@@ -8,7 +8,8 @@
         "removes": false,
         "effects": {
           "savageandravage:growing": {},
-          "savageandravage:shrinking": {}
+          "savageandravage:shrinking": {},
+          "savageandravage:frostbite": {}
         }
       }
     }
