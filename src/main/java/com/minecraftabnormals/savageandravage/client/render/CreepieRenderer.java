@@ -4,7 +4,6 @@ import com.minecraftabnormals.savageandravage.client.model.CreepieModel;
 import com.minecraftabnormals.savageandravage.client.render.layer.CreepieChargeLayer;
 import com.minecraftabnormals.savageandravage.client.render.layer.SproutLayer;
 import com.minecraftabnormals.savageandravage.common.entity.CreepieEntity;
-import com.minecraftabnormals.savageandravage.core.SRConfig;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.MobRenderer;
@@ -31,15 +30,6 @@ public class CreepieRenderer extends MobRenderer<CreepieEntity, CreepieModel> {
 		float dividedByMathsThing = (1.0f + creeperFlashIntensity * 0.1f) / mathsThing;
 		matrixStackIn.scale(multipliedByMathsThing, dividedByMathsThing, multipliedByMathsThing);
 		matrixStackIn.scale(0.5F, 0.5F, 0.5F);
-
-		if (SRConfig.CLIENT.creepiesGrowLargerOnExplosion.get()) {
-			float creeperFlashIntensity2 = entityLivingBaseIn.getCreeperFlashIntensity(partialTickTime);
-			float mathsThing2 = 1.0f + MathHelper.sin(creeperFlashIntensity2 * 100.0f) * creeperFlashIntensity2 * 0.01f;
-			float multipliedByMathsThing2 = (1.0f + creeperFlashIntensity + 0.4f) * mathsThing2;
-			float dividedByMathsThing2 = (1.0f + creeperFlashIntensity + 0.4f) / mathsThing2;
-			matrixStackIn.scale(multipliedByMathsThing2, dividedByMathsThing2, multipliedByMathsThing2);
-			matrixStackIn.scale(0.5F, 0.5F, 0.5F);
-		}
 	}
 
 	@Override
