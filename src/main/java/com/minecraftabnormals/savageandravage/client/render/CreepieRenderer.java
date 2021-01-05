@@ -1,7 +1,8 @@
 package com.minecraftabnormals.savageandravage.client.render;
 
 import com.minecraftabnormals.savageandravage.client.model.CreepieModel;
-import com.minecraftabnormals.savageandravage.client.render.layer.SproutRenderLayer;
+import com.minecraftabnormals.savageandravage.client.render.layer.CreepieChargeLayer;
+import com.minecraftabnormals.savageandravage.client.render.layer.SproutLayer;
 import com.minecraftabnormals.savageandravage.common.entity.CreepieEntity;
 import com.minecraftabnormals.savageandravage.core.SRConfig;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -15,7 +16,8 @@ public class CreepieRenderer extends MobRenderer<CreepieEntity, CreepieModel> {
 
 	public CreepieRenderer(EntityRendererManager renderManagerIn) {
 		super(renderManagerIn, new CreepieModel(), 0.3F);
-		this.addLayer(new SproutRenderLayer<>(this));
+		this.addLayer(new CreepieChargeLayer(this));
+		this.addLayer(new SproutLayer<>(this));
 	}
 
 	@Override

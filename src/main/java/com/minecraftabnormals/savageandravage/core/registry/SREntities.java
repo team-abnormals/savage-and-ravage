@@ -6,9 +6,12 @@ import com.minecraftabnormals.savageandravage.common.entity.*;
 import com.minecraftabnormals.savageandravage.common.entity.block.SporeBombEntity;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 import net.minecraft.entity.EntityClassification;
+import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.entity.monster.AbstractSkeletonEntity;
+import net.minecraft.entity.monster.MonsterEntity;
+import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.raid.Raid;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -34,6 +37,12 @@ public class SREntities {
 	public static final RegistryObject<EntityType<IceologerEntity>> ICEOLOGER = ENTITIES.register("iceologer", () -> EntityType.Builder.create(IceologerEntity::new, EntityClassification.MONSTER).size(0.6F, 1.95F).trackingRange(8).build(SavageAndRavage.MOD_ID + ":iceologer"));
 	public static final RegistryObject<EntityType<IceChunkEntity>> ICE_CHUNK = ENTITIES.register("ice_chunk", () -> EntityType.Builder.<IceChunkEntity>create(IceChunkEntity::new, EntityClassification.MISC).size(2.2F, 1.0F).trackingRange(8).func_233608_b_(Integer.MAX_VALUE).build(SavageAndRavage.MOD_ID + ":iceologer_ice_chunk"));
 	public static final RegistryObject<EntityType<IceCloudEntity>> ICE_CLOUD = ENTITIES.register("ice_cloud", () -> EntityType.Builder.<IceCloudEntity>create(IceCloudEntity::new, EntityClassification.MISC).size(1.0F, 1.0F).trackingRange(8).build(SavageAndRavage.MOD_ID + ":iceologer_ice_cloud"));
+
+	public static void registerEntitySpawns() {
+		EntitySpawnPlacementRegistry.register(SREntities.SKELETON_VILLAGER.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::canMonsterSpawnInLight);
+		EntitySpawnPlacementRegistry.register(SREntities.EXECUTIONER.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::canMonsterSpawnInLight);
+		EntitySpawnPlacementRegistry.register(SREntities.ICEOLOGER.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, IceologerEntity::canIceologerSpawn);
+	}
 
 	public static void registerRendering() {
 		RenderingRegistry.registerEntityRenderingHandler(CREEPIE.get(), CreepieRenderer::new);

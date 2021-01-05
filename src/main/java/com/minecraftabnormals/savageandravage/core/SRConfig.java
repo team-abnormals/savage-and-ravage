@@ -15,10 +15,10 @@ public class SRConfig {
 		public Common(ForgeConfigSpec.Builder builder) {
 			creeperExplosionsDestroyBlocks = builder
 					.translation(makeTranslation("creeperExplosionsDestroyBlocks"))
-					.define("Creeper explosions destroy blocks", false);
+					.define("Creeper explosions destroy blocks", true);
 			creeperExplosionsSpawnCreepies = builder
 					.translation(makeTranslation("creeperExplosionsSpawnCreepies"))
-					.define("Creeper explosions spawn creepies", true);
+					.define("Creeper explosions spawn creepies", false);
 			creepersDropSporesAfterExplosionDeath = builder
 					.translation(makeTranslation("creepersDropSporesAfterExplosionDeath"))
 					.define("Creepers drop Creeper Spores after they die from an explosion", true);

@@ -41,8 +41,13 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
 
-public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeableEntity {
+@OnlyIn(
+		value = Dist.CLIENT,
+		_interface = IChargeableMob.class
+)
+public class CreepieEntity extends MonsterEntity implements IChargeableMob, IOwnableMob, IAgeableEntity {
 	private static final DataParameter<Integer> STATE = EntityDataManager.createKey(CreepieEntity.class, DataSerializers.VARINT);
+	private static final DataParameter<Boolean> POWERED = EntityDataManager.createKey(CreepieEntity.class, DataSerializers.BOOLEAN);
 	private static final DataParameter<Boolean> IGNITED = EntityDataManager.createKey(CreepieEntity.class, DataSerializers.BOOLEAN);
 	private static final DataParameter<Optional<UUID>> OWNER_UUID = EntityDataManager.createKey(CreepieEntity.class, DataSerializers.OPTIONAL_UNIQUE_ID);
 	private static final DataParameter<Integer> CONVERSION_TIME = EntityDataManager.createKey(CreepieEntity.class, DataSerializers.VARINT);
@@ -128,6 +133,7 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
 	protected void registerData() {
 		super.registerData();
 		this.dataManager.register(STATE, -1);
+		this.dataManager.register(POWERED, false);
 		this.dataManager.register(IGNITED, false);
 		this.dataManager.register(CONVERSION_TIME, -1);
 		this.dataManager.register(OWNER_UUID, Optional.empty());
@@ -144,6 +150,9 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
 		compound.putShort("Fuse", (short) this.fuseTime);
 		compound.putByte("ExplosionRadius", (byte) this.explosionRadius);
 		compound.putBoolean("Ignited", this.hasIgnited());
+		if (this.dataManager.get(POWERED)) {
+			compound.putBoolean("Powered", true);
+		}
 		compound.putBoolean("AttackPlayersOnly", this.attackPlayersOnly);
 	}
 
@@ -158,6 +167,7 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
 			this.setGrowingAge(compound.getInt("Age"));
 		}
 		if (compound.getBoolean("Ignited")) this.ignite();
+		this.dataManager.set(POWERED, compound.getBoolean("Powered"));
 		if (compound.contains("ConversionTime", 99) && compound.getInt("ConversionTime") > -1) {
 			this.startConversion(compound.getInt("ConversionTime"));
 		}
@@ -166,6 +176,16 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
 		}
 		this.attackPlayersOnly = compound.getBoolean("AttackPlayersOnly");
 	}
+
+	@Override
+	public boolean isCharged() {
+		return this.dataManager.get(POWERED);
+	}
+
+	public void setCharged(boolean charged) {
+		this.dataManager.set(POWERED, charged);
+	}
+
 
 	@Override
 	public ItemStack getPickedResult(RayTraceResult target) {
@@ -208,7 +228,7 @@ public class CreepieEntity extends MonsterEntity implements IOwnableMob, IAgeabl
 	protected void explode() {
 		if (!this.world.isRemote()) {
 			Explosion.Mode mode = SRConfig.COMMON.creepieExplosionsDestroyBlocks.get() ? Explosion.Mode.DESTROY : Explosion.Mode.NONE;
-			float chargedModifier = 1.0F;
+			float chargedModifier = this.isCharged() ? 2.0F : 1.0F;
 			this.dead = true;
 			this.world.createExplosion(this, this.getPosX(), this.getPosY(), this.getPosZ(), this.explosionRadius * chargedModifier, mode);
 			this.remove();

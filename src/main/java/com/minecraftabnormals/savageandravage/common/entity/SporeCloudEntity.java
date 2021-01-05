@@ -12,8 +12,10 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.potion.Effects;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
@@ -22,7 +24,6 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.UUID;
 
 public class SporeCloudEntity extends ThrowableEntity implements IEntityAdditionalSpawnData {
@@ -31,6 +32,7 @@ public class SporeCloudEntity extends ThrowableEntity implements IEntityAddition
 	private UUID cloudId;
 
 	private int cloudSize;
+	private boolean charged = false;
 	private boolean spawnCloudInstantly;
 	private boolean creepiesAttackPlayersOnly;
 	private boolean hit;
@@ -86,6 +88,8 @@ public class SporeCloudEntity extends ThrowableEntity implements IEntityAddition
 
 		if (this.cloudId != null)
 			nbt.putUniqueId("CloudEntity", this.cloudId);
+		if (this.charged)
+			nbt.putBoolean("Charged", true);
 		nbt.putInt("CloudSize", this.cloudSize);
 		nbt.putBoolean("SpawnCloudInstantly", this.spawnCloudInstantly);
 		nbt.putBoolean("AttackPlayersOnly", this.creepiesAttackPlayersOnly);
@@ -94,8 +98,8 @@ public class SporeCloudEntity extends ThrowableEntity implements IEntityAddition
 	@Override
 	protected void readAdditional(CompoundNBT nbt) {
 		super.readAdditional(nbt);
-
 		this.cloudId = nbt.hasUniqueId("CloudEntity") ? nbt.getUniqueId("CloudEntity") : null;
+		this.charged = nbt.getBoolean("Charged");
 		this.cloudSize = nbt.getInt("CloudSize");
 		this.spawnCloudInstantly = nbt.getBoolean("SpawnCloudInstantly");
 		this.creepiesAttackPlayersOnly = nbt.getBoolean("AttackPlayersOnly");
@@ -141,44 +145,47 @@ public class SporeCloudEntity extends ThrowableEntity implements IEntityAddition
 				return;
 			}
 
-			aoe.setNoGravity(false);
-
-			if (aoe.ticksExisted % 20 == 0) {
-				double xPos = aoe.getPosXRandom(0.1D);
-				double zPos = aoe.getPosZRandom(0.2D);
-				BlockPos pos = new BlockPos(xPos, this.getPosY(), zPos);
-				List<AxisAlignedBB> blockShapes = this.world.getBlockState(pos).getShape(this.world, pos).toBoundingBoxList();
-				//wait this will just be one block lol
-
-				//TODO this doesn't work for shit, fix it
-				boolean flag = true;
-				for (AxisAlignedBB box : blockShapes) {
-					if (box.intersects(aoe.getBoundingBox()) && this.world.getBlockState(pos).isSuffocating(this.world, pos)) {
-						flag = false;
-						break;
+			CreepieEntity creepie = SREntities.CREEPIE.get().create(this.world);
+			if (creepie != null) {
+				if (this.charged) {
+					creepie.setCharged(true);
+				}
+				creepie.attackPlayersOnly = this.creepiesAttackPlayersOnly();
+				Entity thrower = this.func_234616_v_();
+				if (thrower instanceof LivingEntity) {
+					if (!((LivingEntity) thrower).isPotionActive(Effects.INVISIBILITY))
+						creepie.setOwnerId(thrower.getUniqueID());
+				}
+				BlockPos nextPosition = null;
+				if (aoe.ticksExisted % 20 == 0) {
+					for (int i = 0; i < 10; i++) {
+						double xPos = aoe.getPosXRandom(0.1D);
+						double zPos = aoe.getPosZRandom(0.2D);
+						creepie.setLocationAndAngles(xPos, aoe.getPosY(), zPos, 0.0F, 0.0F);
+						AxisAlignedBB box = creepie.getBoundingBox();
+						if (BlockPos.getAllInBox(MathHelper.floor(box.minX), MathHelper.floor(box.minY), MathHelper.floor(box.minZ), MathHelper.ceil(box.maxX), MathHelper.ceil(box.maxY), MathHelper.ceil(box.maxZ)).distinct().noneMatch(pos -> {
+							if (this.world.getBlockState(pos).isSuffocating(this.world, pos)) {
+								for (AxisAlignedBB blockBox : this.world.getBlockState(pos).getShape(this.world, pos).toBoundingBoxList()) {
+									blockBox = new AxisAlignedBB(blockBox.minX + pos.getX(), blockBox.minY + pos.getY(), blockBox.minZ + pos.getZ(), blockBox.maxX + pos.getX(), blockBox.maxY + pos.getY(), blockBox.maxZ + pos.getZ());
+									if (blockBox.intersects(creepie.getBoundingBox())) {
+										return true;
+									}
+								}
+							}
+							return false;
+						})) {
+							nextPosition = new BlockPos(xPos, aoe.getPosY(), zPos);
+							break;
+						}
+					}
+					if (nextPosition != null) {
+						this.world.addEntity(creepie);
 					}
 				}
 
-				if (flag) {
-					CreepieEntity creepie = SREntities.CREEPIE.get().create(this.world);
-					if (creepie == null)
-						return;
-
-					creepie.setLocationAndAngles(xPos, aoe.getPosY(), zPos, 0.0F, 0.0F);
-
-					Entity thrower = this.func_234616_v_();
-					if (thrower instanceof LivingEntity) {
-						if (!((LivingEntity) thrower).isPotionActive(Effects.INVISIBILITY))
-							creepie.setOwnerId(thrower.getUniqueID());
-					}
-					creepie.attackPlayersOnly = this.creepiesAttackPlayersOnly();
-					this.world.addEntity(creepie);
-
-				}
+				if (!aoe.isAlive())
+					this.remove();
 			}
-
-			if (!aoe.isAlive())
-				this.remove();
 		}
 	}
 
@@ -198,6 +205,10 @@ public class SporeCloudEntity extends ThrowableEntity implements IEntityAddition
 
 	public void setSpawnCloudInstantly(boolean spawnCloudInstantly) {
 		this.spawnCloudInstantly = spawnCloudInstantly;
+	}
+
+	public void setCharged(boolean charged) {
+		this.charged = charged;
 	}
 
 	@Override
