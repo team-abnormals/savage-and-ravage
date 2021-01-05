@@ -158,7 +158,10 @@ public class SREvents {
 						return;
 					spores.setSpawnCloudInstantly(true);
 					spores.creepiesAttackPlayersOnly(true);
-					spores.setCloudSize(creeper.isCharged() ? (int) (creeper.getHealth() / 4) : (int) (creeper.getHealth() / 5));
+					if (creeper.isCharged()) {
+						spores.setCharged(true);
+					}
+					spores.setCloudSize(creeper.isCharged() ? (int) (creeper.getHealth() / 3) : (int) (creeper.getHealth() / 5));
 					spores.copyLocationAndAnglesFrom(creeper);
 					creeper.world.addEntity(spores);
 				}

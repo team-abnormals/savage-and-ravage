@@ -16,10 +16,10 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class SproutRenderLayer<E extends CreepieEntity, M extends EntityModel<E>> extends LayerRenderer<E, M> {
+public class SproutLayer<E extends CreepieEntity, M extends EntityModel<E>> extends LayerRenderer<E, M> {
 	private static final ResourceLocation SPROUT_TEXTURE = new ResourceLocation(SavageAndRavage.MOD_ID, "textures/entity/creepie_sprout.png");
 
-	public SproutRenderLayer(IEntityRenderer<E, M> entityRenderer) {
+	public SproutLayer(IEntityRenderer<E, M> entityRenderer) {
 		super(entityRenderer);
 	}
 

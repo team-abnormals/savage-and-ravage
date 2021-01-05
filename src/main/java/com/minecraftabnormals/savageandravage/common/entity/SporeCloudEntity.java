@@ -31,6 +31,7 @@ public class SporeCloudEntity extends ThrowableEntity implements IEntityAddition
 	private UUID cloudId;
 
 	private int cloudSize;
+	private boolean charged = false;
 	private boolean spawnCloudInstantly;
 	private boolean creepiesAttackPlayersOnly;
 	private boolean hit;
@@ -86,6 +87,8 @@ public class SporeCloudEntity extends ThrowableEntity implements IEntityAddition
 
 		if (this.cloudId != null)
 			nbt.putUniqueId("CloudEntity", this.cloudId);
+		if (this.charged)
+			nbt.putBoolean("Charged", true);
 		nbt.putInt("CloudSize", this.cloudSize);
 		nbt.putBoolean("SpawnCloudInstantly", this.spawnCloudInstantly);
 		nbt.putBoolean("AttackPlayersOnly", this.creepiesAttackPlayersOnly);
@@ -94,8 +97,8 @@ public class SporeCloudEntity extends ThrowableEntity implements IEntityAddition
 	@Override
 	protected void readAdditional(CompoundNBT nbt) {
 		super.readAdditional(nbt);
-
 		this.cloudId = nbt.hasUniqueId("CloudEntity") ? nbt.getUniqueId("CloudEntity") : null;
+		this.charged = nbt.getBoolean("Charged");
 		this.cloudSize = nbt.getInt("CloudSize");
 		this.spawnCloudInstantly = nbt.getBoolean("SpawnCloudInstantly");
 		this.creepiesAttackPlayersOnly = nbt.getBoolean("AttackPlayersOnly");
@@ -165,7 +168,9 @@ public class SporeCloudEntity extends ThrowableEntity implements IEntityAddition
 						return;
 
 					creepie.setLocationAndAngles(xPos, aoe.getPosY(), zPos, 0.0F, 0.0F);
-
+					if (this.charged) {
+						creepie.setCharged(true);
+					}
 					Entity thrower = this.func_234616_v_();
 					if (thrower instanceof LivingEntity) {
 						if (!((LivingEntity) thrower).isPotionActive(Effects.INVISIBILITY))
@@ -198,6 +203,10 @@ public class SporeCloudEntity extends ThrowableEntity implements IEntityAddition
 
 	public void setSpawnCloudInstantly(boolean spawnCloudInstantly) {
 		this.spawnCloudInstantly = spawnCloudInstantly;
+	}
+
+	public void setCharged(boolean charged) {
+		this.charged = charged;
 	}
 
 	@Override
