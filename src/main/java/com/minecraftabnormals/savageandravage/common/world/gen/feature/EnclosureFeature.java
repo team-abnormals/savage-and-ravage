@@ -1,12 +1,12 @@
-package com.minecraftabnormals.savageandravage.common.generation;
+package com.minecraftabnormals.savageandravage.common.world.gen.feature;
 
 import com.minecraftabnormals.savageandravage.common.entity.CreepieEntity;
 import com.minecraftabnormals.savageandravage.common.entity.GrieferEntity;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 import com.minecraftabnormals.savageandravage.core.registry.SRBlocks;
 import com.minecraftabnormals.savageandravage.core.registry.SREntities;
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
-import javafx.util.Pair;
 import net.minecraft.block.*;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
@@ -35,20 +35,20 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 
 	@Override
 	public boolean generate(ISeedReader reader, ChunkGenerator generator, Random rand, BlockPos centerPos, NoFeatureConfig config) {
-		int minY = centerPos.getY() - (4 + rand.nextInt(2)); //the lowest y to use when making the pit
+		int minY = centerPos.getY() - (4 + rand.nextInt(2)); // The lowest y to use when making the pit
 		originalStartPos = centerPos;
 		centerPos = findSuitablePosition(reader, centerPos, minY, rand);
 		if (centerPos != null) {
-			//(These position arrays use the surface as their Y level - the air block above the ground)
-			ArrayList<BlockPos> holePositions = new ArrayList<>(); //Positions at the hole - i.e. which x and z values are to be cut out
-			ArrayList<BlockPos> edgePositions = new ArrayList<>(); //positions at the edge of the hole, where 'drop-offs' might be placed
-			ArrayList<BlockPos> outlinePositions; //Positions for fences to be placed on or the griefer to spawn
-			//Adding the 'starting positions' - the center and its neighbours
+			// These position arrays use the surface as their Y level - the air block above the ground
+			ArrayList<BlockPos> holePositions = new ArrayList<>(); // Positions at the hole - i.e. which X and Z values are to be cut out
+			ArrayList<BlockPos> edgePositions = new ArrayList<>(); // Positions at the edge of the hole, where 'drop-offs' might be placed
+			ArrayList<BlockPos> outlinePositions; // Positions for fences to be placed on or the griefer to spawn
+			// Adding the 'starting positions' - the center and its neighbours
 			holePositions.add(centerPos);
 			for (Direction dir : horizontalDirections) {
 				edgePositions.add(centerPos.offset(dir));
 			}
-			for (int i = 0; i <= 5 + rand.nextInt(5); i++) { //Iterations randomised for variety
+			for (int i = 0; i <= 5 + rand.nextInt(5); i++) {
 				edgePositions = expandHole(edgePositions, holePositions, centerPos, reader, rand);
 			}
 			generateEdges(edgePositions, reader, rand);
@@ -67,7 +67,6 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 					reader.addEntity(griefer);
 				}
 			}
-			//Placing the decoration structures
 			generateDecorations(getDecorationStarts(outlinePositions, edgePositions, holePositions, reader), reader, rand);
 			return true;
 		}
@@ -88,10 +87,8 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 					for (int z = bigZ - 4; z <= bigZ + 4; z++) {
 						for (int y = minY; y <= centerPos.getY() + 1; y++) {
 							pos.setPos(x, y, z);
-                            /*isOpaqueCube should return false for surface positions (where y>=centerPos.getY() is true)
-                            but true for underground positions (where y>=centerPos.getY() is false), so this has the effect
-                            of checking that the area is 'clear'
-                            */
+							// isOpaqueCube should return false for surface positions (where y>=centerPos.getY() is true) but true for underground positions (where y >= centerPos.getY() is false)
+							// This has the effect of checking that the area is 'clear'
 							if (((y >= centerPos.getY()) == reader.getBlockState(pos).isOpaqueCube(reader, pos)) || Math.abs(originalStartPos.getX() - pos.getX()) > 11 || Math.abs(originalStartPos.getZ() - pos.getZ()) > 11) {
 								areaClear = false;
 							}
@@ -111,9 +108,8 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 	 * Like isAreaClear, but it only checks one position and two y levels - ground and the block above
 	 */
 	private boolean isSurfacePositionClear(ISeedReader reader, BlockPos pos) {
-        /*This is a quick fix to stop decorations from intersecting outposts. It's not ideal as it restricts decoration positions
-        decoration positions in certain directions where they shouldn't be restricted. If enclosure placement could be
-        deferred until the other jigsaw blocks are placed, this would be obsolete.*/
+		// This is a quick fix to stop decorations from intersecting outposts. It's not ideal as it restricts decoration positions decoration positions in certain directions where they shouldn't be restricted.
+		// If enclosure placement could be deferred until the other jigsaw blocks are placed, this would be obsolete.
 		if (Math.abs(originalStartPos.getX() - pos.getX()) < 12 && Math.abs(originalStartPos.getZ() - pos.getZ()) < 12) {
 			if (!(reader.getBlockState(pos).isOpaqueCube(reader, pos))) {
 				return reader.getBlockState(pos.offset(Direction.DOWN)).isOpaqueCube(reader, pos.offset(Direction.DOWN));
@@ -127,9 +123,9 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 	 */
 	private ArrayList<BlockPos> expandHole(ArrayList<BlockPos> edgePositions, ArrayList<BlockPos> holePositions, BlockPos centerPos, ISeedReader reader, Random rand) {
 		BlockPos.Mutable currentPos = new BlockPos.Mutable();
-		ArrayList<BlockPos> newEdgePositions = new ArrayList<>(edgePositions); //caching edgePositions as elements need to be removed
+		ArrayList<BlockPos> newEdgePositions = new ArrayList<>(edgePositions); // Caching edgePositions as elements need to be removed
 		for (BlockPos edgePos : edgePositions) {
-			//This makes it less likely to expand further as it gets larger, preventing ridiculous hole sizes
+			// This makes it less likely to expand further as it gets larger, preventing ridiculous hole sizes
 			if (rand.nextInt(49) > edgePos.distanceSq(centerPos)) {
 				ArrayList<BlockPos> validPotentialPositions = new ArrayList<>();
 				boolean hasHoleNeighbor = false;
@@ -150,11 +146,11 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 				if (isNothingBlocking) {
 					if (hasHoleNeighbor) {
 						if (validPotentialPositions.size() == 0) {
-							holePositions.add(edgePos); //Prevents pillars in the pit
+							holePositions.add(edgePos); // Prevents pillars in the pit
 							newEdgePositions.remove(edgePos);
 						} else {
-                            /*This random check makes it less likely that positions with fewer neighbours will expand further -
-                            in theory, this prevents straight lines in one direction from going on too far */
+							// This random check makes it less likely that positions with fewer neighbours will expand further
+							// In theory, this prevents straight lines in one direction from going on too far
 							if ((rand.nextFloat() < (1 / (validPotentialPositions.size() + 1.0f)))) {
 								newEdgePositions.addAll(validPotentialPositions);
 								newEdgePositions.remove(edgePos);
@@ -174,7 +170,7 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 	 */
 	private void generateEdges(ArrayList<BlockPos> edgePositions, ISeedReader reader, Random rand) {
 		for (BlockPos edgePos : edgePositions) {
-			if (rand.nextFloat() < 0.6f) { //Randomised to make the hole look a bit more natural
+			if (rand.nextFloat() < 0.6f) { // Randomised to make the hole look a bit more natural
 				reader.setBlockState(edgePos.offset(Direction.DOWN), Blocks.AIR.getDefaultState(), 3);
 				reader.setBlockState(edgePos, Blocks.AIR.getDefaultState(), 3);
 				reader.setBlockState(edgePos.offset(Direction.UP), Blocks.AIR.getDefaultState(), 3);
@@ -187,11 +183,11 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 		BlockPos.Mutable currentPos = new BlockPos.Mutable();
 		ArrayList<BlockPos> outlinePositions = new ArrayList<>();
 		for (BlockPos edgePos : edgePositions) {
-			//The rotate y stuff is used to get diagonal neighbours, is there a better way?
+			// The rotate y stuff is used to get diagonal neighbours, is there a better way?
 			for (Direction dir : horizontalDirections) {
 				currentPos.setPos(edgePos.offset(dir));
 				if (!edgePositions.contains(currentPos) && !holePositions.contains(currentPos) && !(reader.getBlockState(currentPos).isOpaqueCube(reader, currentPos))) {
-					outlinePositions.add(currentPos.toImmutable()); //Needs to be cloned
+					outlinePositions.add(currentPos.toImmutable()); // Needs to be cloned
 				}
 				currentPos.setPos(currentPos.offset(dir.rotateY()));
 				if (!edgePositions.contains(currentPos) && !holePositions.contains(currentPos) && !(reader.getBlockState(currentPos).isOpaqueCube(reader, currentPos))) {
@@ -209,7 +205,7 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 		for (BlockPos holePos : holePositions) {
 			BlockPos.Mutable currentPos = new BlockPos.Mutable();
 			currentPos.setPos(holePos);
-			for (int i = minY; i < holePos.getY() + 2; i++) { //holePos.getY() is the block 1 above the surface, so < is used
+			for (int i = minY; i < holePos.getY() + 2; i++) { // holePos.getY() is the block 1 above the surface, so < is used
 				currentPos.setY(i);
 				if (i == minY) {
 					reader.setBlockState(currentPos, Blocks.COARSE_DIRT.getDefaultState(), 3);
@@ -248,7 +244,7 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 						if (nonFenceOutlines.contains(secondFencePos) && reader.getBlockState(secondFencePos.offset(Direction.DOWN)).isOpaqueCube(reader, secondFencePos.offset(Direction.DOWN))) {
 							reader.setBlockState(firstFencePos, Blocks.SPRUCE_FENCE.getDefaultState(), 3);
 							reader.setBlockState(secondFencePos, Blocks.SPRUCE_FENCE.getDefaultState(), 3);
-							//Removed so that the griefer doesn't spawn in a fence. Also prevents redundant placement.
+							// Removed so that the griefer doesn't spawn in a fence. Also prevents redundant placement.
 							nonFenceOutlines.remove(firstFencePos);
 							nonFenceOutlines.remove(secondFencePos);
 							break;
@@ -290,7 +286,7 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 			for (Direction dir : horizontalDirections) {
 				currentPos.setPos(outlinePos.offset(dir));
 				if (!outlinePositions.contains(currentPos) && !edgePositions.contains(currentPos)) {
-					//tries to allow positions at the diagonal sides of holes by trying again if the position arrays contain a thing
+					// Tries to allow positions at the diagonal sides of holes by trying again if the position arrays contain a thing
 					for (int attempts = 0; attempts < 4; attempts++) {
 						currentPos.setPos(currentPos.offset(dir));
 						if (!outlinePositions.contains(currentPos) && !edgePositions.contains(currentPos)) {
@@ -348,10 +344,10 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 		BlockPos[] decorationCenters = new BlockPos[3];
 		while (decorationIndex < 3 && !potentialStarts.isEmpty()) {
 			Pair<Direction, BlockPos> positionInfo = potentialStarts.get(rand.nextInt(potentialStarts.size()));
-			currentPos.setPos(positionInfo.getValue());
-			Direction dir = positionInfo.getKey();
-			BlockPos[][] decorationPositions = new BlockPos[5][5]; //first bracket for along, second for ahead
-			//Caching decoration locations to make it easier to set blockstates
+			currentPos.setPos(positionInfo.getSecond());
+			Direction dir = positionInfo.getFirst();
+			BlockPos[][] decorationPositions = new BlockPos[5][5]; // First bracket for along, second for ahead
+			// Caching decoration locations to make it easier to set blockstates
 			currentPos.setPos(currentPos.offset(dir.rotateYCCW(), 2));
 			BlockPos.Mutable mainForwardPos = currentPos.toMutable();
 			for (int i = 0; i < 5; i++) {
@@ -365,7 +361,6 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 				mainForwardPos.setPos(mainForwardPos.offset(dir));
 				currentPos.setPos(mainForwardPos);
 			}
-			//Placing the decorations
 			boolean doesNotIntersect = true;
 			if (decorationIndex > 0) {
 				currentPos.setPos(decorationCenters[decorationIndex]);
@@ -379,9 +374,8 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 			potentialStarts.remove(positionInfo);
 			if (doesNotIntersect) {
 				if (decorationIndex == 0) {
-					switch (rand.nextInt(ModList.get().isLoaded("quark") ? 3 : 2)) { //Only uses creeper spore sack decoration if quark is loaded
+					switch (rand.nextInt(ModList.get().isLoaded("quark") ? 3 : 2)) {
 						case 0:
-							//Crafting table decoration
 							for (int i = 0; i <= 1; i++) {
 								for (int j = 1; j <= 2; j++) {
 									currentPos.setPos(decorationPositions[j][i]);
@@ -397,7 +391,6 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 							}
 							break;
 						case 1:
-							//Blast proof plates decoration
 							for (int i = 0; i < 3; i++) {
 								if (i == 0) {
 									BlockState stairsState = SRBlocks.BLAST_PROOF_STAIRS.get().getDefaultState().with(HorizontalBlock.HORIZONTAL_FACING, dir);
@@ -419,7 +412,6 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 							}
 							break;
 						case 2:
-							//Creeper spore sack decoration
 							reader.setBlockState(decorationPositions[2][0], SRBlocks.CREEPER_SPORE_SACK.get().getDefaultState(), 3);
 							reader.setBlockState(decorationPositions[3][0], Blocks.CHEST.getDefaultState().with(HorizontalBlock.HORIZONTAL_FACING, dir), 3);
 							LockableLootTileEntity.setLootTable(reader, rand, decorationPositions[3][0], new ResourceLocation(SavageAndRavage.MOD_ID, "chests/enclosure"));
@@ -427,7 +419,7 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 				} else {
 					switch (rand.nextInt(3)) {
 						case 0:
-							//big cage with spore bomb
+							// Big cage with spore bomb
 							for (int i = 0; i < 6; i++) {
 								if (i == 0 || i == 4) {
 									for (int j = 0; j < 5; j++) {
@@ -451,7 +443,7 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 							}
 							break;
 						case 1:
-							//medium cage;
+							// Medium cage
 							for (int i = 0; i < 4; i++) {
 								if (i > 0 && i < 3) {
 									reader.setBlockState(decorationPositions[1][i], Blocks.OAK_FENCE.getDefaultState(), 3);
@@ -474,7 +466,7 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 							}
 							break;
 						case 2:
-							//small cage
+							// Small cage
 							for (int i = 0; i < 3; i++) {
 								if (i == 1) {
 									reader.setBlockState(decorationPositions[1][i], Blocks.OAK_FENCE.getDefaultState(), 3);
@@ -499,8 +491,8 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 				}
 				for (BlockPos[] positions : decorationPositions) {
 					for (BlockPos position : positions) {
-						reader.getBlockState(position).updateNeighbours(reader, position, 3); //fixes fence connections
-						reader.getBlockState(position.offset(Direction.UP)).updateNeighbours(reader, position.offset(Direction.UP), 3); //fixes fence connections
+						reader.getBlockState(position).updateNeighbours(reader, position, 3);
+						reader.getBlockState(position.offset(Direction.UP)).updateNeighbours(reader, position.offset(Direction.UP), 3);
 					}
 				}
 				decorationIndex++;

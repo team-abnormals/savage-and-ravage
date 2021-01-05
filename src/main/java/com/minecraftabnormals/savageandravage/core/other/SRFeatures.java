@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.minecraftabnormals.abnormals_core.common.world.modification.BiomeModificationManager;
 import com.minecraftabnormals.abnormals_core.common.world.modification.BiomeModificationPredicates;
 import com.minecraftabnormals.abnormals_core.common.world.modification.BiomeSpawnsModifier;
-import com.minecraftabnormals.savageandravage.common.generation.EnclosureFeature;
+import com.minecraftabnormals.savageandravage.common.world.gen.feature.EnclosureFeature;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 import com.minecraftabnormals.savageandravage.core.registry.SREntities;
 import com.mojang.datafixers.util.Pair;
