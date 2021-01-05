@@ -9,6 +9,7 @@ import com.minecraftabnormals.savageandravage.common.world.gen.feature.Enclosure
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 import com.minecraftabnormals.savageandravage.core.registry.SREntities;
 import com.mojang.datafixers.util.Pair;
+import com.sun.org.apache.regexp.internal.RE;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
@@ -31,8 +32,34 @@ public class SRFeatures {
 		JigsawPatternRegistry.func_244094_a(new JigsawPattern(new ResourceLocation(SavageAndRavage.MOD_ID, "enclosure/enclosures"), new ResourceLocation("empty"), ImmutableList.of(Pair.of(JigsawPiece.func_242845_a(CREEPER_ENCLOSURE.get().withConfiguration(NoFeatureConfig.field_236559_b_)), 1)), JigsawPattern.PlacementBehaviour.RIGID));
 		JigsawPatternRegistry.func_244094_a(new JigsawPattern(new ResourceLocation(SavageAndRavage.MOD_ID, "pillager_outpost/pillagers"), new ResourceLocation("empty"), ImmutableList.of(Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":pillager_outpost/pillager"), 1)),  JigsawPattern.PlacementBehaviour.RIGID));
 		JigsawPatternRegistry.func_244094_a(new JigsawPattern(new ResourceLocation(SavageAndRavage.MOD_ID, "pillager_outpost/vindicators"), new ResourceLocation("empty"), ImmutableList.of(Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":pillager_outpost/vindicator"), 1)),  JigsawPattern.PlacementBehaviour.RIGID));
+		JigsawPatternRegistry.func_244094_a(new JigsawPattern(new ResourceLocation(SavageAndRavage.MOD_ID, "pillager_outpost/note_blocks"), new ResourceLocation("empty"), ImmutableList.of(
+				Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":pillager_outpost/note_blocks/note_block0"), 1),
+				Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":pillager_outpost/note_blocks/note_block1"), 1),
+				Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":pillager_outpost/note_blocks/note_block2"), 1),
+				Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":pillager_outpost/note_blocks/note_block3"), 1),
+				Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":pillager_outpost/note_blocks/note_block4"), 1),
+				Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":pillager_outpost/note_blocks/note_block6"), 1),
+				Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":pillager_outpost/note_blocks/note_block7"), 1),
+				Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":pillager_outpost/note_blocks/note_block8"), 1),
+				Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":pillager_outpost/note_blocks/note_block9"), 1),
+				Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":pillager_outpost/note_blocks/note_block10"), 1),
+				Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":pillager_outpost/note_blocks/note_block11"), 1),
+				Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":pillager_outpost/note_blocks/note_block12"), 1),
+				Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":pillager_outpost/note_blocks/note_block13"), 1),
+				Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":pillager_outpost/note_blocks/note_block14"), 1),
+				Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":pillager_outpost/note_blocks/note_block15"), 1),
+				Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":pillager_outpost/note_blocks/note_block16"), 1),
+				Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":pillager_outpost/note_blocks/note_block17"), 1),
+				Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":pillager_outpost/note_blocks/note_block18"), 1),
+				Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":pillager_outpost/note_blocks/note_block19"), 1),
+				Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":pillager_outpost/note_blocks/note_block20"), 1),
+				Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":pillager_outpost/note_blocks/note_block21"), 1),
+				Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":pillager_outpost/note_blocks/note_block22"), 1),
+				Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":pillager_outpost/note_blocks/note_block23"), 1),
+				Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":pillager_outpost/note_blocks/note_block24"), 1)), JigsawPattern.PlacementBehaviour.RIGID));
 		for (String biome : new String[]{"plains", "snowy", "savanna", "desert", "taiga"})
 			DataUtil.addToJigsawPattern(new ResourceLocation("village/" + biome + "/zombie/villagers"), JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":village/skeleton_villager").apply(JigsawPattern.PlacementBehaviour.RIGID), 10);
+		DataUtil.addToJigsawPattern(new ResourceLocation("pillager_outpost/features"), JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":pillager_outpost/feature_targets_arrow").apply(JigsawPattern.PlacementBehaviour.RIGID), 2);
 	}
 
 	public static void registerBiomeModifications() {
