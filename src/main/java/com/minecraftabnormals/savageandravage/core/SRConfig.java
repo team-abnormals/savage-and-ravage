@@ -25,7 +25,7 @@ public class SRConfig {
 
 			builder.push("illagers");
 			noBadOmenOnDeath = builder
-					.comment("Illagers with banners will no longer give Bad Omen when you kill them", "Instead, you will have to place and burn the banner that they drop with flint and steel")
+					.comment("Illagers with banners will no longer give Bad Omen when you kill them", "Instead, you will have to place and burn the banner that they drop with flint and steel or a fire charge")
 					.define("Illagers no longer give Bad Omen when killed", false);
 			builder.pop();
 
