@@ -10,6 +10,7 @@ import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.AbstractIllagerEntity;
 import net.minecraft.entity.monster.ZombieVillagerEntity;
 import net.minecraft.entity.monster.ZombifiedPiglinEntity;
+import net.minecraft.entity.monster.piglin.AbstractPiglinEntity;
 import net.minecraft.entity.monster.piglin.PiglinEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.util.ResourceLocation;
@@ -271,7 +272,7 @@ public class GrieferArmorModel<T extends LivingEntity> extends BipedModel<T> {
 				entity instanceof ZombieVillagerEntity ||
 				entity instanceof AbstractVillagerEntity ||
 				entity.getType() == ForgeRegistries.ENTITIES.getValue(GUARD_VILLAGER_NAME);
-		boolean piglin = entity instanceof PiglinEntity ||
+		boolean piglin = entity instanceof AbstractPiglinEntity ||
 				entity instanceof ZombifiedPiglinEntity;
 		int entityFlag = (slot.ordinal() & 15) | (illager ? 1 : 0) << 4 | (piglin ? 1 : 0) << 5 | (entity.isChild() ? 1 : 0) << 6;
 		return (A) CACHE.computeIfAbsent(entityFlag, GrieferArmorModel::new);

@@ -82,6 +82,10 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 		this.dataManager.register(KICKING, false);
 		this.dataManager.register(APESHIT_MODE, false);
 	}
+	
+	public AbstractIllagerEntity.ArmPose getArmPose() {
+		return this.getCelebrating() ? AbstractIllagerEntity.ArmPose.CELEBRATING : AbstractIllagerEntity.ArmPose.NEUTRAL;
+	}
 
 	// temporary sounds
 	@Override

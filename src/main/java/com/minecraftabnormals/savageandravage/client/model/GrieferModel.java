@@ -5,6 +5,7 @@ import com.google.common.collect.Iterables;
 import com.minecraftabnormals.savageandravage.common.entity.GrieferEntity;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraft.entity.monster.AbstractIllagerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
@@ -80,14 +81,18 @@ public class GrieferModel extends BipedModel<GrieferEntity> {
 			float f1 = 1.0F - (float) MathHelper.abs(10 - 2 * entityIn.getKickTicks()) / 10.0F;
 			this.bipedRightLeg.rotateAngleX = MathHelper.lerp(f1, 0.0F, -1.40F);
 		}
-		if (entityIn.getCelebrating()) // party rockers in the hou
-		{
+		AbstractIllagerEntity.ArmPose armpose = entityIn.getArmPose();
+		switch (armpose) {
+		case CELEBRATING:
 			this.bipedHead.rotateAngleX = MathHelper.cos(ageInTicks * 0.6662F) * 0.05F;
 			this.bipedLeftArm.rotationPointZ = 0.0F;
 			this.bipedLeftArm.rotationPointX = 5.0F;
 			this.bipedLeftArm.rotateAngleX = MathHelper.cos(ageInTicks * 0.7000F) * 0.05F;
 			this.bipedLeftArm.rotateAngleZ = -2.3561945F;
 			this.bipedLeftArm.rotateAngleY = 0.0F;
+			break;
+		default:
+			break;
 		}
 	}
 
