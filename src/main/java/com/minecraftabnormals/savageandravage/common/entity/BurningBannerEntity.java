@@ -1,5 +1,6 @@
 package com.minecraftabnormals.savageandravage.common.entity;
 
+import com.minecraftabnormals.savageandravage.core.SRConfig;
 import com.minecraftabnormals.savageandravage.core.registry.SREntities;
 import com.minecraftabnormals.savageandravage.core.registry.SRTriggers;
 import net.minecraft.block.BannerBlock;
@@ -110,7 +111,7 @@ public class BurningBannerEntity extends Entity implements IEntityAdditionalSpaw
 			} else if (this.getTicksTillRemove() == 10) {
 				this.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH, 2F, this.world.getRandom().nextFloat() * 0.4F + 0.8F);
 				PlayerEntity offender = this.getOffender();
-				if (offender != null && isOminousBanner(this.world, bannerPos) && ((ServerWorld) this.world).findRaid(bannerPos) == null) {
+				if (offender != null && isOminousBanner(this.world, bannerPos) && ((ServerWorld) this.world).findRaid(bannerPos) == null && SRConfig.COMMON.noBadOmenOnDeath.get()) {
 					SRTriggers.BURN_BANNER.trigger((ServerPlayerEntity) offender);
 					EffectInstance effect = offender.getActivePotionEffect(Effects.BAD_OMEN);
 					if (effect != null)

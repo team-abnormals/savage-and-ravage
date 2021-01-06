@@ -178,8 +178,7 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 		}
 	}
 
-	private ArrayList<BlockPos> findOutlines(ArrayList<BlockPos> edgePositions, ArrayList<BlockPos> holePositions, ISeedReader reader
-	) {
+	private ArrayList<BlockPos> findOutlines(ArrayList<BlockPos> edgePositions, ArrayList<BlockPos> holePositions, ISeedReader reader) {
 		BlockPos.Mutable currentPos = new BlockPos.Mutable();
 		ArrayList<BlockPos> outlinePositions = new ArrayList<>();
 		for (BlockPos edgePos : edgePositions) {
