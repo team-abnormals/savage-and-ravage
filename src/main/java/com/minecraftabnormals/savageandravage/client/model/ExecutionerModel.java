@@ -102,7 +102,6 @@ public class ExecutionerModel extends BipedModel<VindicatorEntity> {
 			default:
 				break;
 		}
-
 		boolean isCrossed = illagerArmPose == AbstractIllagerEntity.ArmPose.CROSSED;
 		this.closedArms.showModel = isCrossed;
 		this.bipedLeftArm.showModel = !isCrossed;

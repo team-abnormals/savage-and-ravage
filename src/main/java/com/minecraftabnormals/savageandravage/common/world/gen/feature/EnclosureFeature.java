@@ -63,6 +63,7 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 				if (griefer != null) {
 					BlockPos grieferPos = clearOutlinePositions.get(rand.nextInt(clearOutlinePositions.size())).toMutable(); //put the griefer at a random location on the edge of the hole
 					griefer.setLocationAndAngles(grieferPos.getX(), grieferPos.getY(), grieferPos.getZ(), 0, 0);
+					griefer.enablePersistence();
 					griefer.onInitialSpawn(reader, reader.getDifficultyForLocation(grieferPos), SpawnReason.CHUNK_GENERATION, null, null);
 					reader.addEntity(griefer);
 				}
@@ -218,10 +219,11 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 				MobEntity entity = rand.nextFloat() < 0.5f ? EntityType.CREEPER.create(reader.getWorld()) : SREntities.CREEPIE.get().create(reader.getWorld());
 				if (entity != null) {
 					entity.setLocationAndAngles(currentPos.getX() + 0.5, minY + 1, currentPos.getZ() + 0.5, 0, 0);
-					entity.onInitialSpawn(reader, reader.getDifficultyForLocation(currentPos), SpawnReason.CHUNK_GENERATION, null, null);
+					entity.enablePersistence();
 					if (entity instanceof CreepieEntity) {
 						((CreepieEntity) entity).attackPlayersOnly = true;
 					}
+					entity.onInitialSpawn(reader, reader.getDifficultyForLocation(currentPos), SpawnReason.CHUNK_GENERATION, null, null);
 					reader.addEntity(entity);
 				}
 			}
@@ -453,6 +455,7 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 									if (creeper != null) {
 										currentPos.setPos(decorationPositions[2 + rand.nextInt(2)][i]);
 										creeper.setLocationAndAngles(currentPos.getX(), currentPos.getY(), currentPos.getZ(), 0, 0);
+										creeper.enablePersistence();
 										creeper.onInitialSpawn(reader, reader.getDifficultyForLocation(currentPos), SpawnReason.CHUNK_GENERATION, null, null);
 										reader.addEntity(creeper);
 									}
@@ -476,6 +479,7 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 									if (creeper != null) {
 										currentPos.setPos(decorationPositions[2][i]);
 										creeper.setLocationAndAngles(currentPos.getX(), currentPos.getY(), currentPos.getZ(), 0, 0);
+										creeper.enablePersistence();
 										creeper.onInitialSpawn(reader, reader.getDifficultyForLocation(currentPos), SpawnReason.CHUNK_GENERATION, null, null);
 										reader.addEntity(creeper);
 									}
