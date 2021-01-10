@@ -25,7 +25,7 @@ public class SproutLayer<E extends CreepieEntity, M extends EntityModel<E>> exte
 
 	@Override
 	public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, E entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-		if (!SRConfig.CLIENT.creepieSprout.get()) return;
+		if (!SRConfig.CLIENT.creepieSprout.get() || entity.isInvisible()) return;
 		matrixStackIn.push();
 		matrixStackIn.translate(0.0F, 0.125F, 0.0F);
 		matrixStackIn.scale(1.5F, 1.5F, 1.5F);
