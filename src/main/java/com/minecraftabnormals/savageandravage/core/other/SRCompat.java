@@ -1,6 +1,5 @@
 package com.minecraftabnormals.savageandravage.core.other;
 
-import com.minecraftabnormals.abnormals_core.core.util.BlockUtil;
 import com.minecraftabnormals.abnormals_core.core.util.DataUtil;
 import com.minecraftabnormals.savageandravage.common.entity.BurningBannerEntity;
 import com.minecraftabnormals.savageandravage.common.entity.MischiefArrowEntity;
