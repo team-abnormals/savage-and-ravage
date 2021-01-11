@@ -35,7 +35,7 @@ public class CreeperSporesItem extends Item implements PottableItem {
 		player.addStat(Stats.ITEM_USED.get(this));
 		if (!player.isCreative())
 			stack.shrink(1);
-
+		player.getCooldownTracker().setCooldown(this, 30);
 		return ActionResult.resultSuccess(stack);
 	}
 
