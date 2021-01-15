@@ -19,14 +19,14 @@ public class SREffects {
 	public static final DeferredRegister<Effect> EFFECTS = DeferredRegister.create(ForgeRegistries.POTIONS, SavageAndRavage.MOD_ID);
 	public static final DeferredRegister<Potion> POTIONS = DeferredRegister.create(ForgeRegistries.POTION_TYPES, SavageAndRavage.MOD_ID);
 
-	public static final RegistryObject<Effect> GROWING = EFFECTS.register("growing", GrowingEffect::new);
+	public static final RegistryObject<Effect> GROWING   = EFFECTS.register("growing", GrowingEffect::new);
 	public static final RegistryObject<Effect> SHRINKING = EFFECTS.register("shrinking", ShrinkingEffect::new);
 	public static final RegistryObject<Effect> FROSTBITE = EFFECTS.register("frostbite", FrostbiteEffect::new);
 
 	public static final RegistryObject<Potion> GROWTH_NORMAL = POTIONS.register("growth", () -> new Potion(new EffectInstance(GROWING.get(), 600)));
-	public static final RegistryObject<Potion> GROWTH_LONG = POTIONS.register("growth_long", () -> new Potion(new EffectInstance(GROWING.get(), 1800)));
-	public static final RegistryObject<Potion> YOUTH_NORMAL = POTIONS.register("youth", () -> new Potion(new EffectInstance(SHRINKING.get(), 600)));
-	public static final RegistryObject<Potion> YOUTH_LONG = POTIONS.register("youth_long", () -> new Potion(new EffectInstance(SHRINKING.get(), 1800)));
+	public static final RegistryObject<Potion> GROWTH_LONG   = POTIONS.register("growth_long", () -> new Potion(new EffectInstance(GROWING.get(), 1800)));
+	public static final RegistryObject<Potion> YOUTH_NORMAL  = POTIONS.register("youth", () -> new Potion(new EffectInstance(SHRINKING.get(), 600)));
+	public static final RegistryObject<Potion> YOUTH_LONG    = POTIONS.register("youth_long", () -> new Potion(new EffectInstance(SHRINKING.get(), 1800)));
 
 	private static final Method ADD_MIX_METHOD = ObfuscationReflectionHelper.findMethod(PotionBrewing.class, "func_193357_a", Potion.class, Item.class, Potion.class);
 
