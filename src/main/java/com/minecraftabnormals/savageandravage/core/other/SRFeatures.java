@@ -47,7 +47,7 @@ public class SRFeatures {
 			if (biome.getCategory() != Biome.Category.MUSHROOM && biome.getCategory() != Biome.Category.NONE) {
 				return false;
 			} else
-				return biome == ForgeRegistries.BIOMES.getValue(new ResourceLocation("biomesoplenty", "rainbow_valley"));
+				return biome == ForgeRegistries.BIOMES.getValue(new ResourceLocation("biomesoplenty", "rainbow_hills"));
 		}
 		return true;
 	}
