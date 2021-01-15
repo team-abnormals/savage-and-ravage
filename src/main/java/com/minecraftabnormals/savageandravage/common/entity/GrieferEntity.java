@@ -189,12 +189,12 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 		return this.dataManager.get(APESHIT_MODE);
 	}
 
-	public void setKicking(boolean trueorfalse) {
-		this.dataManager.set(KICKING, trueorfalse);
+	public void setKicking(boolean shouldSetKicking) {
+		this.dataManager.set(KICKING, shouldSetKicking);
 	}
 
-	public void becomeApeshit(boolean trueorfalse) {
-		this.dataManager.set(APESHIT_MODE, trueorfalse);
+	public void becomeApeshit(boolean shouldBecomeApeshit) {
+		this.dataManager.set(APESHIT_MODE, shouldBecomeApeshit);
 	}
 
 	@Nullable
@@ -231,7 +231,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 	public void attackEntityWithRangedAttack(LivingEntity target, float distanceFactor) {
 		if (this.world.getTargettableEntitiesWithinAABB(CreepieEntity.class, social_distance, this, this.getBoundingBox().grow(30.0D)).size() < 5 && this.getHeldItemMainhand().getItem() instanceof CreeperSporesItem) {
 			SporeCloudEntity creeperSpores = new SporeCloudEntity(this.world, this);
-			double distance = target.getPosYEye() - (double) 1.1F;
+			double distance = target.getPosY() -1;
 			double d1 = target.getPosX() - this.getPosX();
 			double d2 = distance - creeperSpores.getPosY();
 			double d3 = target.getPosZ() - this.getPosZ();
@@ -329,6 +329,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 		}
 	}
 
+	//TODO fix weird pathfinding with strafing
 	public static class GrieferAttackWithSporesGoal extends Goal {
 		private final GrieferEntity griefer;
 		private int rangedAttackTime = -1;
@@ -340,13 +341,13 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 		private boolean strafingBackwards;
 		private int seeTime;
 
-		public GrieferAttackWithSporesGoal(GrieferEntity attacker, double movespeed, int maxAttackTime) {
-			this(attacker, movespeed, maxAttackTime, maxAttackTime);
+		public GrieferAttackWithSporesGoal(GrieferEntity attacker, double moveSpeed, int maxAttackTime) {
+			this(attacker, moveSpeed, maxAttackTime, maxAttackTime);
 		}
 
-		public GrieferAttackWithSporesGoal(GrieferEntity attacker, double movespeed, int p_i1650_4_, int maxAttackTime) {
+		public GrieferAttackWithSporesGoal(GrieferEntity attacker, double moveSpeed, int p_i1650_4_, int maxAttackTime) {
 			this.griefer = attacker;
-			this.entityMoveSpeed = movespeed;
+			this.entityMoveSpeed = moveSpeed;
 			this.attackIntervalMin = p_i1650_4_;
 			this.maxRangedAttackTime = maxAttackTime;
 			this.attackRadius = (float) 15.0D;
@@ -375,6 +376,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 		public void resetTask() {
 			this.griefer.setAggroed(false);
 			this.griefer.setAttackTarget(null);
+			this.griefer.getNavigator();
 			this.rangedAttackTime = -1;
 			if (griefer.isKicking()) {
 				this.griefer.setKicking(false);

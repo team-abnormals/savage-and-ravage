@@ -1,6 +1,6 @@
 package com.minecraftabnormals.savageandravage.common.block;
 
-import com.minecraftabnormals.abnormals_core.core.util.item.ItemStackUtil;
+import com.minecraftabnormals.abnormals_core.core.util.item.filling.TargetedItemGroupFiller;
 import com.minecraftabnormals.savageandravage.common.entity.block.SporeBombEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -19,6 +19,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 
 public class SporeBombBlock extends TNTBlock {
+	private static final TargetedItemGroupFiller FILLER = new TargetedItemGroupFiller(() -> Items.TNT);
 	public SporeBombBlock(Block.Properties properties) {
 		super(properties);
 	}
@@ -47,13 +48,6 @@ public class SporeBombBlock extends TNTBlock {
 
 	@Override
 	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-		if (ItemStackUtil.isInGroup(this.asItem(), group)) {
-			int targetIndex = ItemStackUtil.findIndexOfItem(Items.TNT, items);
-			if (targetIndex != -1) {
-				items.add(targetIndex + 1, new ItemStack(this));
-			} else {
-				super.fillItemGroup(group, items);
-			}
-		}
+		FILLER.fillItem(this.asItem(), group, items);
 	}
 }

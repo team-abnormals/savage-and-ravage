@@ -47,7 +47,9 @@ public class SRCompat {
 		DispenserBlock.registerDispenseBehavior(SRItems.CREEPER_SPORES.get(), new ProjectileDispenseBehavior() {
 			@Override
 			protected ProjectileEntity getProjectileEntity(World world, IPosition position, ItemStack stack) {
-				return new SporeCloudEntity(world, position.getX(), position.getY(), position.getZ());
+				SporeCloudEntity cloud = new SporeCloudEntity(world, position.getX(), position.getY(), position.getZ());
+				cloud.setCloudSize(world.getRandom().nextInt(50) == 0 ? 0 : 1 + world.getRandom().nextInt(3));
+				return cloud;
 			}
 		});
 

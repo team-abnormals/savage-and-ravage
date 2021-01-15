@@ -21,8 +21,8 @@ public class SRParticles {
 	public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, SavageAndRavage.MOD_ID);
 
 	public static final RegistryObject<BasicParticleType> CREEPER_SPORES = PARTICLES.register("creeper_spores", () -> new BasicParticleType(true));
-	public static final RegistryObject<BasicParticleType> RUNE = PARTICLES.register("rune", () -> new BasicParticleType(true));
-	public static final RegistryObject<BasicParticleType> SNOWFLAKE = PARTICLES.register("snowflake", () -> new BasicParticleType(true));
+	public static final RegistryObject<BasicParticleType> RUNE           = PARTICLES.register("rune", () -> new BasicParticleType(true));
+	public static final RegistryObject<BasicParticleType> SNOWFLAKE      = PARTICLES.register("snowflake", () -> new BasicParticleType(true));
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public static void registerParticleFactories(ParticleFactoryRegisterEvent event) {
