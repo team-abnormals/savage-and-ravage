@@ -241,8 +241,8 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
                     for (Direction dir : horizontalDirections) {
                         secondFencePos.setPos(firstFencePos.offset(dir));
                         if (nonFenceOutlines.contains(secondFencePos) && reader.getBlockState(secondFencePos.offset(Direction.DOWN)).isOpaqueCube(reader, secondFencePos.offset(Direction.DOWN))) {
-                            reader.setBlockState(firstFencePos, Blocks.SPRUCE_FENCE.getDefaultState(), 3);
-                            reader.setBlockState(secondFencePos, Blocks.SPRUCE_FENCE.getDefaultState(), 3);
+                            reader.setBlockState(firstFencePos, Blocks.DARK_OAK_FENCE.getDefaultState(), 3);
+                            reader.setBlockState(secondFencePos, Blocks.DARK_OAK_FENCE.getDefaultState(), 3);
                             // Removed so that the griefer doesn't spawn in a fence. Also prevents redundant placement.
                             nonFenceOutlines.remove(firstFencePos);
                             nonFenceOutlines.remove(secondFencePos);
@@ -420,19 +420,19 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
                             for (int i = 0; i < 6; i++) {
                                 if (i == 0 || i == 4) {
                                     for (int j = 0; j < 5; j++) {
-                                        reader.setBlockState(decorationPositions[j][i], Blocks.OAK_FENCE.getDefaultState(), 3);
-                                        reader.setBlockState(decorationPositions[j][i].offset(Direction.UP), Blocks.OAK_FENCE.getDefaultState(), 3);
+                                        reader.setBlockState(decorationPositions[j][i], Blocks.DARK_OAK_FENCE.getDefaultState(), 3);
+                                        reader.setBlockState(decorationPositions[j][i].offset(Direction.UP), Blocks.DARK_OAK_FENCE.getDefaultState(), 3);
                                         if (i == 4) {
-                                            reader.setBlockState(decorationPositions[2][i], Blocks.OAK_PLANKS.getDefaultState(), 3);
+                                            reader.setBlockState(decorationPositions[2][i], Blocks.DARK_OAK_PLANKS.getDefaultState(), 3);
                                         }
                                     }
                                 } else if (i == 5) {
-                                    reader.setBlockState(decorationPositions[2][4].offset(dir), Blocks.OAK_BUTTON.getDefaultState().with(HorizontalFaceBlock.HORIZONTAL_FACING, dir), 3);
+                                    reader.setBlockState(decorationPositions[2][4].offset(dir), Blocks.DARK_OAK_BUTTON.getDefaultState().with(HorizontalFaceBlock.HORIZONTAL_FACING, dir), 3);
                                 } else {
-                                    reader.setBlockState(decorationPositions[0][i], Blocks.OAK_FENCE.getDefaultState(), 3);
-                                    reader.setBlockState(decorationPositions[0][i].offset(Direction.UP), Blocks.OAK_FENCE.getDefaultState(), 3);
-                                    reader.setBlockState(decorationPositions[4][i], Blocks.OAK_FENCE.getDefaultState(), 3);
-                                    reader.setBlockState(decorationPositions[4][i].offset(Direction.UP), Blocks.OAK_FENCE.getDefaultState(), 3);
+                                    reader.setBlockState(decorationPositions[0][i], Blocks.DARK_OAK_FENCE.getDefaultState(), 3);
+                                    reader.setBlockState(decorationPositions[0][i].offset(Direction.UP), Blocks.DARK_OAK_FENCE.getDefaultState(), 3);
+                                    reader.setBlockState(decorationPositions[4][i], Blocks.DARK_OAK_FENCE.getDefaultState(), 3);
+                                    reader.setBlockState(decorationPositions[4][i].offset(Direction.UP), Blocks.DARK_OAK_FENCE.getDefaultState(), 3);
                                     if (i == 3) {
                                         reader.setBlockState(decorationPositions[2][i], SRBlocks.SPORE_BOMB.get().getDefaultState(), 3);
                                     }
@@ -443,10 +443,10 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
                             // Medium cage
                             for (int i = 0; i < 4; i++) {
                                 if (i > 0 && i < 3) {
-                                    reader.setBlockState(decorationPositions[1][i], Blocks.OAK_FENCE.getDefaultState(), 3);
-                                    reader.setBlockState(decorationPositions[1][i].offset(Direction.UP), Blocks.OAK_FENCE.getDefaultState(), 3);
-                                    reader.setBlockState(decorationPositions[4][i], Blocks.OAK_FENCE.getDefaultState(), 3);
-                                    reader.setBlockState(decorationPositions[4][i].offset(Direction.UP), Blocks.OAK_FENCE.getDefaultState(), 3);
+                                    reader.setBlockState(decorationPositions[1][i], Blocks.DARK_OAK_FENCE.getDefaultState(), 3);
+                                    reader.setBlockState(decorationPositions[1][i].offset(Direction.UP), Blocks.DARK_OAK_FENCE.getDefaultState(), 3);
+                                    reader.setBlockState(decorationPositions[4][i], Blocks.DARK_OAK_FENCE.getDefaultState(), 3);
+                                    reader.setBlockState(decorationPositions[4][i].offset(Direction.UP), Blocks.DARK_OAK_FENCE.getDefaultState(), 3);
                                     CreeperEntity creeper = EntityType.CREEPER.create(reader.getWorld());
                                     if (creeper != null) {
                                         currentPos.setPos(decorationPositions[2 + rand.nextInt(2)][i]);
@@ -457,8 +457,8 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
                                     }
                                 } else {
                                     for (int j = 1; j < 5; j++) {
-                                        reader.setBlockState(decorationPositions[j][i], Blocks.OAK_FENCE.getDefaultState(), 3);
-                                        reader.setBlockState(decorationPositions[j][i].offset(Direction.UP), Blocks.OAK_FENCE.getDefaultState(), 3);
+                                        reader.setBlockState(decorationPositions[j][i], Blocks.DARK_OAK_FENCE.getDefaultState(), 3);
+                                        reader.setBlockState(decorationPositions[j][i].offset(Direction.UP), Blocks.DARK_OAK_FENCE.getDefaultState(), 3);
                                     }
                                 }
                             }
@@ -467,10 +467,10 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
                             // Small cage
                             for (int i = 0; i < 3; i++) {
                                 if (i == 1) {
-                                    reader.setBlockState(decorationPositions[1][i], Blocks.OAK_FENCE.getDefaultState(), 3);
-                                    reader.setBlockState(decorationPositions[1][i].offset(Direction.UP), Blocks.OAK_FENCE.getDefaultState(), 3);
-                                    reader.setBlockState(decorationPositions[3][i], Blocks.OAK_FENCE.getDefaultState(), 3);
-                                    reader.setBlockState(decorationPositions[3][i].offset(Direction.UP), Blocks.OAK_FENCE.getDefaultState(), 3);
+                                    reader.setBlockState(decorationPositions[1][i], Blocks.DARK_OAK_FENCE.getDefaultState(), 3);
+                                    reader.setBlockState(decorationPositions[1][i].offset(Direction.UP), Blocks.DARK_OAK_FENCE.getDefaultState(), 3);
+                                    reader.setBlockState(decorationPositions[3][i], Blocks.DARK_OAK_FENCE.getDefaultState(), 3);
+                                    reader.setBlockState(decorationPositions[3][i].offset(Direction.UP), Blocks.DARK_OAK_FENCE.getDefaultState(), 3);
                                     CreeperEntity creeper = EntityType.CREEPER.create(reader.getWorld());
                                     if (creeper != null) {
                                         currentPos.setPos(decorationPositions[2][i]);
@@ -481,8 +481,8 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
                                     }
                                 } else {
                                     for (int j = 1; j < 4; j++) {
-                                        reader.setBlockState(decorationPositions[j][i], Blocks.OAK_FENCE.getDefaultState(), 3);
-                                        reader.setBlockState(decorationPositions[j][i].offset(Direction.UP), Blocks.OAK_FENCE.getDefaultState(), 3);
+                                        reader.setBlockState(decorationPositions[j][i], Blocks.DARK_OAK_FENCE.getDefaultState(), 3);
+                                        reader.setBlockState(decorationPositions[j][i].offset(Direction.UP), Blocks.DARK_OAK_FENCE.getDefaultState(), 3);
                                     }
                                 }
                             }
