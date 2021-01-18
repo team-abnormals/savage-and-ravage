@@ -11,7 +11,6 @@ import net.minecraft.entity.monster.AbstractIllagerEntity;
 import net.minecraft.entity.monster.ZombieVillagerEntity;
 import net.minecraft.entity.monster.ZombifiedPiglinEntity;
 import net.minecraft.entity.monster.piglin.AbstractPiglinEntity;
-import net.minecraft.entity.monster.piglin.PiglinEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
