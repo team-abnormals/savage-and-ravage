@@ -5,8 +5,6 @@ import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.LivingEntity;
 
 public class VillagerArmorModel<T extends LivingEntity> extends BipedModel<T> {
-	public float kickingTime;
-
 	public VillagerArmorModel(float modelSize) {
 		super(modelSize);
 		this.bipedHead = new ModelRenderer(this, 0, 0);

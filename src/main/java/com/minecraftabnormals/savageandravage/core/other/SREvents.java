@@ -29,6 +29,10 @@ import net.minecraft.entity.passive.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
+import net.minecraft.loot.LootContext;
+import net.minecraft.loot.LootParameterSets;
+import net.minecraft.loot.LootParameters;
+import net.minecraft.loot.LootTable;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.particles.ParticleTypes;
@@ -117,17 +121,19 @@ public class SREvents {
 		if (event.getEntity().getType() == EntityType.CREEPER) {
 			CreeperEntity creeper = (CreeperEntity) event.getEntity();
 			if (event.getSource().isExplosion() && SRConfig.COMMON.creepersDropSporesAfterExplosionDeath.get()) {
-				creeper.entityDropItem(new ItemStack(SRItems.CREEPER_SPORES.get(), 1 + creeper.world.rand.nextInt(3)));
-			}
-		} else if (event.getEntity() instanceof PillagerEntity) {
-			PillagerEntity pillager = (PillagerEntity) event.getEntity();
-			if (pillager.world.isRemote() && ((ServerWorld) pillager.getEntityWorld()).findRaid(pillager.getPosition()) != null) {
-				pillager.entityDropItem(new ItemStack(Items.EMERALD, pillager.world.rand.nextInt(2)));
-				if (pillager.world.rand.nextDouble() < 0.05D) {
-					pillager.entityDropItem(new ItemStack(Items.EMERALD, 4 + pillager.world.rand.nextInt(1)));
-				}
-				if (pillager.world.rand.nextDouble() < 0.12D) {
-					pillager.entityDropItem(new ItemStack(Items.EMERALD, 2 + pillager.world.rand.nextInt(1)));
+				LootTable loottable = creeper.world.getServer().getLootTableManager().getLootTableFromLocation(SRLootTables.CREEPER_EXPLOSION_DROPS);
+				LootContext ctx = new LootContext.Builder((ServerWorld) creeper.world).withParameter(LootParameters.THIS_ENTITY, creeper).withRandom(creeper.world.rand).build(LootParameterSets.field_237453_h_);
+				loottable.generate(ctx).forEach(creeper::entityDropItem);
+			} else if (event.getEntity() instanceof PillagerEntity) {
+				PillagerEntity pillager = (PillagerEntity) event.getEntity();
+				if (pillager.world.isRemote() && ((ServerWorld) pillager.getEntityWorld()).findRaid(pillager.getPosition()) != null) {
+					pillager.entityDropItem(new ItemStack(Items.EMERALD, pillager.world.rand.nextInt(2)));
+					if (pillager.world.rand.nextDouble() < 0.05D) {
+						pillager.entityDropItem(new ItemStack(Items.EMERALD, 4 + pillager.world.rand.nextInt(1)));
+					}
+					if (pillager.world.rand.nextDouble() < 0.12D) {
+						pillager.entityDropItem(new ItemStack(Items.EMERALD, 2 + pillager.world.rand.nextInt(1)));
+					}
 				}
 			}
 		}
