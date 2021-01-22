@@ -15,10 +15,10 @@
   "block.savageandravage.spore_bomb": "Bomba de esporas",
 
   "item.savageandravage.blast_proof_plating": "Blindaje a prueba de explosiones",
-  "item.savageandravage.griefer_helmet": "Yelmo de alborotador",
-  "item.savageandravage.griefer_chestplate": "Pechera de alborotador",
-  "item.savageandravage.griefer_leggings": "Grebas de alborotador",
-  "item.savageandravage.griefer_boots": "Botas de alborotador",
+  "item.savageandravage.griefer_helmet": "Yelmo de buscapleitos",
+  "item.savageandravage.griefer_chestplate": "Pechera de buscapleitos",
+  "item.savageandravage.griefer_leggings": "Grebas de buscapleitos",
+  "item.savageandravage.griefer_boots": "Botas de buscapleitos",
 
   "item.savageandravage.wand_of_freezing": "Varita de congelación",
   "item.savageandravage.cleaver_of_beheading": "Cuchilla de decapitación",
@@ -27,12 +27,12 @@
   "item.savageandravage.mischief_arrow": "Flecha traviesa",
 
   "item.savageandravage.skeleton_villager_spawn_egg": "Generar aldeano esqueleto",
-  "item.savageandravage.griefer_spawn_egg": "Generar alborotador",
+  "item.savageandravage.griefer_spawn_egg": "Generar buscapleitos",
   "item.savageandravage.executioner_spawn_egg": "Generar verdugo",
   "item.savageandravage.iceologer_spawn_egg": "Generar friólogo",
 
   "entity.savageandravage.skeleton_villager": "Aldeano esqueleto",
-  "entity.savageandravage.griefer": "Alborotador",
+  "entity.savageandravage.griefer": "Buscapleitos",
   "entity.savageandravage.creepie": "Creepie",
   "entity.savageandravage.spore_cloud": "Nube de esporas",
   "entity.savageandravage.spore_bomb": "Bomba de esporas",
@@ -50,11 +50,14 @@
 
   "attribute.name.generic.explosive_damage_reduction": "Reducción de daño explosivo",
 
-  "advancements.savageandravage.story.griefer_armor.title": "Dinamita con un rayo láser",
-  "advancements.savageandravage.story.griefer_armor.description": "Consigue una armadura de alborotador completa",
+  "advancements.savageandravage.adventure.creeper_spores.title": "Ataques esporádicos",
+  "advancements.savageandravage.adventure.creeper_spores.description": "Obtén esporas de creeper matando a un creeper con una explosión",
+  "advancements.savageandravage.adventure.griefer_armor.title": "Dinamita con un rayo láser",
+  "advancements.savageandravage.adventure.griefer_armor.description": "Consigue el conjunto completo de la armadura de buscapleitos",
   "advancements.savageandravage.adventure.relic_collector.title": "Coleccionista de reliquias",
-  "advancements.savageandravage.adventure.relic_collector.description": "Obtén un tótem de la inmortalidad, una cuchilla de decapitación y una varita de congelación",
-  "advancements.savageandravage.adventure.voluntary_exile.description": "Prende fuego a un estandarte de mal presagio.\nY a lo mejor te conviente alejarte de las aldeas por el momento...",
+  "advancements.savageandravage.adventure.relic_collector.description": "Reune un tótem de la inmortalidad, una cuchilla de decapitación y una varita de congelación",
+
+  "advancements.savageandravage.adventure.voluntary_exile.description": "Prende fuego un estandarte de mal presagio.\nSería mejor alejarte de las aldeas por un tiempo...",
 
   "subtitles.savageandravage.entity.creepie.hurt": "Creepie herido",
   "subtitles.savageandravage.entity.creepie.death": "Creepie muerto",
