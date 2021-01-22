@@ -49,11 +49,14 @@
   "effect.savageandravage.frostbite": "Frostbite",
   
   "attribute.name.generic.explosive_damage_reduction": "Explosive Damage Reduction",
-  
-  "advancements.savageandravage.story.griefer_armor.title": "Dynamite with a Laser Beam",
-  "advancements.savageandravage.story.griefer_armor.description": "Get a full suit of Griefer armor",
+
+  "advancements.savageandravage.adventure.creeper_spores.title": "Creepie Crawly",
+  "advancements.savageandravage.adventure.creeper_spores.description": "Obtain Creeper Spores by killing a Creeper with an explosion",
+  "advancements.savageandravage.adventure.griefer_armor.title": "Dynamite with a Laser Beam",
+  "advancements.savageandravage.adventure.griefer_armor.description": "Collect a full set of Griefer armor",
   "advancements.savageandravage.adventure.relic_collector.title": "Relic Collector",
   "advancements.savageandravage.adventure.relic_collector.description": "Obtain a Totem of Undying, Cleaver of Beheading, and Wand of Freezing",
+
   "advancements.savageandravage.adventure.voluntary_exile.description": "Set fire to an Ominous Banner.\nMaybe consider staying away from villages for the time being...",
 
   "subtitles.savageandravage.entity.creepie.hurt": "Creepie hurts",

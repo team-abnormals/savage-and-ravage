@@ -1,5 +1,6 @@
 package com.minecraftabnormals.savageandravage.common.item;
 
+import com.minecraftabnormals.abnormals_core.core.util.item.filling.TargetedItemGroupFiller;
 import com.minecraftabnormals.savageandravage.common.block.PottedCreeperSporesBlock;
 import com.minecraftabnormals.savageandravage.common.entity.SporeCloudEntity;
 import com.minecraftabnormals.savageandravage.core.registry.SRBlocks;
@@ -7,15 +8,15 @@ import com.minecraftabnormals.savageandravage.core.registry.SRSounds;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 
 public class CreeperSporesItem extends Item implements PottableItem {
+	private static final TargetedItemGroupFiller FILLER = new TargetedItemGroupFiller(() -> Items.EGG);
 
 	public CreeperSporesItem(Item.Properties properties) {
 		super(properties);
@@ -35,12 +36,17 @@ public class CreeperSporesItem extends Item implements PottableItem {
 		player.addStat(Stats.ITEM_USED.get(this));
 		if (!player.isCreative())
 			stack.shrink(1);
-
+		player.getCooldownTracker().setCooldown(this, 30);
 		return ActionResult.resultSuccess(stack);
 	}
 
 	@Override
 	public BlockState getPottedState(Direction direction) {
 		return ((PottedCreeperSporesBlock) SRBlocks.POTTED_CREEPER_SPORES.get()).getDirectionalState(direction);
+	}
+
+	@Override
+	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
+		FILLER.fillItem(this, group, items);
 	}
 }

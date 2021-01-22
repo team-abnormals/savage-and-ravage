@@ -1,6 +1,6 @@
 {
-  "type":"chest",
-  "pools":[
+  "type": "chest",
+  "pools": [
     {
       "rolls": {
         "min": 2,
@@ -8,30 +8,30 @@
       },
       "entries": [
         {
-          "type":"item",
-          "weight":4,
-          "quality":0,
-          "name":"minecraft:leather",
-          "functions":[
+          "type": "item",
+          "weight": 4,
+          "quality": 0,
+          "name": "minecraft:leather",
+          "functions": [
             {
-              "function":"set_count",
-              "count":{
-                "min":2,
-                "max":6
+              "function": "set_count",
+              "count": {
+                "min": 2,
+                "max": 6
               }
             }
           ]
         },
         {
-          "type":"item",
-          "weight":3,
-          "name":"minecraft:gunpowder",
-          "functions":[
+          "type": "item",
+          "weight": 3,
+          "name": "minecraft:gunpowder",
+          "functions": [
             {
-              "function":"set_count",
-              "count":{
-                "min":1,
-                "max":4
+              "function": "set_count",
+              "count": {
+                "min": 1,
+                "max": 4
               }
             }
           ]
@@ -46,29 +46,29 @@
       "bonus_rolls": 1,
       "entries": [
         {
-          "type":"item",
-          "weight":1,
-          "name":"savageandravage:blast_proof_plating",
-          "functions":[
+          "type": "item",
+          "weight": 1,
+          "name": "savageandravage:blast_proof_plating",
+          "functions": [
             {
-              "function":"set_count",
-              "count":{
-                "min":1,
-                "max":1
+              "function": "set_count",
+              "count": {
+                "min": 1,
+                "max": 1
               }
             }
           ]
         },
         {
-          "type":"item",
-          "weight":1,
-          "name":"minecraft:gold_ingot",
-          "functions":[
+          "type": "item",
+          "weight": 1,
+          "name": "minecraft:gold_ingot",
+          "functions": [
             {
-              "function":"set_count",
-              "count":{
-                "min":1,
-                "max":1
+              "function": "set_count",
+              "count": {
+                "min": 1,
+                "max": 1
               }
             }
           ]
@@ -82,30 +82,30 @@
       },
       "entries": [
         {
-          "type":"item",
-          "weight":1,
-          "quality":1,
-          "name":"savageandravage:creeper_spores",
-          "functions":[
+          "type": "item",
+          "weight": 1,
+          "quality": 1,
+          "name": "savageandravage:creeper_spores",
+          "functions": [
             {
-              "function":"set_count",
-              "count":{
-                "min":1,
-                "max":3
+              "function": "set_count",
+              "count": {
+                "min": 1,
+                "max": 3
               }
             }
           ]
         },
         {
-          "type":"item",
-          "weight":1,
-          "name":"minecraft:gold_nugget",
-          "functions":[
+          "type": "item",
+          "weight": 1,
+          "name": "minecraft:gold_nugget",
+          "functions": [
             {
-              "function":"set_count",
-              "count":{
-                "min":2,
-                "max":6
+              "function": "set_count",
+              "count": {
+                "min": 2,
+                "max": 6
               }
             }
           ]

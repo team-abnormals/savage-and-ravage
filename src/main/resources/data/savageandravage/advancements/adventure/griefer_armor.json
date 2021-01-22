@@ -1,15 +1,15 @@
 {
-  "parent": "minecraft:story/obtain_armor",
+  "parent": "savageandravage:adventure/creeper_spores",
   "display": {
     "icon": {
       "item": "savageandravage:griefer_chestplate",
       "nbt": "{Damage:0}"
     },
     "title": {
-      "translate": "advancements.savageandravage.story.griefer_armor.title"
+      "translate": "advancements.savageandravage.adventure.griefer_armor.title"
     },
     "description": {
-      "translate": "advancements.savageandravage.story.griefer_armor.description"
+      "translate": "advancements.savageandravage.adventure.griefer_armor.description"
     },
     "frame": "challenge",
     "show_toast": true,
