@@ -97,5 +97,23 @@
       "mob/evocation_illager/prepare_attack2"
     ],
     "subtitle": "subtitles.savageandravage.block.runed_gloomy_tiles.activate"
+  },
+  "block.note_block.hit_marker": {
+    "sounds": [
+      "savageandravage:block/note_block/hit_marker"
+    ],
+    "subtitle": "subtitles.block.note_block.note"
+  },
+  "block.note_block.harpsichord": {
+    "sounds": [
+      "savageandravage:block/note_block/harpsichord"
+    ],
+    "subtitle": "subtitles.block.note_block.note"
+  },
+  "block.note_block.orchestral_hit": {
+    "sounds": [
+      "savageandravage:block/note_block/orchestral_hit"
+    ],
+    "subtitle": "subtitles.block.note_block.note"
   }
 }

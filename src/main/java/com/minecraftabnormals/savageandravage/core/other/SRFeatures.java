@@ -9,7 +9,6 @@ import com.minecraftabnormals.savageandravage.common.world.gen.feature.Enclosure
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 import com.minecraftabnormals.savageandravage.core.registry.SREntities;
 import com.mojang.datafixers.util.Pair;
-import com.sun.org.apache.regexp.internal.RE;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;

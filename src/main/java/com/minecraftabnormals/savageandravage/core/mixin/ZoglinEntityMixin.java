@@ -11,7 +11,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ZoglinEntity.class)
 public abstract class ZoglinEntityMixin {
-
 	@Inject(at = @At("RETURN"), method = "func_234337_j_", cancellable = true)
 	private static void func_234337_j_(LivingEntity entity, CallbackInfoReturnable<Boolean> ci) {
 		if (!SRConfig.COMMON.creeperExplosionsDestroyBlocks.get() && entity.getType() == EntityType.CREEPER)

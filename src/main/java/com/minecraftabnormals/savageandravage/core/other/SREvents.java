@@ -1,10 +1,12 @@
 package com.minecraftabnormals.savageandravage.core.other;
 
 import com.minecraftabnormals.abnormals_core.core.api.IAgeableEntity;
+import com.minecraftabnormals.abnormals_core.core.util.NetworkUtil;
 import com.minecraftabnormals.savageandravage.common.effect.GrowingEffect;
 import com.minecraftabnormals.savageandravage.common.effect.ShrinkingEffect;
 import com.minecraftabnormals.savageandravage.common.entity.*;
 import com.minecraftabnormals.savageandravage.common.entity.block.SporeBombEntity;
+import com.minecraftabnormals.savageandravage.common.entity.goals.AttackTargetBlockRandomlyGoal;
 import com.minecraftabnormals.savageandravage.common.entity.goals.AvoidGrieferOwnedCreepiesGoal;
 import com.minecraftabnormals.savageandravage.common.entity.goals.ImprovedCrossbowGoal;
 import com.minecraftabnormals.savageandravage.common.item.PottableItem;
@@ -53,6 +55,7 @@ import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.event.entity.living.PotionEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
+import net.minecraftforge.event.world.NoteBlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
@@ -73,6 +76,8 @@ public class SREvents {
 		if (event.getEntity() instanceof PillagerEntity) {
 			PillagerEntity pillager = (PillagerEntity) event.getEntity();
 			ImprovedCrossbowGoal<PillagerEntity> aiCrossBow = new ImprovedCrossbowGoal<>(pillager, 1.0D, 8.0F, 5.0D);
+			AttackTargetBlockRandomlyGoal<PillagerEntity> attackTargetBlock = new AttackTargetBlockRandomlyGoal<>(pillager);
+			pillager.goalSelector.addGoal(4, attackTargetBlock);
 			pillager.goalSelector.goals.stream().map(it -> it.inner).filter(it -> it instanceof RangedCrossbowAttackGoal<?>).findFirst().ifPresent(crossbowGoal -> {
 				pillager.goalSelector.removeGoal(crossbowGoal);
 				pillager.goalSelector.addGoal(3, aiCrossBow);
@@ -352,12 +357,28 @@ public class SREvents {
 						shouldSetChild = !shouldSetChild;
 					effectInstance = new EffectInstance(shouldSetChild ? Effects.INSTANT_DAMAGE : Effects.INSTANT_HEALTH, 1, 1);
 					effectInstance.getPotion().affectEntity(null, null, affected, effectInstance.getAmplifier(), 1.0D);
-				}
-				if (!affected.world.isRemote()) {
-					((ServerWorld) affected.world).spawnParticle(canChange ? (shouldSetChild ? ParticleTypes.TOTEM_OF_UNDYING : ParticleTypes.HAPPY_VILLAGER) : ParticleTypes.LARGE_SMOKE, affected.getPosXRandom(0.3D), affected.getPosYRandom() - 0.1D, affected.getPosZRandom(0.3D), canChange ? 40 : 20, 0.3D, 0.6D, 0.3D, canChange ? 0.2D : 0.01D);
-					affected.playSound(canChange ? SRSounds.ENTITY_GENERIC_GROWTH_SUCCESS.get() : SRSounds.ENTITY_GENERIC_GROWTH_FAILURE.get(), 1.0F, 1.0F);
+
+					if (!affected.world.isRemote()) {
+						((ServerWorld) affected.world).spawnParticle(canChange ? (shouldSetChild ? ParticleTypes.TOTEM_OF_UNDYING : ParticleTypes.HAPPY_VILLAGER) : ParticleTypes.LARGE_SMOKE, affected.getPosXRandom(0.3D), affected.getPosYRandom() - 0.1D, affected.getPosZRandom(0.3D), canChange ? 40 : 20, 0.3D, 0.6D, 0.3D, canChange ? 0.2D : 0.01D);
+						affected.playSound(canChange ? SRSounds.ENTITY_GENERIC_GROWTH_SUCCESS.get() : SRSounds.ENTITY_GENERIC_GROWTH_FAILURE.get(), 1.0F, 1.0F);
+					}
 				}
 			}
+		}
+	}
+
+	@SubscribeEvent
+	public static void onNoteBlockPlay(NoteBlockEvent.Play event) {
+		BlockPos pos = event.getPos();
+		BlockState state = event.getWorld().getBlockState(pos.offset(Direction.DOWN));
+		SoundEvent sound = state.isIn(Blocks.TARGET) ? SRSounds.BLOCK_NOTE_BLOCK_HIT_MARKER.get() : state.isIn(SRBlocks.GLOOMY_TILES.get()) ? SRSounds.BLOCK_NOTE_BLOCK_HARPSICHORD.get() : state.isIn(SRBlocks.BLAST_PROOF_PLATES.get()) ? SRSounds.BLOCK_NOTE_BLOCK_ORCHESTRAL_HIT.get() : null;
+		if (sound != null) {
+			int note = event.getVanillaNoteId();
+			float f = (float)Math.pow(2.0D, (double)(note - 12) / 12.0D);
+			event.getWorld().playSound(null, pos, sound, SoundCategory.RECORDS, 3.0F, f);
+			if (!event.getWorld().isRemote())
+				NetworkUtil.spawnParticle("note",  pos.getX() + 0.5D, pos.getY() + 1.2D, pos.getZ() + 0.5D, (double) note / 24.0D, 0.0D, 0.0D);
+			event.setCanceled(true);
 		}
 	}
 

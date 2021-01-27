@@ -2,6 +2,8 @@ package com.minecraftabnormals.savageandravage.core.registry;
 
 import com.minecraftabnormals.abnormals_core.core.util.registry.SoundSubRegistryHelper;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
+import net.minecraft.block.Blocks;
+import net.minecraft.state.properties.NoteBlockInstrument;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
@@ -25,4 +27,7 @@ public class SRSounds {
 	public static final RegistryObject<SoundEvent> ENTITY_GENERIC_GROWTH_SUCCESS     = HELPER.createSoundEvent("entity.generic.growth_success");
 	public static final RegistryObject<SoundEvent> ENTITY_GENERIC_GROWTH_FAILURE     = HELPER.createSoundEvent("entity.generic.growth_failure");
 	public static final RegistryObject<SoundEvent> BLOCK_RUNED_GLOOMY_TILES_ACTIVATE = HELPER.createSoundEvent("block.runed_gloomy_tiles.activate");
+	public static final RegistryObject<SoundEvent> BLOCK_NOTE_BLOCK_HIT_MARKER       = HELPER.createSoundEvent("block.note_block.hit_marker");
+	public static final RegistryObject<SoundEvent> BLOCK_NOTE_BLOCK_HARPSICHORD      = HELPER.createSoundEvent("block.note_block.harpsichord");
+	public static final RegistryObject<SoundEvent> BLOCK_NOTE_BLOCK_ORCHESTRAL_HIT   = HELPER.createSoundEvent("block.note_block.orchestral_hit");
 }
