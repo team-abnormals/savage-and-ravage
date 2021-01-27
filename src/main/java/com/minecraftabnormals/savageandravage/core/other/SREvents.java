@@ -40,6 +40,7 @@ import net.minecraft.nbt.ListNBT;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -126,6 +127,8 @@ public class SREvents {
 		if (event.getEntity().getType() == EntityType.CREEPER) {
 			CreeperEntity creeper = (CreeperEntity) event.getEntity();
 			if (event.getSource().isExplosion() && SRConfig.COMMON.creepersDropSporesAfterExplosionDeath.get()) {
+				MinecraftServer server = creeper.world.getServer();
+				if (server == null) return;
 				LootTable loottable = creeper.world.getServer().getLootTableManager().getLootTableFromLocation(SRLootTables.CREEPER_EXPLOSION_DROPS);
 				LootContext ctx = new LootContext.Builder((ServerWorld) creeper.world).withParameter(LootParameters.THIS_ENTITY, creeper).withRandom(creeper.world.rand).build(LootParameterSets.field_237453_h_);
 				loottable.generate(ctx).forEach(creeper::entityDropItem);
@@ -319,50 +322,48 @@ public class SREvents {
 
 	@SubscribeEvent
 	public static void onPotionExpire(PotionEvent.PotionExpiryEvent event) {
-		if (event.getPotionEffect() != null) {
-			LivingEntity affected = event.getEntityLiving();
-			boolean shouldSetChild = event.getPotionEffect().getPotion() instanceof ShrinkingEffect;
-			if (event.getPotionEffect().getPotion() instanceof GrowingEffect || shouldSetChild) {
-				boolean canChange = false;
-				if (affected instanceof IAgeableEntity && ((IAgeableEntity) affected).canAge(!shouldSetChild)) {
-					((IAgeableEntity) affected).attemptAging(!shouldSetChild);
+		if (event.getPotionEffect() == null) return;
+		LivingEntity affected = event.getEntityLiving();
+		boolean shouldSetChild = event.getPotionEffect().getPotion() instanceof ShrinkingEffect;
+		if (event.getPotionEffect().getPotion() instanceof GrowingEffect || shouldSetChild) {
+			boolean canChange = false;
+			if (affected instanceof IAgeableEntity && ((IAgeableEntity) affected).canAge(!shouldSetChild)) {
+				((IAgeableEntity) affected).attemptAging(!shouldSetChild);
+				canChange = true;
+			} else if (affected instanceof SlimeEntity) {
+				SlimeEntity slime = (SlimeEntity) affected;
+				int size = slime.getSlimeSize();
+				if (shouldSetChild ? size > 1 : size < 3) {
 					canChange = true;
-				} else if (affected instanceof SlimeEntity) {
-					SlimeEntity slime = (SlimeEntity) affected;
-					int size = slime.getSlimeSize();
-					if (shouldSetChild ? size > 1 : size < 3) {
-						canChange = true;
-						try {
-							setSize.invoke(slime, (size + (shouldSetChild ? (size < 4 ? -1 : -2) : (size < 2 ? 1 : 2))), false);
-						} catch (IllegalAccessException | InvocationTargetException e) {
-							throw new RuntimeException("Invoking setSize failed. Something has gone horribly wrong with Savage & Ravage!");
-						}
-					}
-				} else if (shouldSetChild != affected.isChild()) {
-					canChange = true;
-					if (affected instanceof AgeableEntity && !(affected instanceof ParrotEntity))
-						((AgeableEntity) affected).setGrowingAge(shouldSetChild ? -24000 : 0);
-					else if (shouldSetChild && affected instanceof CreeperEntity)
-						convertCreeper((CreeperEntity) affected);
-					else if (affected instanceof ZombieEntity || affected instanceof PiglinEntity || affected instanceof ZoglinEntity)
-						((MobEntity) affected).setChild(shouldSetChild);
-					else
-						canChange = false;
-				}
-				if (!canChange) {
-					EffectInstance effectInstance;
-					if (!shouldSetChild)
-						affected.addPotionEffect(new EffectInstance(Effects.ABSORPTION, 2400, 0));
-					if (affected.isEntityUndead())
-						shouldSetChild = !shouldSetChild;
-					effectInstance = new EffectInstance(shouldSetChild ? Effects.INSTANT_DAMAGE : Effects.INSTANT_HEALTH, 1, 1);
-					effectInstance.getPotion().affectEntity(null, null, affected, effectInstance.getAmplifier(), 1.0D);
-
-					if (!affected.world.isRemote()) {
-						((ServerWorld) affected.world).spawnParticle(canChange ? (shouldSetChild ? ParticleTypes.TOTEM_OF_UNDYING : ParticleTypes.HAPPY_VILLAGER) : ParticleTypes.LARGE_SMOKE, affected.getPosXRandom(0.3D), affected.getPosYRandom() - 0.1D, affected.getPosZRandom(0.3D), canChange ? 40 : 20, 0.3D, 0.6D, 0.3D, canChange ? 0.2D : 0.01D);
-						affected.playSound(canChange ? SRSounds.ENTITY_GENERIC_GROWTH_SUCCESS.get() : SRSounds.ENTITY_GENERIC_GROWTH_FAILURE.get(), 1.0F, 1.0F);
+					try {
+						setSize.invoke(slime, (size + (shouldSetChild ? (size < 4 ? -1 : -2) : (size < 2 ? 1 : 2))), false);
+					} catch (IllegalAccessException | InvocationTargetException e) {
+						throw new RuntimeException("Invoking setSize failed. Something has gone horribly wrong with Savage & Ravage!");
 					}
 				}
+			} else if (shouldSetChild != affected.isChild()) {
+				canChange = true;
+				if (affected instanceof AgeableEntity && !(affected instanceof ParrotEntity))
+					((AgeableEntity) affected).setGrowingAge(shouldSetChild ? -24000 : 0);
+				else if (shouldSetChild && affected instanceof CreeperEntity)
+					convertCreeper((CreeperEntity) affected);
+				else if (affected instanceof ZombieEntity || affected instanceof PiglinEntity || affected instanceof ZoglinEntity)
+					((MobEntity) affected).setChild(shouldSetChild);
+				else
+					canChange = false;
+			}
+			if (!canChange) {
+				EffectInstance effectInstance;
+				if (!shouldSetChild)
+					affected.addPotionEffect(new EffectInstance(Effects.ABSORPTION, 2400, 0));
+				if (affected.isEntityUndead())
+					shouldSetChild = !shouldSetChild;
+				effectInstance = new EffectInstance(shouldSetChild ? Effects.INSTANT_DAMAGE : Effects.INSTANT_HEALTH, 1, 1);
+				effectInstance.getPotion().affectEntity(null, null, affected, effectInstance.getAmplifier(), 1.0D);
+			}
+			if (!affected.world.isRemote()) {
+				((ServerWorld) affected.world).spawnParticle(canChange ? (shouldSetChild ? ParticleTypes.TOTEM_OF_UNDYING : ParticleTypes.HAPPY_VILLAGER) : ParticleTypes.LARGE_SMOKE, affected.getPosXRandom(0.3D), affected.getPosYRandom() - 0.1D, affected.getPosZRandom(0.3D), canChange ? 40 : 20, 0.3D, 0.6D, 0.3D, canChange ? 0.2D : 0.01D);
+				affected.playSound(canChange ? SRSounds.ENTITY_GENERIC_GROWTH_SUCCESS.get() : SRSounds.ENTITY_GENERIC_GROWTH_FAILURE.get(), 1.0F, 1.0F);
 			}
 		}
 	}
