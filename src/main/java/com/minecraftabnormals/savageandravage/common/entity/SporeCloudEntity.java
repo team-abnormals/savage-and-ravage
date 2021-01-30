@@ -150,11 +150,10 @@ public class SporeCloudEntity extends ThrowableEntity implements IEntityAddition
 					creepie.setCharged(true);
 				}
 				creepie.attackPlayersOnly = this.creepiesAttackPlayersOnly();
+				if (!creepie.attackPlayersOnly) creepie.enablePersistence();
 				Entity thrower = this.func_234616_v_();
-				if (thrower instanceof LivingEntity) {
-					if (!((LivingEntity) thrower).isPotionActive(Effects.INVISIBILITY))
-						creepie.setOwnerId(thrower.getUniqueID());
-				}
+				if (thrower instanceof LivingEntity && !((LivingEntity) thrower).isPotionActive(Effects.INVISIBILITY))
+					creepie.setOwnerId(thrower.getUniqueID());
 				BlockPos nextPosition = null;
 				if (aoe.ticksExisted % 20 == 0) {
 					for (int i = 0; i < 10; i++) {
