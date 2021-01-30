@@ -223,7 +223,7 @@ public class SporeCloudEntity extends ThrowableEntity implements IEntityAddition
 		return creepiesAttackPlayersOnly;
 	}
 
-	public void creepiesAttackPlayersOnly(boolean haveCreepiesAttackPlayersOnly) {
-		this.creepiesAttackPlayersOnly = haveCreepiesAttackPlayersOnly;
+	public void creepiesAttackPlayersOnly(boolean creepiesAttackPlayersOnly) {
+		this.creepiesAttackPlayersOnly = creepiesAttackPlayersOnly;
 	}
 }
