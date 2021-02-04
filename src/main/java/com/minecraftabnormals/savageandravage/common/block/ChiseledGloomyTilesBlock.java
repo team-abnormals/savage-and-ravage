@@ -1,30 +1,20 @@
 package com.minecraftabnormals.savageandravage.common.block;
 
-import com.minecraftabnormals.savageandravage.core.registry.SRBlocks;
-import com.minecraftabnormals.savageandravage.core.registry.SRParticles;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 public class ChiseledGloomyTilesBlock extends Block {
-
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
 	public ChiseledGloomyTilesBlock(AbstractBlock.Properties properties) {
@@ -63,10 +53,5 @@ public class ChiseledGloomyTilesBlock extends Block {
 	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
 		builder.add(POWERED);
-	}
-
-	@Override
-	public void fillItemGroup(ItemGroup group, NonNullList< ItemStack > items) {
-		SRBlocks.CRACKED_POLISHED_BLACKSTONE_BRICKS.fillItem(this.asItem(), group, items);
 	}
 }
