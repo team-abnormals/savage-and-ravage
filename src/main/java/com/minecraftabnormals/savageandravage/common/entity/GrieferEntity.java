@@ -82,7 +82,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 		this.dataManager.register(KICKING, false);
 		this.dataManager.register(APESHIT_MODE, false);
 	}
-	
+
 	public AbstractIllagerEntity.ArmPose getArmPose() {
 		return this.getCelebrating() ? AbstractIllagerEntity.ArmPose.CELEBRATING : AbstractIllagerEntity.ArmPose.NEUTRAL;
 	}
@@ -231,7 +231,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 	public void attackEntityWithRangedAttack(LivingEntity target, float distanceFactor) {
 		if (this.world.getTargettableEntitiesWithinAABB(CreepieEntity.class, social_distance, this, this.getBoundingBox().grow(30.0D)).size() < 5 && this.getHeldItemMainhand().getItem() instanceof CreeperSporesItem) {
 			SporeCloudEntity creeperSpores = new SporeCloudEntity(this.world, this);
-			double distance = target.getPosY() -1;
+			double distance = target.getPosY() - 1;
 			double d1 = target.getPosX() - this.getPosX();
 			double d2 = distance - creeperSpores.getPosY();
 			double d3 = target.getPosZ() - this.getPosZ();

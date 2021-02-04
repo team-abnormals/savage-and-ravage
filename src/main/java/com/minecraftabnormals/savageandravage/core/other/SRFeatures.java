@@ -29,8 +29,8 @@ public class SRFeatures {
 
 	public static void registerPools() {
 		JigsawPatternRegistry.func_244094_a(new JigsawPattern(new ResourceLocation(SavageAndRavage.MOD_ID, "enclosure/enclosures"), new ResourceLocation("empty"), ImmutableList.of(Pair.of(JigsawPiece.func_242845_a(CREEPER_ENCLOSURE.get().withConfiguration(NoFeatureConfig.field_236559_b_)), 1)), JigsawPattern.PlacementBehaviour.RIGID));
-		JigsawPatternRegistry.func_244094_a(new JigsawPattern(new ResourceLocation(SavageAndRavage.MOD_ID, "pillager_outpost/pillagers"), new ResourceLocation("empty"), ImmutableList.of(Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":pillager_outpost/pillager"), 1)),  JigsawPattern.PlacementBehaviour.RIGID));
-		JigsawPatternRegistry.func_244094_a(new JigsawPattern(new ResourceLocation(SavageAndRavage.MOD_ID, "pillager_outpost/vindicators"), new ResourceLocation("empty"), ImmutableList.of(Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":pillager_outpost/vindicator"), 1)),  JigsawPattern.PlacementBehaviour.RIGID));
+		JigsawPatternRegistry.func_244094_a(new JigsawPattern(new ResourceLocation(SavageAndRavage.MOD_ID, "pillager_outpost/pillagers"), new ResourceLocation("empty"), ImmutableList.of(Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":pillager_outpost/pillager"), 1)), JigsawPattern.PlacementBehaviour.RIGID));
+		JigsawPatternRegistry.func_244094_a(new JigsawPattern(new ResourceLocation(SavageAndRavage.MOD_ID, "pillager_outpost/vindicators"), new ResourceLocation("empty"), ImmutableList.of(Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":pillager_outpost/vindicator"), 1)), JigsawPattern.PlacementBehaviour.RIGID));
 		for (String biome : new String[]{"plains", "snowy", "savanna", "desert", "taiga"})
 			DataUtil.addToJigsawPattern(new ResourceLocation("village/" + biome + "/zombie/villagers"), JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":village/skeleton_villager").apply(JigsawPattern.PlacementBehaviour.RIGID), 10);
 	}

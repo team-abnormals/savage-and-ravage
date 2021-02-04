@@ -28,7 +28,7 @@ public class CreepieModel extends SegmentedModel<CreepieEntity> {
 		this.textureHeight = 32;
 		this.head = new ModelRenderer(this, 0, 0);
 		this.head.setRotationPoint(0.0F, 6.0F, 0.0F);
-		this.head.addBox(-4.0F, -8.0F, -4.0F, 8, 8, 8, 2.0F+scaleIncrease);
+		this.head.addBox(-4.0F, -8.0F, -4.0F, 8, 8, 8, 2.0F + scaleIncrease);
 		this.sprout = new ModelRenderer(this, 48, 16);
 		this.sprout.setRotationPoint(0.0F, 6.0F, 0.0F);
 		this.head.addChild(this.sprout);

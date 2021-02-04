@@ -83,16 +83,16 @@ public class GrieferModel extends BipedModel<GrieferEntity> {
 		}
 		AbstractIllagerEntity.ArmPose armpose = entityIn.getArmPose();
 		switch (armpose) {
-		case CELEBRATING:
-			this.bipedHead.rotateAngleX = MathHelper.cos(ageInTicks * 0.6662F) * 0.05F;
-			this.bipedLeftArm.rotationPointZ = 0.0F;
-			this.bipedLeftArm.rotationPointX = 5.0F;
-			this.bipedLeftArm.rotateAngleX = MathHelper.cos(ageInTicks * 0.7000F) * 0.05F;
-			this.bipedLeftArm.rotateAngleZ = -2.3561945F;
-			this.bipedLeftArm.rotateAngleY = 0.0F;
-			break;
-		default:
-			break;
+			case CELEBRATING:
+				this.bipedHead.rotateAngleX = MathHelper.cos(ageInTicks * 0.6662F) * 0.05F;
+				this.bipedLeftArm.rotationPointZ = 0.0F;
+				this.bipedLeftArm.rotationPointX = 5.0F;
+				this.bipedLeftArm.rotateAngleX = MathHelper.cos(ageInTicks * 0.7000F) * 0.05F;
+				this.bipedLeftArm.rotateAngleZ = -2.3561945F;
+				this.bipedLeftArm.rotateAngleY = 0.0F;
+				break;
+			default:
+				break;
 		}
 	}
 
