@@ -476,6 +476,9 @@ public class CreepieEntity extends MonsterEntity implements IChargeableMob, IOwn
 			creeperEntity.setCustomNameVisible(this.isCustomNameVisible());
 		}
 
+		if (this.isCharged())
+			creeperEntity.getDataManager().set(CreeperEntity.POWERED, true);
+
 		if (this.isNoDespawnRequired()) {
 			creeperEntity.enablePersistence();
 		}
