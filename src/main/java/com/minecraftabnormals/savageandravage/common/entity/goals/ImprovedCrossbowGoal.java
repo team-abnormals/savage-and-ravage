@@ -93,7 +93,7 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 		}
 
 		this.entity.getLookController().setLookPositionWithEntity(target, 30.0F, 30.0F);
-		if (this.crossbowStateUnCharged == ImprovedCrossbowGoal.CrossbowState.UNCHARGED || !CrossbowItem.isCharged(activeStack) && this.crossbowStateUnCharged == ImprovedCrossbowGoal.CrossbowState.UNCHARGED ) {
+		if (this.crossbowStateUnCharged == ImprovedCrossbowGoal.CrossbowState.UNCHARGED && !CrossbowItem.isCharged(activeStack)) {
 			if (canSeeEnemy) {
 				this.entity.setActiveHand(ProjectileHelper.getHandWith(this.entity, Items.CROSSBOW));
 				this.crossbowStateUnCharged = ImprovedCrossbowGoal.CrossbowState.CHARGING;
