@@ -31,7 +31,6 @@ public class SavageAndRavage {
 		SREntities.ENTITIES.register(bus);
 		SRParticles.PARTICLES.register(bus);
 		SREffects.EFFECTS.register(bus);
-		SREffects.POTIONS.register(bus);
 		SRFeatures.FEATURES.register(bus);
 		SRAttributes.ATTRIBUTES.register(bus);
 
@@ -53,7 +52,6 @@ public class SavageAndRavage {
 
 	private void commonSetup(FMLCommonSetupEvent event) {
 		DeferredWorkQueue.runLater(() -> {
-			SREffects.registerBrewingRecipes();
 			SREntities.registerEntitySpawns();
 			SRFeatures.registerPools();
 			SRFeatures.registerBiomeModifications();

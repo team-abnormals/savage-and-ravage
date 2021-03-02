@@ -1,8 +1,5 @@
 package com.minecraftabnormals.savageandravage.core.other;
 
-import com.minecraftabnormals.abnormals_core.core.api.IAgeableEntity;
-import com.minecraftabnormals.savageandravage.common.effect.GrowingEffect;
-import com.minecraftabnormals.savageandravage.common.effect.ShrinkingEffect;
 import com.minecraftabnormals.savageandravage.common.entity.*;
 import com.minecraftabnormals.savageandravage.common.entity.block.SporeBombEntity;
 import com.minecraftabnormals.savageandravage.common.entity.goals.AvoidGrieferOwnedCreepiesGoal;
@@ -24,7 +21,6 @@ import net.minecraft.entity.ai.goal.RangedCrossbowAttackGoal;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.*;
-import net.minecraft.entity.monster.piglin.PiglinEntity;
 import net.minecraft.entity.passive.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -35,9 +31,6 @@ import net.minecraft.loot.LootParameters;
 import net.minecraft.loot.LootTable;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -50,26 +43,18 @@ import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
-import net.minecraftforge.event.entity.living.PotionEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 @Mod.EventBusSubscriber(modid = SavageAndRavage.MOD_ID)
 public class SREvents {
-	public static final Method SET_SIZE = ObfuscationReflectionHelper.findMethod(SlimeEntity.class, "func_70799_a", int.class, boolean.class);
-	public static final Map<Entity, DamageSource> SPORE_DROP_ENTITIES = new HashMap<>();
 
 	@SubscribeEvent
 	public static void onLivingSpawned(EntityJoinWorldEvent event) {
@@ -121,16 +106,15 @@ public class SREvents {
 
 	@SubscribeEvent
 	public static void onLivingDrops(LivingDropsEvent event) {
-		Entity entity = event.getEntity();
-		if (entity.getType() == EntityType.CREEPER && event.getSource().isExplosion() && SPORE_DROP_ENTITIES.containsKey(entity)){
-			if (entity.world.getServer() != null && SPORE_DROP_ENTITIES.get(entity).equals(event.getSource())) {
-				LootTable loottable = entity.world.getServer().getLootTableManager().getLootTableFromLocation(SRLootTables.CREEPER_EXPLOSION_DROPS);
-				LootContext ctx = new LootContext.Builder((ServerWorld) entity.world).withParameter(LootParameters.THIS_ENTITY, entity).withRandom(entity.world.rand).build(LootParameterSets.field_237453_h_);
-				loottable.generate(ctx).forEach(entity::entityDropItem);
+		if (event.getEntity().getType() == EntityType.CREEPER) {
+			CreeperEntity creeper = (CreeperEntity) event.getEntity();
+			if (event.getSource().isExplosion() && SRConfig.COMMON.creepersDropSporesAfterExplosionDeath.get()) {
+				LootTable loottable = creeper.world.getServer().getLootTableManager().getLootTableFromLocation(SRLootTables.CREEPER_EXPLOSION_DROPS);
+				LootContext ctx = new LootContext.Builder((ServerWorld) creeper.world).withParameter(LootParameters.THIS_ENTITY, creeper).withRandom(creeper.world.rand).build(LootParameterSets.field_237453_h_);
+				loottable.generate(ctx).forEach(creeper::entityDropItem);
 			}
-			SPORE_DROP_ENTITIES.remove(entity);
-		} else if (entity instanceof PillagerEntity) {
-			PillagerEntity pillager = (PillagerEntity) entity;
+		} else if (event.getEntity() instanceof PillagerEntity) {
+			PillagerEntity pillager = (PillagerEntity) event.getEntity();
 			if (pillager.world.isRemote() && ((ServerWorld) pillager.getEntityWorld()).findRaid(pillager.getPosition()) != null) {
 				pillager.entityDropItem(new ItemStack(Items.EMERALD, pillager.world.rand.nextInt(2)));
 				if (pillager.world.rand.nextDouble() < 0.05D) {
@@ -190,17 +174,12 @@ public class SREvents {
 		}
 
 		List<Entity> safeItems = new ArrayList<>();
-		boolean hasSpawnedSpore = false;
 		for (Entity entity : event.getAffectedEntities()) {
 			if (entity instanceof ItemEntity) {
 				ItemStack itemstack = ((ItemEntity) entity).getItem();
 				if (itemstack.getItem().isIn(SRTags.BLAST_PROOF_ITEMS)) {
 					safeItems.add(entity);
 				}
-			}
-			if (!hasSpawnedSpore && entity.getType() == EntityType.CREEPER && SRConfig.COMMON.creepersDropSporesAfterExplosionDeath.get()) {
-				SPORE_DROP_ENTITIES.put(entity, explosion.getDamageSource());
-				hasSpawnedSpore = true;
 			}
 		}
 		event.getAffectedEntities().removeAll(safeItems);
@@ -319,55 +298,6 @@ public class SREvents {
 			return noBurningBanners;
 		}
 		return false;
-	}
-
-	@SubscribeEvent
-	public static void onPotionExpire(PotionEvent.PotionExpiryEvent event) {
-		if (event.getPotionEffect() != null) {
-			LivingEntity affected = event.getEntityLiving();
-			boolean shouldSetChild = event.getPotionEffect().getPotion() instanceof ShrinkingEffect;
-			if (event.getPotionEffect().getPotion() instanceof GrowingEffect || shouldSetChild) {
-				boolean canChange = false;
-				if (affected instanceof IAgeableEntity && ((IAgeableEntity) affected).canAge(!shouldSetChild)) {
-					((IAgeableEntity) affected).attemptAging(!shouldSetChild);
-					canChange = true;
-				} else if (affected instanceof SlimeEntity) {
-					SlimeEntity slime = (SlimeEntity) affected;
-					int size = slime.getSlimeSize();
-					if (shouldSetChild ? size > 1 : size < 3) {
-						canChange = true;
-						try {
-							SET_SIZE.invoke(slime, (size + (shouldSetChild ? (size < 4 ? -1 : -2) : (size < 2 ? 1 : 2))), false);
-						} catch (IllegalAccessException | InvocationTargetException e) {
-							throw new RuntimeException("Invoking setSize failed. Something has gone horribly wrong with Savage & Ravage!");
-						}
-					}
-				} else if (shouldSetChild != affected.isChild()) {
-					canChange = true;
-					if (affected instanceof AgeableEntity && !(affected instanceof ParrotEntity))
-						((AgeableEntity) affected).setGrowingAge(shouldSetChild ? -24000 : 0);
-					else if (shouldSetChild && affected instanceof CreeperEntity)
-						convertCreeper((CreeperEntity) affected);
-					else if (affected instanceof ZombieEntity || affected instanceof PiglinEntity || affected instanceof ZoglinEntity)
-						((MobEntity) affected).setChild(shouldSetChild);
-					else
-						canChange = false;
-				}
-				if (!canChange) {
-					EffectInstance effectInstance;
-					if (!shouldSetChild)
-						affected.addPotionEffect(new EffectInstance(Effects.ABSORPTION, 2400, 0));
-					if (affected.isEntityUndead())
-						shouldSetChild = !shouldSetChild;
-					effectInstance = new EffectInstance(shouldSetChild ? Effects.INSTANT_DAMAGE : Effects.INSTANT_HEALTH, 1, 1);
-					effectInstance.getPotion().affectEntity(null, null, affected, effectInstance.getAmplifier(), 1.0D);
-				}
-				if (!affected.world.isRemote()) {
-					((ServerWorld) affected.world).spawnParticle(canChange ? (shouldSetChild ? ParticleTypes.TOTEM_OF_UNDYING : ParticleTypes.HAPPY_VILLAGER) : ParticleTypes.LARGE_SMOKE, affected.getPosXRandom(0.3D), affected.getPosYRandom() - 0.1D, affected.getPosZRandom(0.3D), canChange ? 40 : 20, 0.3D, 0.6D, 0.3D, canChange ? 0.2D : 0.01D);
-					affected.playSound(canChange ? SRSounds.ENTITY_GENERIC_GROWTH_SUCCESS.get() : SRSounds.ENTITY_GENERIC_GROWTH_FAILURE.get(), 1.0F, 1.0F);
-				}
-			}
-		}
 	}
 
 	public static void convertCreeper(CreeperEntity creeper) {
