@@ -29,6 +29,10 @@ import net.minecraft.entity.passive.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
+import net.minecraft.loot.LootContext;
+import net.minecraft.loot.LootParameterSets;
+import net.minecraft.loot.LootParameters;
+import net.minecraft.loot.LootTable;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.particles.ParticleTypes;
@@ -119,8 +123,11 @@ public class SREvents {
 	public static void onLivingDrops(LivingDropsEvent event) {
 		Entity entity = event.getEntity();
 		if (entity.getType() == EntityType.CREEPER && event.getSource().isExplosion() && SPORE_DROP_ENTITIES.containsKey(entity)){
-			if (SPORE_DROP_ENTITIES.get(entity).equals(event.getSource()))
-				entity.entityDropItem(SRItems.CREEPER_SPORES.get());
+			if (entity.world.getServer() != null && SPORE_DROP_ENTITIES.get(entity).equals(event.getSource())) {
+				LootTable loottable = entity.world.getServer().getLootTableManager().getLootTableFromLocation(SRLootTables.CREEPER_EXPLOSION_DROPS);
+				LootContext ctx = new LootContext.Builder((ServerWorld) entity.world).withParameter(LootParameters.THIS_ENTITY, entity).withRandom(entity.world.rand).build(LootParameterSets.field_237453_h_);
+				loottable.generate(ctx).forEach(entity::entityDropItem);
+			}
 			SPORE_DROP_ENTITIES.remove(entity);
 		} else if (entity instanceof PillagerEntity) {
 			PillagerEntity pillager = (PillagerEntity) entity;
