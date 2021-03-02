@@ -29,10 +29,6 @@ import net.minecraft.entity.passive.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootParameterSets;
-import net.minecraft.loot.LootParameters;
-import net.minecraft.loot.LootTable;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.particles.ParticleTypes;
@@ -61,12 +57,15 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 @Mod.EventBusSubscriber(modid = SavageAndRavage.MOD_ID)
 public class SREvents {
-	public static final Method setSize = ObfuscationReflectionHelper.findMethod(SlimeEntity.class, "func_70799_a", int.class, boolean.class);
+	public static final Method SET_SIZE = ObfuscationReflectionHelper.findMethod(SlimeEntity.class, "func_70799_a", int.class, boolean.class);
+	public static final Map<Entity, DamageSource> SPORE_DROP_ENTITIES = new HashMap<>();
 
 	@SubscribeEvent
 	public static void onLivingSpawned(EntityJoinWorldEvent event) {
@@ -118,22 +117,20 @@ public class SREvents {
 
 	@SubscribeEvent
 	public static void onLivingDrops(LivingDropsEvent event) {
-		if (event.getEntity().getType() == EntityType.CREEPER) {
-			CreeperEntity creeper = (CreeperEntity) event.getEntity();
-			if (event.getSource().isExplosion() && SRConfig.COMMON.creepersDropSporesAfterExplosionDeath.get()) {
-				LootTable loottable = creeper.world.getServer().getLootTableManager().getLootTableFromLocation(SRLootTables.CREEPER_EXPLOSION_DROPS);
-				LootContext ctx = new LootContext.Builder((ServerWorld) creeper.world).withParameter(LootParameters.THIS_ENTITY, creeper).withRandom(creeper.world.rand).build(LootParameterSets.field_237453_h_);
-				loottable.generate(ctx).forEach(creeper::entityDropItem);
-			} else if (event.getEntity() instanceof PillagerEntity) {
-				PillagerEntity pillager = (PillagerEntity) event.getEntity();
-				if (pillager.world.isRemote() && ((ServerWorld) pillager.getEntityWorld()).findRaid(pillager.getPosition()) != null) {
-					pillager.entityDropItem(new ItemStack(Items.EMERALD, pillager.world.rand.nextInt(2)));
-					if (pillager.world.rand.nextDouble() < 0.05D) {
-						pillager.entityDropItem(new ItemStack(Items.EMERALD, 4 + pillager.world.rand.nextInt(1)));
-					}
-					if (pillager.world.rand.nextDouble() < 0.12D) {
-						pillager.entityDropItem(new ItemStack(Items.EMERALD, 2 + pillager.world.rand.nextInt(1)));
-					}
+		Entity entity = event.getEntity();
+		if (entity.getType() == EntityType.CREEPER && event.getSource().isExplosion() && SPORE_DROP_ENTITIES.containsKey(entity)){
+			if (SPORE_DROP_ENTITIES.get(entity).equals(event.getSource()))
+				entity.entityDropItem(SRItems.CREEPER_SPORES.get());
+			SPORE_DROP_ENTITIES.remove(entity);
+		} else if (entity instanceof PillagerEntity) {
+			PillagerEntity pillager = (PillagerEntity) entity;
+			if (pillager.world.isRemote() && ((ServerWorld) pillager.getEntityWorld()).findRaid(pillager.getPosition()) != null) {
+				pillager.entityDropItem(new ItemStack(Items.EMERALD, pillager.world.rand.nextInt(2)));
+				if (pillager.world.rand.nextDouble() < 0.05D) {
+					pillager.entityDropItem(new ItemStack(Items.EMERALD, 4 + pillager.world.rand.nextInt(1)));
+				}
+				if (pillager.world.rand.nextDouble() < 0.12D) {
+					pillager.entityDropItem(new ItemStack(Items.EMERALD, 2 + pillager.world.rand.nextInt(1)));
 				}
 			}
 		}
@@ -186,12 +183,17 @@ public class SREvents {
 		}
 
 		List<Entity> safeItems = new ArrayList<>();
+		boolean hasSpawnedSpore = false;
 		for (Entity entity : event.getAffectedEntities()) {
 			if (entity instanceof ItemEntity) {
 				ItemStack itemstack = ((ItemEntity) entity).getItem();
 				if (itemstack.getItem().isIn(SRTags.BLAST_PROOF_ITEMS)) {
 					safeItems.add(entity);
 				}
+			}
+			if (!hasSpawnedSpore && entity.getType() == EntityType.CREEPER && SRConfig.COMMON.creepersDropSporesAfterExplosionDeath.get()) {
+				SPORE_DROP_ENTITIES.put(entity, explosion.getDamageSource());
+				hasSpawnedSpore = true;
 			}
 		}
 		event.getAffectedEntities().removeAll(safeItems);
@@ -328,7 +330,7 @@ public class SREvents {
 					if (shouldSetChild ? size > 1 : size < 3) {
 						canChange = true;
 						try {
-							setSize.invoke(slime, (size + (shouldSetChild ? (size < 4 ? -1 : -2) : (size < 2 ? 1 : 2))), false);
+							SET_SIZE.invoke(slime, (size + (shouldSetChild ? (size < 4 ? -1 : -2) : (size < 2 ? 1 : 2))), false);
 						} catch (IllegalAccessException | InvocationTargetException e) {
 							throw new RuntimeException("Invoking setSize failed. Something has gone horribly wrong with Savage & Ravage!");
 						}

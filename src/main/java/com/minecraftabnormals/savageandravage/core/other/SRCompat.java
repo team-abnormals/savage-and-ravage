@@ -5,6 +5,7 @@ import com.minecraftabnormals.savageandravage.common.entity.BurningBannerEntity;
 import com.minecraftabnormals.savageandravage.common.entity.MischiefArrowEntity;
 import com.minecraftabnormals.savageandravage.common.entity.SporeCloudEntity;
 import com.minecraftabnormals.savageandravage.common.entity.block.SporeBombEntity;
+import com.minecraftabnormals.savageandravage.common.item.CreeperSporesItem;
 import com.minecraftabnormals.savageandravage.core.registry.SRBlocks;
 import com.minecraftabnormals.savageandravage.core.registry.SRItems;
 import net.minecraft.block.DispenserBlock;
@@ -48,7 +49,7 @@ public class SRCompat {
 			@Override
 			protected ProjectileEntity getProjectileEntity(World world, IPosition position, ItemStack stack) {
 				SporeCloudEntity cloud = new SporeCloudEntity(world, position.getX(), position.getY(), position.getZ());
-				cloud.setCloudSize(world.getRandom().nextInt(50) == 0 ? 0 : 1 + world.getRandom().nextInt(3));
+				cloud.setCloudSize(CreeperSporesItem.getThrownSporeCloudSize(world.getRandom()));
 				return cloud;
 			}
 		});

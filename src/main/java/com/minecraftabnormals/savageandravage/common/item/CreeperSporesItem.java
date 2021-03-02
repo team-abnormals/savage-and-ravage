@@ -15,6 +15,8 @@ import net.minecraft.stats.Stats;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 
+import java.util.Random;
+
 public class CreeperSporesItem extends Item implements PottableItem {
 	private static final TargetedItemGroupFiller FILLER = new TargetedItemGroupFiller(() -> Items.EGG);
 
@@ -22,6 +24,9 @@ public class CreeperSporesItem extends Item implements PottableItem {
 		super(properties);
 	}
 
+	public static int getThrownSporeCloudSize(Random rand) {
+		return rand.nextInt(50) == 0 ? 0 : 1 + rand.nextInt(3);
+	}
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
 		ItemStack stack = player.getHeldItem(hand);
@@ -29,7 +34,7 @@ public class CreeperSporesItem extends Item implements PottableItem {
 		if (!world.isRemote()) {
 			SporeCloudEntity spores = new SporeCloudEntity(world, player);
 			spores.func_234612_a_(player, player.rotationPitch, player.rotationYaw, 0.0F, 0.99F, 1.0F);
-			spores.setCloudSize(world.getRandom().nextInt(50) == 0 ? 0 : 1 + spores.world.getRandom().nextInt(3));
+			spores.setCloudSize(getThrownSporeCloudSize(spores.world.getRandom()));
 			world.addEntity(spores);
 		}
 
