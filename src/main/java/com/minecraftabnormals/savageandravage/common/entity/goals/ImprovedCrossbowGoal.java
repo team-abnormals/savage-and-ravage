@@ -93,7 +93,7 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 		}
 
 		this.entity.getLookController().setLookPositionWithEntity(target, 30.0F, 30.0F);
-		if (this.crossbowStateUnCharged == ImprovedCrossbowGoal.CrossbowState.UNCHARGED || ModList.get().isLoaded("bigbrain") && !CrossbowItem.isCharged(activeStack) && this.crossbowStateUnCharged == ImprovedCrossbowGoal.CrossbowState.UNCHARGED ) {
+		if (this.crossbowStateUnCharged == ImprovedCrossbowGoal.CrossbowState.UNCHARGED || CrossbowItem.isCharged(activeStack) && this.crossbowStateUnCharged == ImprovedCrossbowGoal.CrossbowState.UNCHARGED ) {
 			if (canSeeEnemy) {
 				this.entity.setActiveHand(ProjectileHelper.getHandWith(this.entity, Items.CROSSBOW));
 				this.crossbowStateUnCharged = ImprovedCrossbowGoal.CrossbowState.CHARGING;
@@ -105,7 +105,7 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 			}
 
 			int i = this.entity.getItemInUseMaxCount();
-			if (i >= CrossbowItem.getChargeTime(activeStack) || ModList.get().isLoaded("bigbrain") && CrossbowItem.isCharged(activeStack)) {
+			if (i >= CrossbowItem.getChargeTime(activeStack) || CrossbowItem.isCharged(activeStack)) {
 				this.entity.stopActiveHand();
 				this.crossbowStateUnCharged = ImprovedCrossbowGoal.CrossbowState.CHARGED;
 				this.wait = 20 + this.entity.getRNG().nextInt(20);
