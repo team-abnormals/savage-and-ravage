@@ -22,7 +22,5 @@ public class SRSounds {
 	public static final RegistryObject<SoundEvent> ENTITY_ICEOLOGER_CAST_SPELL = HELPER.createSoundEvent("entity.iceologer.cast_spell");
 	public static final RegistryObject<SoundEvent> ENTITY_PLAYER_CAST_SPELL = HELPER.createSoundEvent("entity.player.cast_spell");
 	public static final RegistryObject<SoundEvent> ENTITY_CREEPER_SPORES_THROW = HELPER.createSoundEvent("entity.creeper_spores.throw");
-	public static final RegistryObject<SoundEvent> ENTITY_GENERIC_GROWTH_SUCCESS = HELPER.createSoundEvent("entity.generic.growth_success");
-	public static final RegistryObject<SoundEvent> ENTITY_GENERIC_GROWTH_FAILURE = HELPER.createSoundEvent("entity.generic.growth_failure");
 	public static final RegistryObject<SoundEvent> BLOCK_RUNED_GLOOMY_TILES_ACTIVATE = HELPER.createSoundEvent("block.runed_gloomy_tiles.activate");
 }
