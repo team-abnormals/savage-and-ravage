@@ -51,7 +51,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 		this.goalSelector.addGoal(0, new SwimGoal(this));
 		this.goalSelector.addGoal(2, new AbstractRaiderEntity.FindTargetGoal(this, 10.0F));
 		this.goalSelector.addGoal(3, new GrieferEntity.MeleePhaseGoal(this, 0.9D, true));
-		this.goalSelector.addGoal(3, new GrieferEntity.GrieferAttackWithSporesGoal(this, 0.9D, 100));
+		this.goalSelector.addGoal(3, new GrieferEntity.GrieferAttackWithSporesGoal(this, 0.9D, 200));
 		this.goalSelector.addGoal(2, new GrieferEntity.KickGoal(this));
 		this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.0D, true) {
 			@Override
@@ -202,7 +202,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 	public ILivingEntityData onInitialSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
 		super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
 		this.setEquipmentBasedOnDifficulty(difficultyIn);
-		this.creeperSporeStacks = 10;
+		this.creeperSporeStacks = 3 + rand.nextInt(3);
 		return spawnDataIn;
 	}
 
