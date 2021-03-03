@@ -111,7 +111,7 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 
 		double distanceSq = target.getDistanceSq(entity);
 		double distance = target.getDistance(entity);
-		if (distance <= blocksUntilBackupSq && !(entity.getAttackTarget() instanceof AbstractVillagerEntity)) {
+		if (distance <= blocksUntilBackupSq && !(target instanceof AbstractVillagerEntity)) {
 			this.entity.faceEntity(target, 30.0F, 30.0F);
 			if (isWalkable())
 				this.entity.getMoveHelper().strafe(entity.isHandActive() ? -0.5F : -3.0F, 0); // note: when an entity is "charging" their crossbow they set an active hand

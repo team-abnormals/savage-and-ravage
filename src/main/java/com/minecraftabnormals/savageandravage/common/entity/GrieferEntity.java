@@ -391,7 +391,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 			PathNavigator pathnavigator = this.griefer.getNavigator();
 			if (pathnavigator != null) {
 				NodeProcessor nodeprocessor = pathnavigator.getNodeProcessor();
-				if (nodeprocessor != null && nodeprocessor.getPathNodeType(this.griefer.world, MathHelper.floor(this.griefer.getPosX() + 1.0D), MathHelper.floor(this.griefer.getPosY()), MathHelper.floor(this.griefer.getPosZ() + 1.0D)) == PathNodeType.WALKABLE) {
+				if (nodeprocessor != null && nodeprocessor.getPathNodeType(this.griefer.world, MathHelper.floor(this.griefer.getPosX() + 0.5D), MathHelper.floor(this.griefer.getPosY()), MathHelper.floor(this.griefer.getPosZ() + 0.5D)) == PathNodeType.WALKABLE) {
 					return true;
 				}
 			}
@@ -425,9 +425,9 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 				}
 				
 				if (this.strafingClockwise && !this.isWalkable() || this.strafingBackwards && !this.isWalkable()) {
-			         this.griefer.setMoveForward(1.0F);
-			         this.griefer.setMoveStrafing(0.0F);
-			         griefer.getNavigator().clearPath();
+					this.griefer.setMoveForward(1.0F);
+					this.griefer.setMoveStrafing(0.0F);
+					this.griefer.getNavigator().clearPath();
 				}
 				this.griefer.getLookController().setLookPositionWithEntity(attackTarget, 30.0F, 30.0F);
 				this.griefer.faceEntity(attackTarget, 30.0F, 30.0F);
@@ -438,8 +438,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 					float f = MathHelper.sqrt(distance) / this.attackRadius;
 					float lvt_5_1_ = MathHelper.clamp(f, 0.1F, 1.0F);
 					this.griefer.attackEntityWithRangedAttack(attackTarget, lvt_5_1_);
-					if (isWalkable())
-						this.griefer.getMoveHelper().strafe((float) (this.strafingBackwards ? -this.entityMoveSpeed : this.entityMoveSpeed), (float) (this.strafingClockwise ? this.entityMoveSpeed : -this.entityMoveSpeed));
+					this.griefer.getMoveHelper().strafe((float) (this.strafingBackwards ? -this.entityMoveSpeed : this.entityMoveSpeed), (float) (this.strafingClockwise ? this.entityMoveSpeed : -this.entityMoveSpeed));
 					this.rangedAttackTime = MathHelper.floor(f * (float) (this.maxRangedAttackTime - this.attackIntervalMin) + (float) this.attackIntervalMin);
 				} else if (this.rangedAttackTime < 0) {
 					float f2 = MathHelper.sqrt(distance) / this.attackRadius;
