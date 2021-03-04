@@ -67,8 +67,8 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 		this.goalSelector.addGoal(10, new LookAtGoal(this, MobEntity.class, 15.0F));
 		this.targetSelector.addGoal(1, (new HurtByTargetGoal(this, AbstractRaiderEntity.class)).setCallsForHelp());
 		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
-		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillagerEntity.class, true));
 		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, IronGolemEntity.class, true));
+		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillagerEntity.class, true));
 	}
 
 	public static AttributeModifierMap.MutableAttribute registerAttributes() {
@@ -162,9 +162,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 	public void readAdditional(CompoundNBT compound) {
 		super.readAdditional(compound);
 		this.kickTicks = compound.getInt("KickTicks");
-		if (compound.contains("CreeperSporeStacks", 99)) {
-			this.creeperSporeStacks = compound.getInt("CreeperSporeStacks");
-		}
+		this.creeperSporeStacks = compound.getInt("CreeperSporeStacks");
 	}
 
 	@Override
@@ -232,7 +230,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 
 	@Override
 	public void attackEntityWithRangedAttack(LivingEntity target, float distanceFactor) {
-		if (this.world.getTargettableEntitiesWithinAABB(CreepieEntity.class, social_distance, this, this.getBoundingBox().grow(30.0D)).size() < 5 && this.getHeldItemMainhand().getItem() instanceof CreeperSporesItem) {
+		if (this.world.getTargettableEntitiesWithinAABB(CreepieEntity.class, social_distance, this, this.getBoundingBox().grow(10.0D, 4.0D, 10.0D)).size() < 5 && this.getHeldItemMainhand().getItem() instanceof CreeperSporesItem) {
 			SporeCloudEntity creeperSpores = new SporeCloudEntity(this.world, this);
 			double distance = target.getPosY() - 1;
 			double d1 = target.getPosX() - this.getPosX();
@@ -250,7 +248,6 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 	}
 
 	public static class KickGoal extends Goal {
-
 		private final GrieferEntity griefer;
 
 		public KickGoal(GrieferEntity griefer) {
@@ -391,7 +388,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 			PathNavigator pathnavigator = this.griefer.getNavigator();
 			if (pathnavigator != null) {
 				NodeProcessor nodeprocessor = pathnavigator.getNodeProcessor();
-				if (nodeprocessor != null && nodeprocessor.getPathNodeType(this.griefer.world, MathHelper.floor(this.griefer.getPosX() + 0.5D), MathHelper.floor(this.griefer.getPosY()), MathHelper.floor(this.griefer.getPosZ() + 0.5D)) == PathNodeType.WALKABLE) {
+				if (nodeprocessor != null && nodeprocessor.getPathNodeType(this.griefer.world, MathHelper.floor(this.griefer.getPosX() + 1.0D), MathHelper.floor(this.griefer.getPosY()), MathHelper.floor(this.griefer.getPosZ() + 1.0D)) == PathNodeType.WALKABLE) {
 					return true;
 				}
 			}
@@ -410,7 +407,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 				} else {
 					--this.seeTime;
 				}
-
+				
 				if (this.griefer.getRNG().nextDouble() < 0.3D) {
 					this.strafingClockwise = !this.strafingClockwise;
 				}
@@ -418,6 +415,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 				if (this.griefer.getRNG().nextDouble() < 0.3D) {
 					this.strafingBackwards = !this.strafingBackwards;
 				}
+				
 				if (distance < 15.0D) {
 					this.griefer.getNavigator().clearPath();
 				} else {
@@ -429,6 +427,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 					this.griefer.setMoveStrafing(0.0F);
 					this.griefer.getNavigator().clearPath();
 				}
+				
 				this.griefer.getLookController().setLookPositionWithEntity(attackTarget, 30.0F, 30.0F);
 				this.griefer.faceEntity(attackTarget, 30.0F, 30.0F);
 				if (--this.rangedAttackTime == 0 || this.seeTime == 3) {

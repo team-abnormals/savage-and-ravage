@@ -70,25 +70,9 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 	
 	private boolean isWalkable() {
 		PathNavigator pathnavigator = this.entity.getNavigator();
-        float f = (float)this.entity.getAttributeValue(Attributes.MOVEMENT_SPEED);
-        float f1 = (float) 0.25D * f;
-        float f2 = entity.moveForward;
-        float f3 = entity.moveStrafing;
-        float f4 = MathHelper.sqrt(f2 * f2 + f3 * f3);
-        if (f4 < 1.0F) {
-           f4 = 1.0F;
-        }
-
-        f4 = f1 / f4;
-        f2 = f2 * f4;
-        f3 = f3 * f4;
-        float f5 = MathHelper.sin(this.entity.rotationYaw * ((float)Math.PI / 180F));
-        float f6 = MathHelper.cos(this.entity.rotationYaw * ((float)Math.PI / 180F));
-        float f7 = f2 * f6 - f3 * f5;
-        float f8 = f3 * f6 + f2 * f5;
 		if (pathnavigator != null) {
 			NodeProcessor nodeprocessor = pathnavigator.getNodeProcessor();
-			if (nodeprocessor != null && nodeprocessor.getPathNodeType(this.entity.world, MathHelper.floor(this.entity.getPosX() + (double)f7), MathHelper.floor(this.entity.getPosY()), MathHelper.floor(this.entity.getPosZ() + (double)f8)) == PathNodeType.WALKABLE) {
+			if (nodeprocessor != null && nodeprocessor.getPathNodeType(this.entity.world, MathHelper.floor(this.entity.getPosX() + 1.0D), MathHelper.floor(this.entity.getPosY()), MathHelper.floor(this.entity.getPosZ() + 1.0D)) == PathNodeType.WALKABLE) {
 				return true;
 			}
 		}
