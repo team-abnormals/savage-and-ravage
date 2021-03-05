@@ -1,5 +1,6 @@
 package com.minecraftabnormals.savageandravage.core.other;
 
+import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.IDataManager;
 import com.minecraftabnormals.savageandravage.common.entity.*;
 import com.minecraftabnormals.savageandravage.common.entity.block.SporeBombEntity;
 import com.minecraftabnormals.savageandravage.common.entity.goals.AvoidGrieferOwnedCreepiesGoal;
@@ -23,6 +24,7 @@ import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.*;
 import net.minecraft.entity.passive.*;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
 import net.minecraft.loot.LootContext;
@@ -31,6 +33,7 @@ import net.minecraft.loot.LootParameters;
 import net.minecraft.loot.LootTable;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -39,7 +42,9 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
@@ -71,7 +76,15 @@ public class SREvents {
 				pillager.setDropChance(EquipmentSlotType.OFFHAND, 2.0F);
 			}
 		}
-
+		if (event.getEntity() instanceof EvokerEntity) {
+			EvokerEntity evoker = (EvokerEntity) event.getEntity();
+			evoker.goalSelector.addGoal(1, new AvoidEntityGoal<IronGolemEntity>(evoker, IronGolemEntity.class, 8.0F, 0.6D, 1.0D) {
+				@Override
+				public boolean shouldExecute() {
+					return super.shouldExecute() && ((IDataManager) this.entity).getValue(SREntities.EVOKER_SHIELD_TIME) > 0;
+				}
+			});
+		}
 		if (event.getEntity() instanceof IronGolemEntity && !SRConfig.COMMON.creeperExplosionsDestroyBlocks.get()) {
 			IronGolemEntity golem = (IronGolemEntity) event.getEntity();
 			golem.targetSelector.goals.stream().map(it -> it.inner).filter(it -> it instanceof NearestAttackableTargetGoal<?>).findFirst().ifPresent(noAngryAtCreeper -> {
@@ -108,7 +121,7 @@ public class SREvents {
 	public static void onLivingDrops(LivingDropsEvent event) {
 		if (event.getEntity().getType() == EntityType.CREEPER) {
 			CreeperEntity creeper = (CreeperEntity) event.getEntity();
-			if (event.getSource().isExplosion() && SRConfig.COMMON.creepersDropSporesAfterExplosionDeath.get()) {
+			if (event.getSource().isExplosion() && SRConfig.COMMON.creepersDropSporesAfterExplosionDeath.get() && creeper.world.getServer() != null) {
 				LootTable loottable = creeper.world.getServer().getLootTableManager().getLootTableFromLocation(SRLootTables.CREEPER_EXPLOSION_DROPS);
 				LootContext ctx = new LootContext.Builder((ServerWorld) creeper.world).withParameter(LootParameters.THIS_ENTITY, creeper).withRandom(creeper.world.rand).build(LootParameterSets.field_237453_h_);
 				loottable.generate(ctx).forEach(creeper::entityDropItem);
@@ -129,10 +142,16 @@ public class SREvents {
 
 	@SubscribeEvent
 	public static void onLivingSetAttackTarget(LivingSetAttackTargetEvent event) {
-		if (event.getEntityLiving() instanceof GolemEntity && !(event.getEntityLiving() instanceof ShulkerEntity) && event.getTarget() instanceof IOwnableMob) {
-			if (((IOwnableMob) event.getTarget()).getOwner() instanceof PlayerEntity && ((MobEntity) event.getTarget()).getAttackTarget() != event.getEntityLiving()) {
-				((GolemEntity) event.getEntityLiving()).setAttackTarget(null);
+		LivingEntity entity = event.getEntityLiving();
+		LivingEntity target = event.getTarget();
+		if (target != null) {
+			if (entity instanceof GolemEntity && !(entity instanceof ShulkerEntity) && target instanceof IOwnableMob) {
+				if (((IOwnableMob) target).getOwner() instanceof PlayerEntity && ((MobEntity) target).getAttackTarget() != entity) {
+					((GolemEntity) entity).setAttackTarget(null);
+				}
 			}
+			if (entity instanceof EvokerEntity && ((IDataManager) entity).getValue(SREntities.EVOKER_SHIELD_TIME) > 0)
+				((EvokerEntity) entity).setAttackTarget(null);
 		}
 	}
 
@@ -186,7 +205,7 @@ public class SREvents {
 	}
 
 	@SubscribeEvent
-	public static void handleBlastProof(LivingDamageEvent event) {
+	public static void onEntityDamage(LivingDamageEvent event) {
 		LivingEntity entity = event.getEntityLiving();
 
 		if (event.getSource().isExplosion()) {
@@ -206,6 +225,32 @@ public class SREvents {
 				return;
 
 			event.setAmount(event.getAmount() - (float) (event.getAmount() * decrease));
+		}
+	}
+
+	@SubscribeEvent
+	public static void onLivingAttack(LivingAttackEvent event) {
+		Entity entity = event.getEntity();
+		if (entity instanceof EvokerEntity) {
+			IDataManager data = (IDataManager) entity;
+			if (data.getValue(SREntities.EVOKER_SHIELD_TIME) > 0) {
+				if (event.getSource().getImmediateSource() instanceof ProjectileEntity)
+					event.setCanceled(true);
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public static void onLivingDeath(LivingDeathEvent event) {
+		Entity entity = event.getEntity();
+		IDataManager data = (IDataManager) entity;
+		if (entity instanceof EvokerEntity && event.getSource().getImmediateSource() instanceof ProjectileEntity && data.getValue(SREntities.EVOKER_SHIELD_COOLDOWN) <= 0) {
+			event.setCanceled(true);
+			((EvokerEntity) entity).setHealth(2.0F);
+			data.setValue(SREntities.EVOKER_SHIELD_TIME, 600);
+			if (!entity.world.isRemote()) {
+				entity.world.setEntityState(entity, (byte) 35);
+			}
 		}
 	}
 
@@ -285,6 +330,20 @@ public class SREvents {
 		LivingEntity entity = event.getEntityLiving();
 		if (entity.getFireTimer() > 0 && entity.getActivePotionEffect(SREffects.FROSTBITE.get()) != null)
 			entity.removePotionEffect(SREffects.FROSTBITE.get());
+		IDataManager data = (IDataManager) entity;
+		if (entity instanceof EvokerEntity) {
+			int shieldTime = data.getValue(SREntities.EVOKER_SHIELD_TIME);
+			if (shieldTime > 0)
+				data.setValue(SREntities.EVOKER_SHIELD_TIME, shieldTime-1);
+			else if (shieldTime == 0) {
+				data.setValue(SREntities.EVOKER_SHIELD_COOLDOWN, 1800);
+				data.setValue(SREntities.EVOKER_SHIELD_TIME, -1);
+			}
+			int cooldown = data.getValue(SREntities.EVOKER_SHIELD_COOLDOWN);
+			if (cooldown > 0)
+				data.setValue(SREntities.EVOKER_SHIELD_COOLDOWN, cooldown-1);
+		}
+
 	}
 
 	public static boolean isValidBurningBannerPos(World world, BlockPos pos) {

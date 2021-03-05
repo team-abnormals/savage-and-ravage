@@ -1,16 +1,24 @@
 package com.minecraftabnormals.savageandravage.core.registry;
 
+import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.DataProcessors;
+import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.TrackedData;
+import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.TrackedDataManager;
 import com.minecraftabnormals.abnormals_core.core.util.registry.EntitySubRegistryHelper;
 import com.minecraftabnormals.savageandravage.client.render.*;
+import com.minecraftabnormals.savageandravage.client.render.layer.EvokerShieldLayer;
 import com.minecraftabnormals.savageandravage.common.entity.*;
 import com.minecraftabnormals.savageandravage.common.entity.block.SporeBombEntity;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.EvokerRenderer;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.entity.monster.AbstractSkeletonEntity;
+import net.minecraft.entity.monster.EvokerEntity;
 import net.minecraft.entity.monster.MonsterEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.raid.Raid;
 import net.minecraftforge.fml.RegistryObject;
@@ -38,10 +46,18 @@ public class SREntities {
 	public static final RegistryObject<EntityType<IceChunkEntity>> ICE_CHUNK = ENTITIES.register("ice_chunk", () -> EntityType.Builder.<IceChunkEntity>create(IceChunkEntity::new, EntityClassification.MISC).size(2.2F, 1.0F).trackingRange(8).func_233608_b_(Integer.MAX_VALUE).build(SavageAndRavage.MOD_ID + ":iceologer_ice_chunk"));
 	public static final RegistryObject<EntityType<IceCloudEntity>> ICE_CLOUD = ENTITIES.register("ice_cloud", () -> EntityType.Builder.<IceCloudEntity>create(IceCloudEntity::new, EntityClassification.MISC).size(1.0F, 1.0F).trackingRange(8).build(SavageAndRavage.MOD_ID + ":iceologer_ice_cloud"));
 
+	public static final TrackedData<Integer> EVOKER_SHIELD_TIME = TrackedData.Builder.create(DataProcessors.INT, () -> -1).build();
+	public static final TrackedData<Integer> EVOKER_SHIELD_COOLDOWN = TrackedData.Builder.create(DataProcessors.INT, () -> 0).build();
+
 	public static void registerEntitySpawns() {
 		EntitySpawnPlacementRegistry.register(SREntities.SKELETON_VILLAGER.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::canMonsterSpawnInLight);
 		EntitySpawnPlacementRegistry.register(SREntities.EXECUTIONER.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::canMonsterSpawnInLight);
 		EntitySpawnPlacementRegistry.register(SREntities.ICEOLOGER.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, IceologerEntity::canIceologerSpawn);
+	}
+
+	public static void registerTrackedData() {
+		TrackedDataManager.INSTANCE.registerData(new ResourceLocation(SavageAndRavage.MOD_ID, "evoker_shield_time"), EVOKER_SHIELD_TIME);
+		TrackedDataManager.INSTANCE.registerData(new ResourceLocation(SavageAndRavage.MOD_ID, "evoker_shield_cooldown"), EVOKER_SHIELD_COOLDOWN);
 	}
 
 	public static void registerRendering() {
@@ -57,6 +73,14 @@ public class SREntities {
 		RenderingRegistry.registerEntityRenderingHandler(ICE_CHUNK.get(), IceChunkRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(ICE_CLOUD.get(), NoModelRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(EXECUTIONER.get(), ExecutionerRenderer::new);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static void addLayers() {
+		try {
+			EvokerRenderer<EvokerEntity> renderer = (EvokerRenderer<EvokerEntity>) Minecraft.getInstance().getRenderManager().renderers.get(EntityType.EVOKER);
+			renderer.addLayer(new EvokerShieldLayer(renderer));
+		} catch (ClassCastException ignored) {}
 	}
 
 	public static void registerAttributes() {

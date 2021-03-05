@@ -19,6 +19,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
+@SuppressWarnings({"Convert2MethodRef", "CodeBlock2Expr"})
 @Mod(SavageAndRavage.MOD_ID)
 public class SavageAndRavage {
 	public static final String MOD_ID = "savageandravage";
@@ -53,6 +54,7 @@ public class SavageAndRavage {
 	private void commonSetup(FMLCommonSetupEvent event) {
 		DeferredWorkQueue.runLater(() -> {
 			SREntities.registerEntitySpawns();
+			SREntities.registerTrackedData();
 			SRFeatures.registerPools();
 			SRFeatures.registerBiomeModifications();
 			SREntities.registerAttributes();
@@ -64,6 +66,7 @@ public class SavageAndRavage {
 
 	private void clientSetup(FMLClientSetupEvent event) {
 		SREntities.registerRendering();
+		SREntities.addLayers();
 		DeferredWorkQueue.runLater(() -> {
 			SRItems.registerItemProperties();
 		});
