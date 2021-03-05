@@ -1,6 +1,7 @@
 package com.minecraftabnormals.savageandravage.client.render.layer;
 
 import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.IDataManager;
+import com.minecraftabnormals.savageandravage.core.SRConfig;
 import com.minecraftabnormals.savageandravage.core.registry.SREntities;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -22,7 +23,7 @@ public class EvokerShieldLayer extends LayerRenderer<EvokerEntity, IllagerModel<
     }
 
     public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, EvokerEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        if (((IDataManager) entitylivingbaseIn).getValue(SREntities.EVOKER_SHIELD_TIME) > 0) {
+        if (SRConfig.COMMON.evokersUseTotems.get() && ((IDataManager) entitylivingbaseIn).getValue(SREntities.EVOKER_SHIELD_TIME) > 0) {
             float f = (float)entitylivingbaseIn.ticksExisted + partialTicks;
             evokerModel.setLivingAnimations(entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks);
             this.getEntityModel().copyModelAttributesTo(evokerModel);

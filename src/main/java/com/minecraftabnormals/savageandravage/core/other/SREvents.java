@@ -15,7 +15,10 @@ import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.*;
+import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.ai.goal.RangedCrossbowAttackGoal;
@@ -33,7 +36,6 @@ import net.minecraft.loot.LootParameters;
 import net.minecraft.loot.LootTable;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
-import net.minecraft.particles.ParticleTypes;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -76,7 +78,7 @@ public class SREvents {
 				pillager.setDropChance(EquipmentSlotType.OFFHAND, 2.0F);
 			}
 		}
-		if (event.getEntity() instanceof EvokerEntity) {
+		if (SRConfig.COMMON.evokersUseTotems.get() && event.getEntity() instanceof EvokerEntity) {
 			EvokerEntity evoker = (EvokerEntity) event.getEntity();
 			evoker.goalSelector.addGoal(1, new AvoidEntityGoal<IronGolemEntity>(evoker, IronGolemEntity.class, 8.0F, 0.6D, 1.0D) {
 				@Override
@@ -84,6 +86,15 @@ public class SREvents {
 					return super.shouldExecute() && ((IDataManager) this.entity).getValue(SREntities.EVOKER_SHIELD_TIME) > 0;
 				}
 			});
+		}
+		if (SRConfig.COMMON.reducedVexHealth.get() && event.getEntity() instanceof VexEntity) {
+			VexEntity vex = (VexEntity) event.getEntity();
+			ModifiableAttributeInstance maxHealth = vex.getAttribute(Attributes.MAX_HEALTH);
+			if (maxHealth != null)
+				maxHealth.setBaseValue(2.0);
+			if (vex.getHealth() > vex.getMaxHealth()) {
+				vex.setHealth(vex.getMaxHealth());
+			}
 		}
 		if (event.getEntity() instanceof IronGolemEntity && !SRConfig.COMMON.creeperExplosionsDestroyBlocks.get()) {
 			IronGolemEntity golem = (IronGolemEntity) event.getEntity();
@@ -150,7 +161,7 @@ public class SREvents {
 					((GolemEntity) entity).setAttackTarget(null);
 				}
 			}
-			if (entity instanceof EvokerEntity && ((IDataManager) entity).getValue(SREntities.EVOKER_SHIELD_TIME) > 0)
+			if (SRConfig.COMMON.evokersUseTotems.get() && entity instanceof EvokerEntity && ((IDataManager) entity).getValue(SREntities.EVOKER_SHIELD_TIME) > 0)
 				((EvokerEntity) entity).setAttackTarget(null);
 		}
 	}
@@ -231,7 +242,7 @@ public class SREvents {
 	@SubscribeEvent
 	public static void onLivingAttack(LivingAttackEvent event) {
 		Entity entity = event.getEntity();
-		if (entity instanceof EvokerEntity) {
+		if (SRConfig.COMMON.evokersUseTotems.get() && entity instanceof EvokerEntity) {
 			IDataManager data = (IDataManager) entity;
 			if (data.getValue(SREntities.EVOKER_SHIELD_TIME) > 0) {
 				if (event.getSource().getImmediateSource() instanceof ProjectileEntity)
@@ -244,7 +255,7 @@ public class SREvents {
 	public static void onLivingDeath(LivingDeathEvent event) {
 		Entity entity = event.getEntity();
 		IDataManager data = (IDataManager) entity;
-		if (entity instanceof EvokerEntity && event.getSource().getImmediateSource() instanceof ProjectileEntity && data.getValue(SREntities.EVOKER_SHIELD_COOLDOWN) <= 0) {
+		if (SRConfig.COMMON.evokersUseTotems.get() && entity instanceof EvokerEntity && event.getSource().getImmediateSource() instanceof ProjectileEntity && data.getValue(SREntities.EVOKER_SHIELD_COOLDOWN) <= 0) {
 			event.setCanceled(true);
 			((EvokerEntity) entity).setHealth(2.0F);
 			data.setValue(SREntities.EVOKER_SHIELD_TIME, 600);

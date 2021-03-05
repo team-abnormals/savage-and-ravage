@@ -46,8 +46,8 @@ public class SREntities {
 	public static final RegistryObject<EntityType<IceChunkEntity>> ICE_CHUNK = ENTITIES.register("ice_chunk", () -> EntityType.Builder.<IceChunkEntity>create(IceChunkEntity::new, EntityClassification.MISC).size(2.2F, 1.0F).trackingRange(8).func_233608_b_(Integer.MAX_VALUE).build(SavageAndRavage.MOD_ID + ":iceologer_ice_chunk"));
 	public static final RegistryObject<EntityType<IceCloudEntity>> ICE_CLOUD = ENTITIES.register("ice_cloud", () -> EntityType.Builder.<IceCloudEntity>create(IceCloudEntity::new, EntityClassification.MISC).size(1.0F, 1.0F).trackingRange(8).build(SavageAndRavage.MOD_ID + ":iceologer_ice_cloud"));
 
-	public static final TrackedData<Integer> EVOKER_SHIELD_TIME = TrackedData.Builder.create(DataProcessors.INT, () -> -1).build();
-	public static final TrackedData<Integer> EVOKER_SHIELD_COOLDOWN = TrackedData.Builder.create(DataProcessors.INT, () -> 0).build();
+	public static final TrackedData<Integer> EVOKER_SHIELD_TIME = TrackedData.Builder.create(DataProcessors.INT, () -> -1).enableSaving().build();
+	public static final TrackedData<Integer> EVOKER_SHIELD_COOLDOWN = TrackedData.Builder.create(DataProcessors.INT, () -> 0).enableSaving().build();
 
 	public static void registerEntitySpawns() {
 		EntitySpawnPlacementRegistry.register(SREntities.SKELETON_VILLAGER.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::canMonsterSpawnInLight);
