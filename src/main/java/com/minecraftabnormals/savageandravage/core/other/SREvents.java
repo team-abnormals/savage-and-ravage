@@ -46,7 +46,6 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
@@ -237,6 +236,20 @@ public class SREvents {
 
 			event.setAmount(event.getAmount() - (float) (event.getAmount() * decrease));
 		}
+
+		IDataManager data = (IDataManager) entity;
+		if (SRConfig.COMMON.evokersUseTotems.get() && entity instanceof EvokerEntity) {
+			if (entity.getHealth() - event.getAmount() <= 0 && event.getSource().getImmediateSource() instanceof ProjectileEntity) {
+				if (data.getValue(SREntities.EVOKER_SHIELD_TIME) <= 0 && data.getValue(SREntities.EVOKER_SHIELD_COOLDOWN) <= 0) {
+					event.setCanceled(true);
+					entity.setHealth(2.0F);
+					data.setValue(SREntities.EVOKER_SHIELD_TIME, 600);
+					if (!entity.world.isRemote()) {
+						entity.world.setEntityState(entity, (byte) 35);
+					}
+				}
+			}
+		}
 	}
 
 	@SubscribeEvent
@@ -247,20 +260,6 @@ public class SREvents {
 			if (data.getValue(SREntities.EVOKER_SHIELD_TIME) > 0) {
 				if (event.getSource().getImmediateSource() instanceof ProjectileEntity)
 					event.setCanceled(true);
-			}
-		}
-	}
-
-	@SubscribeEvent
-	public static void onLivingDeath(LivingDeathEvent event) {
-		Entity entity = event.getEntity();
-		IDataManager data = (IDataManager) entity;
-		if (SRConfig.COMMON.evokersUseTotems.get() && entity instanceof EvokerEntity && event.getSource().getImmediateSource() instanceof ProjectileEntity && data.getValue(SREntities.EVOKER_SHIELD_COOLDOWN) <= 0) {
-			event.setCanceled(true);
-			((EvokerEntity) entity).setHealth(2.0F);
-			data.setValue(SREntities.EVOKER_SHIELD_TIME, 600);
-			if (!entity.world.isRemote()) {
-				entity.world.setEntityState(entity, (byte) 35);
 			}
 		}
 	}
