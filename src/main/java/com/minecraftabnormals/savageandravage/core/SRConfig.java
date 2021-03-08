@@ -12,6 +12,7 @@ public class SRConfig {
 		public final ConfigValue<Boolean> creepersDropSporesAfterExplosionDeath;
 		public final ConfigValue<Boolean> creepieExplosionsDestroyBlocks;
 		public final ConfigValue<Boolean> evokersUseTotems;
+		public final ForgeConfigSpec.DoubleValue conchDropChance;
 		public final ConfigValue<Boolean> reducedVexHealth;
 		public final ConfigValue<Boolean> noBadOmenOnDeath;
 
@@ -32,13 +33,14 @@ public class SRConfig {
 			evokersUseTotems = builder
 					.comment("When killed by projectiles, evokers use a totem of undying", "This restores 2 health and gives them a projectile-proof shield for 30 seconds", "When their shield runs out, evokers cannot use totems for another 90 seeconds")
 					.define("Evokers use totems when killed by projectiles", true);
+			conchDropChance = builder
+					.comment("The chance evokers will drop an ELdritch Conch instead of a Totem of Undying")
+					.defineInRange("Conch drop chance", 0.05, 0, 1);
 			reducedVexHealth = builder
-					.define("Vexs' max health is reduced to 2", true);
+					.define("Vexes' max health is reduced to 2", true);
 			builder.pop();
 
 			builder.pop();
-
-
 		}
 	}
 

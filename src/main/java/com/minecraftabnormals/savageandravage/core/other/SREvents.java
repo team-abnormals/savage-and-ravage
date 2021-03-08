@@ -129,15 +129,16 @@ public class SREvents {
 
 	@SubscribeEvent
 	public static void onLivingDrops(LivingDropsEvent event) {
-		if (event.getEntity().getType() == EntityType.CREEPER) {
-			CreeperEntity creeper = (CreeperEntity) event.getEntity();
+		Entity entity = event.getEntity();
+		if (entity.getType() == EntityType.CREEPER) {
+			CreeperEntity creeper = (CreeperEntity) entity;
 			if (event.getSource().isExplosion() && SRConfig.COMMON.creepersDropSporesAfterExplosionDeath.get() && creeper.world.getServer() != null) {
 				LootTable loottable = creeper.world.getServer().getLootTableManager().getLootTableFromLocation(SRLootTables.CREEPER_EXPLOSION_DROPS);
 				LootContext ctx = new LootContext.Builder((ServerWorld) creeper.world).withParameter(LootParameters.THIS_ENTITY, creeper).withRandom(creeper.world.rand).build(LootParameterSets.field_237453_h_);
 				loottable.generate(ctx).forEach(creeper::entityDropItem);
 			}
-		} else if (event.getEntity() instanceof PillagerEntity) {
-			PillagerEntity pillager = (PillagerEntity) event.getEntity();
+		} else if (entity instanceof PillagerEntity) {
+			PillagerEntity pillager = (PillagerEntity) entity; //TODO JSON someday
 			if (pillager.world.isRemote() && ((ServerWorld) pillager.getEntityWorld()).findRaid(pillager.getPosition()) != null) {
 				pillager.entityDropItem(new ItemStack(Items.EMERALD, pillager.world.rand.nextInt(2)));
 				if (pillager.world.rand.nextDouble() < 0.05D) {
@@ -145,6 +146,17 @@ public class SREvents {
 				}
 				if (pillager.world.rand.nextDouble() < 0.12D) {
 					pillager.entityDropItem(new ItemStack(Items.EMERALD, 2 + pillager.world.rand.nextInt(1)));
+				}
+			}
+		} else if (entity instanceof EvokerEntity && entity.world.rand.nextFloat() < SRConfig.COMMON.conchDropChance.get()) {
+			boolean addedDrop = false;
+			Collection<ItemEntity> drops = event.getDrops();
+			for (ItemEntity item : new ArrayList<>(drops)) {
+				if (item.getItem().getItem() == Items.TOTEM_OF_UNDYING) {
+					drops.remove(item);
+					if (!addedDrop)
+						entity.entityDropItem(new ItemStack(SRItems.ELDRITCH_CONCH.get()));
+					addedDrop = true;
 				}
 			}
 		}
