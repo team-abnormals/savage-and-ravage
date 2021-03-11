@@ -1,12 +1,9 @@
 package com.minecraftabnormals.savageandravage.common.entity.goals;
 
-import java.util.EnumSet;
-
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.ICrossbowUser;
 import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.projectile.ProjectileHelper;
@@ -19,6 +16,8 @@ import net.minecraft.pathfinding.PathNavigator;
 import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.MathHelper;
+
+import java.util.EnumSet;
 
 public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & ICrossbowUser> extends Goal {
 
@@ -67,7 +66,7 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 			this.entity.setCharging(false);
 		}
 	}
-	
+
 	private boolean isWalkable() {
 		PathNavigator pathnavigator = this.entity.getNavigator();
 		if (pathnavigator != null) {

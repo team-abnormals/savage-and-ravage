@@ -2,7 +2,7 @@ package com.minecraftabnormals.savageandravage.core.registry;
 
 import com.minecraftabnormals.savageandravage.common.effect.FrostbiteEffect;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
-import net.minecraft.potion.*;
+import net.minecraft.potion.Effect;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;

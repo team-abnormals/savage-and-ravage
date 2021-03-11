@@ -9,9 +9,9 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(LivingEntity.class)
 public interface LivingEntityAccessor {
-    @Accessor("recentlyHit")
-    int getRecentlyHit();
+	@Accessor("recentlyHit")
+	int getRecentlyHit();
 
-    @Invoker("getLootContextBuilder")
-    LootContext.Builder invokeGetLootContextBuilder(boolean recentlyHit, DamageSource damageSource);
+	@Invoker("getLootContextBuilder")
+	LootContext.Builder invokeGetLootContextBuilder(boolean recentlyHit, DamageSource damageSource);
 }

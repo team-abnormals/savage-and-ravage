@@ -41,10 +41,7 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
 
-@OnlyIn(
-		value = Dist.CLIENT,
-		_interface = IChargeableMob.class
-)
+@OnlyIn(value = Dist.CLIENT, _interface = IChargeableMob.class)
 public class CreepieEntity extends MonsterEntity implements IChargeableMob, IOwnableMob, IAgeableEntity {
 	private static final DataParameter<Integer> STATE = EntityDataManager.createKey(CreepieEntity.class, DataSerializers.VARINT);
 	private static final DataParameter<Boolean> POWERED = EntityDataManager.createKey(CreepieEntity.class, DataSerializers.BOOLEAN);

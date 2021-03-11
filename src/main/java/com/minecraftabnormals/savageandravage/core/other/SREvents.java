@@ -9,13 +9,19 @@ import com.minecraftabnormals.savageandravage.common.item.PottableItem;
 import com.minecraftabnormals.savageandravage.core.SRConfig;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 import com.minecraftabnormals.savageandravage.core.mixin.LivingEntityAccessor;
-import com.minecraftabnormals.savageandravage.core.registry.*;
+import com.minecraftabnormals.savageandravage.core.registry.SRAttributes;
+import com.minecraftabnormals.savageandravage.core.registry.SRBlocks;
+import com.minecraftabnormals.savageandravage.core.registry.SREffects;
+import com.minecraftabnormals.savageandravage.core.registry.SREntities;
 import net.minecraft.block.AbstractBannerBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
@@ -25,7 +31,10 @@ import net.minecraft.entity.ai.goal.RangedCrossbowAttackGoal;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.*;
-import net.minecraft.entity.passive.*;
+import net.minecraft.entity.passive.CatEntity;
+import net.minecraft.entity.passive.GolemEntity;
+import net.minecraft.entity.passive.IronGolemEntity;
+import net.minecraft.entity.passive.OcelotEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -132,7 +141,7 @@ public class SREvents {
 		Entity entity = event.getEntity();
 		if (entity.getType() == EntityType.CREEPER) {
 			CreeperEntity creeper = (CreeperEntity) entity;
-			MinecraftServer server = entity.world.getServer();
+			MinecraftServer server = entity.getServer();
 			if (event.getSource().isExplosion() && SRConfig.COMMON.creepersDropSporesAfterExplosionDeath.get() && server != null) {
 				LootTable loottable = server.getLootTableManager().getLootTableFromLocation(SRLoot.CREEPER_EXPLOSION_DROPS);
 				LivingEntityAccessor accessor = (LivingEntityAccessor) creeper;
@@ -141,7 +150,7 @@ public class SREvents {
 			}
 		} else if (entity instanceof PillagerEntity) {
 			PillagerEntity pillager = (PillagerEntity) entity;
-			MinecraftServer server = entity.world.getServer();
+			MinecraftServer server = entity.getServer();
 			if (!pillager.world.isRemote() && ((ServerWorld) pillager.getEntityWorld()).findRaid(pillager.getPosition()) != null && server != null) {
 				LootTable loottable = server.getLootTableManager().getLootTableFromLocation(SRLoot.PILLAGER_RAID_DROPS);
 				LivingEntityAccessor accessor = (LivingEntityAccessor) entity;
@@ -149,7 +158,7 @@ public class SREvents {
 				loottable.generate(ctx).forEach(pillager::entityDropItem);
 			}
 		} else if (entity instanceof EvokerEntity) {
-			MinecraftServer server = entity.world.getServer();
+			MinecraftServer server = entity.getServer();
 			if (server != null) {
 				LootTable loottable = server.getLootTableManager().getLootTableFromLocation(SRLoot.EVOKER_TOTEM_REPLACEMENT);
 				LivingEntityAccessor accessor = (LivingEntityAccessor) entity;
@@ -363,14 +372,14 @@ public class SREvents {
 		if (entity instanceof EvokerEntity) {
 			int shieldTime = data.getValue(SREntities.EVOKER_SHIELD_TIME);
 			if (shieldTime > 0)
-				data.setValue(SREntities.EVOKER_SHIELD_TIME, shieldTime-1);
+				data.setValue(SREntities.EVOKER_SHIELD_TIME, shieldTime - 1);
 			else if (shieldTime == 0) {
 				data.setValue(SREntities.EVOKER_SHIELD_COOLDOWN, 1800);
 				data.setValue(SREntities.EVOKER_SHIELD_TIME, -1);
 			}
 			int cooldown = data.getValue(SREntities.EVOKER_SHIELD_COOLDOWN);
 			if (cooldown > 0)
-				data.setValue(SREntities.EVOKER_SHIELD_COOLDOWN, cooldown-1);
+				data.setValue(SREntities.EVOKER_SHIELD_COOLDOWN, cooldown - 1);
 		}
 
 	}

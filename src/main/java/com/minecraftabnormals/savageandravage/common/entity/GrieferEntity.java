@@ -367,10 +367,10 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 
 		@Override
 		public void startExecuting() {
-			if (griefer.isApeshit()) 
+			if (griefer.isApeshit())
 				griefer.becomeApeshit(false);
 
-			if (griefer.creeperSporeStacks > 0) 
+			if (griefer.creeperSporeStacks > 0)
 				griefer.setHeldItem(Hand.MAIN_HAND, new ItemStack(SRItems.CREEPER_SPORES.get()));
 		}
 
@@ -380,10 +380,10 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 			this.griefer.setAttackTarget(null);
 			this.griefer.getNavigator();
 			this.rangedAttackTime = -1;
-			if (griefer.isKicking()) 
+			if (griefer.isKicking())
 				this.griefer.setKicking(false);
 		}
-		
+
 		private boolean isWalkable() {
 			PathNavigator pathnavigator = this.griefer.getNavigator();
 			if (pathnavigator != null) {
@@ -407,7 +407,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 				} else {
 					--this.seeTime;
 				}
-				
+
 				if (this.griefer.getRNG().nextDouble() < 0.3D) {
 					this.strafingClockwise = !this.strafingClockwise;
 				}
@@ -415,19 +415,19 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 				if (this.griefer.getRNG().nextDouble() < 0.3D) {
 					this.strafingBackwards = !this.strafingBackwards;
 				}
-				
+
 				if (distance < 15.0D) {
 					this.griefer.getNavigator().clearPath();
 				} else {
 					this.griefer.getNavigator().tryMoveToEntityLiving(attackTarget, this.entityMoveSpeed);
 				}
-				
+
 				if (this.strafingClockwise && !this.isWalkable() || this.strafingBackwards && !this.isWalkable()) {
 					this.griefer.setMoveForward(1.0F);
 					this.griefer.setMoveStrafing(0.0F);
 					this.griefer.getNavigator().clearPath();
 				}
-				
+
 				this.griefer.getLookController().setLookPositionWithEntity(attackTarget, 30.0F, 30.0F);
 				this.griefer.faceEntity(attackTarget, 30.0F, 30.0F);
 				if (--this.rangedAttackTime == 0 || this.seeTime == 3) {
