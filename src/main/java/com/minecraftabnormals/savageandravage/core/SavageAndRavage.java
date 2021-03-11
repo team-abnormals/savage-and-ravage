@@ -60,6 +60,7 @@ public class SavageAndRavage {
 			SREntities.registerWaveMembers();
 			SRCompat.registerFlammables();
 			SRCompat.registerDispenserBehaviors();
+			SRCompat.registerConfigCondition();
 		});
 	}
 

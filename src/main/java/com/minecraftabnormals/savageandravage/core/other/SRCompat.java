@@ -6,6 +6,8 @@ import com.minecraftabnormals.savageandravage.common.entity.MischiefArrowEntity;
 import com.minecraftabnormals.savageandravage.common.entity.SporeCloudEntity;
 import com.minecraftabnormals.savageandravage.common.entity.block.SporeBombEntity;
 import com.minecraftabnormals.savageandravage.common.item.CreeperSporesItem;
+import com.minecraftabnormals.savageandravage.core.SRConfig;
+import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 import com.minecraftabnormals.savageandravage.core.registry.SRBlocks;
 import com.minecraftabnormals.savageandravage.core.registry.SRItems;
 import net.minecraft.block.DispenserBlock;
@@ -77,5 +79,9 @@ public class SRCompat {
 				return stack;
 			}
 		});
+	}
+
+	public static void registerConfigCondition() {
+		DataUtil.registerConfigCondition(SavageAndRavage.MOD_ID, SRConfig.COMMON, SRConfig.CLIENT);
 	}
 }

@@ -1,5 +1,6 @@
 package com.minecraftabnormals.savageandravage.core;
 
+import com.minecraftabnormals.abnormals_core.core.annotations.ConfigKey;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 import org.apache.commons.lang3.tuple.Pair;
@@ -7,13 +8,21 @@ import org.apache.commons.lang3.tuple.Pair;
 public class SRConfig {
 
 	public static class Common {
+		@ConfigKey("creeper_explosions_destroy_blocks")
 		public final ConfigValue<Boolean> creeperExplosionsDestroyBlocks;
+		@ConfigKey("creeper_explosions_spawn_creepies")
 		public final ConfigValue<Boolean> creeperExplosionsSpawnCreepies;
+		@ConfigKey("creepers_drop_spores_after_explosion_death")
 		public final ConfigValue<Boolean> creepersDropSporesAfterExplosionDeath;
+		@ConfigKey("creepie_explosions_destroy_blocks")
 		public final ConfigValue<Boolean> creepieExplosionsDestroyBlocks;
+		@ConfigKey("evokers_use_totems")
 		public final ConfigValue<Boolean> evokersUseTotems;
-		public final ForgeConfigSpec.DoubleValue conchDropChance;
+		@ConfigKey("conch_drop_chance")
+		public final ConfigValue<Double> conchDropChance;
+		@ConfigKey("vex_health_is_reduced")
 		public final ConfigValue<Boolean> reducedVexHealth;
+		@ConfigKey("no_bad_omen_on_death")
 		public final ConfigValue<Boolean> noBadOmenOnDeath;
 
 		public Common(ForgeConfigSpec.Builder builder) {
@@ -45,6 +54,7 @@ public class SRConfig {
 	}
 
 	public static class Client {
+		@ConfigKey("creepie_sprout_on")
 		public final ConfigValue<Boolean> creepieSprout;
 
 		public Client(ForgeConfigSpec.Builder builder) {
