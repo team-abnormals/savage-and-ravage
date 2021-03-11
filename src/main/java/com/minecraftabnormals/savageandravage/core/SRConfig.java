@@ -18,8 +18,6 @@ public class SRConfig {
 		public final ConfigValue<Boolean> creepieExplosionsDestroyBlocks;
 		@ConfigKey("evokers_use_totems")
 		public final ConfigValue<Boolean> evokersUseTotems;
-		@ConfigKey("conch_drop_chance")
-		public final ConfigValue<Double> conchDropChance;
 		@ConfigKey("vex_health_is_reduced")
 		public final ConfigValue<Boolean> reducedVexHealth;
 		@ConfigKey("no_bad_omen_on_death")
@@ -42,9 +40,6 @@ public class SRConfig {
 			evokersUseTotems = builder
 					.comment("When killed by projectiles, evokers use a totem of undying", "This restores 2 health and gives them a projectile-proof shield for 30 seconds", "When their shield runs out, evokers cannot use totems for another 90 seeconds")
 					.define("Evokers use totems when killed by projectiles", true);
-			conchDropChance = builder
-					.comment("The chance evokers will drop an ELdritch Conch instead of a Totem of Undying")
-					.defineInRange("Conch drop chance", 0.05, 0, 1);
 			reducedVexHealth = builder
 					.define("Vexes' max health is reduced to 2", true);
 			builder.pop();

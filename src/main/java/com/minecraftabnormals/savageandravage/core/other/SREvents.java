@@ -8,6 +8,7 @@ import com.minecraftabnormals.savageandravage.common.entity.goals.ImprovedCrossb
 import com.minecraftabnormals.savageandravage.common.item.PottableItem;
 import com.minecraftabnormals.savageandravage.core.SRConfig;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
+import com.minecraftabnormals.savageandravage.core.mixin.LivingEntityAccessor;
 import com.minecraftabnormals.savageandravage.core.registry.*;
 import net.minecraft.block.AbstractBannerBlock;
 import net.minecraft.block.BlockState;
@@ -15,7 +16,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
@@ -32,10 +32,10 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
 import net.minecraft.loot.LootContext;
 import net.minecraft.loot.LootParameterSets;
-import net.minecraft.loot.LootParameters;
 import net.minecraft.loot.LootTable;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -132,31 +132,38 @@ public class SREvents {
 		Entity entity = event.getEntity();
 		if (entity.getType() == EntityType.CREEPER) {
 			CreeperEntity creeper = (CreeperEntity) entity;
-			if (event.getSource().isExplosion() && SRConfig.COMMON.creepersDropSporesAfterExplosionDeath.get() && creeper.world.getServer() != null) {
-				LootTable loottable = creeper.world.getServer().getLootTableManager().getLootTableFromLocation(SRLootTables.CREEPER_EXPLOSION_DROPS);
-				LootContext ctx = new LootContext.Builder((ServerWorld) creeper.world).withParameter(LootParameters.THIS_ENTITY, creeper).withRandom(creeper.world.rand).build(LootParameterSets.field_237453_h_);
+			MinecraftServer server = entity.world.getServer();
+			if (event.getSource().isExplosion() && SRConfig.COMMON.creepersDropSporesAfterExplosionDeath.get() && server != null) {
+				LootTable loottable = server.getLootTableManager().getLootTableFromLocation(SRLoot.CREEPER_EXPLOSION_DROPS);
+				LivingEntityAccessor accessor = (LivingEntityAccessor) creeper;
+				LootContext ctx = accessor.invokeGetLootContextBuilder(accessor.getRecentlyHit() > 0, event.getSource()).build(LootParameterSets.ENTITY);
 				loottable.generate(ctx).forEach(creeper::entityDropItem);
 			}
 		} else if (entity instanceof PillagerEntity) {
-			PillagerEntity pillager = (PillagerEntity) entity; //TODO JSON someday
-			if (pillager.world.isRemote() && ((ServerWorld) pillager.getEntityWorld()).findRaid(pillager.getPosition()) != null) {
-				pillager.entityDropItem(new ItemStack(Items.EMERALD, pillager.world.rand.nextInt(2)));
-				if (pillager.world.rand.nextDouble() < 0.05D) {
-					pillager.entityDropItem(new ItemStack(Items.EMERALD, 4 + pillager.world.rand.nextInt(1)));
-				}
-				if (pillager.world.rand.nextDouble() < 0.12D) {
-					pillager.entityDropItem(new ItemStack(Items.EMERALD, 2 + pillager.world.rand.nextInt(1)));
-				}
+			PillagerEntity pillager = (PillagerEntity) entity;
+			MinecraftServer server = entity.world.getServer();
+			if (!pillager.world.isRemote() && ((ServerWorld) pillager.getEntityWorld()).findRaid(pillager.getPosition()) != null && server != null) {
+				LootTable loottable = server.getLootTableManager().getLootTableFromLocation(SRLoot.PILLAGER_RAID_DROPS);
+				LivingEntityAccessor accessor = (LivingEntityAccessor) entity;
+				LootContext ctx = accessor.invokeGetLootContextBuilder(accessor.getRecentlyHit() > 0, event.getSource()).build(LootParameterSets.ENTITY);
+				loottable.generate(ctx).forEach(pillager::entityDropItem);
 			}
-		} else if (entity instanceof EvokerEntity && entity.world.rand.nextFloat() < SRConfig.COMMON.conchDropChance.get()) {
-			boolean addedDrop = false;
-			Collection<ItemEntity> drops = event.getDrops();
-			for (ItemEntity item : new ArrayList<>(drops)) {
-				if (item.getItem().getItem() == Items.TOTEM_OF_UNDYING) {
-					drops.remove(item);
-					if (!addedDrop)
-						entity.entityDropItem(new ItemStack(SRItems.ELDRITCH_CONCH.get()));
-					addedDrop = true;
+		} else if (entity instanceof EvokerEntity) {
+			MinecraftServer server = entity.world.getServer();
+			if (server != null) {
+				LootTable loottable = server.getLootTableManager().getLootTableFromLocation(SRLoot.EVOKER_TOTEM_REPLACEMENT);
+				LivingEntityAccessor accessor = (LivingEntityAccessor) entity;
+				LootContext ctx = accessor.invokeGetLootContextBuilder(accessor.getRecentlyHit() > 0, event.getSource()).build(LootParameterSets.ENTITY);
+				List<ItemStack> stacks = loottable.generate(ctx);
+				if (!stacks.isEmpty()) {
+					Collection<ItemEntity> drops = event.getDrops();
+					for (ItemEntity item : new ArrayList<>(drops)) {
+						if (item.getItem().getItem() == Items.TOTEM_OF_UNDYING) {
+							drops.remove(item);
+							for (ItemStack stack : stacks)
+								entity.entityDropItem(stack);
+						}
+					}
 				}
 			}
 		}

@@ -1,9 +1,11 @@
 package com.minecraftabnormals.savageandravage.core;
 
+import com.minecraftabnormals.abnormals_core.core.util.DataUtil;
 import com.minecraftabnormals.abnormals_core.core.util.registry.RegistryHelper;
 import com.minecraftabnormals.savageandravage.client.render.IceChunkRenderer;
 import com.minecraftabnormals.savageandravage.core.other.SRCompat;
 import com.minecraftabnormals.savageandravage.core.other.SRFeatures;
+import com.minecraftabnormals.savageandravage.core.other.SRLoot;
 import com.minecraftabnormals.savageandravage.core.registry.*;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -44,6 +46,7 @@ public class SavageAndRavage {
 
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, SRConfig.COMMON_SPEC);
 		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, SRConfig.CLIENT_SPEC);
+		DataUtil.registerConfigCondition(SavageAndRavage.MOD_ID, SRConfig.COMMON, SRConfig.CLIENT);
 	}
 
 	private void registerModels(ModelRegistryEvent event) {
@@ -58,9 +61,9 @@ public class SavageAndRavage {
 			SRFeatures.registerBiomeModifications();
 			SREntities.registerAttributes();
 			SREntities.registerWaveMembers();
+			SRLoot.registerLootConditions();
 			SRCompat.registerFlammables();
 			SRCompat.registerDispenserBehaviors();
-			SRCompat.registerConfigCondition();
 		});
 	}
 

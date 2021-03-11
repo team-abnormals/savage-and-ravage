@@ -80,8 +80,4 @@ public class SRCompat {
 			}
 		});
 	}
-
-	public static void registerConfigCondition() {
-		DataUtil.registerConfigCondition(SavageAndRavage.MOD_ID, SRConfig.COMMON, SRConfig.CLIENT);
-	}
 }
