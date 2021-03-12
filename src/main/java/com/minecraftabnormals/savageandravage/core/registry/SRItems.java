@@ -40,6 +40,7 @@ public class SRItems {
 	public static final RegistryObject<AbnormalsSpawnEggItem> GRIEFER_SPAWN_EGG = HELPER.createSpawnEggItem("griefer", SREntities.GRIEFER::get, 8296024, 16037892);
 	public static final RegistryObject<AbnormalsSpawnEggItem> ICEOLOGER_SPAWN_EGG = HELPER.createSpawnEggItem("iceologer", SREntities.ICEOLOGER::get, 9343891, 1388394);
 	public static final RegistryObject<AbnormalsSpawnEggItem> EXECUTIONER_SPAWN_EGG = HELPER.createSpawnEggItem("executioner", SREntities.EXECUTIONER::get, 0x8E9393, 0x6F484C);
+	public static final RegistryObject<AbnormalsSpawnEggItem> TRICKSTER_SPAWN_EGG = HELPER.createSpawnEggItem("trickster", SREntities.TRICKSTER::get, 0x8E9393, 0x6F484C);
 
 	public static void registerItemProperties() {
 		ItemModelsProperties.registerProperty(Items.CROSSBOW, new ResourceLocation(SavageAndRavage.MOD_ID, "mischief_arrow"), (stack, world, entity) -> entity != null && CrossbowItem.isCharged(stack) && CrossbowItem.hasChargedProjectile(stack, SRItems.MISCHIEF_ARROW.get()) ? 1.0F : 0.0F);

@@ -21,6 +21,7 @@ public class FrostbiteEffect extends Effect {
 		entity.attackEntityFrom(DamageSource.MAGIC, 0.5F);
 	}
 
+	@Override
 	public boolean isReady(int duration, int amplifier) {
 		int i = 20 >> amplifier;
 		if (i > 0) {
