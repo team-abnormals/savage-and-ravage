@@ -75,15 +75,7 @@ public class SREntities {
 		RenderingRegistry.registerEntityRenderingHandler(ICE_CHUNK.get(), IceChunkRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(ICE_CLOUD.get(), NoModelRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(EXECUTIONER.get(), ExecutionerRenderer::new);
-	}
-
-	@SuppressWarnings("unchecked")
-	public static void addLayers() {
-		try {
-			EvokerRenderer<EvokerEntity> renderer = (EvokerRenderer<EvokerEntity>) Minecraft.getInstance().getRenderManager().renderers.get(EntityType.EVOKER);
-			renderer.addLayer(new EvokerShieldLayer(renderer));
-		} catch (ClassCastException ignored) {
-		}
+		RenderingRegistry.registerEntityRenderingHandler(TRICKSTER.get(), TricksterRenderer::new);
 	}
 
 	@OnlyIn(Dist.CLIENT)
