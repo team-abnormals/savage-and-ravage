@@ -77,16 +77,6 @@ public class SREntities {
 		RenderingRegistry.registerEntityRenderingHandler(EXECUTIONER.get(), ExecutionerRenderer::new);
 	}
 
-	@OnlyIn(Dist.CLIENT)
-	@SuppressWarnings("unchecked")
-	public static void addLayers() {
-		try {
-			EvokerRenderer<EvokerEntity> renderer = (EvokerRenderer<EvokerEntity>) Minecraft.getInstance().getRenderManager().renderers.get(EntityType.EVOKER);
-			renderer.addLayer(new EvokerShieldLayer(renderer));
-		} catch (ClassCastException ignored) {
-		}
-	}
-
 	public static void registerAttributes() {
 		GlobalEntityTypeAttributes.put(CREEPIE.get(), CreepieEntity.registerAttributes().create());
 		GlobalEntityTypeAttributes.put(GRIEFER.get(), GrieferEntity.registerAttributes().create());

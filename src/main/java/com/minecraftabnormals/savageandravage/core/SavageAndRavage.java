@@ -3,22 +3,30 @@ package com.minecraftabnormals.savageandravage.core;
 import com.minecraftabnormals.abnormals_core.core.util.DataUtil;
 import com.minecraftabnormals.abnormals_core.core.util.registry.RegistryHelper;
 import com.minecraftabnormals.savageandravage.client.render.IceChunkRenderer;
+import com.minecraftabnormals.savageandravage.client.render.layer.EvokerShieldLayer;
 import com.minecraftabnormals.savageandravage.core.other.SRCompat;
 import com.minecraftabnormals.savageandravage.core.other.SRFeatures;
 import com.minecraftabnormals.savageandravage.core.other.SRLoot;
 import com.minecraftabnormals.savageandravage.core.registry.*;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.entity.EvokerRenderer;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.monster.EvokerEntity;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 @Mod(SavageAndRavage.MOD_ID)
@@ -39,9 +47,10 @@ public class SavageAndRavage {
 		MinecraftForge.EVENT_BUS.register(this);
 
 		bus.addListener(this::commonSetup);
-		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 			bus.addListener(this::clientSetup);
 			bus.addListener(this::registerModels);
+			bus.addListener(this::finish);
 		});
 
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, SRConfig.COMMON_SPEC);
@@ -54,7 +63,7 @@ public class SavageAndRavage {
 	}
 
 	private void commonSetup(FMLCommonSetupEvent event) {
-		DeferredWorkQueue.runLater(() -> {
+		event.enqueueWork(() -> {
 			SREntities.registerEntitySpawns();
 			SREntities.registerTrackedData();
 			SRFeatures.registerPools();
@@ -69,9 +78,17 @@ public class SavageAndRavage {
 
 	private void clientSetup(FMLClientSetupEvent event) {
 		SREntities.registerRendering();
-		SREntities.addLayers();
-		DeferredWorkQueue.runLater(() -> {
-			SRItems.registerItemProperties();
+		event.enqueueWork(SRItems::registerItemProperties);
+	}
+
+	@SuppressWarnings("unchecked")
+	@OnlyIn(Dist.CLIENT)
+	private void finish(FMLLoadCompleteEvent event) {
+		event.enqueueWork(() -> {
+			EntityRendererManager manager = Minecraft.getInstance().getRenderManager();
+			EntityRenderer<?> render = manager.renderers.get(EntityType.EVOKER);
+			if (render instanceof EvokerRenderer)
+				((EvokerRenderer<EvokerEntity>) render).addLayer(new EvokerShieldLayer((EvokerRenderer<EvokerEntity>) render));
 		});
 	}
 }
