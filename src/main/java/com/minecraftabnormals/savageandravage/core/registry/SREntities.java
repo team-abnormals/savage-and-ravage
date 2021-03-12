@@ -21,6 +21,8 @@ import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.raid.Raid;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.registries.DeferredRegister;
@@ -75,6 +77,16 @@ public class SREntities {
 		RenderingRegistry.registerEntityRenderingHandler(EXECUTIONER.get(), ExecutionerRenderer::new);
 	}
 
+	@SuppressWarnings("unchecked")
+	public static void addLayers() {
+		try {
+			EvokerRenderer<EvokerEntity> renderer = (EvokerRenderer<EvokerEntity>) Minecraft.getInstance().getRenderManager().renderers.get(EntityType.EVOKER);
+			renderer.addLayer(new EvokerShieldLayer(renderer));
+		} catch (ClassCastException ignored) {
+		}
+	}
+
+	@OnlyIn(Dist.CLIENT)
 	@SuppressWarnings("unchecked")
 	public static void addLayers() {
 		try {

@@ -13,7 +13,10 @@ import net.minecraft.client.renderer.entity.model.IllagerModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.entity.monster.EvokerEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class EvokerShieldLayer extends LayerRenderer<EvokerEntity, IllagerModel<EvokerEntity>> {
 	private static final ResourceLocation SHIELD_TEXTURE = new ResourceLocation("textures/entity/creeper/creeper_armor.png");
 	private final IllagerModel<EvokerEntity> evokerModel = new IllagerModel<>(2.0F, 0.0F, 64, 64);
