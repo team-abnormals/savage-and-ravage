@@ -8,14 +8,20 @@ import com.minecraftabnormals.savageandravage.common.entity.goals.ImprovedCrossb
 import com.minecraftabnormals.savageandravage.common.item.PottableItem;
 import com.minecraftabnormals.savageandravage.core.SRConfig;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
-import com.minecraftabnormals.savageandravage.core.registry.*;
+import com.minecraftabnormals.savageandravage.core.mixin.LivingEntityAccessor;
+import com.minecraftabnormals.savageandravage.core.registry.SRAttributes;
+import com.minecraftabnormals.savageandravage.core.registry.SRBlocks;
+import com.minecraftabnormals.savageandravage.core.registry.SREffects;
+import com.minecraftabnormals.savageandravage.core.registry.SREntities;
 import net.minecraft.block.AbstractBannerBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.*;
-import net.minecraft.entity.ai.attributes.Attribute;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
@@ -25,17 +31,20 @@ import net.minecraft.entity.ai.goal.RangedCrossbowAttackGoal;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.*;
-import net.minecraft.entity.passive.*;
+import net.minecraft.entity.passive.CatEntity;
+import net.minecraft.entity.passive.GolemEntity;
+import net.minecraft.entity.passive.IronGolemEntity;
+import net.minecraft.entity.passive.OcelotEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
 import net.minecraft.loot.LootContext;
 import net.minecraft.loot.LootParameterSets;
-import net.minecraft.loot.LootParameters;
 import net.minecraft.loot.LootTable;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -46,9 +55,7 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -131,22 +138,41 @@ public class SREvents {
 
 	@SubscribeEvent
 	public static void onLivingDrops(LivingDropsEvent event) {
-		if (event.getEntity().getType() == EntityType.CREEPER) {
-			CreeperEntity creeper = (CreeperEntity) event.getEntity();
-			if (event.getSource().isExplosion() && SRConfig.COMMON.creepersDropSporesAfterExplosionDeath.get() && creeper.world.getServer() != null) {
-				LootTable loottable = creeper.world.getServer().getLootTableManager().getLootTableFromLocation(SRLootTables.CREEPER_EXPLOSION_DROPS);
-				LootContext ctx = new LootContext.Builder((ServerWorld) creeper.world).withParameter(LootParameters.THIS_ENTITY, creeper).withRandom(creeper.world.rand).build(LootParameterSets.field_237453_h_);
+		Entity entity = event.getEntity();
+		if (entity.getType() == EntityType.CREEPER) {
+			CreeperEntity creeper = (CreeperEntity) entity;
+			MinecraftServer server = entity.getServer();
+			if (event.getSource().isExplosion() && SRConfig.COMMON.creepersDropSporesAfterExplosionDeath.get() && server != null) {
+				LootTable loottable = server.getLootTableManager().getLootTableFromLocation(SRLoot.CREEPER_EXPLOSION_DROPS);
+				LivingEntityAccessor accessor = (LivingEntityAccessor) creeper;
+				LootContext ctx = accessor.invokeGetLootContextBuilder(accessor.getRecentlyHit() > 0, event.getSource()).build(LootParameterSets.ENTITY);
 				loottable.generate(ctx).forEach(creeper::entityDropItem);
 			}
-		} else if (event.getEntity() instanceof PillagerEntity) {
-			PillagerEntity pillager = (PillagerEntity) event.getEntity();
-			if (pillager.world.isRemote() && ((ServerWorld) pillager.getEntityWorld()).findRaid(pillager.getPosition()) != null) {
-				pillager.entityDropItem(new ItemStack(Items.EMERALD, pillager.world.rand.nextInt(2)));
-				if (pillager.world.rand.nextDouble() < 0.05D) {
-					pillager.entityDropItem(new ItemStack(Items.EMERALD, 4 + pillager.world.rand.nextInt(1)));
-				}
-				if (pillager.world.rand.nextDouble() < 0.12D) {
-					pillager.entityDropItem(new ItemStack(Items.EMERALD, 2 + pillager.world.rand.nextInt(1)));
+		} else if (entity instanceof PillagerEntity) {
+			PillagerEntity pillager = (PillagerEntity) entity;
+			MinecraftServer server = entity.getServer();
+			if (!pillager.world.isRemote() && ((ServerWorld) pillager.getEntityWorld()).findRaid(pillager.getPosition()) != null && server != null) {
+				LootTable loottable = server.getLootTableManager().getLootTableFromLocation(SRLoot.PILLAGER_RAID_DROPS);
+				LivingEntityAccessor accessor = (LivingEntityAccessor) entity;
+				LootContext ctx = accessor.invokeGetLootContextBuilder(accessor.getRecentlyHit() > 0, event.getSource()).build(LootParameterSets.ENTITY);
+				loottable.generate(ctx).forEach(pillager::entityDropItem);
+			}
+		} else if (entity instanceof EvokerEntity) {
+			MinecraftServer server = entity.getServer();
+			if (server != null) {
+				LootTable loottable = server.getLootTableManager().getLootTableFromLocation(SRLoot.EVOKER_TOTEM_REPLACEMENT);
+				LivingEntityAccessor accessor = (LivingEntityAccessor) entity;
+				LootContext ctx = accessor.invokeGetLootContextBuilder(accessor.getRecentlyHit() > 0, event.getSource()).build(LootParameterSets.ENTITY);
+				List<ItemStack> stacks = loottable.generate(ctx);
+				if (!stacks.isEmpty()) {
+					Collection<ItemEntity> drops = event.getDrops();
+					for (ItemEntity item : new ArrayList<>(drops)) {
+						if (item.getItem().getItem() == Items.TOTEM_OF_UNDYING) {
+							drops.remove(item);
+							for (ItemStack stack : stacks)
+								entity.entityDropItem(stack);
+						}
+					}
 				}
 			}
 		}
@@ -238,6 +264,20 @@ public class SREvents {
 
 			event.setAmount(event.getAmount() - (float) (event.getAmount() * decrease));
 		}
+
+		IDataManager data = (IDataManager) entity;
+		if (SRConfig.COMMON.evokersUseTotems.get() && entity instanceof EvokerEntity) {
+			if (entity.getHealth() - event.getAmount() <= 0 && event.getSource().getImmediateSource() instanceof ProjectileEntity) {
+				if (data.getValue(SREntities.EVOKER_SHIELD_TIME) <= 0 && data.getValue(SREntities.EVOKER_SHIELD_COOLDOWN) <= 0) {
+					event.setCanceled(true);
+					entity.setHealth(2.0F);
+					data.setValue(SREntities.EVOKER_SHIELD_TIME, 600);
+					if (!entity.world.isRemote()) {
+						entity.world.setEntityState(entity, (byte) 35);
+					}
+				}
+			}
+		}
 	}
 
 	@SubscribeEvent
@@ -250,27 +290,6 @@ public class SREvents {
 					event.setCanceled(true);
 			}
 		}
-	}
-
-	@SubscribeEvent
-	public static void onLivingDeath(LivingDeathEvent event) {
-		Entity entity = event.getEntity();
-		IDataManager data = (IDataManager) entity;
-		if (SRConfig.COMMON.evokersUseTotems.get() && entity instanceof EvokerEntity && event.getSource().getImmediateSource() instanceof ProjectileEntity && data.getValue(SREntities.EVOKER_SHIELD_COOLDOWN) <= 0) {
-			event.setCanceled(true);
-			((EvokerEntity) entity).setHealth(2.0F);
-			data.setValue(SREntities.EVOKER_SHIELD_TIME, 600);
-			if (!entity.world.isRemote()) {
-				entity.world.setEntityState(entity, (byte) 35);
-			}
-		}
-	}
-
-	@SubscribeEvent
-	public static void onLivingJump(LivingEvent.LivingJumpEvent event) {
-		LivingEntity entity = event.getEntityLiving();
-		if (entity.getActivePotionEffect(SREffects.WEIGHT.get()) != null)
-			entity.setMotion(entity.getMotion().getX(), 0.0D, entity.getMotion().getZ());
 	}
 
 	@SubscribeEvent
@@ -353,14 +372,14 @@ public class SREvents {
 		if (entity instanceof EvokerEntity) {
 			int shieldTime = data.getValue(SREntities.EVOKER_SHIELD_TIME);
 			if (shieldTime > 0)
-				data.setValue(SREntities.EVOKER_SHIELD_TIME, shieldTime-1);
+				data.setValue(SREntities.EVOKER_SHIELD_TIME, shieldTime - 1);
 			else if (shieldTime == 0) {
 				data.setValue(SREntities.EVOKER_SHIELD_COOLDOWN, 1800);
 				data.setValue(SREntities.EVOKER_SHIELD_TIME, -1);
 			}
 			int cooldown = data.getValue(SREntities.EVOKER_SHIELD_COOLDOWN);
 			if (cooldown > 0)
-				data.setValue(SREntities.EVOKER_SHIELD_COOLDOWN, cooldown-1);
+				data.setValue(SREntities.EVOKER_SHIELD_COOLDOWN, cooldown - 1);
 		}
 
 	}
@@ -376,6 +395,35 @@ public class SREvents {
 			return noBurningBanners;
 		}
 		return false;
+	}
+
+	public static void convertCreeper(CreeperEntity creeper) {
+		CreepieEntity creepie = SREntities.CREEPIE.get().create(creeper.world);
+		if (creepie == null)
+			return;
+
+		creepie.copyLocationAndAnglesFrom(creeper.getEntity());
+		creeper.remove();
+		creepie.setNoAI(creeper.isAIDisabled());
+		if (creeper.hasCustomName()) {
+			creepie.setCustomName(creeper.getCustomName());
+			creepie.setCustomNameVisible(creeper.isCustomNameVisible());
+		}
+
+		if (creeper.isNoDespawnRequired()) {
+			creepie.enablePersistence();
+		}
+		if (creeper.getLeashed() && creeper.getLeashHolder() != null) {
+			creepie.setLeashHolder(creeper.getLeashHolder(), true);
+			creeper.clearLeashed(true, false);
+		}
+
+		if (creeper.getRidingEntity() != null) {
+			creepie.startRiding(creeper.getRidingEntity());
+		}
+		creepie.setInvulnerable(creeper.isInvulnerable());
+		creeper.setHealth(creeper.getMaxHealth());
+		creeper.world.addEntity(creepie);
 	}
 
 	public static ItemStack createRocket() {

@@ -27,6 +27,7 @@ public class CreeperSporesItem extends Item implements PottableItem {
 	public static int getThrownSporeCloudSize(Random rand) {
 		return rand.nextInt(50) == 0 ? 0 : 1 + rand.nextInt(3);
 	}
+
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
 		ItemStack stack = player.getHeldItem(hand);

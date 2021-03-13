@@ -19,6 +19,12 @@
     },
     {
       "type": "display",
+      "conditions": [
+        {
+          "type": "savageandravage:config",
+          "value": "no_bad_omen_on_death"
+        }
+      ],
       "config": {
         "mode": "modify",
         "description": {
