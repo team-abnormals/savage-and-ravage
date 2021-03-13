@@ -56,6 +56,7 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -176,6 +177,13 @@ public class SREvents {
 				}
 			}
 		}
+	}
+
+	@SubscribeEvent
+	public static void onLivingJump(LivingEvent.LivingJumpEvent event) {
+		LivingEntity entity = event.getEntityLiving();
+		if (entity.getActivePotionEffect(SREffects.WEIGHT.get()) != null)
+			entity.setMotion(entity.getMotion().getX(), 0.0D, entity.getMotion().getZ());
 	}
 
 	@SubscribeEvent
@@ -395,35 +403,6 @@ public class SREvents {
 			return noBurningBanners;
 		}
 		return false;
-	}
-
-	public static void convertCreeper(CreeperEntity creeper) {
-		CreepieEntity creepie = SREntities.CREEPIE.get().create(creeper.world);
-		if (creepie == null)
-			return;
-
-		creepie.copyLocationAndAnglesFrom(creeper.getEntity());
-		creeper.remove();
-		creepie.setNoAI(creeper.isAIDisabled());
-		if (creeper.hasCustomName()) {
-			creepie.setCustomName(creeper.getCustomName());
-			creepie.setCustomNameVisible(creeper.isCustomNameVisible());
-		}
-
-		if (creeper.isNoDespawnRequired()) {
-			creepie.enablePersistence();
-		}
-		if (creeper.getLeashed() && creeper.getLeashHolder() != null) {
-			creepie.setLeashHolder(creeper.getLeashHolder(), true);
-			creeper.clearLeashed(true, false);
-		}
-
-		if (creeper.getRidingEntity() != null) {
-			creepie.startRiding(creeper.getRidingEntity());
-		}
-		creepie.setInvulnerable(creeper.isInvulnerable());
-		creeper.setHealth(creeper.getMaxHealth());
-		creeper.world.addEntity(creepie);
 	}
 
 	public static ItemStack createRocket() {
