@@ -95,14 +95,14 @@ public class IceologerModel extends BipedModel<IceologerEntity> {
 		this.arms.rotationPointY = 3.0F;
 		this.arms.rotationPointZ = -1.0F;
 		this.arms.rotateAngleX = -0.75F;
-		AbstractIllagerEntity.ArmPose abstractillagerentity$armpose = entity.getArmPose();
-		if (abstractillagerentity$armpose == AbstractIllagerEntity.ArmPose.ATTACKING) {
+		AbstractIllagerEntity.ArmPose armPose = entity.getArmPose();
+		if (armPose == AbstractIllagerEntity.ArmPose.ATTACKING) {
 			if (entity.getHeldItemMainhand().isEmpty()) {
 				ModelHelper.func_239105_a_(this.bipedLeftArm, this.bipedRightArm, true, this.swingProgress, ageInTicks);
 			} else {
 				ModelHelper.func_239103_a_(this.bipedRightArm, this.bipedLeftArm, entity, this.swingProgress, ageInTicks);
 			}
-		} else if (abstractillagerentity$armpose == AbstractIllagerEntity.ArmPose.SPELLCASTING) {
+		} else if (armPose == AbstractIllagerEntity.ArmPose.SPELLCASTING) {
 			this.bipedRightArm.rotationPointZ = 0.0F;
 			this.bipedRightArm.rotationPointX = -5.0F;
 			this.bipedLeftArm.rotationPointZ = 0.0F;
@@ -113,17 +113,17 @@ public class IceologerModel extends BipedModel<IceologerEntity> {
 			this.bipedLeftArm.rotateAngleZ = -2.3561945F;
 			this.bipedRightArm.rotateAngleY = 0.0F;
 			this.bipedLeftArm.rotateAngleY = 0.0F;
-		} else if (abstractillagerentity$armpose == AbstractIllagerEntity.ArmPose.BOW_AND_ARROW) {
+		} else if (armPose == AbstractIllagerEntity.ArmPose.BOW_AND_ARROW) {
 			this.bipedRightArm.rotateAngleY = -0.1F + this.bipedHead.rotateAngleY;
 			this.bipedRightArm.rotateAngleX = (-(float) Math.PI / 2F) + this.bipedHead.rotateAngleX;
 			this.bipedLeftArm.rotateAngleX = -0.9424779F + this.bipedHead.rotateAngleX;
 			this.bipedLeftArm.rotateAngleY = this.bipedHead.rotateAngleY - 0.4F;
 			this.bipedLeftArm.rotateAngleZ = ((float) Math.PI / 2F);
-		} else if (abstractillagerentity$armpose == AbstractIllagerEntity.ArmPose.CROSSBOW_HOLD) {
+		} else if (armPose == AbstractIllagerEntity.ArmPose.CROSSBOW_HOLD) {
 			ModelHelper.func_239104_a_(this.bipedRightArm, this.bipedLeftArm, this.bipedHead, true);
-		} else if (abstractillagerentity$armpose == AbstractIllagerEntity.ArmPose.CROSSBOW_CHARGE) {
+		} else if (armPose == AbstractIllagerEntity.ArmPose.CROSSBOW_CHARGE) {
 			ModelHelper.func_239102_a_(this.bipedRightArm, this.bipedLeftArm, entity, true);
-		} else if (abstractillagerentity$armpose == AbstractIllagerEntity.ArmPose.CELEBRATING) {
+		} else if (armPose == AbstractIllagerEntity.ArmPose.CELEBRATING) {
 			this.bipedRightArm.rotationPointZ = 0.0F;
 			this.bipedRightArm.rotationPointX = -5.0F;
 			this.bipedRightArm.rotateAngleX = MathHelper.cos(ageInTicks * 0.6662F) * 0.05F;
@@ -136,7 +136,7 @@ public class IceologerModel extends BipedModel<IceologerEntity> {
 			this.bipedLeftArm.rotateAngleY = 0.0F;
 		}
 
-		boolean flag = abstractillagerentity$armpose == AbstractIllagerEntity.ArmPose.CROSSED;
+		boolean flag = armPose == AbstractIllagerEntity.ArmPose.CROSSED;
 		this.arms.showModel = flag;
 		this.bipedLeftArm.showModel = !flag;
 		this.bipedRightArm.showModel = !flag;

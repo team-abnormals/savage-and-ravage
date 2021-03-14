@@ -23,8 +23,8 @@ import net.minecraft.world.World;
 
 import java.util.function.Supplier;
 
+@SuppressWarnings("deprecation")
 public class PottedCreeperSporesBlock extends Block {
-
 	private static final VoxelShape SHAPE = Block.makeCuboidShape(5.0D, 0.0D, 5.0D, 11.0D, 6.0D, 11.0D);
 	public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
 	private final Supplier<Item> flower;

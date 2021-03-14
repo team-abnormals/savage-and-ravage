@@ -5,7 +5,7 @@ import com.minecraftabnormals.savageandravage.common.entity.*;
 import com.minecraftabnormals.savageandravage.common.entity.block.SporeBombEntity;
 import com.minecraftabnormals.savageandravage.common.entity.goals.AvoidGrieferOwnedCreepiesGoal;
 import com.minecraftabnormals.savageandravage.common.entity.goals.ImprovedCrossbowGoal;
-import com.minecraftabnormals.savageandravage.common.item.PottableItem;
+import com.minecraftabnormals.savageandravage.common.item.IPottableItem;
 import com.minecraftabnormals.savageandravage.core.SRConfig;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 import com.minecraftabnormals.savageandravage.core.mixin.LivingEntityAccessor;
@@ -342,8 +342,8 @@ public class SREvents {
 		BlockPos pos = event.getPos();
 		World world = event.getWorld();
 
-		if (stack.getItem() instanceof PottableItem && world.getBlockState(pos).getBlock() == Blocks.FLOWER_POT) {
-			BlockState pottedState = ((PottableItem) stack.getItem()).getPottedState(player.getHorizontalFacing().getOpposite());
+		if (stack.getItem() instanceof IPottableItem && world.getBlockState(pos).getBlock() == Blocks.FLOWER_POT) {
+			BlockState pottedState = ((IPottableItem) stack.getItem()).getPottedState(player.getHorizontalFacing().getOpposite());
 			if (pottedState == null)
 				return;
 			world.setBlockState(pos, pottedState);

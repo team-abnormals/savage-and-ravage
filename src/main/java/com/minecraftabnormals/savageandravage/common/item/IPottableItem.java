@@ -10,7 +10,7 @@ import javax.annotation.Nullable;
  *
  * @author Ocelot
  */
-public interface PottableItem {
+public interface IPottableItem {
 
 	/**
 	 * @param direction The direction that the pot should face, ignore if not directional

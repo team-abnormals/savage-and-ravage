@@ -21,7 +21,6 @@ public class SkeletonVillagerModel extends BipedModel<SkeletonVillagerEntity> {
 	public ModelRenderer Nose;
 	public ModelRenderer RightClosedArm;
 	public ModelRenderer LeftClosedArm;
-	public float floatthing;
 
 	public SkeletonVillagerModel(float f) {
 		super(f);

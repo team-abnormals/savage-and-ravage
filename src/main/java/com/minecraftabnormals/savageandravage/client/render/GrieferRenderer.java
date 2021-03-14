@@ -26,7 +26,7 @@ public class GrieferRenderer extends BipedRenderer<GrieferEntity, GrieferModel> 
 	}
 
 	@Override
-	protected void preRenderCallback(GrieferEntity entitylivingbaseIn, MatrixStack matrixStackIn, float partialTickTime) {
+	protected void preRenderCallback(GrieferEntity entity, MatrixStack matrixStackIn, float partialTickTime) {
 		matrixStackIn.scale(0.9375F, 0.9375F, 0.9375F);
 	}
 }
