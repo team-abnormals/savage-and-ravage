@@ -386,13 +386,8 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 
 		private boolean isWalkable() {
 			PathNavigator pathnavigator = this.griefer.getNavigator();
-			if (pathnavigator != null) {
-				NodeProcessor nodeprocessor = pathnavigator.getNodeProcessor();
-				if (nodeprocessor != null && nodeprocessor.getPathNodeType(this.griefer.world, MathHelper.floor(this.griefer.getPosX() + 1.0D), MathHelper.floor(this.griefer.getPosY()), MathHelper.floor(this.griefer.getPosZ() + 1.0D)) == PathNodeType.WALKABLE) {
-					return true;
-				}
-			}
-			return false;
+			NodeProcessor nodeprocessor = pathnavigator.getNodeProcessor();
+			return nodeprocessor.getPathNodeType(this.griefer.world, MathHelper.floor(this.griefer.getPosX() + 1.0D), MathHelper.floor(this.griefer.getPosY()), MathHelper.floor(this.griefer.getPosZ() + 1.0D)) == PathNodeType.WALKABLE;
 		}
 
 		@Override

@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 
 import java.util.Random;
 
-public class CreeperSporesItem extends Item implements PottableItem {
+public class CreeperSporesItem extends Item implements IPottableItem {
 	private static final TargetedItemGroupFiller FILLER = new TargetedItemGroupFiller(() -> Items.EGG);
 
 	public CreeperSporesItem(Item.Properties properties) {

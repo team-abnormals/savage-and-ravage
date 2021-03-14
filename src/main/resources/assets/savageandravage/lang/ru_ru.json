@@ -44,14 +44,12 @@
   "entity.savageandravage.ice_chunk": "Кусок льда",
   "entity.savageandravage.ice_cloud": "Облако льда",
   
-  "effect.savageandravage.growing": "Рост",
-  "effect.savageandravage.shrinking": "Сокращение",
   "effect.savageandravage.frostbite": "Обморожение",
   
   "attribute.name.generic.explosive_damage_reduction": "Защита от взрывов",
   
-  "advancements.savageandravage.story.griefer_armor.title": "Динамит с лазерным лучом",
-  "advancements.savageandravage.story.griefer_armor.description": "Получите полный комплект гриферской брони",
+  "advancements.savageandravage.adventure.griefer_armor.title": "Динамит с лазерным лучом",
+  "advancements.savageandravage.adventure.griefer_armor.description": "Получите полный комплект гриферской брони",
   "advancements.savageandravage.adventure.relic_collector.title": "Собиратель реликвий",
   "advancements.savageandravage.adventure.relic_collector.description": "Получите тотем бессмертия, головоруб и морозный жезл",
   "advancements.savageandravage.adventure.voluntary_exile.description": "Сожгите зловещий флаг.\nМожет, стоит пока держаться подальше от деревень...",
@@ -67,25 +65,6 @@
   "subtitles.savageandravage.entity.iceologer.celebrate": "Ледолог празднует",
   "subtitles.savageandravage.entity.iceologer.cast_spell": "Ледолог применяет заклинание",
   "subtitles.savageandravage.entity.player.cast_spell": "Игрок применяет заклинание",
-  "subtitles.savageandravage.entity.generic.growth_success": "Рост удался",
-  "subtitles.savageandravage.entity.generic.growth_failure": "Рост не удался",
   "subtitles.savageandravage.entity.creeper_spores.throw": "Споры криперов парят",
-  "subtitles.savageandravage.block.runed_gloomy_tiles.activate": "Рунический мрачная плитка активировалась",
-	
-  "item.minecraft.potion.effect.growth": "Зелье роста",
-  "item.minecraft.potion.effect.growth_long": "Зелье роста",
-  "item.minecraft.splash_potion.effect.growth": "Взрывное зелье роста",
-  "item.minecraft.splash_potion.effect.growth_long": "Взрывное зелье роста",
-  "item.minecraft.lingering_potion.effect.growth": "Туманное зелье роста",
-  "item.minecraft.lingering_potion.effect.growth_long": "Туманное зелье роста",
-  "item.minecraft.tipped_arrow.effect.growth": "Стрела роста",
-  "item.minecraft.tipped_arrow.effect.growth_long": "Стрела роста",
-  "item.minecraft.potion.effect.youth": "Зелье молодняка",
-  "item.minecraft.potion.effect.youth_long": "Зелье молодняка",
-  "item.minecraft.splash_potion.effect.youth": "Взрывное зелье молодняка",
-  "item.minecraft.splash_potion.effect.youth_long": "Взрывное зелье молодняка",
-  "item.minecraft.lingering_potion.effect.youth": "Туманное зелье молодняка",
-  "item.minecraft.lingering_potion.effect.youth_long": "Туманное зелье молодняка",
-  "item.minecraft.tipped_arrow.effect.youth": "Стрела молодняка",
-  "item.minecraft.tipped_arrow.effect.youth_long": "Стрела молодняка"
+  "subtitles.savageandravage.block.runed_gloomy_tiles.activate": "Рунический мрачная плитка активировалась"
 }

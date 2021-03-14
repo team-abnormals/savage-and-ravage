@@ -19,16 +19,16 @@ public class SkeletonVillagerRenderer extends MobRenderer<SkeletonVillagerEntity
 		this.addLayer(new BipedArmorLayer<>(this, new VillagerArmorModel<>(0.5F), new VillagerArmorModel<>(1.0F)));
 		this.addLayer(new HeldItemLayer<SkeletonVillagerEntity, SkeletonVillagerModel>(this) {
 			@Override
-			public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, SkeletonVillagerEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-				if (entitylivingbaseIn.isAggressive()) {
-					super.render(matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch);
+			public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, SkeletonVillagerEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+				if (entity.isAggressive()) {
+					super.render(matrixStackIn, bufferIn, packedLightIn, entity, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch);
 				}
 			}
 		});
 	}
 
 	@Override
-	protected void preRenderCallback(SkeletonVillagerEntity entitylivingbaseIn, MatrixStack matrixStackIn, float partialTickTime) {
+	protected void preRenderCallback(SkeletonVillagerEntity entity, MatrixStack matrixStackIn, float partialTickTime) {
 		matrixStackIn.scale(0.9375F, 0.9375F, 0.9375F);
 	}
 

@@ -69,13 +69,8 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 
 	private boolean isWalkable() {
 		PathNavigator pathnavigator = this.entity.getNavigator();
-		if (pathnavigator != null) {
-			NodeProcessor nodeprocessor = pathnavigator.getNodeProcessor();
-			if (nodeprocessor != null && nodeprocessor.getPathNodeType(this.entity.world, MathHelper.floor(this.entity.getPosX() + 1.0D), MathHelper.floor(this.entity.getPosY()), MathHelper.floor(this.entity.getPosZ() + 1.0D)) == PathNodeType.WALKABLE) {
-				return true;
-			}
-		}
-		return false;
+		NodeProcessor nodeprocessor = pathnavigator.getNodeProcessor();
+		return nodeprocessor.getPathNodeType(this.entity.world, MathHelper.floor(this.entity.getPosX() + 1.0D), MathHelper.floor(this.entity.getPosY()), MathHelper.floor(this.entity.getPosZ() + 1.0D)) == PathNodeType.WALKABLE;
 	}
 
 	@Override

@@ -15,7 +15,7 @@ import net.minecraft.util.math.MathHelper;
 
 public class GrieferModel extends BipedModel<GrieferEntity> {
 	public ModelRenderer bipedBody2Layer;
-	public ModelRenderer lenose;
+	public ModelRenderer nose;
 	public ModelRenderer tnt;
 	public ModelRenderer pouch;
 	public ModelRenderer shoulderPad;
@@ -35,9 +35,9 @@ public class GrieferModel extends BipedModel<GrieferEntity> {
 		this.bipedRightArm = new ModelRenderer(this, 16, 34);
 		this.bipedRightArm.setRotationPoint(-5.0F, 2.0F, 0.0F);
 		this.bipedRightArm.addBox(-3.0F, -2.0F, -2.0F, 4, 12, 4, 0.0F);
-		this.lenose = new ModelRenderer(this, 24, 0);
-		this.lenose.setRotationPoint(0.0F, -2.0F, 0.0F);
-		this.lenose.addBox(-1.0F, -1.0F, -6.0F, 2, 4, 2, 0.0F);
+		this.nose = new ModelRenderer(this, 24, 0);
+		this.nose.setRotationPoint(0.0F, -2.0F, 0.0F);
+		this.nose.addBox(-1.0F, -1.0F, -6.0F, 2, 4, 2, 0.0F);
 		this.tnt = new ModelRenderer(this, 50, 45);
 		this.tnt.setRotationPoint(-0.0F, 6.0F, -6.00F);
 		this.tnt.addBox(0.0F, 0.0F, 0.0F, 4, 4, 3, 0.0F);
@@ -60,7 +60,7 @@ public class GrieferModel extends BipedModel<GrieferEntity> {
 		this.bipedBody2Layer = new ModelRenderer(this, 36, 18);
 		this.bipedBody2Layer.setRotationPoint(0.0F, 0.0F, 0.0F);
 		this.bipedBody2Layer.addBox(-4.0F, 0.0F, -3.0F, 8, 12, 6, 0.03F);
-		this.bipedHead.addChild(this.lenose);
+		this.bipedHead.addChild(this.nose);
 		this.bipedBody.addChild(this.tnt);
 		this.bipedBody.addChild(this.pouch);
 		this.bipedRightArm.addChild(this.shoulderPad);
@@ -72,8 +72,8 @@ public class GrieferModel extends BipedModel<GrieferEntity> {
 	}
 
 	@Override
-	public void setRotationAngles(GrieferEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netbipedbipedHeadYaw, float bipedbipedHeadPitch) {
-		super.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netbipedbipedHeadYaw, bipedbipedHeadPitch);
+	public void setRotationAngles(GrieferEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+		super.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 		boolean flag = entityIn.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() instanceof ArmorItem;
 		this.bipedBody2Layer.copyModelAngles(this.bipedBody);
 		this.shoulderPad.showModel = !flag;
@@ -81,18 +81,14 @@ public class GrieferModel extends BipedModel<GrieferEntity> {
 			float f1 = 1.0F - (float) MathHelper.abs(10 - 2 * entityIn.getKickTicks()) / 10.0F;
 			this.bipedRightLeg.rotateAngleX = MathHelper.lerp(f1, 0.0F, -1.40F);
 		}
-		AbstractIllagerEntity.ArmPose armpose = entityIn.getArmPose();
-		switch (armpose) {
-			case CELEBRATING:
-				this.bipedHead.rotateAngleX = MathHelper.cos(ageInTicks * 0.6662F) * 0.05F;
-				this.bipedLeftArm.rotationPointZ = 0.0F;
-				this.bipedLeftArm.rotationPointX = 5.0F;
-				this.bipedLeftArm.rotateAngleX = MathHelper.cos(ageInTicks * 0.7000F) * 0.05F;
-				this.bipedLeftArm.rotateAngleZ = -2.3561945F;
-				this.bipedLeftArm.rotateAngleY = 0.0F;
-				break;
-			default:
-				break;
+		AbstractIllagerEntity.ArmPose armPose = entityIn.getArmPose();
+		if (armPose == AbstractIllagerEntity.ArmPose.CELEBRATING) {
+			this.bipedHead.rotateAngleX = MathHelper.cos(ageInTicks * 0.6662F) * 0.05F;
+			this.bipedLeftArm.rotationPointZ = 0.0F;
+			this.bipedLeftArm.rotationPointX = 5.0F;
+			this.bipedLeftArm.rotateAngleX = MathHelper.cos(ageInTicks * 0.7000F) * 0.05F;
+			this.bipedLeftArm.rotateAngleZ = -2.3561945F;
+			this.bipedLeftArm.rotateAngleY = 0.0F;
 		}
 	}
 
@@ -136,11 +132,5 @@ public class GrieferModel extends BipedModel<GrieferEntity> {
 			}
 		}
 		super.setLivingAnimations(entityIn, limbSwing, limbSwingAmount, partialTick);
-	}
-
-	public void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) {
-		modelRenderer.rotateAngleX = x;
-		modelRenderer.rotateAngleY = y;
-		modelRenderer.rotateAngleZ = z;
 	}
 }

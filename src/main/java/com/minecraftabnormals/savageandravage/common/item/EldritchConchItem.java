@@ -58,17 +58,17 @@ public class EldritchConchItem extends Item {
 	}
 
 	private boolean spawnFangs(double x, double y, double z, int lowestYCheck, float rotationYaw, int warmupDelayTicks, World world, PlayerEntity player) {
-		BlockPos blockpos = new BlockPos(x, y, z);
+		BlockPos pos = new BlockPos(x, y, z);
 		boolean shouldSpawn = false;
 		double yCorrection = 0.0D;
 
 		do {
-			BlockPos blockpos1 = blockpos.down();
-			BlockState blockstate = world.getBlockState(blockpos1);
-			if (blockstate.isSolidSide(world, blockpos1, Direction.UP)) {
-				if (!world.isAirBlock(blockpos)) {
-					BlockState blockstate1 = world.getBlockState(blockpos);
-					VoxelShape voxelshape = blockstate1.getCollisionShape(world, blockpos);
+			BlockPos belowPos = pos.down();
+			BlockState stateDown = world.getBlockState(belowPos);
+			if (stateDown.isSolidSide(world, belowPos, Direction.UP)) {
+				if (!world.isAirBlock(pos)) {
+					BlockState state = world.getBlockState(pos);
+					VoxelShape voxelshape = state.getCollisionShape(world, pos);
 					if (!voxelshape.isEmpty()) {
 						yCorrection = voxelshape.getEnd(Direction.Axis.Y);
 					}
@@ -78,11 +78,11 @@ public class EldritchConchItem extends Item {
 				break;
 			}
 
-			blockpos = blockpos.down();
-		} while (blockpos.getY() >= lowestYCheck);
+			pos = belowPos;
+		} while (pos.getY() >= lowestYCheck);
 
 		if (shouldSpawn) {
-			world.addEntity(new EvokerFangsEntity(world, x, (double) blockpos.getY() + yCorrection, z, rotationYaw, warmupDelayTicks, player));
+			world.addEntity(new EvokerFangsEntity(world, x, (double) pos.getY() + yCorrection, z, rotationYaw, warmupDelayTicks, player));
 			return true;
 		}
 		return false;

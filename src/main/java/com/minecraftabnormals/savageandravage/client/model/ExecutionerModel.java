@@ -14,7 +14,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
- * ModelExecutionor - MCVinnyq Created using Tabula 8.0.0
+ * ModelExecutioner - MCVinnyQ Created using Tabula 8.0.0
  */
 @OnlyIn(Dist.CLIENT)
 public class ExecutionerModel extends BipedModel<VindicatorEntity> {
@@ -94,13 +94,9 @@ public class ExecutionerModel extends BipedModel<VindicatorEntity> {
 	public void setRotationAngles(VindicatorEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		super.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 		AbstractIllagerEntity.ArmPose illagerArmPose = entityIn.getArmPose();
-		switch (illagerArmPose) {
-			case ATTACKING:
-				if (!entityIn.getHeldItemMainhand().isEmpty())
-					ModelHelper.func_239103_a_(this.bipedRightArm, this.bipedLeftArm, entityIn, this.swingProgress, ageInTicks);
-				break;
-			default:
-				break;
+		if (illagerArmPose == AbstractIllagerEntity.ArmPose.ATTACKING) {
+			if (!entityIn.getHeldItemMainhand().isEmpty())
+				ModelHelper.func_239103_a_(this.bipedRightArm, this.bipedLeftArm, entityIn, this.swingProgress, ageInTicks);
 		}
 		boolean isCrossed = illagerArmPose == AbstractIllagerEntity.ArmPose.CROSSED;
 		this.closedArms.showModel = isCrossed;

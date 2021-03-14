@@ -44,14 +44,12 @@
   "entity.savageandravage.ice_chunk": "얼음 덩이",
   "entity.savageandravage.ice_cloud": "얼음 구름",
   
-  "effect.savageandravage.growing": "성장",
-  "effect.savageandravage.shrinking": "어려짐",
   "effect.savageandravage.frostbite": "동상",
   
   "attribute.name.generic.explosive_damage_reduction": "폭발 피해 감소",
   
-  "advancements.savageandravage.story.griefer_armor.title": "다이너마이트와 레이저 빔처럼",
-  "advancements.savageandravage.story.griefer_armor.description": "그리퍼 갑옷 풀 세트를 입으세요",
+  "advancements.savageandravage.adventure.griefer_armor.title": "다이너마이트와 레이저 빔처럼",
+  "advancements.savageandravage.adventure.griefer_armor.description": "그리퍼 갑옷 풀 세트를 입으세요",
   "advancements.savageandravage.adventure.relic_collector.title": "유물 수집가",
   "advancements.savageandravage.adventure.relic_collector.description": "불사의 토템, 참수용 대검, 그리고 얼음지팡이를 얻으세요",
   "advancements.savageandravage.adventure.voluntary_exile.description": "불길한 현수막에 불을 붙이세요.\n당분간 마을에서 떨어져 있는 게 좋을지도 몰라요...",
@@ -67,25 +65,6 @@
   "subtitles.savageandravage.entity.iceologer.celebrate": "얼음술사가 환호함",
   "subtitles.savageandravage.entity.iceologer.cast_spell": "얼음술사가 주문을 외움",
   "subtitles.savageandravage.entity.player.cast_spell": "플레이어가 주문을 외움",
-  "subtitles.savageandravage.entity.generic.growth_success": "성장에 성공함",
-  "subtitles.savageandravage.entity.generic.growth_failure": "성장에 실패함",
   "subtitles.savageandravage.entity.creeper_spores.throw": "크리퍼 포자가 날아감",
-  "subtitles.savageandravage.block.runed_gloomy_tiles.activate": "룬이 새겨진 우울한 타일이 활성화됨",
-
-  "item.minecraft.potion.effect.growth": "성장의 물약",
-  "item.minecraft.potion.effect.growth_long": "성장의 물약",
-  "item.minecraft.splash_potion.effect.growth": "투척용 성장의 물약",
-  "item.minecraft.splash_potion.effect.growth_long": "투척용 성장의 물약",
-  "item.minecraft.lingering_potion.effect.growth": "잔류형 성장의 물약",
-  "item.minecraft.lingering_potion.effect.growth_long": "잔류형 성장의 물약",
-  "item.minecraft.tipped_arrow.effect.growth": "성장의 화살",
-  "item.minecraft.tipped_arrow.effect.growth_long": "성장의 화살",
-  "item.minecraft.potion.effect.youth": "젊음의 물약",
-  "item.minecraft.potion.effect.youth_long": "젊음의 물약",
-  "item.minecraft.splash_potion.effect.youth": "투척용 젊음의 물약",
-  "item.minecraft.splash_potion.effect.youth_long": "투척용 젊음의 물약",
-  "item.minecraft.lingering_potion.effect.youth": "잔류형 젊음의 물약",
-  "item.minecraft.lingering_potion.effect.youth_long": "잔류형 젊음의 물약",
-  "item.minecraft.tipped_arrow.effect.youth": "젊음의 화살",
-  "item.minecraft.tipped_arrow.effect.youth_long": "젊음의 화살"
+  "subtitles.savageandravage.block.runed_gloomy_tiles.activate": "룬이 새겨진 우울한 타일이 활성화됨"
 }
