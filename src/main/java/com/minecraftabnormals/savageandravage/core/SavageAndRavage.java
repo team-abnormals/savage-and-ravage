@@ -58,10 +58,6 @@ public class SavageAndRavage {
 		DataUtil.registerConfigCondition(SavageAndRavage.MOD_ID, SRConfig.COMMON, SRConfig.CLIENT);
 	}
 
-	private void registerModels(ModelRegistryEvent event) {
-		ModelLoader.addSpecialModel(IceChunkRenderer.MODEL_LOCATION);
-	}
-
 	private void commonSetup(FMLCommonSetupEvent event) {
 		event.enqueueWork(() -> {
 			SREntities.registerEntitySpawns();
@@ -78,7 +74,13 @@ public class SavageAndRavage {
 
 	private void clientSetup(FMLClientSetupEvent event) {
 		SREntities.registerRendering();
-		event.enqueueWork(SRItems::registerItemProperties);
+		event.enqueueWork(() -> {
+			SRItems.registerItemProperties();
+		});
+	}
+
+	private void registerModels(ModelRegistryEvent event) {
+		ModelLoader.addSpecialModel(IceChunkRenderer.MODEL_LOCATION);
 	}
 
 	@SuppressWarnings("unchecked")

@@ -18,7 +18,6 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.util.function.ToIntFunction;
 
-@SuppressWarnings("unused")
 @Mod.EventBusSubscriber(modid = SavageAndRavage.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class SRBlocks {
 	public static final BlockSubRegistryHelper HELPER = SavageAndRavage.REGISTRY_HELPER.getBlockSubHelper();
