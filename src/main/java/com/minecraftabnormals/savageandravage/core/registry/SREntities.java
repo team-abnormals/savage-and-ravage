@@ -5,18 +5,14 @@ import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.Track
 import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.TrackedDataManager;
 import com.minecraftabnormals.abnormals_core.core.util.registry.EntitySubRegistryHelper;
 import com.minecraftabnormals.savageandravage.client.render.*;
-import com.minecraftabnormals.savageandravage.client.render.layer.EvokerShieldLayer;
 import com.minecraftabnormals.savageandravage.common.entity.*;
 import com.minecraftabnormals.savageandravage.common.entity.block.SporeBombEntity;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.EvokerRenderer;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.entity.monster.AbstractSkeletonEntity;
-import net.minecraft.entity.monster.EvokerEntity;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.gen.Heightmap;
@@ -73,15 +69,6 @@ public class SREntities {
 		RenderingRegistry.registerEntityRenderingHandler(ICE_CHUNK.get(), IceChunkRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(ICE_CLOUD.get(), NoModelRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(EXECUTIONER.get(), ExecutionerRenderer::new);
-	}
-
-	@SuppressWarnings("unchecked")
-	public static void addLayers() {
-		try {
-			EvokerRenderer<EvokerEntity> renderer = (EvokerRenderer<EvokerEntity>) Minecraft.getInstance().getRenderManager().renderers.get(EntityType.EVOKER);
-			renderer.addLayer(new EvokerShieldLayer(renderer));
-		} catch (ClassCastException ignored) {
-		}
 	}
 
 	public static void registerAttributes() {

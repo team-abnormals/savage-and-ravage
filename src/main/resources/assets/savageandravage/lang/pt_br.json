@@ -42,14 +42,12 @@
   	"entity.savageandravage.ice_chunk": "Pedaço de gelo",
   	"entity.savageandravage.ice_cloud": "Nuvem de gelo",
 	
-	"effect.savageandravage.growing": "Crescimento",
-	"effect.savageandravage.shrinking": "Encolhimento",
 	"effect.savageandravage.frostbite": "Queimadura de gelo",
 	
 	"attribute.name.generic.explosive_damage_reduction": "Redução de dano explosivo",
 	
-	"advancements.savageandravage.story.griefer_armor.title": "Dinamite com um raio laser",
-  	"advancements.savageandravage.story.griefer_armor.description": "Obtenha um conjunto completo de armadura griefer",
+	"advancements.savageandravage.adventure.griefer_armor.title": "Dinamite com um raio laser",
+  	"advancements.savageandravage.adventure.griefer_armor.description": "Obtenha um conjunto completo de armadura griefer",
   
   	"advancements.savageandravage.adventure.relic_collector.title": "Coletor de rélicas",
   	"advancements.savageandravage.adventure.relic_collector.description": "Obtenha um totem da imortalidade, cutelo de decapitamento e varinha de congelamento",
@@ -59,26 +57,7 @@
 	"subtitles.savageandravage.entity.creepie.fuse": "Creepie sibilando",
 	"subtitles.savageandravage.entity.creepie.convert": "Creepie começa a se converter",
 	"subtitles.savageandravage.entity.creepie.grow": "Creepie vira creeper",
-	"subtitles.savageandravage.entity.generic.growth_success": "Crescimento sucede",
-	"subtitles.savageandravage.entity.generic.growth_failure": "Crescimento falha",
 	"subtitles.savageandravage.block.runed_gloomy_tiles.activate": "Azulejos sombrios rúnicos ativam",
-
-	"item.minecraft.potion.effect.growth": "Poção de crescimento",
-	"item.minecraft.potion.effect.growth_long": "Poção de crescimento",
-	"item.minecraft.splash_potion.effect.growth": "Poção arremessável de crescimento",
-	"item.minecraft.splash_potion.effect.growth_long": "Poção arremessável de crescimento",
-	"item.minecraft.lingering_potion.effect.growth": "Poção prolongada de crescimento",
-	"item.minecraft.lingering_potion.effect.growth_long": "Poção prolongada de crescimento",
-	"item.minecraft.tipped_arrow.effect.growth": "Flecha de crescimento",
-	"item.minecraft.tipped_arrow.effect.growth_long": "Flecha de crescimento",
-	"item.minecraft.potion.effect.youth": "Poção de juventude",
-	"item.minecraft.potion.effect.youth_long": "Poção de juventude",
-	"item.minecraft.splash_potion.effect.youth": "Poção arremessável de juventude",
-	"item.minecraft.splash_potion.effect.youth_long": "Poção arremessável de juventude",
-	"item.minecraft.lingering_potion.effect.youth": "Poção prolongada de juventude",
-	"item.minecraft.lingering_potion.effect.youth_long": "Poção prolongada de juventude",
-	"item.minecraft.tipped_arrow.effect.youth": "Flecha de juventude",
-	"item.minecraft.tipped_arrow.effect.youth_long": "Flecha de juventude",
 
 	"advancements.savageandravage.adventure.voluntary_exile.description": "Ateie fogo a um estandarte sinistro.\nTalvez seja melhor ficar longe de vilas por enquanto..."
 }

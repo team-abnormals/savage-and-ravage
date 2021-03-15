@@ -5,7 +5,7 @@ import com.minecraftabnormals.savageandravage.common.entity.*;
 import com.minecraftabnormals.savageandravage.common.entity.block.SporeBombEntity;
 import com.minecraftabnormals.savageandravage.common.entity.goals.AvoidGrieferOwnedCreepiesGoal;
 import com.minecraftabnormals.savageandravage.common.entity.goals.ImprovedCrossbowGoal;
-import com.minecraftabnormals.savageandravage.common.item.PottableItem;
+import com.minecraftabnormals.savageandravage.common.item.IPottableItem;
 import com.minecraftabnormals.savageandravage.core.SRConfig;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 import com.minecraftabnormals.savageandravage.core.mixin.LivingEntityAccessor;
@@ -334,8 +334,8 @@ public class SREvents {
 		BlockPos pos = event.getPos();
 		World world = event.getWorld();
 
-		if (stack.getItem() instanceof PottableItem && world.getBlockState(pos).getBlock() == Blocks.FLOWER_POT) {
-			BlockState pottedState = ((PottableItem) stack.getItem()).getPottedState(player.getHorizontalFacing().getOpposite());
+		if (stack.getItem() instanceof IPottableItem && world.getBlockState(pos).getBlock() == Blocks.FLOWER_POT) {
+			BlockState pottedState = ((IPottableItem) stack.getItem()).getPottedState(player.getHorizontalFacing().getOpposite());
 			if (pottedState == null)
 				return;
 			world.setBlockState(pos, pottedState);
@@ -395,35 +395,6 @@ public class SREvents {
 			return noBurningBanners;
 		}
 		return false;
-	}
-
-	public static void convertCreeper(CreeperEntity creeper) {
-		CreepieEntity creepie = SREntities.CREEPIE.get().create(creeper.world);
-		if (creepie == null)
-			return;
-
-		creepie.copyLocationAndAnglesFrom(creeper.getEntity());
-		creeper.remove();
-		creepie.setNoAI(creeper.isAIDisabled());
-		if (creeper.hasCustomName()) {
-			creepie.setCustomName(creeper.getCustomName());
-			creepie.setCustomNameVisible(creeper.isCustomNameVisible());
-		}
-
-		if (creeper.isNoDespawnRequired()) {
-			creepie.enablePersistence();
-		}
-		if (creeper.getLeashed() && creeper.getLeashHolder() != null) {
-			creepie.setLeashHolder(creeper.getLeashHolder(), true);
-			creeper.clearLeashed(true, false);
-		}
-
-		if (creeper.getRidingEntity() != null) {
-			creepie.startRiding(creeper.getRidingEntity());
-		}
-		creepie.setInvulnerable(creeper.isInvulnerable());
-		creeper.setHealth(creeper.getMaxHealth());
-		creeper.world.addEntity(creepie);
 	}
 
 	public static ItemStack createRocket() {

@@ -26,7 +26,7 @@ public class IceologerRenderer extends MobRenderer<IceologerEntity, IceologerMod
 	}
 
 	@Override
-	protected void preRenderCallback(IceologerEntity entitylivingbaseIn, MatrixStack matrixStackIn, float partialTickTime) {
+	protected void preRenderCallback(IceologerEntity entity, MatrixStack matrixStackIn, float partialTickTime) {
 		matrixStackIn.scale(0.9375F, 0.9375F, 0.9375F);
 	}
 }
