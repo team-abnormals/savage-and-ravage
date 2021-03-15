@@ -37,6 +37,7 @@ public class SREntities {
 	public static final RegistryObject<EntityType<BurningBannerEntity>> BURNING_BANNER = ENTITIES.register("burning_banner", () -> EntityType.Builder.<BurningBannerEntity>create(BurningBannerEntity::new, EntityClassification.MISC).immuneToFire().size(1.0F, 2.0F).disableSummoning().build(SavageAndRavage.MOD_ID + ":burning_banner"));
 	public static final RegistryObject<EntityType<RunePrisonEntity>> RUNE_PRISON = ENTITIES.register("rune_prison", () -> EntityType.Builder.<RunePrisonEntity>create(RunePrisonEntity::new, EntityClassification.MISC).immuneToFire().size(1.35F, 0.7F).build(SavageAndRavage.MOD_ID + ":rune_prison"));
 	public static final RegistryObject<EntityType<ExecutionerEntity>> EXECUTIONER = ENTITIES.register("executioner", () -> EntityType.Builder.create(ExecutionerEntity::new, EntityClassification.MONSTER).size(0.6F, 1.95F).trackingRange(8).build(SavageAndRavage.MOD_ID + ":executioner"));
+	public static final RegistryObject<EntityType<TricksterEntity>> TRICKSTER = HELPER.createLivingEntity("trickster", TricksterEntity::new, EntityClassification.MONSTER, 0.6F, 1.99F);
 
 	public static final RegistryObject<EntityType<IceologerEntity>> ICEOLOGER = ENTITIES.register("iceologer", () -> EntityType.Builder.create(IceologerEntity::new, EntityClassification.MONSTER).size(0.6F, 1.95F).trackingRange(8).build(SavageAndRavage.MOD_ID + ":iceologer"));
 	public static final RegistryObject<EntityType<IceChunkEntity>> ICE_CHUNK = ENTITIES.register("ice_chunk", () -> EntityType.Builder.<IceChunkEntity>create(IceChunkEntity::new, EntityClassification.MISC).size(2.2F, 1.0F).trackingRange(8).func_233608_b_(Integer.MAX_VALUE).build(SavageAndRavage.MOD_ID + ":ice_chunk"));
@@ -77,10 +78,12 @@ public class SREntities {
 		GlobalEntityTypeAttributes.put(SKELETON_VILLAGER.get(), AbstractSkeletonEntity.registerAttributes().create());
 		GlobalEntityTypeAttributes.put(ICEOLOGER.get(), IceologerEntity.registerAttributes().create());
 		GlobalEntityTypeAttributes.put(EXECUTIONER.get(), ExecutionerEntity.registerAttributes().create());
+		GlobalEntityTypeAttributes.put(TRICKSTER.get(), TricksterEntity.registerAttributes().create());
 	}
 
 	public static void registerWaveMembers() {
-		Raid.WaveMember.create("griefer", SREntities.GRIEFER.get(), new int[]{0, 1, 0, 1, 2, 2, 3, 2});
-		Raid.WaveMember.create("executioner", SREntities.EXECUTIONER.get(), new int[]{0, 0, 1, 0, 0, 1, 2, 2});
+		Raid.WaveMember.create("GRIEFER", SREntities.GRIEFER.get(), new int[]{0, 1, 0, 1, 2, 2, 3, 2});
+		Raid.WaveMember.create("EXECUTIONER", SREntities.EXECUTIONER.get(), new int[]{0, 0, 1, 0, 0, 1, 2, 2});
+		Raid.WaveMember.create("TRICKSTER", SREntities.TRICKSTER.get(), new int[]{0, 0, 1, 0, 0, 1, 2, 2});
 	}
 }

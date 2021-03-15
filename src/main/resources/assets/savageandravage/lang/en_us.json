@@ -45,8 +45,10 @@
   "entity.savageandravage.ice_chunk": "Ice Chunk",
   "entity.savageandravage.ice_cloud": "Ice Cloud",
 
+  "effect.savageandravage.confusion": "Confusion",
   "effect.savageandravage.frostbite": "Frostbite",
-  
+  "effect.savageandravage.weight": "Weight",
+
   "attribute.name.generic.explosive_damage_reduction": "Explosive Damage Reduction",
 
   "advancements.savageandravage.adventure.creeper_spores.title": "Creepie Crawly",

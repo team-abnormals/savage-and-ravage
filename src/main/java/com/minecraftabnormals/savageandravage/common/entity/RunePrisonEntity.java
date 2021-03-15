@@ -2,6 +2,7 @@ package com.minecraftabnormals.savageandravage.common.entity;
 
 import com.minecraftabnormals.savageandravage.common.block.RunedGloomyTilesBlock;
 import com.minecraftabnormals.savageandravage.core.registry.SRBlocks;
+import com.minecraftabnormals.savageandravage.core.registry.SREffects;
 import com.minecraftabnormals.savageandravage.core.registry.SREntities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -13,7 +14,6 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -102,7 +102,7 @@ public class RunePrisonEntity extends Entity {
 		List<LivingEntity> intersectingEntityList = this.world.getEntitiesWithinAABB(LivingEntity.class, this.getBoundingBox());
 		for (LivingEntity livingEntity : intersectingEntityList) {
 			if (livingEntity.canBeHitWithPotion() && RunedGloomyTilesBlock.shouldTrigger(livingEntity)) {
-				livingEntity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 20, 2));
+				livingEntity.addPotionEffect(new EffectInstance(SREffects.WEIGHT.get(), 20, 2));
 			}
 		}
 

@@ -56,6 +56,7 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -176,6 +177,13 @@ public class SREvents {
 				}
 			}
 		}
+	}
+
+	@SubscribeEvent
+	public static void onLivingJump(LivingEvent.LivingJumpEvent event) {
+		LivingEntity entity = event.getEntityLiving();
+		if (entity.getActivePotionEffect(SREffects.WEIGHT.get()) != null)
+			entity.setMotion(entity.getMotion().getX(), 0.0D, entity.getMotion().getZ());
 	}
 
 	@SubscribeEvent
