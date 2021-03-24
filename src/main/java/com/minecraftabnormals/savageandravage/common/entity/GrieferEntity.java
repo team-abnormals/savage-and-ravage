@@ -54,7 +54,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 		this.goalSelector.addGoal(0, new SwimGoal(this));
 		this.goalSelector.addGoal(2, new AbstractRaiderEntity.FindTargetGoal(this, 10.0F));
 		this.goalSelector.addGoal(3, new GrieferEntity.MeleePhaseGoal(this, 0.9D, true));
-		this.goalSelector.addGoal(3, new GrieferEntity.GrieferAttackWithSporesGoal(this, 0.9D, 200));
+		this.goalSelector.addGoal(3, new GrieferEntity.AttackWithSporesGoal(this, 0.9D, 200));
 		this.goalSelector.addGoal(2, new GrieferEntity.KickGoal(this));
 		this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.0D, true) {
 			@Override
@@ -329,8 +329,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 		}
 	}
 
-	//TODO fix weird pathfinding with strafing
-	public static class GrieferAttackWithSporesGoal extends Goal {
+	public static class AttackWithSporesGoal extends Goal {
 		private final GrieferEntity griefer;
 		private int rangedAttackTime = -1;
 		private final double entityMoveSpeed;
@@ -338,14 +337,14 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 		private final int maxRangedAttackTime;
 		private final float attackRadius;
 		private boolean strafingClockwise;
-		private boolean strafingBackwards;
 		private int seeTime;
+		private int strafeTime;
 
-		public GrieferAttackWithSporesGoal(GrieferEntity attacker, double moveSpeed, int maxAttackTime) {
+		public AttackWithSporesGoal(GrieferEntity attacker, double moveSpeed, int maxAttackTime) {
 			this(attacker, moveSpeed, maxAttackTime, maxAttackTime);
 		}
 
-		public GrieferAttackWithSporesGoal(GrieferEntity attacker, double moveSpeed, int p_i1650_4_, int maxAttackTime) {
+		public AttackWithSporesGoal(GrieferEntity attacker, double moveSpeed, int p_i1650_4_, int maxAttackTime) {
 			this.griefer = attacker;
 			this.entityMoveSpeed = moveSpeed;
 			this.attackIntervalMin = p_i1650_4_;
@@ -402,27 +401,23 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 				} else {
 					--this.seeTime;
 				}
-
-				if (this.griefer.getRNG().nextDouble() < 0.3D) {
-					this.strafingClockwise = !this.strafingClockwise;
-				}
-
-				if (this.griefer.getRNG().nextDouble() < 0.3D) {
-					this.strafingBackwards = !this.strafingBackwards;
-				}
-
-				if (distance < 15.0D) {
+				if (distance <= 15.0D) {
 					this.griefer.getNavigator().clearPath();
 				} else {
 					this.griefer.getNavigator().tryMoveToEntityLiving(attackTarget, this.entityMoveSpeed);
 				}
-
-				if (this.strafingClockwise && !this.isWalkable() || this.strafingBackwards && !this.isWalkable()) {
-					this.griefer.setMoveForward(1.0F);
-					this.griefer.setMoveStrafing(0.0F);
-					this.griefer.getNavigator().clearPath();
+				if (this.griefer.getRNG().nextDouble() < 0.3D && strafeTime <= 0) {
+					this.strafingClockwise = !this.strafingClockwise;
 				}
-
+				if (strafeTime > 0) {
+					if (this.isWalkable()) {
+						this.griefer.getMoveHelper().strafe(0.0F, (float) (this.strafingClockwise ? this.entityMoveSpeed : -this.entityMoveSpeed));
+					} else {
+						this.griefer.setMoveForward(1.0F);
+						this.griefer.setMoveStrafing(0.0F);
+						this.griefer.getNavigator().clearPath();
+					}
+				}
 				this.griefer.getLookController().setLookPositionWithEntity(attackTarget, 30.0F, 30.0F);
 				this.griefer.faceEntity(attackTarget, 30.0F, 30.0F);
 				if (--this.rangedAttackTime == 0 || this.seeTime == 3) {
@@ -430,9 +425,9 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 						return;
 					}
 					float f = MathHelper.sqrt(distance) / this.attackRadius;
-					float lvt_5_1_ = MathHelper.clamp(f, 0.1F, 1.0F);
-					this.griefer.attackEntityWithRangedAttack(attackTarget, lvt_5_1_);
-					this.griefer.getMoveHelper().strafe((float) (this.strafingBackwards ? -this.entityMoveSpeed : this.entityMoveSpeed), (float) (this.strafingClockwise ? this.entityMoveSpeed : -this.entityMoveSpeed));
+					float distanceFactor = MathHelper.clamp(f, 0.1F, 1.0F);
+					this.griefer.attackEntityWithRangedAttack(attackTarget, distanceFactor);
+					this.strafeTime = 50;
 					this.rangedAttackTime = MathHelper.floor(f * (float) (this.maxRangedAttackTime - this.attackIntervalMin) + (float) this.attackIntervalMin);
 				} else if (this.rangedAttackTime < 0) {
 					float f2 = MathHelper.sqrt(distance) / this.attackRadius;
