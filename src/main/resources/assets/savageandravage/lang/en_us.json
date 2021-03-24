@@ -31,7 +31,8 @@
   "item.savageandravage.griefer_spawn_egg": "Griefer Spawn Egg",
   "item.savageandravage.executioner_spawn_egg": "Executioner Spawn Egg",
   "item.savageandravage.iceologer_spawn_egg": "Iceologer Spawn Egg",
-  
+  "item.savageandravage.trickster_spawn_egg": "Trickster Spawn Egg",
+
   "entity.savageandravage.skeleton_villager": "Skeleton Villager",
   "entity.savageandravage.griefer": "Griefer",
   "entity.savageandravage.creepie": "Creepie",
@@ -44,6 +45,7 @@
   "entity.savageandravage.iceologer": "Iceologer",
   "entity.savageandravage.ice_chunk": "Ice Chunk",
   "entity.savageandravage.ice_cloud": "Ice Cloud",
+  "entity.savageandravage.trickster": "Trickster",
 
   "effect.savageandravage.confusion": "Confusion",
   "effect.savageandravage.frostbite": "Frostbite",

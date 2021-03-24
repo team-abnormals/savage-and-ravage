@@ -52,6 +52,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
@@ -184,6 +185,11 @@ public class SREvents {
 		LivingEntity entity = event.getEntityLiving();
 		if (entity.getActivePotionEffect(SREffects.WEIGHT.get()) != null)
 			entity.setMotion(entity.getMotion().getX(), 0.0D, entity.getMotion().getZ());
+	}
+
+	@SubscribeEvent
+	public static void onKeyInput(InputEvent.KeyInputEvent event) {
+		//do player stuff
 	}
 
 	@SubscribeEvent
