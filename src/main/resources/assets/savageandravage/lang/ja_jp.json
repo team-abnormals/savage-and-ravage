@@ -1,0 +1,73 @@
+{
+  "block.savageandravage.gloomy_tiles": "薄暗いタイル",
+  "block.savageandravage.gloomy_tile_stairs": "薄暗いタイルの階段",
+  "block.savageandravage.gloomy_tile_slab": "薄暗いタイルのハーフブロック",
+  "block.savageandravage.gloomy_tile_wall": "薄暗いタイルの塀",
+  "block.savageandravage.chiseled_gloomy_tiles": "模様入りの薄暗いタイル",
+  "block.savageandravage.gloomy_tile_vertical_slab": "薄暗いタイルの縦ハーフブロック",
+  "block.savageandravage.runed_gloomy_tiles": "ルーンの刻まれた薄暗いタイル",
+  
+  "block.savageandravage.blast_proof_plates": "爆発耐性のプレート",
+  "block.savageandravage.blast_proof_slab": "爆発耐性のハーフブロック",
+  "block.savageandravage.blast_proof_stairs": "爆発耐性の階段",
+  "block.savageandravage.blast_proof_vertical_slab": "爆発耐性の縦ハーフブロック",
+  "block.savageandravage.creeper_spore_sack": "クリーパーの胞子の袋",
+  "block.savageandravage.spore_bomb": "胞子爆弾",
+  
+  "item.savageandravage.blast_proof_plating": "爆発耐性のメッキ",
+  "item.savageandravage.griefer_helmet": "グリーファーのヘルメット",
+  "item.savageandravage.griefer_chestplate": "グリーファーのチェストプレート",
+  "item.savageandravage.griefer_leggings": "グリーファーのレギンス",
+  "item.savageandravage.griefer_boots": "グリーファーのブーツ",
+  
+  "item.savageandravage.wand_of_freezing": "凍結の杖",
+  "item.savageandravage.cleaver_of_beheading": "斬首剣",
+  
+  "item.savageandravage.creeper_spores": "クリーパーの胞子",
+  "item.savageandravage.mischief_arrow": "いたずらの矢",
+  
+  "item.savageandravage.skeleton_villager_spawn_egg": "スケルトン村人のスポーンエッグ",
+  "item.savageandravage.griefer_spawn_egg": "グリーファーのスポーンエッグ",
+  "item.savageandravage.executioner_spawn_egg": "死刑執行人のスポーンエッグ",
+  "item.savageandravage.iceologer_spawn_egg": "氷の邪悪な村人のスポーンエッグ",
+  
+  "entity.savageandravage.skeleton_villager": "スケルトン村人",
+  "entity.savageandravage.griefer": "グリーファー",
+  "entity.savageandravage.creepie": "クリーピー",
+  "entity.savageandravage.spore_cloud": "胞子の雲",
+  "entity.savageandravage.spore_bomb": "胞子爆弾",
+  "entity.savageandravage.rune_prison": "ルーンプリズン",
+  "entity.savageandravage.burning_banner": "燃えている旗",
+  "entity.savageandravage.mischief_arrow": "いたずらの矢",
+  "entity.savageandravage.executioner": "死刑執行人",
+  "entity.savageandravage.iceologer": "氷の邪悪な村人",
+  "entity.savageandravage.ice_chunk": "氷の塊",
+  "entity.savageandravage.ice_cloud": "氷の雲",
+  
+  "effect.savageandravage.frostbite": "凍傷",
+  
+  "attribute.name.generic.explosive_damage_reduction": "爆発ダメージを軽減する",
+  
+  "advancements.savageandravage.adventure.creeper_spores.title": "クリーピー・クローリー",
+  "advancements.savageandravage.adventure.creeper_spores.description": "クリーパーを爆発で倒し、クリーパーの胞子を手に入れる",
+  "advancements.savageandravage.adventure.griefer_armor.title": "レーザービームを備えたダイナマイト",
+  "advancements.savageandravage.adventure.griefer_armor.description": "グリーファーの装備をすべて集める",
+  "advancements.savageandravage.adventure.relic_collector.title": "遺品の収集家",
+  "advancements.savageandravage.adventure.relic_collector.description": "不死のトーテム、斬首剣、凍結の杖を手に入れる",
+
+  "advancements.savageandravage.adventure.voluntary_exile.description": "不吉な旗に火をつける。\n当分の間、村から離れて過ごされてはいかがでしょうか...",
+
+  "subtitles.savageandravage.entity.creepie.hurt": "クリーピーがダメージを受ける",
+  "subtitles.savageandravage.entity.creepie.death": "クリーピーが死ぬ",
+  "subtitles.savageandravage.entity.creepie.fuse": "クリーピーがシューッという音を立てる",
+  "subtitles.savageandravage.entity.creepie.convert": "クリーピーが変換する",
+  "subtitles.savageandravage.entity.creepie.grow": "クリーピーが成長する",
+  "subtitles.savageandravage.entity.iceologer.ambient": "氷の邪悪な村人がささやく",
+  "subtitles.savageandravage.entity.iceologer.hurt": "氷の邪悪な村人がダメージを受ける",
+  "subtitles.savageandravage.entity.iceologer.death": "氷の邪悪な村人が死ぬ",
+  "subtitles.savageandravage.entity.iceologer.celebrate": "氷の邪悪な村人が喜ぶ",
+  "subtitles.savageandravage.entity.iceologer.cast_spell": "氷の邪悪な村人が呪文を唱える",
+  "subtitles.savageandravage.entity.player.cast_spell": "プレイヤーが呪文を唱える",
+  "subtitles.savageandravage.entity.creeper_spores.throw": "クリーパーの胞子が飛ぶ",
+  "subtitles.savageandravage.block.runed_gloomy_tiles.activate": "ルーンの刻まれた薄暗いタイルがアクティブになる"
+}
