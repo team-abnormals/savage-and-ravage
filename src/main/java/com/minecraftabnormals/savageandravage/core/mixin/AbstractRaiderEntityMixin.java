@@ -1,5 +1,6 @@
 package com.minecraftabnormals.savageandravage.core.mixin;
 
+import com.minecraftabnormals.savageandravage.core.SRConfig;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.monster.AbstractRaiderEntity;
 import net.minecraft.entity.monster.PatrollerEntity;
@@ -16,13 +17,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(AbstractRaiderEntity.class)
 public abstract class AbstractRaiderEntityMixin extends PatrollerEntity {
 
-    private AbstractRaiderEntityMixin(EntityType<? extends PatrollerEntity> entityType, World world) {
-        super(entityType, world);
-    }
+	private AbstractRaiderEntityMixin(EntityType<? extends PatrollerEntity> entityType, World world) {
+		super(entityType, world);
+	}
 
-    @Inject(method = "onDeath", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/GameRules;getBoolean(Lnet/minecraft/world/GameRules$RuleKey;)Z", shift = At.Shift.AFTER), cancellable = true)
-    private void cancelBadOmenEffect(DamageSource source, CallbackInfo info) {
-        super.onDeath(source);
-        info.cancel();
-    }
+	@Inject(method = "onDeath", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/GameRules;getBoolean(Lnet/minecraft/world/GameRules$RuleKey;)Z", shift = At.Shift.AFTER), cancellable = true)
+	private void cancelBadOmenEffect(DamageSource source, CallbackInfo info) {
+		if (SRConfig.COMMON.noBadOmenOnDeath.get()) {
+			super.onDeath(source);
+			info.cancel();
+		}
+	}
 }

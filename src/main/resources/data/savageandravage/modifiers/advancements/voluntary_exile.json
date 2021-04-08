@@ -1,0 +1,36 @@
+{
+  "advancement": "minecraft:adventure/voluntary_exile",
+  "modifiers": [
+    {
+      "type": "criteria",
+      "config": {
+        "mode": "replace",
+        "criteria": {
+          "voluntary_exile": {
+            "trigger": "savageandravage:burn_banner"
+          }
+        },
+        "requirements": [
+          [
+            "voluntary_exile"
+          ]
+        ]
+      }
+    },
+    {
+      "type": "display",
+      "conditions": [
+        {
+          "type": "savageandravage:config",
+          "value": "no_bad_omen_on_death"
+        }
+      ],
+      "config": {
+        "mode": "modify",
+        "description": {
+          "translate": "advancements.savageandravage.adventure.voluntary_exile.description"
+        }
+      }
+    }
+  ]
+}

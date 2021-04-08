@@ -2,11 +2,10 @@ package com.minecraftabnormals.savageandravage.common.item;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import com.minecraftabnormals.abnormals_core.core.util.item.ItemStackUtil;
+import com.minecraftabnormals.abnormals_core.core.util.item.filling.TargetedItemGroupFiller;
 import com.minecraftabnormals.savageandravage.client.model.GrieferArmorModel;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 import com.minecraftabnormals.savageandravage.core.registry.SRAttributes;
-import com.minecraftabnormals.savageandravage.core.registry.SRItems;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -24,6 +23,7 @@ import java.util.UUID;
 public class GrieferArmorItem extends ArmorItem {
 	private static final UUID MODIFIER = UUID.fromString("B77CAE62-FCEB-40F9-BD4D-A15F8F44CB91");
 	private final LazyValue<Multimap<Attribute, AttributeModifier>> attributes;
+	private static final TargetedItemGroupFiller FILLER = new TargetedItemGroupFiller(() -> Items.GOLDEN_BOOTS);
 
 	public GrieferArmorItem(IArmorMaterial material, EquipmentSlotType slot, Properties properties) {
 		super(material, slot, properties);
@@ -53,15 +53,7 @@ public class GrieferArmorItem extends ArmorItem {
 
 	@Override
 	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-		Item fill = Items.GOLDEN_BOOTS;
-		Item item = this.asItem();
-		if (item == SRItems.GRIEFER_CHESTPLATE.get())
-			fill = SRItems.GRIEFER_HELMET.get();
-		if (item == SRItems.GRIEFER_LEGGINGS.get())
-			fill = SRItems.GRIEFER_CHESTPLATE.get();
-		if (item == SRItems.GRIEFER_BOOTS.get())
-			fill = SRItems.GRIEFER_LEGGINGS.get();
-		ItemStackUtil.fillAfterItemForGroup(this.asItem(), fill, group, items);
+		FILLER.fillItem(this, group, items);
 	}
 
 	@Override

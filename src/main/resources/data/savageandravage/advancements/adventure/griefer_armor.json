@@ -1,0 +1,48 @@
+{
+  "parent": "savageandravage:adventure/creeper_spores",
+  "display": {
+    "icon": {
+      "item": "savageandravage:griefer_chestplate",
+      "nbt": "{Damage:0}"
+    },
+    "title": {
+      "translate": "advancements.savageandravage.adventure.griefer_armor.title"
+    },
+    "description": {
+      "translate": "advancements.savageandravage.adventure.griefer_armor.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "rewards": {
+    "experience": 100
+  },
+  "criteria": {
+    "griefer_armor": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "savageandravage:griefer_helmet"
+          },
+          {
+            "item": "savageandravage:griefer_chestplate"
+          },
+          {
+            "item": "savageandravage:griefer_leggings"
+          },
+          {
+            "item": "savageandravage:griefer_boots"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "griefer_armor"
+    ]
+  ]
+}

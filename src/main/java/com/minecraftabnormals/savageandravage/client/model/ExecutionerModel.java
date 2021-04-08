@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.model.ModelHelper;
@@ -15,7 +14,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
- * ModelExecutionor - MCVinnyq Created using Tabula 8.0.0
+ * ModelExecutioner - MCVinnyQ Created using Tabula 8.0.0
  */
 @OnlyIn(Dist.CLIENT)
 public class ExecutionerModel extends BipedModel<VindicatorEntity> {
@@ -50,8 +49,8 @@ public class ExecutionerModel extends BipedModel<VindicatorEntity> {
 		closedRightArm = new ModelRenderer(this);
 		closedRightArm.setRotationPoint(0.0F, 0.0F, 0.0F);
 		closedArms.addChild(closedRightArm);
-		closedRightArm.setTextureOffset(48, 12).addBox(4.0F, -2.0F, -2.0F, 4.0F, 8.0F, 4.0F, 0.0F, false);
-		closedRightArm.setTextureOffset(40, 0).addBox(4.0F, -3.0F, -2.5F, 6.0F, 7.0F, 5.0F, 0.0F, false);
+		closedRightArm.setTextureOffset(48, 12).addBox(4.0F, -2.0F, -2.0F, 4.0F, 8.0F, 4.0F, 0.0F, true);
+		closedRightArm.setTextureOffset(40, 0).addBox(4.0F, -3.0F, -2.5F, 6.0F, 7.0F, 5.0F, 0.0F, true);
 
 		closedLeftArm = new ModelRenderer(this);
 		closedLeftArm.setRotationPoint(0.0F, 0.0F, 0.0F);
@@ -62,8 +61,8 @@ public class ExecutionerModel extends BipedModel<VindicatorEntity> {
 		bipedRightArm = new ModelRenderer(this);
 		bipedRightArm.setRotationPoint(4.0F, 2.0F, 0.0F);
 		setRotationAngle(bipedRightArm, 0.0F, 0.0F, -0.0436F);
-		bipedRightArm.setTextureOffset(48, 48).addBox(-3.5F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.0F, false);
-		bipedRightArm.setTextureOffset(40, 0).addBox(-4.5F, -2.5F, -2.5F, 6.0F, 7.0F, 5.0F, 0.0F, false);
+		bipedRightArm.setTextureOffset(48, 48).addBox(-3.5F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.0F, true);
+		bipedRightArm.setTextureOffset(40, 0).addBox(-4.5F, -2.5F, -2.5F, 6.0F, 7.0F, 5.0F, 0.0F, true);
 
 		bipedLeftArm = new ModelRenderer(this);
 		bipedLeftArm.setRotationPoint(-4.0F, 2.0F, 0.0F);
@@ -73,8 +72,8 @@ public class ExecutionerModel extends BipedModel<VindicatorEntity> {
 
 		bipedRightLeg = new ModelRenderer(this);
 		bipedRightLeg.setRotationPoint(1.9F, 12.0F, 0.0F);
-		bipedRightLeg.setTextureOffset(32, 48).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.0F, false);
-		bipedRightLeg.setTextureOffset(30, 12).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.0F, false);
+		bipedRightLeg.setTextureOffset(32, 48).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.0F, true);
+		bipedRightLeg.setTextureOffset(30, 12).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.0F, true);
 
 		bipedLeftLeg = new ModelRenderer(this);
 		bipedLeftLeg.setRotationPoint(-1.9F, 12.0F, 0.0F);
@@ -95,15 +94,10 @@ public class ExecutionerModel extends BipedModel<VindicatorEntity> {
 	public void setRotationAngles(VindicatorEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		super.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 		AbstractIllagerEntity.ArmPose illagerArmPose = entityIn.getArmPose();
-		switch (illagerArmPose) {
-		case ATTACKING:
+		if (illagerArmPose == AbstractIllagerEntity.ArmPose.ATTACKING) {
 			if (!entityIn.getHeldItemMainhand().isEmpty())
 				ModelHelper.func_239103_a_(this.bipedRightArm, this.bipedLeftArm, entityIn, this.swingProgress, ageInTicks);
-			break;
-		default:
-			break;
 		}
-
 		boolean isCrossed = illagerArmPose == AbstractIllagerEntity.ArmPose.CROSSED;
 		this.closedArms.showModel = isCrossed;
 		this.bipedLeftArm.showModel = !isCrossed;

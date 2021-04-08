@@ -18,18 +18,18 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 @EventBusSubscriber(modid = SavageAndRavage.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class SRParticles {
-    public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, SavageAndRavage.MOD_ID);
+	public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, SavageAndRavage.MOD_ID);
 
-    public static final RegistryObject<BasicParticleType> CREEPER_SPORES 	= PARTICLES.register("creeper_spores", () -> new BasicParticleType(true));
-    public static final RegistryObject<BasicParticleType> RUNE          	= PARTICLES.register("rune", () -> new BasicParticleType(true));
-    public static final RegistryObject<BasicParticleType> SNOWFLAKE 		= PARTICLES.register("snowflake", () -> new BasicParticleType(true));
+	public static final RegistryObject<BasicParticleType> CREEPER_SPORES = PARTICLES.register("creeper_spores", () -> new BasicParticleType(true));
+	public static final RegistryObject<BasicParticleType> RUNE = PARTICLES.register("rune", () -> new BasicParticleType(true));
+	public static final RegistryObject<BasicParticleType> SNOWFLAKE = PARTICLES.register("snowflake", () -> new BasicParticleType(true));
 
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void registerParticleFactories(ParticleFactoryRegisterEvent event) {
-        // Bug: This should be in the deferred work queue, but then the particle manager freaks out
-    	ParticleManager manager = Minecraft.getInstance().particles;
-        if (CREEPER_SPORES.isPresent()) manager.registerFactory(CREEPER_SPORES.get(), CreeperSporeParticle.Factory::new);
-        if (RUNE.isPresent()) manager.registerFactory(RUNE.get(), RuneParticle.Factory::new);
-        if (SNOWFLAKE.isPresent()) manager.registerFactory(SNOWFLAKE.get(), SpellParticle.Factory::new);
-    }
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public static void registerParticleFactories(ParticleFactoryRegisterEvent event) {
+		ParticleManager manager = Minecraft.getInstance().particles;
+		if (CREEPER_SPORES.isPresent())
+			manager.registerFactory(CREEPER_SPORES.get(), CreeperSporeParticle.Factory::new);
+		if (RUNE.isPresent()) manager.registerFactory(RUNE.get(), RuneParticle.Factory::new);
+		if (SNOWFLAKE.isPresent()) manager.registerFactory(SNOWFLAKE.get(), SpellParticle.Factory::new);
+	}
 }

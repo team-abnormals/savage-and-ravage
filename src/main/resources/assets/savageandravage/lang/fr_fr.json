@@ -30,35 +30,12 @@
   "subtitles.savageandravage.entity.creepie.fuse": "Sifflement de Creepie",
   "subtitles.savageandravage.entity.creepie.convert": "Creepie commence à convertir",
   "subtitles.savageandravage.entity.creepie.grow": "Creepie évolue en Creeper",
-  "subtitles.savageandravage.entity.generic.growth_success": "Évolution réussie",
-  "subtitles.savageandravage.entity.generic.growth_failure": "Évolution échouée",
   "subtitles.savageandravage.block.runed_gloomy_tiles.activate": "Carrelage lugubre orné activé",
   
   "entity.savageandravage.skeleton_villager": "Villageois squelette",
   "item.savageandravage.skeleton_villager_spawn_egg": "Oeuf d'apparition de villageois squelette",
 
-  "effect.savageandravage.growing": "Croissance",
-  
-  
-  "item.minecraft.potion.effect.growth": "Potion de croissance",
-  "item.minecraft.potion.effect.growth_long": "Potion de croissance",
-  "item.minecraft.splash_potion.effect.growth": "Potion de croissance jetable",
-  "item.minecraft.splash_potion.effect.growth_long": "Potion de croissance jetable",
-  "item.minecraft.lingering_potion.effect.growth": "Potion de croissance persistante",
-  "item.minecraft.lingering_potion.effect.growth_long": "Potion de croissance persistante",
-  "item.minecraft.tipped_arrow.effect.growth": "Flèche de croissance",
-  "item.minecraft.tipped_arrow.effect.growth_long": "Flèche de croissance",
-  "effect.savageandravage.shrinking": "Décroissance",
-  "item.minecraft.potion.effect.youth": "Potion de décroissance",
-  "item.minecraft.potion.effect.youth_long": "Potion de décroissance",
-  "item.minecraft.splash_potion.effect.youth": "Potion de décroissance jetable",
-  "item.minecraft.splash_potion.effect.youth_long": "Potion de décroissance jetable",
-  "item.minecraft.lingering_potion.effect.youth": "Potion de décroissance persistante",
-  "item.minecraft.lingering_potion.effect.youth_long": "Potion de décroissance persistante",
-  "item.minecraft.tipped_arrow.effect.youth": "Flèche de décroissance",
-  "item.minecraft.tipped_arrow.effect.youth_long": "Flèche de décroissance",
-
   "attribute.name.generic.explosive_damage_reduction": "Réduction de dégâts explosifs",
 
-  "advancements.adventure.voluntary_exile.description": "Mettez le feu à une bannière menaçante.\nIl faudrait peut-être éviter les villages pour l'instant..."
+  "advancements.savageandravage.adventure.voluntary_exile.description": "Mettez le feu à une bannière menaçante.\nIl faudrait peut-être éviter les villages pour l'instant..."
 }

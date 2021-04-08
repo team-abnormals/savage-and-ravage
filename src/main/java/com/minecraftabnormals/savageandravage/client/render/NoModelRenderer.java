@@ -9,12 +9,12 @@ import net.minecraft.util.ResourceLocation;
 // Used for CreeperSpores and BurningBanner - entities with no model
 public class NoModelRenderer extends EntityRenderer<Entity> {
 
-    public NoModelRenderer(EntityRendererManager renderManager) {
-        super(renderManager);
-    }
+	public NoModelRenderer(EntityRendererManager renderManager) {
+		super(renderManager);
+	}
 
-    @Override
-    public ResourceLocation getEntityTexture(Entity entity) {
-        return PlayerContainer.LOCATION_BLOCKS_TEXTURE;
-    }
+	@Override
+	public ResourceLocation getEntityTexture(Entity entity) {
+		return PlayerContainer.LOCATION_BLOCKS_TEXTURE;
+	}
 }

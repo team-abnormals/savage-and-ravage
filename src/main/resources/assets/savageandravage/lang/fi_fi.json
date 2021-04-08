@@ -43,18 +43,16 @@
 	"entity.savageandravage.iceologer": "Jäädyttäjä",
 	"entity.savageandravage.ice_chunk": "Jäälohkare",
 	"entity.savageandravage.ice_cloud": "Jääpilvi",
-    
-	"effect.savageandravage.growing": "Kasvaminen",
-	"effect.savageandravage.shrinking": "Nuorentuminen",
+	
 	"effect.savageandravage.frostbite": "Paleltuminen",
 	
 	"attribute.name.generic.explosive_damage_reduction": "Räjähdyksenkestävyys",
 
-	"advancements.story.griefer_armor.title": "Dynamite with a Laser Beam",
-	"advancements.story.griefer_armor.description": "Hanki kokonainen rettelöitsijän haarniska",
-	"advancements.adventure.relic_collector.title": "Jäännöstenkerääjä",
-	"advancements.adventure.relic_collector.description": "Hanki kuolemattomuuden toteemi, pyövelin veitsi ja jäädyttäjän sauva",
-	"advancements.adventure.voluntary_exile.description": "Sytytä pahaenteinen viiri tuleen.\nKylien välttelemistä kannattaa harkita toistaiseksi...",
+	"advancements.savageandravage.adventure.griefer_armor.title": "Dynamite with a Laser Beam",
+	"advancements.savageandravage.adventure.griefer_armor.description": "Hanki kokonainen rettelöitsijän haarniska",
+	"advancements.savageandravage.adventure.relic_collector.title": "Jäännöstenkerääjä",
+	"advancements.savageandravage.adventure.relic_collector.description": "Hanki kuolemattomuuden toteemi, pyövelin veitsi ja jäädyttäjän sauva",
+	"advancements.savageandravage.adventure.voluntary_exile.description": "Sytytä pahaenteinen viiri tuleen.\nKylien välttelemistä kannattaa harkita toistaiseksi...",
 	
 	"subtitles.savageandravage.entity.creepie.hurt": "Creepie vahingoittuu",
 	"subtitles.savageandravage.entity.creepie.death": "Creepie kuolee",
@@ -67,25 +65,6 @@
 	"subtitles.savageandravage.entity.iceologer.celebrate": "Jäädyttäjä hurraa",
 	"subtitles.savageandravage.entity.iceologer.cast_spell": "Jäädyttäjä loihtii",
 	"subtitles.savageandravage.entity.player.cast_spell": "Pelaaja loihtii",
-	"subtitles.savageandravage.entity.generic.growth_success": "Kasvu onnistuu",
-	"subtitles.savageandravage.entity.generic.growth_failure": "Kasvu epäonnistuu",
     "subtitles.savageandravage.entity.creeper_spores.throw": "Creeper-itiöt lentävät",
-	"subtitles.savageandravage.block.runed_gloomy_tiles.activate": "Riimutettu synkkätiili aktivoituu",
-	
-	"item.minecraft.potion.effect.growth": "Kasvamisen taikajuoma",
-	"item.minecraft.potion.effect.growth_long": "Kasvamisen taikajuoma",
-	"item.minecraft.splash_potion.effect.growth": "Roiskahtava kasvamisen taikajuoma",
-	"item.minecraft.splash_potion.effect.growth_long": "Roiskahtava kasvamisen taikajuoma",
-	"item.minecraft.lingering_potion.effect.growth": "Viipyvä kasvamisen taikajuoma",
-	"item.minecraft.lingering_potion.effect.growth_long": "Viipyvä kasvamisen taikajuoma",
-	"item.minecraft.tipped_arrow.effect.growth": "Kasvamisen nuoli",
-	"item.minecraft.tipped_arrow.effect.growth_long": "Kasvamisen nuoli",
-	"item.minecraft.potion.effect.youth": "Nuoruuden taikajuoma",
-	"item.minecraft.potion.effect.youth_long": "Nuoruuden taikajuoma",
-	"item.minecraft.splash_potion.effect.youth": "Roiskahtava nuoruuden taikajuoma",
-	"item.minecraft.splash_potion.effect.youth_long": "Roiskahtava nuoruuden taikajuoma",
-	"item.minecraft.lingering_potion.effect.youth": "Viipyvä nuoruuden taikajuoma",
-	"item.minecraft.lingering_potion.effect.youth_long": "Viipyvä nuoruuden taikajuoma",
-	"item.minecraft.tipped_arrow.effect.youth": "Nuoruuden nuoli",
-	"item.minecraft.tipped_arrow.effect.youth_long": "Nuoruuden nuoli"
+	"subtitles.savageandravage.block.runed_gloomy_tiles.activate": "Riimutettu synkkätiili aktivoituu"
 }

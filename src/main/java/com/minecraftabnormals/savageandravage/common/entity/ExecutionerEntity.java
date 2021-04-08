@@ -1,10 +1,7 @@
 package com.minecraftabnormals.savageandravage.common.entity;
 
-import java.util.Map;
-
 import com.google.common.collect.Maps;
 import com.minecraftabnormals.savageandravage.core.registry.SRItems;
-
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
@@ -20,6 +17,8 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraft.world.raid.Raid;
+
+import java.util.Map;
 
 public class ExecutionerEntity extends VindicatorEntity {
 
@@ -37,7 +36,7 @@ public class ExecutionerEntity extends VindicatorEntity {
 
 	public static AttributeModifierMap.MutableAttribute registerAttributes() {
 		return MonsterEntity.func_234295_eP_()
-				.createMutableAttribute(Attributes.MOVEMENT_SPEED, (double) 0.30F)
+				.createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.30F)
 				.createMutableAttribute(Attributes.FOLLOW_RANGE, 14.0D)
 				.createMutableAttribute(Attributes.MAX_HEALTH, 35.0D)
 				.createMutableAttribute(Attributes.ATTACK_DAMAGE, 7.0D)
@@ -53,6 +52,8 @@ public class ExecutionerEntity extends VindicatorEntity {
 	public void applyWaveBonus(int wave, boolean p_213660_2_) {
 		ItemStack itemstack = new ItemStack(SRItems.CLEAVER_OF_BEHEADING.get());
 		Raid raid = this.getRaid();
+		if (raid == null)
+			return;
 		int i = 1;
 		if (wave > raid.getWaves(Difficulty.NORMAL)) {
 			i = 2;
