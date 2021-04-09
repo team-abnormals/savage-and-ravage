@@ -22,6 +22,7 @@
   
   "item.savageandravage.wand_of_freezing": "Zauberstab des Einfrierens",
   "item.savageandravage.cleaver_of_beheading": "Hackmesser der Enthauptung",
+  "item.savageandravage.eldritch_conch": "Unheimliche Koncha",
   
   "item.savageandravage.creeper_spores": "Creepersporen",
   "item.savageandravage.mischief_arrow": "Unfugpfeil",
@@ -30,6 +31,7 @@
   "item.savageandravage.griefer_spawn_egg": "Griefer-Spawn-Ei",
   "item.savageandravage.executioner_spawn_egg": "Henker-Spawn-Ei",
   "item.savageandravage.iceologer_spawn_egg": "Iceologer-Spawn-Ei",
+  "item.savageandravage.trickster_spawn_egg": "Schwindler-Spawn-Ei",
   
   "entity.savageandravage.skeleton_villager": "Skelettdorfbewohner",
   "entity.savageandravage.griefer": "Griefer",
@@ -43,11 +45,16 @@
   "entity.savageandravage.iceologer": "Iceologer",
   "entity.savageandravage.ice_chunk": "Eisklumpen",
   "entity.savageandravage.ice_cloud": "Eiswolke",
-
+  "entity.savageandravage.trickster": "Schwindler",
+  
+  "effect.savageandravage.confusion": "Verwechslung",
   "effect.savageandravage.frostbite": "Erfrierung",
+  "effect.savageandravage.weight": "Schwere",
   
   "attribute.name.generic.explosive_damage_reduction": "Explosionsschadenreduzierung",
   
+  "advancements.savageandravage.adventure.creeper_spores.title": "Creepie-Crawly",
+  "advancements.savageandravage.adventure.creeper_spores.description": "Beschaff Creepersporen dadurch, einen Creeper mit einer Explosion zu töten",
   "advancements.savageandravage.adventure.griefer_armor.title": "Dynamit mit einem Laserstrahl",
   "advancements.savageandravage.adventure.griefer_armor.description": "Besorge dir eine komplette Grieferrüstung",
   "advancements.savageandravage.adventure.relic_collector.title": "Reliktsammler",
@@ -65,25 +72,6 @@
   "subtitles.savageandravage.entity.iceologer.celebrate": "Iceologer jubelt",
   "subtitles.savageandravage.entity.iceologer.cast_spell": "Iceologer verhext",
   "subtitles.savageandravage.entity.player.cast_spell": "Spieler verhext",
-  "subtitles.savageandravage.entity.generic.growth_success": "Wachstum folgt",
-  "subtitles.savageandravage.entity.generic.growth_failure": "Wachstum fällt aus",
   "subtitles.savageandravage.entity.creeper_spores.throw": "Creepersporen fliegen",
-  "subtitles.savageandravage.block.runed_gloomy_tiles.activate": "Runendüsterfliesen aktivieren",
-
-  "item.minecraft.potion.effect.growth": "Trank des Wachstums",
-  "item.minecraft.potion.effect.growth_long": "Trank des Wachstums",
-  "item.minecraft.splash_potion.effect.growth": "Wurftrank des Wachstums",
-  "item.minecraft.splash_potion.effect.growth_long": "Wurftrank des Wachstums",
-  "item.minecraft.lingering_potion.effect.growth": "Verweiltrank des Wachstums",
-  "item.minecraft.lingering_potion.effect.growth_long": "Verweiltrank des Wachstums",
-  "item.minecraft.tipped_arrow.effect.growth": "Pfeil des Wachstums",
-  "item.minecraft.tipped_arrow.effect.growth_long": "Pfeil des Wachstums",
-  "item.minecraft.potion.effect.youth": "Trank der Jugend",
-  "item.minecraft.potion.effect.youth_long": "Trank der Jugend",
-  "item.minecraft.splash_potion.effect.youth": "Wurftrank der Jugend",
-  "item.minecraft.splash_potion.effect.youth_long": "Wurftrank der Jugend",
-  "item.minecraft.lingering_potion.effect.youth": "Verweiltrank der Jugend",
-  "item.minecraft.lingering_potion.effect.youth_long": "Verweiltrank der Jugend",
-  "item.minecraft.tipped_arrow.effect.youth": "Pfeil der Jugend",
-  "item.minecraft.tipped_arrow.effect.youth_long": "Pfeil der Jugend"
+  "subtitles.savageandravage.block.runed_gloomy_tiles.activate": "Runendüsterfliesen aktivieren"
 }
