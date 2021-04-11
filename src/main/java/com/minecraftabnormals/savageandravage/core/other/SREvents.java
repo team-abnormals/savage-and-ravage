@@ -1,8 +1,10 @@
 package com.minecraftabnormals.savageandravage.core.other;
 
 import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.IDataManager;
+import com.minecraftabnormals.abnormals_core.core.util.NetworkUtil;
 import com.minecraftabnormals.savageandravage.common.entity.*;
 import com.minecraftabnormals.savageandravage.common.entity.block.SporeBombEntity;
+import com.minecraftabnormals.savageandravage.common.entity.goals.AttackTargetBlockRandomlyGoal;
 import com.minecraftabnormals.savageandravage.common.entity.goals.AvoidGrieferOwnedCreepiesGoal;
 import com.minecraftabnormals.savageandravage.common.entity.goals.ImprovedCrossbowGoal;
 import com.minecraftabnormals.savageandravage.common.item.IPottableItem;
@@ -13,6 +15,7 @@ import com.minecraftabnormals.savageandravage.core.registry.SRAttributes;
 import com.minecraftabnormals.savageandravage.core.registry.SRBlocks;
 import com.minecraftabnormals.savageandravage.core.registry.SREffects;
 import com.minecraftabnormals.savageandravage.core.registry.SREntities;
+import com.minecraftabnormals.savageandravage.core.registry.SRSounds;
 import net.minecraft.block.AbstractBannerBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -62,6 +65,7 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
+import net.minecraftforge.event.world.NoteBlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -82,6 +86,8 @@ public class SREvents {
 				pillager.goalSelector.removeGoal(crossbowGoal);
 				pillager.goalSelector.addGoal(3, aiCrossBow);
 			});
+			AttackTargetBlockRandomlyGoal<PillagerEntity> attackTargetBlock = new AttackTargetBlockRandomlyGoal<>(pillager);
+			pillager.goalSelector.addGoal(4, attackTargetBlock);
 			if (event.getWorld().rand.nextInt(100) == 0 && !event.getWorld().isRemote()) {
 				pillager.setItemStackToSlot(EquipmentSlotType.OFFHAND, createRocket());
 				pillager.setActiveHand(Hand.OFF_HAND);
@@ -396,6 +402,21 @@ public class SREvents {
 				data.setValue(SREntities.EVOKER_SHIELD_COOLDOWN, cooldown - 1);
 		}
 
+	}
+
+	@SubscribeEvent
+	public static void onNoteBlockPlay(NoteBlockEvent.Play event) {
+		BlockPos pos = event.getPos();
+		BlockState state = event.getWorld().getBlockState(pos.offset(Direction.DOWN));
+		SoundEvent sound = state.isIn(Blocks.TARGET) ? SRSounds.BLOCK_NOTE_BLOCK_HIT_MARKER.get() : state.isIn(SRBlocks.GLOOMY_TILES.get()) ? SRSounds.BLOCK_NOTE_BLOCK_HARPSICHORD.get() : state.isIn(SRBlocks.BLAST_PROOF_PLATES.get()) ? SRSounds.BLOCK_NOTE_BLOCK_ORCHESTRAL_HIT.get() : null;
+		if (sound != null) {
+			int note = event.getVanillaNoteId();
+			float f = (float)Math.pow(2.0D, (double)(note - 12) / 12.0D);
+			event.getWorld().playSound(null, pos, sound, SoundCategory.RECORDS, 3.0F, f);
+			if (!event.getWorld().isRemote())
+				NetworkUtil.spawnParticle("note",  pos.getX() + 0.5D, pos.getY() + 1.2D, pos.getZ() + 0.5D, (double) note / 24.0D, 0.0D, 0.0D);
+			event.setCanceled(true);
+		}
 	}
 
 	public static boolean isValidBurningBannerPos(World world, BlockPos pos) {
