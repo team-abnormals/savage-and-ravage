@@ -8,6 +8,7 @@
     "AbstractRaiderEntityMixin",
     "BannerItemMixin",
     "IronGolemEntityMixin",
+    "LivingEntityAccessor",
     "ZoglinEntityMixin"
   ],
   "injectors": {

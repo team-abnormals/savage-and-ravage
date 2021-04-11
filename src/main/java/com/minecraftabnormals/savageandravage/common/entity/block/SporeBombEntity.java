@@ -34,15 +34,15 @@ public class SporeBombEntity extends TNTEntity {
 
 	@Override
 	protected void explode() {
-		SporeCloudEntity sporecloud = SREntities.SPORE_CLOUD.get().create(this.world);
-		if (sporecloud == null)
+		SporeCloudEntity sporeCloud = SREntities.SPORE_CLOUD.get().create(this.world);
+		if (sporeCloud == null)
 			return;
 
-		sporecloud.setCloudSize(4 + this.world.getRandom().nextInt(3));
-		sporecloud.setSpawnCloudInstantly(true);
+		sporeCloud.setCloudSize(4 + this.world.getRandom().nextInt(3));
+		sporeCloud.setSpawnCloudInstantly(true);
 		this.world.createExplosion(this, this.getPosX(), this.getPosYHeight(0.0625D), this.getPosZ(), 4.0F, Explosion.Mode.NONE);
-		sporecloud.setPositionAndRotation(this.getPosX(), this.getPosYHeight(0.0625), this.getPosZ(), this.rotationYaw, this.rotationPitch);
-		this.world.addEntity(sporecloud);
+		sporeCloud.setPositionAndRotation(this.getPosX(), this.getPosYHeight(0.0625), this.getPosZ(), this.rotationYaw, this.rotationPitch);
+		this.world.addEntity(sporeCloud);
 	}
 
 	@Override

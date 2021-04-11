@@ -42,15 +42,17 @@ public class MischiefArrowEntity extends AbstractArrowEntity {
 			this.pickupStatus = PickupStatus.DISALLOWED;
 
 			CreepieEntity creepie = SREntities.CREEPIE.get().create(world);
-			creepie.setLocationAndAngles(this.getPosX(), this.getPosY(), this.getPosZ(), 0.0F, 0.0F);
+			if (creepie != null) {
+				creepie.setLocationAndAngles(this.getPosX(), this.getPosY(), this.getPosZ(), 0.0F, 0.0F);
 
-			Entity thrower = this.func_234616_v_();
-			if (thrower instanceof LivingEntity) {
-				if (!((LivingEntity) thrower).isPotionActive(Effects.INVISIBILITY))
-					creepie.setOwnerId(thrower.getUniqueID());
+				Entity thrower = this.func_234616_v_();
+				if (thrower instanceof LivingEntity) {
+					if (!((LivingEntity) thrower).isPotionActive(Effects.INVISIBILITY))
+						creepie.setOwnerId(thrower.getUniqueID());
+				}
+
+				this.world.addEntity(creepie);
 			}
-
-			this.world.addEntity(creepie);
 			this.finished = true;
 		}
 	}

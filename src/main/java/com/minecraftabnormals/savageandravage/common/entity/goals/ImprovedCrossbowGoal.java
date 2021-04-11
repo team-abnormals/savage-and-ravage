@@ -9,8 +9,13 @@ import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.projectile.ProjectileHelper;
 import net.minecraft.item.CrossbowItem;
 import net.minecraft.item.FireworkRocketItem;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.pathfinding.NodeProcessor;
+import net.minecraft.pathfinding.PathNavigator;
+import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.MathHelper;
 
 import java.util.EnumSet;
 
@@ -62,6 +67,12 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 		}
 	}
 
+	private boolean isWalkable() {
+		PathNavigator pathnavigator = this.entity.getNavigator();
+		NodeProcessor nodeprocessor = pathnavigator.getNodeProcessor();
+		return nodeprocessor.getPathNodeType(this.entity.world, MathHelper.floor(this.entity.getPosX() + 1.0D), MathHelper.floor(this.entity.getPosY()), MathHelper.floor(this.entity.getPosZ() + 1.0D)) == PathNodeType.WALKABLE;
+	}
+
 	@Override
 	public void tick() {
 		LivingEntity target = this.entity.getAttackTarget();
@@ -78,13 +89,12 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 
 		double distanceSq = target.getDistanceSq(entity);
 		double distance = target.getDistance(entity);
-		// makes the entity that has this goal back up if the attack target is whatever
-		// number blockstillbackup is, infront of them.
-		if (distance <= blocksUntilBackupSq && !(entity.getAttackTarget() instanceof AbstractVillagerEntity)) {
+		if (distance <= blocksUntilBackupSq && !(target instanceof AbstractVillagerEntity)) {
 			this.entity.faceEntity(target, 30.0F, 30.0F);
-			this.entity.getMoveHelper().strafe(entity.isHandActive() ? -0.5F : -3.0F, 0); // note: when an entity is "charging" their crossbow they set an active hand
+			if (isWalkable())
+				this.entity.getMoveHelper().strafe(entity.isHandActive() ? -0.5F : -3.0F, 0); // note: when an entity is "charging" their crossbow they set an active hand
 		}
-
+		ItemStack activeStack = this.entity.getActiveItemStack();
 		boolean shouldMoveTowardsEnemy = (distanceSq > (double) this.radiusSq || this.seeTime < 5) && this.wait == 0;
 		if (shouldMoveTowardsEnemy) {
 			this.entity.getNavigator().tryMoveToEntityLiving(target, this.isCrossbowUncharged() ? this.speedChanger : this.speedChanger * 0.5D);
@@ -93,7 +103,7 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 		}
 
 		this.entity.getLookController().setLookPositionWithEntity(target, 30.0F, 30.0F);
-		if (this.crossbowStateUnCharged == ImprovedCrossbowGoal.CrossbowState.UNCHARGED) {
+		if (this.crossbowStateUnCharged == ImprovedCrossbowGoal.CrossbowState.UNCHARGED && !CrossbowItem.isCharged(activeStack)) {
 			if (canSeeEnemy) {
 				this.entity.setActiveHand(ProjectileHelper.getHandWith(this.entity, Items.CROSSBOW));
 				this.crossbowStateUnCharged = ImprovedCrossbowGoal.CrossbowState.CHARGING;
@@ -105,7 +115,7 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 			}
 
 			int i = this.entity.getItemInUseMaxCount();
-			if (i >= CrossbowItem.getChargeTime(this.entity.getActiveItemStack())) {
+			if (i >= CrossbowItem.getChargeTime(activeStack) || CrossbowItem.isCharged(activeStack)) {
 				this.entity.stopActiveHand();
 				this.crossbowStateUnCharged = ImprovedCrossbowGoal.CrossbowState.CHARGED;
 				this.wait = 20 + this.entity.getRNG().nextInt(20);

@@ -1,36 +1,36 @@
 {
   "entity.creepie.hurt": {
-   "sounds": [
-     "savageandravage:mob/creepie/hurt1",
-     "savageandravage:mob/creepie/hurt2",
-     "savageandravage:mob/creepie/hurt3",
-     "savageandravage:mob/creepie/hurt4"
+    "sounds": [
+      "savageandravage:mob/creepie/hurt1",
+      "savageandravage:mob/creepie/hurt2",
+      "savageandravage:mob/creepie/hurt3",
+      "savageandravage:mob/creepie/hurt4"
     ],
     "subtitle": "subtitles.savageandravage.entity.creepie.hurt"
-   },
+  },
   "entity.creepie.death": {
-   "sounds": [
-     "savageandravage:mob/creepie/death"
+    "sounds": [
+      "savageandravage:mob/creepie/death"
     ],
     "subtitle": "subtitles.savageandravage.entity.creepie.death"
-   },
+  },
   "entity.creepie.primed": {
-   "sounds": [
-     "savageandravage:mob/creepie/fuse"
+    "sounds": [
+      "savageandravage:mob/creepie/fuse"
     ],
     "subtitle": "subtitles.savageandravage.entity.creepie.fuse"
-   },
-    "entity.creepie.convert": {
+  },
+  "entity.creepie.convert": {
     "sounds": [
       "mob/zombie/remedy"
     ],
     "subtitle": "subtitles.savageandravage.entity.creepie.convert"
   },
   "entity.creepie.grow": {
-  "sounds": [
-    "mob/zombie/infect"
-  ],
-  "subtitle": "subtitles.savageandravage.entity.creepie.grow"
+    "sounds": [
+      "mob/zombie/infect"
+    ],
+    "subtitle": "subtitles.savageandravage.entity.creepie.grow"
   },
   "entity.iceologer.ambient": {
     "sounds": [
@@ -72,18 +72,6 @@
       "mob/evocation_illager/cast2"
     ],
     "subtitle": "subtitles.savageandravage.entity.player.cast_spell"
-  },
-  "entity.generic.growth_success": {
-    "sounds": [
-      "mob/zombie/unfect"
-    ],
-    "subtitle": "subtitles.savageandravage.entity.generic.growth_success"
-  },
-  "entity.generic.growth_failure": {
-    "sounds": [
-      "mob/zombie/infect"
-    ],
-    "subtitle": "subtitles.savageandravage.entity.generic.growth_failure"
   },
   "entity.creeper_spores.throw": {
     "sounds": [

@@ -20,6 +20,7 @@ import javax.annotation.Nullable;
 
 public class SporeBombBlock extends TNTBlock {
 	private static final TargetedItemGroupFiller FILLER = new TargetedItemGroupFiller(() -> Items.TNT);
+
 	public SporeBombBlock(Block.Properties properties) {
 		super(properties);
 	}

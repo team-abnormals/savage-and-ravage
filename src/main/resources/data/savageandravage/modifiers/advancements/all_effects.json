@@ -7,9 +7,9 @@
         "criteria": "all_effects",
         "removes": false,
         "effects": {
-          "savageandravage:growing": {},
-          "savageandravage:shrinking": {},
-          "savageandravage:frostbite": {}
+          "savageandravage:confusion": {},
+          "savageandravage:frostbite": {},
+          "savageandravage:weight": {}
         }
       }
     }

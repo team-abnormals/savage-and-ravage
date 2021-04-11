@@ -114,8 +114,8 @@ public class SkeletonVillagerEntity extends AbstractSkeletonEntity implements IC
 	}
 
 	@Override
-	public void setCharging(boolean trueorfalse) {
-		this.dataManager.set(DATA_CHARGING_STATE, trueorfalse);
+	public void setCharging(boolean isCharging) {
+		this.dataManager.set(DATA_CHARGING_STATE, isCharging);
 	}
 
 	@Override
@@ -130,9 +130,11 @@ public class SkeletonVillagerEntity extends AbstractSkeletonEntity implements IC
 		this.setEnchantmentBasedOnDifficulty(difficultyIn);
 		if (worldIn.getRandom().nextInt(100) == 0) {
 			SpiderEntity spider = EntityType.SPIDER.create(this.world);
-			spider.copyLocationAndAnglesFrom(this);
-			worldIn.addEntity(spider);
-			this.startRiding(spider);
+			if (spider != null) {
+				spider.copyLocationAndAnglesFrom(this);
+				worldIn.addEntity(spider);
+				this.startRiding(spider);
+			}
 		}
 		return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
 	}
