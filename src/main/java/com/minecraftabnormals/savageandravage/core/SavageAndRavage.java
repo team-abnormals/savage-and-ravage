@@ -64,7 +64,6 @@ public class SavageAndRavage {
 			SREntities.registerTrackedData();
 			SRFeatures.registerPools();
 			SRFeatures.registerBiomeModifications();
-			SREntities.registerAttributes();
 			SREntities.registerWaveMembers();
 			SRLoot.registerLootConditions();
 			SRCompat.registerFlammables();

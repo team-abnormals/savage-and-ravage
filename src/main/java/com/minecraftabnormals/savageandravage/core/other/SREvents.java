@@ -91,7 +91,7 @@ public class SREvents {
 			if (event.getWorld().rand.nextInt(100) == 0 && !event.getWorld().isRemote()) {
 				pillager.setItemStackToSlot(EquipmentSlotType.OFFHAND, createRocket());
 				pillager.setActiveHand(Hand.OFF_HAND);
-				pillager.setDropChance(EquipmentSlotType.OFFHAND, 2.0F); // We should make this into a mixin as this would make it so pillagers spawn with a rocket item in their hand everytime the world is loaded.
+				pillager.setDropChance(EquipmentSlotType.OFFHAND, 2.0F); // We should make this into a mixin as this makes it so pillagers spawn with a rocket item in their hand everytime the world is loaded.
 			}
 		}
 		if (SRConfig.COMMON.evokersUseTotems.get() && event.getEntity() instanceof EvokerEntity) {

@@ -7,6 +7,7 @@ license = "https://github.com/team-abnormals/savage-and-ravage/blob/main/LICENSE
     modId = "savageandravage"
     version = "${file.jarVersion}"
     logoFile = "logo.png"
+    itemIcon = "savageandravage:griefer_helmet"
     authors = "Team Abnormals"
     credits = "Farcr, bageldotjpg, abigailfails, TallestRed, and MCVinnyQ"
     displayName = "Savage & Ravage"
@@ -17,14 +18,14 @@ license = "https://github.com/team-abnormals/savage-and-ravage/blob/main/LICENSE
 [[dependencies.savageandravage]]
     modId = "minecraft"
     mandatory = true
-    versionRange = "[1.16.3,1.17)"
+    versionRange = "[1.16.5,1.17)"
     ordering = "NONE"
     side = "BOTH"
 
 [[dependencies.savageandravage]]
     modId = "forge"
     mandatory = true
-    versionRange = "[34.1.42,)"
+    versionRange = "[36.1.0,)"
     ordering = "NONE"
     side = "BOTH"
 
