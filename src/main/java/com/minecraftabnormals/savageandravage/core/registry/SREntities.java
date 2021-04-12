@@ -11,17 +11,20 @@ import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.entity.monster.AbstractSkeletonEntity;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.raid.Raid;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
+@Mod.EventBusSubscriber(modid = SavageAndRavage.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class SREntities {
 
 	public static final EntitySubRegistryHelper HELPER = SavageAndRavage.REGISTRY_HELPER.getEntitySubHelper();
@@ -57,6 +60,22 @@ public class SREntities {
 		TrackedDataManager.INSTANCE.registerData(new ResourceLocation(SavageAndRavage.MOD_ID, "evoker_shield_cooldown"), EVOKER_SHIELD_COOLDOWN);
 	}
 
+	public static void registerWaveMembers() {
+		Raid.WaveMember.create("GRIEFER", SREntities.GRIEFER.get(), new int[]{0, 1, 0, 1, 2, 2, 3, 2});
+		Raid.WaveMember.create("EXECUTIONER", SREntities.EXECUTIONER.get(), new int[]{0, 0, 1, 0, 0, 1, 2, 2});
+		Raid.WaveMember.create("TRICKSTER", SREntities.TRICKSTER.get(), new int[]{0, 0, 1, 0, 0, 1, 2, 2});
+	}
+
+	@SubscribeEvent
+	public static void registerAttributes(EntityAttributeCreationEvent event) {
+		event.put(CREEPIE.get(), CreepieEntity.registerAttributes().create());
+		event.put(GRIEFER.get(), GrieferEntity.registerAttributes().create());
+		event.put(SKELETON_VILLAGER.get(), AbstractSkeletonEntity.registerAttributes().create());
+		event.put(ICEOLOGER.get(), IceologerEntity.registerAttributes().create());
+		event.put(EXECUTIONER.get(), ExecutionerEntity.registerAttributes().create());
+		event.put(TRICKSTER.get(), TricksterEntity.registerAttributes().create());
+	}
+
 	public static void registerRendering() {
 		RenderingRegistry.registerEntityRenderingHandler(CREEPIE.get(), CreepieRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(SKELETON_VILLAGER.get(), SkeletonVillagerRenderer::new);
@@ -71,20 +90,5 @@ public class SREntities {
 		RenderingRegistry.registerEntityRenderingHandler(ICE_CLOUD.get(), NoModelRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(EXECUTIONER.get(), ExecutionerRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(TRICKSTER.get(), TricksterRenderer::new);
-	}
-
-	public static void registerAttributes() {
-		GlobalEntityTypeAttributes.put(CREEPIE.get(), CreepieEntity.registerAttributes().create());
-		GlobalEntityTypeAttributes.put(GRIEFER.get(), GrieferEntity.registerAttributes().create());
-		GlobalEntityTypeAttributes.put(SKELETON_VILLAGER.get(), AbstractSkeletonEntity.registerAttributes().create());
-		GlobalEntityTypeAttributes.put(ICEOLOGER.get(), IceologerEntity.registerAttributes().create());
-		GlobalEntityTypeAttributes.put(EXECUTIONER.get(), ExecutionerEntity.registerAttributes().create());
-		GlobalEntityTypeAttributes.put(TRICKSTER.get(), TricksterEntity.registerAttributes().create());
-	}
-
-	public static void registerWaveMembers() {
-		Raid.WaveMember.create("GRIEFER", SREntities.GRIEFER.get(), new int[]{0, 1, 0, 1, 2, 2, 3, 2});
-		Raid.WaveMember.create("EXECUTIONER", SREntities.EXECUTIONER.get(), new int[]{0, 0, 1, 0, 0, 1, 2, 2});
-		Raid.WaveMember.create("TRICKSTER", SREntities.TRICKSTER.get(), new int[]{0, 0, 1, 0, 0, 1, 2, 2});
 	}
 }
