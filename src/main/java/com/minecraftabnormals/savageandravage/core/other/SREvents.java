@@ -87,11 +87,11 @@ public class SREvents {
 				pillager.goalSelector.addGoal(3, aiCrossBow);
 			});
 			AttackTargetBlockRandomlyGoal<PillagerEntity> attackTargetBlock = new AttackTargetBlockRandomlyGoal<>(pillager);
-			pillager.goalSelector.addGoal(4, attackTargetBlock);
+			pillager.goalSelector.addGoal(5, attackTargetBlock);
 			if (event.getWorld().rand.nextInt(100) == 0 && !event.getWorld().isRemote()) {
 				pillager.setItemStackToSlot(EquipmentSlotType.OFFHAND, createRocket());
 				pillager.setActiveHand(Hand.OFF_HAND);
-				pillager.setDropChance(EquipmentSlotType.OFFHAND, 2.0F);
+				pillager.setDropChance(EquipmentSlotType.OFFHAND, 2.0F); // We should make this into a mixin as this would make it so pillagers spawn with a rocket item in their hand everytime the world is loaded.
 			}
 		}
 		if (SRConfig.COMMON.evokersUseTotems.get() && event.getEntity() instanceof EvokerEntity) {
