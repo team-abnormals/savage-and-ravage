@@ -16,6 +16,7 @@ import net.minecraft.entity.ai.goal.RandomWalkingGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.AbstractRaiderEntity;
+import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.monster.SpellcastingIllagerEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -74,7 +75,10 @@ public class TricksterEntity extends SpellcastingIllagerEntity { //TODO raid spe
     }
 
     public static AttributeModifierMap.MutableAttribute registerAttributes() {
-        return LivingEntity.registerAttributes().createMutableAttribute(Attributes.FOLLOW_RANGE, 16.0D);
+        return MonsterEntity.func_234295_eP_()
+                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.35F)
+                .createMutableAttribute(Attributes.MAX_HEALTH, 24.0D)
+                .createMutableAttribute(Attributes.FOLLOW_RANGE, 16.0D);
     }
 
     class CreatePrisonGoal extends UseSpellGoal {
