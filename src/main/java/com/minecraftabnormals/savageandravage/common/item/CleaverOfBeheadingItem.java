@@ -16,6 +16,7 @@ import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -45,13 +46,13 @@ public class CleaverOfBeheadingItem extends SwordItem {
 	}
 
 	@SubscribeEvent
-	public static void onExecutionerCleaverKill(LivingDeathEvent event) {
+	public static void onExecutionerCleaverKill(LivingDamageEvent event) {
 		if (event.getSource().getTrueSource() instanceof LivingEntity && event.getEntity() instanceof PlayerEntity) {
 			LivingEntity wielder = (LivingEntity) event.getSource().getTrueSource();
 			PlayerEntity targetPlayer = (PlayerEntity) event.getEntity();
 			World world = wielder.world;
 
-			if (wielder.getHeldItemMainhand().getItem() != SRItems.CLEAVER_OF_BEHEADING.get() || targetPlayer == null)
+			if (wielder.getHeldItemMainhand().getItem() != SRItems.CLEAVER_OF_BEHEADING.get() || targetPlayer == null || targetPlayer.getHealth() - event.getAmount() > 0)
 				return;
 
 			CompoundNBT skullNbt = new CompoundNBT();
