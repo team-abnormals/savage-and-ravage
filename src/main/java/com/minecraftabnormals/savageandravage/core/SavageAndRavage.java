@@ -3,7 +3,7 @@ package com.minecraftabnormals.savageandravage.core;
 import com.minecraftabnormals.abnormals_core.core.util.DataUtil;
 import com.minecraftabnormals.abnormals_core.core.util.registry.RegistryHelper;
 import com.minecraftabnormals.savageandravage.client.render.IceChunkRenderer;
-import com.minecraftabnormals.savageandravage.client.render.layer.EvokerShieldLayer;
+import com.minecraftabnormals.savageandravage.client.render.layer.TotemShieldLayer;
 import com.minecraftabnormals.savageandravage.core.other.SRCompat;
 import com.minecraftabnormals.savageandravage.core.other.SRFeatures;
 import com.minecraftabnormals.savageandravage.core.other.SRLoot;
@@ -12,6 +12,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.EvokerRenderer;
+import net.minecraft.client.renderer.entity.IEntityRenderer;
+import net.minecraft.client.renderer.entity.LivingRenderer;
+import net.minecraft.client.renderer.entity.model.EntityModel;
+import net.minecraft.client.renderer.entity.model.IllagerModel;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.monster.EvokerEntity;
 import net.minecraftforge.api.distmarker.Dist;
@@ -87,9 +91,11 @@ public class SavageAndRavage {
 	private void finish(FMLLoadCompleteEvent event) {
 		event.enqueueWork(() -> {
 			EntityRendererManager manager = Minecraft.getInstance().getRenderManager();
-			EntityRenderer<?> render = manager.renderers.get(EntityType.EVOKER);
-			if (render instanceof EvokerRenderer)
-				((EvokerRenderer<EvokerEntity>) render).addLayer(new EvokerShieldLayer((EvokerRenderer<EvokerEntity>) render));
+			EntityRenderer<?> renderer = manager.renderers.get(EntityType.EVOKER);
+			if (renderer instanceof EvokerRenderer) {
+				EvokerRenderer<EvokerEntity> livingRenderer = (EvokerRenderer<EvokerEntity>) renderer;
+				livingRenderer.addLayer(new TotemShieldLayer<>(livingRenderer, new IllagerModel<>(2.0F, 0.0F, 64, 64)));
+			}
 		});
 	}
 }

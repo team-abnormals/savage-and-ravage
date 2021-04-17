@@ -1,6 +1,7 @@
 package com.minecraftabnormals.savageandravage.client.render;
 
 import com.minecraftabnormals.savageandravage.client.model.TricksterModel;
+import com.minecraftabnormals.savageandravage.client.render.layer.TotemShieldLayer;
 import com.minecraftabnormals.savageandravage.common.entity.TricksterEntity;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -14,6 +15,7 @@ public class TricksterRenderer extends MobRenderer<TricksterEntity, TricksterMod
     public TricksterRenderer(EntityRendererManager rendererManager) {
         super(rendererManager, new TricksterModel(), 0.5f);
         this.addLayer(new HeadLayer<>(this));
+        this.addLayer(new TotemShieldLayer<>(this, new TricksterModel(2.0F)));
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.minecraftabnormals.savageandravage.common.entity;
 
+import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.IDataManager;
+import com.minecraftabnormals.savageandravage.core.registry.SREntities;
 import com.minecraftabnormals.savageandravage.core.registry.SRItems;
 import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.EntityType;
@@ -20,7 +22,9 @@ import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.monster.SpellcastingIllagerEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.RayTraceResult;
@@ -42,17 +46,62 @@ public class TricksterEntity extends SpellcastingIllagerEntity { //TODO raid spe
         /*this.goalSelector.addGoal(5, new CreatePrisonGoal());
         this.goalSelector.addGoal(6, new ThrowSparkGoal());*/
         this.goalSelector.addGoal(8, new RandomWalkingGoal(this, 0.6D));
+        this.goalSelector.addGoal(1, new AvoidEntityGoal<PlayerEntity>(this, PlayerEntity.class, 8.0F, 0.6D, 1.0D) {
+            @Override
+            public boolean shouldExecute() {
+                return super.shouldExecute() && ((IDataManager) this.entity).getValue(SREntities.TOTEM_SHIELD_TIME) > 0;
+            }
+        });
+        this.goalSelector.addGoal(1, new AvoidEntityGoal<IronGolemEntity>(this, IronGolemEntity.class, 8.0F, 0.6D, 1.0D) {
+            @Override
+            public boolean shouldExecute() {
+                return super.shouldExecute() && ((IDataManager) this.entity).getValue(SREntities.TOTEM_SHIELD_TIME) > 0;
+            }
+        });
+        this.targetSelector.addGoal(2, (new NearestAttackableTargetGoal<PlayerEntity>(this, PlayerEntity.class, true) {
+            @Override
+            public boolean shouldExecute() {
+                return super.shouldExecute() && ((IDataManager) this.goalOwner).getValue(SREntities.TOTEM_SHIELD_TIME) <= 0;
+            }
+        }.setUnseenMemoryTicks(300)));
+        this.targetSelector.addGoal(3, (new NearestAttackableTargetGoal<AbstractVillagerEntity>(this, AbstractVillagerEntity.class, true) {
+            @Override
+            public boolean shouldExecute() {
+                return super.shouldExecute() && ((IDataManager) this.goalOwner).getValue(SREntities.TOTEM_SHIELD_TIME) <= 0;
+            }
+        }.setUnseenMemoryTicks(300)));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<IronGolemEntity>(this, IronGolemEntity.class, true) {
+            @Override
+            public boolean shouldExecute() {
+                return super.shouldExecute() && ((IDataManager) this.goalOwner).getValue(SREntities.TOTEM_SHIELD_TIME) <= 0;
+            }
+        }.setUnseenMemoryTicks(300));
+
         this.goalSelector.addGoal(9, new LookAtGoal(this, PlayerEntity.class, 3.0F, 1.0F));
         this.goalSelector.addGoal(10, new LookAtGoal(this, MobEntity.class, 8.0F));
         this.targetSelector.addGoal(1, (new HurtByTargetGoal(this, AbstractRaiderEntity.class)).setCallsForHelp());
-        this.targetSelector.addGoal(2, (new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true)).setUnseenMemoryTicks(300));
-        this.targetSelector.addGoal(3, (new NearestAttackableTargetGoal<>(this, AbstractVillagerEntity.class, false)).setUnseenMemoryTicks(300));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, IronGolemEntity.class, false));
     }
 
     @Override
     protected float getStandingEyeHeight(Pose poseIn, EntitySize sizeIn) {
         return sizeIn.height * 0.775F;
+    }
+
+    @Override
+    public boolean attackEntityFrom(DamageSource source, float amount) {
+        IDataManager data = (IDataManager) this;
+        if (source.getImmediateSource() instanceof ProjectileEntity) {
+            if (data.getValue(SREntities.TOTEM_SHIELD_TIME) > 0) {
+                return false;
+            } else if (this.getHealth() - amount <= 0 && data.getValue(SREntities.TOTEM_SHIELD_COOLDOWN) <= 0) {
+                this.setHealth(2.0F);
+                data.setValue(SREntities.TOTEM_SHIELD_TIME, 600);
+                if (!this.world.isRemote())
+                    this.world.setEntityState(this, (byte) 35);
+                return false;
+            }
+        }
+        return super.attackEntityFrom(source, amount);
     }
 
     @Override
@@ -76,7 +125,7 @@ public class TricksterEntity extends SpellcastingIllagerEntity { //TODO raid spe
 
     public static AttributeModifierMap.MutableAttribute registerAttributes() {
         return MonsterEntity.func_234295_eP_()
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.35F)
+                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.5D)
                 .createMutableAttribute(Attributes.MAX_HEALTH, 24.0D)
                 .createMutableAttribute(Attributes.FOLLOW_RANGE, 16.0D);
     }

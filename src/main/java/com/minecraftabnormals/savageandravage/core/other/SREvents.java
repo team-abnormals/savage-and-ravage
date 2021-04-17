@@ -93,7 +93,7 @@ public class SREvents {
 			evoker.goalSelector.addGoal(1, new AvoidEntityGoal<IronGolemEntity>(evoker, IronGolemEntity.class, 8.0F, 0.6D, 1.0D) {
 				@Override
 				public boolean shouldExecute() {
-					return super.shouldExecute() && ((IDataManager) this.entity).getValue(SREntities.EVOKER_SHIELD_TIME) > 0;
+					return super.shouldExecute() && SRConfig.COMMON.evokersUseTotems.get() && ((IDataManager) this.entity).getValue(SREntities.TOTEM_SHIELD_TIME) > 0;
 				}
 			});
 		}
@@ -202,8 +202,8 @@ public class SREvents {
 					((GolemEntity) entity).setAttackTarget(null);
 				}
 			}
-			if (SRConfig.COMMON.evokersUseTotems.get() && entity instanceof EvokerEntity && ((IDataManager) entity).getValue(SREntities.EVOKER_SHIELD_TIME) > 0)
-				((EvokerEntity) entity).setAttackTarget(null);
+			if (entity instanceof EvokerEntity && SRConfig.COMMON.evokersUseTotems.get() && ((IDataManager) entity).getValue(SREntities.TOTEM_SHIELD_TIME) > 0)
+				((MobEntity) entity).setAttackTarget(null);
 		}
 	}
 
@@ -280,15 +280,14 @@ public class SREvents {
 		}
 
 		IDataManager data = (IDataManager) entity;
-		if (SRConfig.COMMON.evokersUseTotems.get() && entity instanceof EvokerEntity) {
+		if (entity instanceof EvokerEntity && SRConfig.COMMON.evokersUseTotems.get()) {
 			if (entity.getHealth() - event.getAmount() <= 0 && event.getSource().getImmediateSource() instanceof ProjectileEntity) {
-				if (data.getValue(SREntities.EVOKER_SHIELD_TIME) <= 0 && data.getValue(SREntities.EVOKER_SHIELD_COOLDOWN) <= 0) {
+				if (data.getValue(SREntities.TOTEM_SHIELD_TIME) <= 0 && data.getValue(SREntities.TOTEM_SHIELD_COOLDOWN) <= 0) {
 					event.setCanceled(true);
 					entity.setHealth(2.0F);
-					data.setValue(SREntities.EVOKER_SHIELD_TIME, 600);
-					if (!entity.world.isRemote()) {
+					data.setValue(SREntities.TOTEM_SHIELD_TIME, 600);
+					if (!entity.world.isRemote())
 						entity.world.setEntityState(entity, (byte) 35);
-					}
 				}
 			}
 		}
@@ -297,9 +296,9 @@ public class SREvents {
 	@SubscribeEvent
 	public static void onLivingAttack(LivingAttackEvent event) {
 		Entity entity = event.getEntity();
-		if (SRConfig.COMMON.evokersUseTotems.get() && entity instanceof EvokerEntity) {
+		if (entity instanceof EvokerEntity && SRConfig.COMMON.evokersUseTotems.get()) {
 			IDataManager data = (IDataManager) entity;
-			if (data.getValue(SREntities.EVOKER_SHIELD_TIME) > 0) {
+			if (data.getValue(SREntities.TOTEM_SHIELD_TIME) > 0) {
 				if (event.getSource().getImmediateSource() instanceof ProjectileEntity)
 					event.setCanceled(true);
 			}
@@ -384,16 +383,16 @@ public class SREvents {
 			entity.removePotionEffect(SREffects.FROSTBITE.get());
 		IDataManager data = (IDataManager) entity;
 		if (entity instanceof EvokerEntity) {
-			int shieldTime = data.getValue(SREntities.EVOKER_SHIELD_TIME);
+			int shieldTime = data.getValue(SREntities.TOTEM_SHIELD_TIME);
 			if (shieldTime > 0)
-				data.setValue(SREntities.EVOKER_SHIELD_TIME, shieldTime - 1);
+				data.setValue(SREntities.TOTEM_SHIELD_TIME, shieldTime - 1);
 			else if (shieldTime == 0) {
-				data.setValue(SREntities.EVOKER_SHIELD_COOLDOWN, 1800);
-				data.setValue(SREntities.EVOKER_SHIELD_TIME, -1);
+				data.setValue(SREntities.TOTEM_SHIELD_COOLDOWN, 1800);
+				data.setValue(SREntities.TOTEM_SHIELD_TIME, -1);
 			}
-			int cooldown = data.getValue(SREntities.EVOKER_SHIELD_COOLDOWN);
+			int cooldown = data.getValue(SREntities.TOTEM_SHIELD_COOLDOWN);
 			if (cooldown > 0)
-				data.setValue(SREntities.EVOKER_SHIELD_COOLDOWN, cooldown - 1);
+				data.setValue(SREntities.TOTEM_SHIELD_COOLDOWN, cooldown - 1);
 		}
 
 	}
