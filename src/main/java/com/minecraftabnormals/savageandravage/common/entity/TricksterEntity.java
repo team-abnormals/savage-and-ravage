@@ -91,11 +91,9 @@ public class TricksterEntity extends SpellcastingIllagerEntity { //TODO raid spe
     public boolean attackEntityFrom(DamageSource source, float amount) {
         IDataManager data = (IDataManager) this;
         if (source.getImmediateSource() instanceof ProjectileEntity) {
-            if (data.getValue(SREntities.TOTEM_SHIELD_TIME) > 0) {
-                return false;
-            } else if (this.getHealth() - amount <= 0 && data.getValue(SREntities.TOTEM_SHIELD_COOLDOWN) <= 0) {
+            if (this.getHealth() - amount <= 0 && data.getValue(SREntities.TOTEM_SHIELD_COOLDOWN) <= 0) {
                 this.setHealth(2.0F);
-                data.setValue(SREntities.TOTEM_SHIELD_TIME, 600);
+                data.setValue(SREntities.TOTEM_SHIELD_COOLDOWN, 1800);
                 if (!this.world.isRemote())
                     this.world.setEntityState(this, (byte) 35);
                 return false;
