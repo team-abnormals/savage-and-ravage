@@ -5,6 +5,8 @@ import java.util.List;
 import com.google.common.collect.Lists;
 
 import net.minecraft.block.TargetBlock;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.ICrossbowUser;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.Goal;
@@ -37,7 +39,7 @@ public class AttackTargetBlockRandomlyGoal<T extends MobEntity & ICrossbowUser> 
 
 	@Override
 	public boolean shouldExecute() {
-		if (this.goalOwner.getRNG().nextFloat() < 0.005F && this.goalOwner.getAttackTarget() == null) {
+		if (this.goalOwner.getRNG().nextFloat() < 0.005F && this.goalOwner.getAttackTarget() == null && this.goalOwner.getHeldItemMainhand().getItem() instanceof CrossbowItem) {
 			World world = this.goalOwner.world;
 			BlockPos.Mutable checkingPos = new BlockPos.Mutable();
 			for (double x = this.goalOwner.getPosX() - 15; x <= this.goalOwner.getPosX() + 15; x++) {
@@ -72,7 +74,7 @@ public class AttackTargetBlockRandomlyGoal<T extends MobEntity & ICrossbowUser> 
 		this.timeTillNextShoot--;
 		this.goalOwner.getNavigator().clearPath();
 		ItemStack activeStack = this.goalOwner.getActiveItemStack();
-		this.goalOwner.getLookController().setLookPosition(nearestTargetPos.getX(), nearestTargetPos.getY() + 1, nearestTargetPos.getZ());
+		this.goalOwner.getLookController().setLookPosition(this.nearestTargetPos.getX(), this.nearestTargetPos.getY() + 1, this.nearestTargetPos.getZ());
 		if (this.timeTillNextShoot <= 0 && this.state == CrossbowState.UNCHARGED) {
 			this.goalOwner.setActiveHand(ProjectileHelper.getHandWith(this.goalOwner, Items.CROSSBOW));
 			this.state = CrossbowState.CHARGING;
@@ -102,13 +104,18 @@ public class AttackTargetBlockRandomlyGoal<T extends MobEntity & ICrossbowUser> 
 		List<ItemStack> stackList = this.getChargedProjectilesFromStack(stack);
 		for (int i = 0; i < stackList.size(); ++i) {
 			ItemStack chosenProjectile = stackList.get(i);
-			Vector3d vector3d1 = goalOwner.getUpVector(1.0F);
-			ArrowEntity arrow = new ArrowEntity(this.goalOwner.getEntityWorld(), goalOwner);
-			FireworkRocketEntity rocket = new FireworkRocketEntity(this.goalOwner.getEntityWorld(), chosenProjectile, this.goalOwner, goalOwner.getPosX(), goalOwner.getPosYEye() - (double) 0.15F, goalOwner.getPosZ(), true);
+			Vector3d vector3d1 = this.goalOwner.getUpVector(1.0F);
+			ArrowEntity arrow = new ArrowEntity(this.goalOwner.getEntityWorld(), this.goalOwner);
+			FireworkRocketEntity rocket = new FireworkRocketEntity(this.goalOwner.getEntityWorld(), chosenProjectile, this.goalOwner, this.goalOwner.getPosX(), this.goalOwner.getPosYEye() - (double) 0.15F, this.goalOwner.getPosZ(), true);
 			ProjectileEntity projectile = chosenProjectile.getItem() == Items.FIREWORK_ROCKET ? rocket : arrow;
 			Quaternion quaternion = new Quaternion(new Vector3f(vector3d1), 1.0F, true);
 			Vector3d vector3d = this.goalOwner.getLook(1.0F);
 			Vector3f vector3f = new Vector3f(vector3d);
+			if (projectile == arrow) {
+				arrow.setShotFromCrossbow(true);
+				int pierce = EnchantmentHelper.getEnchantmentLevel(Enchantments.PIERCING, this.goalOwner.getHeldItemMainhand());
+				arrow.setPierceLevel((byte) pierce);
+			}
 			vector3f.transform(quaternion);
 			this.goalOwner.getEntityWorld().addEntity(projectile);
 			projectile.shoot((double) vector3f.getX(), (double) vector3f.getY(), (double) vector3f.getZ(), 1.6F, 0.0F);
@@ -147,6 +154,6 @@ public class AttackTargetBlockRandomlyGoal<T extends MobEntity & ICrossbowUser> 
 	}
 
 	enum CrossbowState {
-		UNCHARGED, CHARGING, CHARGED, READY_TO_ATTACK
+		UNCHARGED, CHARGING, CHARGED
 	}
 }
