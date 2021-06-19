@@ -9,7 +9,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.IPacket;
-import net.minecraft.potion.Effects;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.world.World;
@@ -47,7 +46,7 @@ public class MischiefArrowEntity extends AbstractArrowEntity {
 
 				Entity thrower = this.func_234616_v_();
 				if (thrower instanceof LivingEntity) {
-					if (!((LivingEntity) thrower).isPotionActive(Effects.INVISIBILITY))
+					if (!thrower.isInvisible())
 						creepie.setOwnerId(thrower.getUniqueID());
 				}
 
@@ -69,7 +68,7 @@ public class MischiefArrowEntity extends AbstractArrowEntity {
 
 			Entity thrower = this.func_234616_v_();
 			if (thrower instanceof LivingEntity) {
-				if (!((LivingEntity) thrower).isPotionActive(Effects.INVISIBILITY))
+				if (!thrower.isInvisible())
 					creepie.setOwnerId(thrower.getUniqueID());
 			}
 

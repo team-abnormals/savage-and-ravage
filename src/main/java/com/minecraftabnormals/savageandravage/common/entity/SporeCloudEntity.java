@@ -11,7 +11,6 @@ import net.minecraft.entity.projectile.ThrowableEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.potion.Effects;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -152,7 +151,7 @@ public class SporeCloudEntity extends ThrowableEntity implements IEntityAddition
 				creepie.attackPlayersOnly = this.creepiesAttackPlayersOnly();
 				if (!creepie.attackPlayersOnly) creepie.enablePersistence();
 				Entity thrower = this.func_234616_v_();
-				if (thrower instanceof LivingEntity && !((LivingEntity) thrower).isPotionActive(Effects.INVISIBILITY))
+				if (thrower instanceof LivingEntity && !(thrower.isInvisible()))
 					creepie.setOwnerId(thrower.getUniqueID());
 				BlockPos nextPosition = null;
 				if (aoe.ticksExisted % 20 == 0) {
