@@ -66,6 +66,48 @@
     ],
     "subtitle": "subtitles.savageandravage.entity.iceologer.cast_spell"
   },
+  "entity.trickster.ambient": {
+    "sounds": [
+      "savageandravage:mob/trickster/idle1",
+      "savageandravage:mob/trickster/idle2",
+      "savageandravage:mob/trickster/idle3"
+    ],
+    "subtitle": "subtitles.savageandravage.entity.trickster.ambient"
+  },
+  "entity.trickster.step": {
+    "sounds": [
+      "savageandravage:mob/trickster/step1",
+      "savageandravage:mob/trickster/step2",
+      "savageandravage:mob/trickster/step3"
+    ],
+    "subtitle": "subtitles.savageandravage.entity.trickster.step"
+  },
+  "entity.trickster.hurt": {
+    "sounds": [
+      "savageandravage:mob/trickster/hurt1",
+      "savageandravage:mob/trickster/hurt2"
+    ],
+    "subtitle": "subtitles.savageandravage.entity.trickster.hurt"
+  },
+  "entity.trickster.death": {
+    "sounds": [
+      "savageandravage:mob/trickster/death"
+    ],
+    "subtitle": "subtitles.savageandravage.entity.trickster.death"
+  },
+  "entity.trickster.celebrate": {
+    "sounds": [
+      "savageandravage:mob/trickster/celebrate1",
+      "savageandravage:mob/trickster/celebrate2"
+    ],
+    "subtitle": "subtitles.savageandravage.entity.trickster.celebrate"
+  },
+  "entity.trickster.laugh": {
+    "sounds": [
+      "savageandravage:mob/trickster/laugh"
+    ],
+    "subtitle": "subtitles.savageandravage.entity.trickster.laugh"
+  },
   "entity.player.cast_spell": {
     "sounds": [
       "mob/evocation_illager/cast1",
