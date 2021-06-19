@@ -102,9 +102,31 @@ public class TricksterEntity extends SpellcastingIllagerEntity { //TODO raid spe
         return super.attackEntityFrom(source, amount);
     }
 
+    @Nullable
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return SRSounds.ENTITY_TRICKSTER_AMBIENT.get();
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
+        return SRSounds.ENTITY_TRICKSTER_HURT.get();
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return SRSounds.ENTITY_TRICKSTER_DEATH.get();
+    }
+
+    @Override
+    protected void playStepSound(BlockPos pos, BlockState blockIn) {
+        super.playStepSound(pos, blockIn);
+        this.playSound(SRSounds.ENTITY_TRICKSTER_STEP.get(), 0.5F, 1.0F);
+    }
+
     @Override
     protected SoundEvent getSpellSound() {
-        return SoundEvents.ENTITY_ILLUSIONER_CAST_SPELL;
+        return SRSounds.ENTITY_TRICKSTER_LAUGH.get();
     }
 
     @Override
@@ -113,7 +135,7 @@ public class TricksterEntity extends SpellcastingIllagerEntity { //TODO raid spe
 
     @Override
     public SoundEvent getRaidLossSound() {
-        return SoundEvents.ENTITY_PILLAGER_CELEBRATE;
+        return SRSounds.ENTITY_TRICKSTER_CELEBRATE.get();
     }
 
     @Override
