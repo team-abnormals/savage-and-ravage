@@ -77,7 +77,7 @@ public class CreepieEntity extends MonsterEntity implements IChargeableMob, IOwn
 		this.targetSelector.addGoal(2, new MobOwnerHurtByTargetGoal(this));
 		this.targetSelector.addGoal(2, new MobOwnerHurtTargetGoal(this));
 		this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
-		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<MobEntity>(this, MobEntity.class, false) {
+		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<MobEntity>(this, MobEntity.class, true) {
 			@Override
 			public boolean shouldExecute() {
 				return super.shouldExecute()
@@ -87,7 +87,7 @@ public class CreepieEntity extends MonsterEntity implements IChargeableMob, IOwn
 						&& !((CreepieEntity) goalOwner).attackPlayersOnly;
 			}
 		});
-		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<PlayerEntity>(this, PlayerEntity.class, false) {
+		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<PlayerEntity>(this, PlayerEntity.class, true) {
 			@Override
 			public boolean shouldExecute() {
 				return super.shouldExecute() && ((CreepieEntity) goalOwner).getOwnerId() == null;
