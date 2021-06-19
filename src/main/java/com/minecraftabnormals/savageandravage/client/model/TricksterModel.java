@@ -3,6 +3,8 @@ package com.minecraftabnormals.savageandravage.client.model;
 import com.minecraftabnormals.savageandravage.common.entity.TricksterEntity;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraft.entity.monster.AbstractIllagerEntity;
+import net.minecraft.util.math.MathHelper;
 
 public class TricksterModel extends BipedModel<TricksterEntity> {
     public ModelRenderer nose;
@@ -81,5 +83,24 @@ public class TricksterModel extends BipedModel<TricksterEntity> {
         modelRenderer.rotateAngleX = x;
         modelRenderer.rotateAngleY = y;
         modelRenderer.rotateAngleZ = z;
+    }
+
+    @Override
+    public void setRotationAngles(TricksterEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+        super.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+        AbstractIllagerEntity.ArmPose pose = entityIn.getArmPose();
+        //TODO fix rotation points considering different arm length
+        if (pose == AbstractIllagerEntity.ArmPose.SPELLCASTING || pose == AbstractIllagerEntity.ArmPose.CELEBRATING) {
+            this.bipedRightArm.rotationPointZ = 0.0F; //Initial adjustments
+            this.bipedRightArm.rotationPointX = -5.0F; //Initial adjustments
+            this.bipedLeftArm.rotationPointZ = 0.0F; //Initial adjustments
+            this.bipedLeftArm.rotationPointX = 5.0F; //Initial adjustments
+            this.bipedRightArm.rotateAngleX = MathHelper.cos(ageInTicks * 0.6662F) * 0.25F; //Right arm wave from -14.3 to 14.3 degrees
+            this.bipedLeftArm.rotateAngleX = MathHelper.cos(ageInTicks * 0.6662F) * 0.25F; //Left arm wave from -14.3 to 14.3 degrees
+            this.bipedRightArm.rotateAngleZ = 2.3561945F; //Constant z rotation for arm
+            this.bipedLeftArm.rotateAngleZ = -2.3561945F; //Constant z rotation for arm
+            this.bipedRightArm.rotateAngleY = 0.0F; //Constant y rotation for arm
+            this.bipedLeftArm.rotateAngleY = 0.0F;//Constant y rotation for arm
+        }
     }
 }

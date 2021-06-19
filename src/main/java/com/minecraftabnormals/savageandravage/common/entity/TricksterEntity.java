@@ -3,6 +3,9 @@ package com.minecraftabnormals.savageandravage.common.entity;
 import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.IDataManager;
 import com.minecraftabnormals.savageandravage.core.registry.SREntities;
 import com.minecraftabnormals.savageandravage.core.registry.SRItems;
+import com.minecraftabnormals.savageandravage.core.registry.SRParticles;
+import com.minecraftabnormals.savageandravage.core.registry.SRSounds;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -25,14 +28,16 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-public class TricksterEntity extends SpellcastingIllagerEntity { //TODO raid speed too high
+public class TricksterEntity extends SpellcastingIllagerEntity {
     public TricksterEntity(EntityType<? extends SpellcastingIllagerEntity> type, World p_i48551_2_) {
         super(type, p_i48551_2_);
     }
@@ -43,8 +48,8 @@ public class TricksterEntity extends SpellcastingIllagerEntity { //TODO raid spe
         this.goalSelector.addGoal(0, new SwimGoal(this));
         this.goalSelector.addGoal(1, new CastingASpellGoal());
         this.goalSelector.addGoal(2, new AvoidEntityGoal<>(this, PlayerEntity.class, 8.0F, 0.6D, 1.0D));
-        /*this.goalSelector.addGoal(5, new CreatePrisonGoal());
-        this.goalSelector.addGoal(6, new ThrowSparkGoal());*/
+        this.goalSelector.addGoal(5, new CreatePrisonGoal());
+        //this.goalSelector.addGoal(6, new ThrowSparkGoal());
         this.goalSelector.addGoal(8, new RandomWalkingGoal(this, 0.6D));
         this.goalSelector.addGoal(1, new AvoidEntityGoal<PlayerEntity>(this, PlayerEntity.class, 8.0F, 0.6D, 1.0D) {
             @Override
@@ -88,6 +93,18 @@ public class TricksterEntity extends SpellcastingIllagerEntity { //TODO raid spe
     }
 
     @Override
+    public void tick() {
+        super.tick();
+        if (world.rand.nextInt(14) == 0 && this.isSpellcasting() && this.getSpellType() == SpellType.FANGS) {
+            float f = this.renderYawOffset * ((float)Math.PI / 180F) + MathHelper.cos((float)this.ticksExisted * 0.6662F) * 0.25F;
+            float f1 = MathHelper.cos(f);
+            float f2 = MathHelper.sin(f);
+            this.world.addParticle(SRParticles.RUNE.get(), this.getPosX() + (double)f1 * 0.6D, this.getPosY() + 1.8D, this.getPosZ() + (double)f2 * 0.6D, 0.0, 0.0, 0.0);
+            this.world.addParticle(SRParticles.RUNE.get(), this.getPosX() - (double)f1 * 0.6D, this.getPosY() + 1.8D, this.getPosZ() - (double)f2 * 0.6D, 0.0, 0.0, 0.0);
+        }
+    }
+
+    @Override
     public boolean attackEntityFrom(DamageSource source, float amount) {
         IDataManager data = (IDataManager) this;
         if (source.getImmediateSource() instanceof ProjectileEntity) {
@@ -96,6 +113,7 @@ public class TricksterEntity extends SpellcastingIllagerEntity { //TODO raid spe
                 data.setValue(SREntities.TOTEM_SHIELD_COOLDOWN, 1800);
                 if (!this.world.isRemote())
                     this.world.setEntityState(this, (byte) 35);
+                this.world.playSound(null, this.getPosition(), SRSounds.ENTITY_TRICKSTER_LAUGH.get(), SoundCategory.HOSTILE, 1.0f, 1.0f);
                 return false;
             }
         }
@@ -154,28 +172,36 @@ public class TricksterEntity extends SpellcastingIllagerEntity { //TODO raid spe
 
         @Override
         protected void castSpell() {
-            //TODO set ticking particle task then prison
+            //TODO rune particles while charging
+            LivingEntity target = TricksterEntity.this.getAttackTarget();
+            if (target != null) {
+                BlockPos pos = target.getPosition();
+                World world = TricksterEntity.this.world;
+                RunePrisonEntity runePrison = new RunePrisonEntity(world, pos, 25);
+                runePrison.setLocationAndAngles(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0.0F, 0.0F);
+                world.addEntity(runePrison);
+            }
         }
 
         @Override
         protected int getCastingTime() {
-            return 0;
+            return 60;
         }
 
         @Override
         protected int getCastingInterval() {
-            return 0;
+            return 100;
         }
 
         @Nullable
         @Override
         protected SoundEvent getSpellPrepareSound() {
-            return null;
+            return SRSounds.BLOCK_RUNED_GLOOMY_TILES_ACTIVATE.get(); //TODO change this?
         }
 
         @Override
         protected SpellType getSpellType() {
-            return null;
+            return SpellType.FANGS;
         }
     }
 
