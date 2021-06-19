@@ -1,5 +1,6 @@
 package com.minecraftabnormals.savageandravage.core.other;
 
+import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.IDataProcessor;
 import com.minecraftabnormals.abnormals_core.core.util.DataUtil;
 import com.minecraftabnormals.savageandravage.common.entity.BurningBannerEntity;
 import com.minecraftabnormals.savageandravage.common.entity.MischiefArrowEntity;
@@ -19,19 +20,41 @@ import net.minecraft.item.ArmorItem;
 import net.minecraft.item.BannerItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Map;
+import java.util.Optional;
 
 import static com.minecraftabnormals.abnormals_core.core.util.BlockUtil.getEntitiesAtOffsetPos;
 import static com.minecraftabnormals.abnormals_core.core.util.BlockUtil.offsetPos;
 
 public class SRCompat {
+	public static final IDataProcessor<Optional<Vector3d>> OPTIONAL_VECTOR3D = new IDataProcessor<Optional<Vector3d>>() {
+		@Override
+		public CompoundNBT write(Optional<Vector3d> optionalVector) {
+			CompoundNBT nbt = new CompoundNBT();
+			if (optionalVector.isPresent()) {
+				Vector3d vector = optionalVector.get();
+				nbt.putDouble("x", vector.x);
+				nbt.putDouble("y", vector.y);
+				nbt.putDouble("z", vector.z);
+			}
+			else nbt.putBoolean("null", true);
+			return nbt;
+		}
+
+		@Override
+		public Optional<Vector3d> read(CompoundNBT nbt) {
+			return Optional.ofNullable(nbt.getBoolean("null") ? null : new Vector3d(nbt.getDouble("x"), nbt.getDouble("y"), nbt.getDouble("z")));
+		}
+	};
 
 	public static void registerFlammables() {
 		DataUtil.registerFlammable(SRBlocks.CREEPER_SPORE_SACK.get(), 30, 60);

@@ -23,6 +23,7 @@
   "item.savageandravage.wand_of_freezing": "Wand of Freezing",
   "item.savageandravage.cleaver_of_beheading": "Cleaver of Beheading",
   "item.savageandravage.eldritch_conch": "Eldritch Conch",
+  "item.savageandravage.mask_of_dishonesty": "Mask of Dishonesty",
 
   "item.savageandravage.creeper_spores": "Creeper Spores",
   "item.savageandravage.mischief_arrow": "Mischief Arrow",
@@ -59,8 +60,12 @@
   "advancements.savageandravage.adventure.griefer_armor.description": "Collect a full set of Griefer armor",
   "advancements.savageandravage.adventure.relic_collector.title": "Relic Collector",
   "advancements.savageandravage.adventure.relic_collector.description": "Obtain a Totem of Undying, Cleaver of Beheading, and Wand of Freezing",
+  "advancements.savageandravage.adventure.mask_of_dishonesty.title": "A Little Tricking",
+  "advancements.savageandravage.adventure.mask_of_dishonesty.description": "Obtain a Mask of Dishonesty by killing a Trickster",
 
   "advancements.savageandravage.adventure.voluntary_exile.description": "Set fire to an Ominous Banner.\nMaybe consider staying away from villages for the time being...",
+
+  "multiplayer.savageandravage.disconnect.invisible_while_moving": "Attempted to keep mask invisibility while moving",
 
   "subtitles.savageandravage.entity.creepie.hurt": "Creepie hurts",
   "subtitles.savageandravage.entity.creepie.death": "Creepie dies",

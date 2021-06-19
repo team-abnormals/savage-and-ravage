@@ -1,11 +1,14 @@
 package com.minecraftabnormals.savageandravage.core.other;
 
 import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.IDataManager;
+import com.minecraftabnormals.abnormals_core.core.AbnormalsCore;
+import com.minecraftabnormals.abnormals_core.core.util.NetworkUtil;
 import com.minecraftabnormals.savageandravage.common.entity.*;
 import com.minecraftabnormals.savageandravage.common.entity.block.SporeBombEntity;
 import com.minecraftabnormals.savageandravage.common.entity.goals.AvoidGrieferOwnedCreepiesGoal;
 import com.minecraftabnormals.savageandravage.common.entity.goals.ImprovedCrossbowGoal;
 import com.minecraftabnormals.savageandravage.common.item.IPottableItem;
+import com.minecraftabnormals.savageandravage.common.network.MessageC2SIsPlayerStill;
 import com.minecraftabnormals.savageandravage.core.SRConfig;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 import com.minecraftabnormals.savageandravage.core.mixin.LivingEntityAccessor;
@@ -13,6 +16,7 @@ import com.minecraftabnormals.savageandravage.core.registry.SRAttributes;
 import com.minecraftabnormals.savageandravage.core.registry.SRBlocks;
 import com.minecraftabnormals.savageandravage.core.registry.SREffects;
 import com.minecraftabnormals.savageandravage.core.registry.SREntities;
+import com.minecraftabnormals.savageandravage.core.registry.SRItems;
 import net.minecraft.block.AbstractBannerBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -28,6 +32,7 @@ import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.ai.goal.RangedCrossbowAttackGoal;
+import net.minecraft.entity.item.ArmorStandEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.*;
@@ -36,6 +41,7 @@ import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.passive.OcelotEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
@@ -44,11 +50,14 @@ import net.minecraft.loot.LootParameterSets;
 import net.minecraft.loot.LootTable;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.potion.Effects;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -68,10 +77,14 @@ import net.minecraftforge.fml.common.Mod;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @Mod.EventBusSubscriber(modid = SavageAndRavage.MOD_ID)
 public class SREvents {
+	public static String prevXKey = SavageAndRavage.MOD_ID + ":prevX";
+	public static String prevYKey = SavageAndRavage.MOD_ID + ":prevY";
+	public static String prevZKey = SavageAndRavage.MOD_ID + ":prevZ";
 
 	@SubscribeEvent
 	public static void onLivingSpawned(EntityJoinWorldEvent event) {
@@ -164,6 +177,7 @@ public class SREvents {
 			if (server != null) {
 				LootTable loottable = server.getLootTableManager().getLootTableFromLocation(SRLoot.EVOKER_TOTEM_REPLACEMENT);
 				LivingEntityAccessor accessor = (LivingEntityAccessor) entity;
+				//TODO this is just breaking?
 				LootContext ctx = accessor.invokeGetLootContextBuilder(accessor.getRecentlyHit() > 0, event.getSource()).build(LootParameterSets.ENTITY);
 				List<ItemStack> stacks = loottable.generate(ctx);
 				if (!stacks.isEmpty()) {
@@ -379,9 +393,42 @@ public class SREvents {
 	@SubscribeEvent
 	public static void livingUpdate(LivingUpdateEvent event) {
 		LivingEntity entity = event.getEntityLiving();
+		IDataManager data = (IDataManager) entity;
 		if (entity.getFireTimer() > 0 && entity.getActivePotionEffect(SREffects.FROSTBITE.get()) != null)
 			entity.removePotionEffect(SREffects.FROSTBITE.get());
-		IDataManager data = (IDataManager) entity;
+		if (!entity.world.isRemote()) {
+			boolean canBeInvisible = maskCanMakeInvisible(entity);
+			boolean invisibleDueToMask = data.getValue(SREntities.INVISIBLE_DUE_TO_MASK);
+			boolean maskStateChanged = canBeInvisible != invisibleDueToMask;
+			if (maskStateChanged) {
+				data.setValue(SREntities.INVISIBLE_DUE_TO_MASK, canBeInvisible);
+				spawnMaskParticles(entity);
+			}
+
+			if (maskStateChanged || (canBeInvisible && !entity.isInvisible()))
+				entity.setInvisible(canBeInvisible || entity.isPotionActive(Effects.INVISIBILITY));
+
+			//Mitigation against hacking
+			if (canBeInvisible && entity.getServer()!= null && entity.getServer().isDedicatedServer() && entity instanceof PlayerEntity) {
+				int illegalTicks = data.getValue(SREntities.ILLEGAL_MASK_TICKS);
+				Vector3d currentPos = entity.getPositionVec();
+				data.getValue(SREntities.PREVIOUS_POSITION).ifPresent(prevPos -> {
+					if (!prevPos.equals(currentPos)) {
+						data.setValue(SREntities.ILLEGAL_MASK_TICKS, illegalTicks + 1);
+						AbnormalsCore.LOGGER.debug("Incremented illegal mask ticks, value is now " + data.getValue(SREntities.ILLEGAL_MASK_TICKS));
+					} else if (illegalTicks > 0)
+						data.setValue(SREntities.ILLEGAL_MASK_TICKS, illegalTicks - 1);
+				});
+				if (data.getValue(SREntities.ILLEGAL_MASK_TICKS) > 80)
+					((ServerPlayerEntity) entity).connection.disconnect(new TranslationTextComponent("multiplayer.savageandravage.disconnect.invisible_while_moving"));
+				data.setValue(SREntities.PREVIOUS_POSITION, Optional.of(currentPos));
+			}
+		} else if (entity instanceof PlayerEntity) {
+			boolean canBeInvisible = maskCanMakeInvisible(entity);
+			if (((IDataManager) entity).getValue(SREntities.MARK_INVISIBLE) != canBeInvisible)
+				SavageAndRavage.CHANNEL.sendToServer(new MessageC2SIsPlayerStill(entity.getUniqueID(), canBeInvisible));
+			data.setValue(SREntities.PREVIOUS_POSITION, Optional.of(entity.getPositionVec()));
+		}
 		if (entity instanceof EvokerEntity) {
 			int shieldTime = data.getValue(SREntities.TOTEM_SHIELD_TIME);
 			if (shieldTime > 0)
@@ -394,7 +441,41 @@ public class SREvents {
 			if (cooldown > 0)
 				data.setValue(SREntities.TOTEM_SHIELD_COOLDOWN, cooldown - 1);
 		}
+	}
 
+	@SubscribeEvent
+	public static void visibilityMultiplierEvent(LivingEvent.LivingVisibilityEvent event) {
+		LivingEntity entity = event.getEntityLiving();
+		if (((IDataManager) entity).getValue(SREntities.INVISIBLE_DUE_TO_MASK)) {
+			double armorCover = entity.getArmorCoverPercentage();
+			if (armorCover < 0.1F) {
+				armorCover = 0.1F;
+			}
+			event.modifyVisibility(1/armorCover); //potentially slightly inaccurate
+			event.modifyVisibility(0.1);
+		}
+	}
+
+	private static boolean maskCanMakeInvisible(LivingEntity entity) {
+		if (!(entity instanceof ArmorStandEntity) && entity.getItemStackFromSlot(EquipmentSlotType.HEAD).getItem() == SRItems.MASK_OF_DISHONESTY.get()) {
+			IDataManager data = (IDataManager) entity;
+			if (entity.getEntityWorld().isRemote() || !(entity instanceof PlayerEntity)) {
+				Vector3d motion = entity.getMotion();
+				return (motion.x == 0 && (entity.isOnGround() || motion.y == 0) && motion.z == 0) && data.getValue(SREntities.PREVIOUS_POSITION).map(previous -> previous.equals(entity.getPositionVec())).orElse(true);
+			} else return data.getValue(SREntities.MARK_INVISIBLE);
+		}
+		return false;
+	}
+
+	public static void spawnMaskParticles(LivingEntity entity) {
+		Random rand = entity.getRNG();
+		for (int i=0; i<3; i++) {
+			AxisAlignedBB box = entity.getBoundingBox();
+			double randomPositionX = box.getMin(Direction.Axis.X) + (rand.nextFloat() * box.getXSize());
+			double randomPositionY = box.getMin(Direction.Axis.Y) + (rand.nextFloat() * box.getYSize());
+			double randomPositionZ = box.getMin(Direction.Axis.Z) + (rand.nextFloat() * box.getZSize());
+			NetworkUtil.spawnParticle("minecraft:poof", randomPositionX, randomPositionY, randomPositionZ, 0.0f, 0.0f, 0.0f);
+		}
 	}
 
 	public static boolean isValidBurningBannerPos(World world, BlockPos pos) {

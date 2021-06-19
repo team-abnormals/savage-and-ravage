@@ -27,6 +27,7 @@ public class SRItems {
 	public static final RegistryObject<Item> WAND_OF_FREEZING = HELPER.createItem("wand_of_freezing", () -> new WandOfFreezingItem(new Item.Properties().maxDamage(250).rarity(Rarity.UNCOMMON).group(ItemGroup.COMBAT)));
 	public static final RegistryObject<Item> CLEAVER_OF_BEHEADING = HELPER.createItem("cleaver_of_beheading", () -> new CleaverOfBeheadingItem(SRTiers.CLEAVER, 6.5f, -3.1F, new Item.Properties().rarity(Rarity.UNCOMMON).maxStackSize(1).group(ItemGroup.COMBAT)));
 	public static final RegistryObject<Item> ELDRITCH_CONCH = HELPER.createItem("eldritch_conch", () -> new EldritchConchItem(new Item.Properties().maxDamage(375).rarity(Rarity.UNCOMMON).group(ItemGroup.COMBAT)));
+	public static final RegistryObject<Item> MASK_OF_DISHONESTY = HELPER.createItem("mask_of_dishonesty", () -> new MaskOfDishonestyItem(SRTiers.MASK, EquipmentSlotType.HEAD, new Item.Properties().rarity(Rarity.UNCOMMON).group(ItemGroup.COMBAT)));
 
 	public static final RegistryObject<AbnormalsSpawnEggItem> SKELETON_VILLAGER_SPAWN_EGG = HELPER.createSpawnEggItem("skeleton_villager", SREntities.SKELETON_VILLAGER::get, 11447986, 9407641);
 	public static final RegistryObject<AbnormalsSpawnEggItem> GRIEFER_SPAWN_EGG = HELPER.createSpawnEggItem("griefer", SREntities.GRIEFER::get, 8296024, 16037892);
