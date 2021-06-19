@@ -67,11 +67,20 @@
   "subtitles.savageandravage.entity.creepie.fuse": "Creepie hisses",
   "subtitles.savageandravage.entity.creepie.convert": "Creepie converts",
   "subtitles.savageandravage.entity.creepie.grow": "Creepie grows",
+  
   "subtitles.savageandravage.entity.iceologer.ambient": "Iceologer murmurs",
   "subtitles.savageandravage.entity.iceologer.hurt": "Iceologer hurts",
   "subtitles.savageandravage.entity.iceologer.death": "Iceologer dies",
   "subtitles.savageandravage.entity.iceologer.celebrate": "Iceologer cheers",
   "subtitles.savageandravage.entity.iceologer.cast_spell": "Iceologer casts spell",
+
+  "subtitles.savageandravage.entity.trickster.ambient": "Trickster murmurs",
+  "subtitles.savageandravage.entity.trickster.step": "Trickster jingles",
+  "subtitles.savageandravage.entity.trickster.hurt": "Trickster hurts",
+  "subtitles.savageandravage.entity.trickster.death": "Trickster dies",
+  "subtitles.savageandravage.entity.trickster.celebrate": "Trickster cheers",
+  "subtitles.savageandravage.entity.trickster.laugh": "Trickster laughs",
+  
   "subtitles.savageandravage.entity.player.cast_spell": "Player casts spell",
   "subtitles.savageandravage.entity.creeper_spores.throw": "Creeper spores fly",
   "subtitles.savageandravage.block.runed_gloomy_tiles.activate": "Runed Gloomy Tiles activate"
