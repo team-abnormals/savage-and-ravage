@@ -409,7 +409,7 @@ public class SREvents {
 				entity.setInvisible(canBeInvisible || entity.isPotionActive(Effects.INVISIBILITY));
 
 			//Mitigation against hacking
-			if (canBeInvisible && entity.getServer()!= null && entity.getServer().isDedicatedServer() && entity instanceof PlayerEntity) {
+			if (canBeInvisible && entity.getServer() != null && entity.getServer().isDedicatedServer() && entity instanceof PlayerEntity) {
 				int illegalTicks = data.getValue(SREntities.ILLEGAL_MASK_TICKS);
 				Vector3d currentPos = entity.getPositionVec();
 				data.getValue(SREntities.PREVIOUS_POSITION).ifPresent(prevPos -> {

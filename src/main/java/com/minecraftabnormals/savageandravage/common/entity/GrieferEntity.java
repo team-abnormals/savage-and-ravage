@@ -38,7 +38,7 @@ import java.util.EnumSet;
 public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttackMob {
 	private static final DataParameter<Boolean> KICKING = EntityDataManager.createKey(GrieferEntity.class, DataSerializers.BOOLEAN);
 	private static final DataParameter<Boolean> APESHIT_MODE = EntityDataManager.createKey(GrieferEntity.class, DataSerializers.BOOLEAN);
-	private final EntityPredicate social_distance = (new EntityPredicate()).setDistance(10.0D);
+	private final EntityPredicate distance = (new EntityPredicate()).setDistance(10.0D);
 
 	public GrieferEntity(EntityType<? extends GrieferEntity> type, World worldIn) {
 		super(type, worldIn);
@@ -53,9 +53,9 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 		super.registerGoals();
 		this.goalSelector.addGoal(0, new SwimGoal(this));
 		this.goalSelector.addGoal(2, new AbstractRaiderEntity.FindTargetGoal(this, 10.0F));
+		this.goalSelector.addGoal(2, new GrieferEntity.KickGoal(this));
 		this.goalSelector.addGoal(3, new GrieferEntity.MeleePhaseGoal(this, 0.9D, true));
 		this.goalSelector.addGoal(3, new GrieferEntity.AttackWithSporesGoal(this, 0.9D, 200));
-		this.goalSelector.addGoal(2, new GrieferEntity.KickGoal(this));
 		this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.0D, true) {
 			@Override
 			public boolean shouldExecute() {
@@ -230,7 +230,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 
 	@Override
 	public void attackEntityWithRangedAttack(LivingEntity target, float distanceFactor) {
-		if (this.world.getTargettableEntitiesWithinAABB(CreepieEntity.class, social_distance, this, this.getBoundingBox().grow(10.0D, 4.0D, 10.0D)).size() < 5 && this.getHeldItemMainhand().getItem() instanceof CreeperSporesItem) {
+		if (this.world.getTargettableEntitiesWithinAABB(CreepieEntity.class, distance, this, this.getBoundingBox().grow(10.0D, 4.0D, 10.0D)).size() < 5 && this.getHeldItemMainhand().getItem() instanceof CreeperSporesItem) {
 			SporeCloudEntity creeperSpores = new SporeCloudEntity(this.world, this);
 			double distance = target.getPosY() - 1;
 			double d1 = target.getPosX() - this.getPosX();
@@ -321,7 +321,7 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 					case 2:
 						this.griefer.kick(enemy);
 						break;
-				} // if this breaks anything tell me
+				}
 				this.griefer.faceEntity(enemy, 30.0F, 30.0F);
 				this.griefer.attackEntityAsMob(enemy);
 				enemy.applyKnockback(1.5F, MathHelper.sin(griefer.rotationYaw * ((float) Math.PI / 180F)), -MathHelper.cos(griefer.rotationYaw * ((float) Math.PI / 180F)));

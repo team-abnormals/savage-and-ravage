@@ -22,7 +22,7 @@ import java.util.EnumSet;
 public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & ICrossbowUser> extends Goal {
 
 	private final T entity;
-	private ImprovedCrossbowGoal.CrossbowState crossbowStateUnCharged = ImprovedCrossbowGoal.CrossbowState.UNCHARGED;
+	private ImprovedCrossbowGoal.CrossbowState crossbowState = ImprovedCrossbowGoal.CrossbowState.UNCHARGED;
 	private final double speedChanger;
 	private final float radiusSq;
 	private int seeTime;
@@ -41,18 +41,18 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 		return this.entity.getHeldItemMainhand().getItem() instanceof CrossbowItem;
 	}
 
-	private boolean isAttackTargetStillExisting() {
+	private boolean hasAttackTarget() {
 		return this.entity.getAttackTarget() != null && this.entity.getAttackTarget().isAlive();
 	}
 
 	@Override
 	public boolean shouldExecute() {
-		return this.isAttackTargetStillExisting() && this.hasCrossbowOnMainHand();
+		return this.hasAttackTarget() && this.hasCrossbowOnMainHand();
 	}
 
 	@Override
 	public boolean shouldContinueExecuting() {
-		return this.isAttackTargetStillExisting() && (this.shouldExecute() || !this.entity.getNavigator().noPath()) && this.hasCrossbowOnMainHand();
+		return this.hasAttackTarget() && (this.shouldExecute() || !this.entity.getNavigator().noPath()) && this.hasCrossbowOnMainHand();
 	}
 
 	@Override
@@ -91,7 +91,7 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 		double distance = target.getDistance(entity);
 		if (distance <= blocksUntilBackupSq && !(target instanceof AbstractVillagerEntity)) {
 			this.entity.faceEntity(target, 30.0F, 30.0F);
-			if (isWalkable())
+			if (this.isWalkable())
 				this.entity.getMoveHelper().strafe(entity.isHandActive() ? -0.5F : -3.0F, 0); // note: when an entity is "charging" their crossbow they set an active hand
 		}
 		ItemStack activeStack = this.entity.getActiveItemStack();
@@ -103,41 +103,41 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 		}
 
 		this.entity.getLookController().setLookPositionWithEntity(target, 30.0F, 30.0F);
-		if (this.crossbowStateUnCharged == ImprovedCrossbowGoal.CrossbowState.UNCHARGED && !CrossbowItem.isCharged(activeStack)) {
+		if (this.crossbowState == ImprovedCrossbowGoal.CrossbowState.UNCHARGED && !CrossbowItem.isCharged(activeStack)) {
 			if (canSeeEnemy) {
 				this.entity.setActiveHand(ProjectileHelper.getHandWith(this.entity, Items.CROSSBOW));
-				this.crossbowStateUnCharged = ImprovedCrossbowGoal.CrossbowState.CHARGING;
+				this.crossbowState = ImprovedCrossbowGoal.CrossbowState.CHARGING;
 				this.entity.setCharging(true);
 			}
-		} else if (this.crossbowStateUnCharged == ImprovedCrossbowGoal.CrossbowState.CHARGING) {
+		} else if (this.crossbowState == ImprovedCrossbowGoal.CrossbowState.CHARGING) {
 			if (!this.entity.isHandActive()) {
-				this.crossbowStateUnCharged = ImprovedCrossbowGoal.CrossbowState.UNCHARGED;
+				this.crossbowState = ImprovedCrossbowGoal.CrossbowState.UNCHARGED;
 			}
 
 			int i = this.entity.getItemInUseMaxCount();
 			if (i >= CrossbowItem.getChargeTime(activeStack) || CrossbowItem.isCharged(activeStack)) {
 				this.entity.stopActiveHand();
-				this.crossbowStateUnCharged = ImprovedCrossbowGoal.CrossbowState.CHARGED;
+				this.crossbowState = ImprovedCrossbowGoal.CrossbowState.CHARGED;
 				this.wait = 20 + this.entity.getRNG().nextInt(20);
 				if (entity.getHeldItemOffhand().getItem() instanceof FireworkRocketItem) {
 					entity.setActiveHand(Hand.OFF_HAND);
 				}
 				this.entity.setCharging(false);
 			}
-		} else if (this.crossbowStateUnCharged == ImprovedCrossbowGoal.CrossbowState.CHARGED) {
+		} else if (this.crossbowState == ImprovedCrossbowGoal.CrossbowState.CHARGED) {
 			--this.wait;
 			if (this.wait == 0) {
-				this.crossbowStateUnCharged = ImprovedCrossbowGoal.CrossbowState.READY_TO_ATTACK;
+				this.crossbowState = ImprovedCrossbowGoal.CrossbowState.READY_TO_ATTACK;
 			}
-		} else if (this.crossbowStateUnCharged == ImprovedCrossbowGoal.CrossbowState.READY_TO_ATTACK && canSeeEnemy) {
+		} else if (this.crossbowState == ImprovedCrossbowGoal.CrossbowState.READY_TO_ATTACK && canSeeEnemy) {
 			this.entity.attackEntityWithRangedAttack(target, 1.0F);
 			CrossbowItem.setCharged(this.entity.getHeldItem(ProjectileHelper.getHandWith(this.entity, Items.CROSSBOW)), false);
-			this.crossbowStateUnCharged = ImprovedCrossbowGoal.CrossbowState.UNCHARGED;
+			this.crossbowState = ImprovedCrossbowGoal.CrossbowState.UNCHARGED;
 		}
 	}
 
 	private boolean isCrossbowUncharged() {
-		return this.crossbowStateUnCharged == ImprovedCrossbowGoal.CrossbowState.UNCHARGED;
+		return this.crossbowState == ImprovedCrossbowGoal.CrossbowState.UNCHARGED;
 	}
 
 	enum CrossbowState {
