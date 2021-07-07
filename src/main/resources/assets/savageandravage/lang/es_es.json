@@ -32,7 +32,7 @@
   "item.savageandravage.griefer_spawn_egg": "Generar gamberro",
   "item.savageandravage.executioner_spawn_egg": "Generar verdugo",
   "item.savageandravage.iceologer_spawn_egg": "Generar friólogo",
-  "item.savageandravage.trickster_spawn_egg": "Generar pícaro",
+  "item.savageandravage.trickster_spawn_egg": "Generar bribón",
 
   "entity.savageandravage.skeleton_villager": "Aldeano esqueleto",
   "entity.savageandravage.griefer": "Gamberro",
@@ -46,7 +46,7 @@
   "entity.savageandravage.iceologer": "Friólogo",
   "entity.savageandravage.ice_chunk": "Trozo de hielo",
   "entity.savageandravage.ice_cloud": "Nube de hielo",
-  "entity.savageandravage.trickster": "Pícaro",
+  "entity.savageandravage.trickster": "Bribón",
 
   "effect.savageandravage.confusion": "Confusión",
   "effect.savageandravage.frostbite": "Congelación",
@@ -61,7 +61,7 @@
   "advancements.savageandravage.adventure.relic_collector.title": "Coleccionista de reliquias",
   "advancements.savageandravage.adventure.relic_collector.description": "Consigue un tótem de inmortalidad, una cuchilla de decapitación, una varita de congelación, una máscara de deshonestidad y una concha sobrenatural",
   "advancements.savageandravage.adventure.mask_of_dishonesty.title": "Ahora no me ves",
-  "advancements.savageandravage.adventure.mask_of_dishonesty.description": "Consigue una máscara de deshonestidad matando a un pícaro",
+  "advancements.savageandravage.adventure.mask_of_dishonesty.description": "Consigue una máscara de deshonestidad matando a un bribón",
 
   "advancements.savageandravage.adventure.voluntary_exile.description": "Prende fuego un estandarte repugnante.\nSerá mejor mantenerse alejado de las aldeas por un tiempo...",
   
@@ -79,12 +79,12 @@
   "subtitles.savageandravage.entity.iceologer.celebrate": "Friólogo celebra",
   "subtitles.savageandravage.entity.iceologer.cast_spell": "Friólogo lanza un hechizo",
 
-  "subtitles.savageandravage.entity.trickster.ambient": "Pícaro murmura",
-  "subtitles.savageandravage.entity.trickster.step": "Pícaro tintinea",
-  "subtitles.savageandravage.entity.trickster.hurt": "Pícaro herido",
-  "subtitles.savageandravage.entity.trickster.death": "Pícaro muere",
-  "subtitles.savageandravage.entity.trickster.celebrate": "Pícaro celebra",
-  "subtitles.savageandravage.entity.trickster.laugh": "Risas de pícaro",
+  "subtitles.savageandravage.entity.trickster.ambient": "Bribón murmura",
+  "subtitles.savageandravage.entity.trickster.step": "Bribón tintinea",
+  "subtitles.savageandravage.entity.trickster.hurt": "Bribón herido",
+  "subtitles.savageandravage.entity.trickster.death": "Bribón muere",
+  "subtitles.savageandravage.entity.trickster.celebrate": "Bribón celebra",
+  "subtitles.savageandravage.entity.trickster.laugh": "Risas de bribón",
 
   "subtitles.savageandravage.entity.player.cast_spell": "Un hechizo es lanzado",
   "subtitles.savageandravage.entity.creeper_spores.throw": "Esporas de creeper vuelan",
