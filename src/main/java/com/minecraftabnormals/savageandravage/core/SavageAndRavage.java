@@ -104,7 +104,7 @@ public class SavageAndRavage {
 	@OnlyIn(Dist.CLIENT)
 	private void finish(FMLLoadCompleteEvent event) {
 		event.enqueueWork(() -> {
-			EntityRendererManager manager = Minecraft.getInstance().getRenderManager();
+			EntityRendererManager manager = Minecraft.getInstance().getEntityRenderDispatcher();
 			EntityRenderer<?> renderer = manager.renderers.get(EntityType.EVOKER);
 			if (renderer instanceof EvokerRenderer) {
 				EvokerRenderer<EvokerEntity> livingRenderer = (EvokerRenderer<EvokerEntity>) renderer;

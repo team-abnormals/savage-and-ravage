@@ -21,12 +21,12 @@ public class IceologerRenderer extends MobRenderer<IceologerEntity, IceologerMod
 	}
 
 	@Override
-	public ResourceLocation getEntityTexture(IceologerEntity entity) {
+	public ResourceLocation getTextureLocation(IceologerEntity entity) {
 		return TEXTURE_LOCATION;
 	}
 
 	@Override
-	protected void preRenderCallback(IceologerEntity entity, MatrixStack matrixStackIn, float partialTickTime) {
+	protected void scale(IceologerEntity entity, MatrixStack matrixStackIn, float partialTickTime) {
 		matrixStackIn.scale(0.9375F, 0.9375F, 0.9375F);
 	}
 }

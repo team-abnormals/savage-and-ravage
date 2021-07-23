@@ -19,17 +19,17 @@ public class CreepieChargeLayer extends EnergyLayer<CreepieEntity, CreepieModel>
 	}
 
 	@Override
-	protected float func_225634_a_(float p_225634_1_) {
+	protected float xOffset(float p_225634_1_) {
 		return p_225634_1_ * 0.01F;
 	}
 
 	@Override
-	protected ResourceLocation func_225633_a_() {
+	protected ResourceLocation getTextureLocation() {
 		return LIGHTNING_TEXTURE;
 	}
 
 	@Override
-	protected EntityModel<CreepieEntity> func_225635_b_() {
+	protected EntityModel<CreepieEntity> model() {
 		return this.creepieModel;
 	}
 }

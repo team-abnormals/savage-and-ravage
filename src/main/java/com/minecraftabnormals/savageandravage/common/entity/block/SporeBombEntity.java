@@ -22,37 +22,37 @@ public class SporeBombEntity extends TNTEntity {
 
 	public SporeBombEntity(World world, double x, double y, double z, @Nullable LivingEntity igniter) {
 		this(SREntities.SPORE_BOMB.get(), world);
-		this.setPosition(x, y, z);
+		this.setPos(x, y, z);
 		double d0 = world.getRandom().nextDouble() * (double) ((float) Math.PI * 2F);
-		this.setMotion(-Math.sin(d0) * 0.02D, 0.2F, -Math.cos(d0) * 0.02D);
+		this.setDeltaMovement(-Math.sin(d0) * 0.02D, 0.2F, -Math.cos(d0) * 0.02D);
 		this.setFuse(80);
-		this.prevPosX = x;
-		this.prevPosY = y;
-		this.prevPosZ = z;
+		this.xo = x;
+		this.yo = y;
+		this.zo = z;
 		this.tntPlacedBy = igniter;
 	}
 
 	@Override
 	protected void explode() {
-		SporeCloudEntity sporeCloud = SREntities.SPORE_CLOUD.get().create(this.world);
+		SporeCloudEntity sporeCloud = SREntities.SPORE_CLOUD.get().create(this.level);
 		if (sporeCloud == null)
 			return;
 
-		sporeCloud.setCloudSize(4 + this.world.getRandom().nextInt(3));
+		sporeCloud.setCloudSize(4 + this.level.getRandom().nextInt(3));
 		sporeCloud.setSpawnCloudInstantly(true);
-		this.world.createExplosion(this, this.getPosX(), this.getPosYHeight(0.0625D), this.getPosZ(), 4.0F, Explosion.Mode.NONE);
-		sporeCloud.setPositionAndRotation(this.getPosX(), this.getPosYHeight(0.0625), this.getPosZ(), this.rotationYaw, this.rotationPitch);
-		this.world.addEntity(sporeCloud);
+		this.level.explode(this, this.getX(), this.getY(0.0625D), this.getZ(), 4.0F, Explosion.Mode.NONE);
+		sporeCloud.absMoveTo(this.getX(), this.getY(0.0625), this.getZ(), this.yRot, this.xRot);
+		this.level.addFreshEntity(sporeCloud);
 	}
 
 	@Override
 	@Nullable
-	public LivingEntity getTntPlacedBy() {
+	public LivingEntity getOwner() {
 		return this.tntPlacedBy;
 	}
 
 	@Override
-	public IPacket<?> createSpawnPacket() {
+	public IPacket<?> getAddEntityPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 }

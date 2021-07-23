@@ -20,6 +20,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.UUID;
 
+import net.minecraft.item.Item.Properties;
+
 public class GrieferArmorItem extends ArmorItem {
 	private static final UUID MODIFIER = UUID.fromString("B77CAE62-FCEB-40F9-BD4D-A15F8F44CB91");
 	private final LazyValue<Multimap<Attribute, AttributeModifier>> attributes;
@@ -29,7 +31,7 @@ public class GrieferArmorItem extends ArmorItem {
 		super(material, slot, properties);
 		this.attributes = new LazyValue<>(() -> {
 			ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-			builder.putAll(super.getAttributeModifiers(slot));
+			builder.putAll(super.getDefaultAttributeModifiers(slot));
 			builder.put(SRAttributes.EXPLOSIVE_DAMAGE_REDUCTION.get(), new AttributeModifier(MODIFIER, "Blast proof", BlastProofArmorType.slotToType(slot).getReductionAmount(), AttributeModifier.Operation.ADDITION));
 			return builder.build();
 		});
@@ -52,12 +54,12 @@ public class GrieferArmorItem extends ArmorItem {
 	}
 
 	@Override
-	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
+	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {
 		FILLER.fillItem(this, group, items);
 	}
 
 	@Override
-	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType equipmentSlot) {
-		return equipmentSlot == this.slot ? this.attributes.getValue() : super.getAttributeModifiers(equipmentSlot);
+	public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlotType equipmentSlot) {
+		return equipmentSlot == this.slot ? this.attributes.get() : super.getDefaultAttributeModifiers(equipmentSlot);
 	}
 }

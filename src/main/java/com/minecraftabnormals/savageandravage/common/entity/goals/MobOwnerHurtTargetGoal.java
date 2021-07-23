@@ -16,18 +16,18 @@ public class MobOwnerHurtTargetGoal extends TargetGoal {
 	public MobOwnerHurtTargetGoal(MobEntity defendingEntityIn) {
 		super(defendingEntityIn, false);
 		this.defendingEntity = (IOwnableMob) defendingEntityIn;
-		this.setMutexFlags(EnumSet.of(Goal.Flag.TARGET));
+		this.setFlags(EnumSet.of(Goal.Flag.TARGET));
 	}
 
 	@Override
-	public boolean shouldExecute() {
+	public boolean canUse() {
 		if (this.defendingEntity.getOwnerId() != null) {
 			LivingEntity owner = this.defendingEntity.getOwner();
 			if (owner == null) {
 				return false;
 			} else {
-				this.attacker = owner instanceof MobEntity ? ((MobEntity) owner).getAttackTarget() : owner.getLastAttackedEntity();
-				return this.isSuitableTarget(this.attacker, EntityPredicate.DEFAULT) && this.defendingEntity.shouldAttackEntity(this.attacker, owner);
+				this.attacker = owner instanceof MobEntity ? ((MobEntity) owner).getTarget() : owner.getLastHurtMob();
+				return this.canAttack(this.attacker, EntityPredicate.DEFAULT) && this.defendingEntity.shouldAttackEntity(this.attacker, owner);
 			}
 		} else {
 			return false;
@@ -35,8 +35,8 @@ public class MobOwnerHurtTargetGoal extends TargetGoal {
 	}
 
 	@Override
-	public void startExecuting() {
-		super.startExecuting();
-		this.goalOwner.setAttackTarget(this.attacker);
+	public void start() {
+		super.start();
+		this.mob.setTarget(this.attacker);
 	}
 }

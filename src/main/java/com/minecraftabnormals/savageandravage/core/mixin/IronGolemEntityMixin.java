@@ -25,19 +25,19 @@ public abstract class IronGolemEntityMixin extends GolemEntity {
 	@Shadow
 	public abstract boolean isPlayerCreated();
 
-	@Inject(at = @At("HEAD"), method = "collideWithEntity(Lnet/minecraft/entity/Entity;)V", cancellable = true)
+	@Inject(at = @At("HEAD"), method = "doPush(Lnet/minecraft/entity/Entity;)V", cancellable = true)
 	public void collideWithEntity(Entity entity, CallbackInfo ci) {
-		if (entity instanceof IMob && this.getRNG().nextInt(20) == 0) {
-			this.setAttackTarget((LivingEntity) entity);
+		if (entity instanceof IMob && this.getRandom().nextInt(20) == 0) {
+			this.setTarget((LivingEntity) entity);
 		}
-		super.collideWithEntity(entity);
+		super.doPush(entity);
 	}
 
-	@Inject(at = @At("RETURN"), method = "canAttack(Lnet/minecraft/entity/EntityType;)Z", cancellable = true)
+	@Inject(at = @At("RETURN"), method = "canAttackType(Lnet/minecraft/entity/EntityType;)Z", cancellable = true)
 	public void canAttack(EntityType<?> typeIn, CallbackInfoReturnable<Boolean> ci) {
 		if (this.isPlayerCreated() && typeIn == EntityType.PLAYER || SRConfig.COMMON.creeperExplosionsDestroyBlocks.get() && typeIn == EntityType.CREEPER) {
 			ci.setReturnValue(false);
 		}
-		ci.setReturnValue(super.canAttack(typeIn));
+		ci.setReturnValue(super.canAttackType(typeIn));
 	}
 }

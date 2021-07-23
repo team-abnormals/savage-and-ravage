@@ -26,12 +26,12 @@ public class SproutLayer<E extends CreepieEntity, M extends EntityModel<E>> exte
 	@Override
 	public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, E entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
 		if (!SRConfig.CLIENT.creepieSprout.get() || entity.isInvisible()) return;
-		matrixStackIn.push();
+		matrixStackIn.pushPose();
 		matrixStackIn.translate(0.0F, 0.125F, 0.0F);
 		matrixStackIn.scale(1.5F, 1.5F, 1.5F);
-		IVertexBuilder builder = bufferIn.getBuffer(RenderType.getEntityCutoutNoCull(SPROUT_TEXTURE));
-		this.getEntityModel().setRotationAngles(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-		this.getEntityModel().render(matrixStackIn, builder, packedLightIn, LivingRenderer.getPackedOverlay(entity, 0.0F), 1.0F, 1.0F, 1.0F, 1.0F);
-		matrixStackIn.pop();
+		IVertexBuilder builder = bufferIn.getBuffer(RenderType.entityCutoutNoCull(SPROUT_TEXTURE));
+		this.getParentModel().setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+		this.getParentModel().renderToBuffer(matrixStackIn, builder, packedLightIn, LivingRenderer.getOverlayCoords(entity, 0.0F), 1.0F, 1.0F, 1.0F, 1.0F);
+		matrixStackIn.popPose();
 	}
 }

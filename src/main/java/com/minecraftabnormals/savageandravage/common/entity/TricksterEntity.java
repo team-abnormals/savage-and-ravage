@@ -37,6 +37,10 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.entity.monster.SpellcastingIllagerEntity.CastingASpellGoal;
+import net.minecraft.entity.monster.SpellcastingIllagerEntity.SpellType;
+import net.minecraft.entity.monster.SpellcastingIllagerEntity.UseSpellGoal;
+
 public class TricksterEntity extends SpellcastingIllagerEntity {
     public TricksterEntity(EntityType<? extends SpellcastingIllagerEntity> type, World p_i48551_2_) {
         super(type, p_i48551_2_);
@@ -53,38 +57,38 @@ public class TricksterEntity extends SpellcastingIllagerEntity {
         this.goalSelector.addGoal(8, new RandomWalkingGoal(this, 0.6D));
         this.goalSelector.addGoal(1, new AvoidEntityGoal<PlayerEntity>(this, PlayerEntity.class, 8.0F, 0.6D, 1.0D) {
             @Override
-            public boolean shouldExecute() {
-                return super.shouldExecute() && ((IDataManager) this.entity).getValue(SREntities.TOTEM_SHIELD_TIME) > 0;
+            public boolean canUse() {
+                return super.canUse() && ((IDataManager) this.mob).getValue(SREntities.TOTEM_SHIELD_TIME) > 0;
             }
         });
         this.goalSelector.addGoal(1, new AvoidEntityGoal<IronGolemEntity>(this, IronGolemEntity.class, 8.0F, 0.6D, 1.0D) {
             @Override
-            public boolean shouldExecute() {
-                return super.shouldExecute() && ((IDataManager) this.entity).getValue(SREntities.TOTEM_SHIELD_TIME) > 0;
+            public boolean canUse() {
+                return super.canUse() && ((IDataManager) this.mob).getValue(SREntities.TOTEM_SHIELD_TIME) > 0;
             }
         });
         this.targetSelector.addGoal(2, (new NearestAttackableTargetGoal<PlayerEntity>(this, PlayerEntity.class, true) {
             @Override
-            public boolean shouldExecute() {
-                return super.shouldExecute() && ((IDataManager) this.goalOwner).getValue(SREntities.TOTEM_SHIELD_TIME) <= 0;
+            public boolean canUse() {
+                return super.canUse() && ((IDataManager) this.mob).getValue(SREntities.TOTEM_SHIELD_TIME) <= 0;
             }
         }.setUnseenMemoryTicks(300)));
         this.targetSelector.addGoal(3, (new NearestAttackableTargetGoal<AbstractVillagerEntity>(this, AbstractVillagerEntity.class, true) {
             @Override
-            public boolean shouldExecute() {
-                return super.shouldExecute() && ((IDataManager) this.goalOwner).getValue(SREntities.TOTEM_SHIELD_TIME) <= 0;
+            public boolean canUse() {
+                return super.canUse() && ((IDataManager) this.mob).getValue(SREntities.TOTEM_SHIELD_TIME) <= 0;
             }
         }.setUnseenMemoryTicks(300)));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<IronGolemEntity>(this, IronGolemEntity.class, true) {
             @Override
-            public boolean shouldExecute() {
-                return super.shouldExecute() && ((IDataManager) this.goalOwner).getValue(SREntities.TOTEM_SHIELD_TIME) <= 0;
+            public boolean canUse() {
+                return super.canUse() && ((IDataManager) this.mob).getValue(SREntities.TOTEM_SHIELD_TIME) <= 0;
             }
         }.setUnseenMemoryTicks(300));
 
         this.goalSelector.addGoal(9, new LookAtGoal(this, PlayerEntity.class, 3.0F, 1.0F));
         this.goalSelector.addGoal(10, new LookAtGoal(this, MobEntity.class, 8.0F));
-        this.targetSelector.addGoal(1, (new HurtByTargetGoal(this, AbstractRaiderEntity.class)).setCallsForHelp());
+        this.targetSelector.addGoal(1, (new HurtByTargetGoal(this, AbstractRaiderEntity.class)).setAlertOthers());
     }
 
     @Override
@@ -95,29 +99,29 @@ public class TricksterEntity extends SpellcastingIllagerEntity {
     @Override
     public void tick() {
         super.tick();
-        if (world.rand.nextInt(14) == 0 && this.isSpellcasting() && this.getSpellType() == SpellType.FANGS) {
-            float f = this.renderYawOffset * ((float)Math.PI / 180F) + MathHelper.cos((float)this.ticksExisted * 0.6662F) * 0.25F;
+        if (level.random.nextInt(14) == 0 && this.isCastingSpell() && this.getCurrentSpell() == SpellType.FANGS) {
+            float f = this.yBodyRot * ((float)Math.PI / 180F) + MathHelper.cos((float)this.tickCount * 0.6662F) * 0.25F;
             float f1 = MathHelper.cos(f);
             float f2 = MathHelper.sin(f);
-            this.world.addParticle(SRParticles.RUNE.get(), this.getPosX() + (double)f1 * 0.6D, this.getPosY() + 1.8D, this.getPosZ() + (double)f2 * 0.6D, 0.0, 0.0, 0.0);
-            this.world.addParticle(SRParticles.RUNE.get(), this.getPosX() - (double)f1 * 0.6D, this.getPosY() + 1.8D, this.getPosZ() - (double)f2 * 0.6D, 0.0, 0.0, 0.0);
+            this.level.addParticle(SRParticles.RUNE.get(), this.getX() + (double)f1 * 0.6D, this.getY() + 1.8D, this.getZ() + (double)f2 * 0.6D, 0.0, 0.0, 0.0);
+            this.level.addParticle(SRParticles.RUNE.get(), this.getX() - (double)f1 * 0.6D, this.getY() + 1.8D, this.getZ() - (double)f2 * 0.6D, 0.0, 0.0, 0.0);
         }
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource source, float amount) {
+    public boolean hurt(DamageSource source, float amount) {
         IDataManager data = (IDataManager) this;
-        if (source.getImmediateSource() instanceof ProjectileEntity) {
+        if (source.getDirectEntity() instanceof ProjectileEntity) {
             if (this.getHealth() - amount <= 0 && data.getValue(SREntities.TOTEM_SHIELD_COOLDOWN) <= 0) {
                 this.setHealth(2.0F);
                 data.setValue(SREntities.TOTEM_SHIELD_COOLDOWN, 1800);
-                if (!this.world.isRemote())
-                    this.world.setEntityState(this, (byte) 35);
-                this.world.playSound(null, this.getPosition(), SRSounds.ENTITY_TRICKSTER_LAUGH.get(), SoundCategory.HOSTILE, 1.0f, 1.0f);
+                if (!this.level.isClientSide())
+                    this.level.broadcastEntityEvent(this, (byte) 35);
+                this.level.playSound(null, this.blockPosition(), SRSounds.ENTITY_TRICKSTER_LAUGH.get(), SoundCategory.HOSTILE, 1.0f, 1.0f);
                 return false;
             }
         }
-        return super.attackEntityFrom(source, amount);
+        return super.hurt(source, amount);
     }
 
     @Nullable
@@ -143,16 +147,16 @@ public class TricksterEntity extends SpellcastingIllagerEntity {
     }
 
     @Override
-    protected SoundEvent getSpellSound() {
+    protected SoundEvent getCastingSoundEvent() {
         return SRSounds.ENTITY_TRICKSTER_LAUGH.get();
     }
 
     @Override
-    public void applyWaveBonus(int wave, boolean p_213660_2_) {
+    public void applyRaidBuffs(int wave, boolean p_213660_2_) {
     }
 
     @Override
-    public SoundEvent getRaidLossSound() {
+    public SoundEvent getCelebrateSound() {
         return SRSounds.ENTITY_TRICKSTER_CELEBRATE.get();
     }
 
@@ -162,24 +166,24 @@ public class TricksterEntity extends SpellcastingIllagerEntity {
     }
 
     public static AttributeModifierMap.MutableAttribute registerAttributes() {
-        return MonsterEntity.func_234295_eP_()
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.5D)
-                .createMutableAttribute(Attributes.MAX_HEALTH, 24.0D)
-                .createMutableAttribute(Attributes.FOLLOW_RANGE, 16.0D);
+        return MonsterEntity.createMonsterAttributes()
+                .add(Attributes.MOVEMENT_SPEED, 0.5D)
+                .add(Attributes.MAX_HEALTH, 24.0D)
+                .add(Attributes.FOLLOW_RANGE, 16.0D);
     }
 
     class CreatePrisonGoal extends UseSpellGoal {
 
         @Override
-        protected void castSpell() {
+        protected void performSpellCasting() {
             //TODO rune particles while charging
-            LivingEntity target = TricksterEntity.this.getAttackTarget();
+            LivingEntity target = TricksterEntity.this.getTarget();
             if (target != null) {
-                BlockPos pos = target.getPosition();
-                World world = TricksterEntity.this.world;
+                BlockPos pos = target.blockPosition();
+                World world = TricksterEntity.this.level;
                 RunePrisonEntity runePrison = new RunePrisonEntity(world, pos, 25);
-                runePrison.setLocationAndAngles(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0.0F, 0.0F);
-                world.addEntity(runePrison);
+                runePrison.moveTo(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0.0F, 0.0F);
+                world.addFreshEntity(runePrison);
             }
         }
 
@@ -200,7 +204,7 @@ public class TricksterEntity extends SpellcastingIllagerEntity {
         }
 
         @Override
-        protected SpellType getSpellType() {
+        protected SpellType getSpell() {
             return SpellType.FANGS;
         }
     }
@@ -208,7 +212,7 @@ public class TricksterEntity extends SpellcastingIllagerEntity {
     class ThrowSparkGoal extends UseSpellGoal {
 
         @Override
-        protected void castSpell() {
+        protected void performSpellCasting() {
 
         }
 
@@ -229,7 +233,7 @@ public class TricksterEntity extends SpellcastingIllagerEntity {
         }
 
         @Override
-        protected SpellType getSpellType() {
+        protected SpellType getSpell() {
             return null;
         }
     }

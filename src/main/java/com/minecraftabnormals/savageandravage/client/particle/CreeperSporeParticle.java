@@ -7,26 +7,26 @@ import net.minecraft.particles.BasicParticleType;
 import net.minecraft.util.math.MathHelper;
 
 public class CreeperSporeParticle extends SpriteTexturedParticle {
-	private final IAnimatedSprite field_217583_C;
+	private final IAnimatedSprite sprites;
 
 	public CreeperSporeParticle(ClientWorld p_i51015_1_, double p_i51015_2_, double p_i51015_4_, double p_i51015_6_, double p_i51015_8_, double p_i51015_10_, double p_i51015_12_, IAnimatedSprite p_i51015_14_) {
 		super(p_i51015_1_, p_i51015_2_, p_i51015_4_, p_i51015_6_, 0.0D, 0.0D, 0.0D);
-		this.field_217583_C = p_i51015_14_;
-		this.motionX *= 0.1;
-		this.motionY *= 0.1;
-		this.motionZ *= 0.1;
-		this.motionX += p_i51015_8_;
-		this.motionY += p_i51015_10_;
-		this.motionZ += p_i51015_12_;
+		this.sprites = p_i51015_14_;
+		this.xd *= 0.1;
+		this.yd *= 0.1;
+		this.zd *= 0.1;
+		this.xd += p_i51015_8_;
+		this.yd += p_i51015_10_;
+		this.zd += p_i51015_12_;
 		float f1 = 1.0F - (float) (Math.random() * (double) 0.3F);
-		this.particleRed = f1;
-		this.particleGreen = f1;
-		this.particleBlue = f1;
-		this.particleScale *= 1.875F;
+		this.rCol = f1;
+		this.gCol = f1;
+		this.bCol = f1;
+		this.quadSize *= 1.875F;
 		int i = (int) (8.0D / (Math.random() * 0.8D + 0.3D));
-		this.maxAge = (int) Math.max((float) i * 2.5F, 1.0F);
-		this.canCollide = false;
-		this.selectSpriteWithAge(p_i51015_14_);
+		this.lifetime = (int) Math.max((float) i * 2.5F, 1.0F);
+		this.hasPhysics = false;
+		this.setSpriteFromAge(p_i51015_14_);
 	}
 
 	@Override
@@ -35,36 +35,36 @@ public class CreeperSporeParticle extends SpriteTexturedParticle {
 	}
 
 	@Override
-	public float getScale(float partialTicks) {
-		return this.particleScale * MathHelper.clamp(((float) this.age + partialTicks) / (float) this.maxAge * 32.0F, 0.0F, 1.0F);
+	public float getQuadSize(float partialTicks) {
+		return this.quadSize * MathHelper.clamp(((float) this.age + partialTicks) / (float) this.lifetime * 32.0F, 0.0F, 1.0F);
 	}
 
 	@Override
 	public void tick() {
-		this.prevPosX = this.posX;
-		this.prevPosY = this.posY;
-		this.prevPosZ = this.posZ;
-		if (this.age++ >= this.maxAge) {
-			this.setExpired();
+		this.xo = this.x;
+		this.yo = this.y;
+		this.zo = this.z;
+		if (this.age++ >= this.lifetime) {
+			this.remove();
 		} else {
-			this.selectSpriteWithAge(this.field_217583_C);
-			this.move(this.motionX, this.motionY, this.motionZ);
-			this.motionX *= 0.96F;
-			this.motionY *= 0.96F;
-			this.motionZ *= 0.96F;
-			PlayerEntity playerentity = this.world.getClosestPlayer(this.posX, this.posY, this.posZ, 2.0D, false);
+			this.setSpriteFromAge(this.sprites);
+			this.move(this.xd, this.yd, this.zd);
+			this.xd *= 0.96F;
+			this.yd *= 0.96F;
+			this.zd *= 0.96F;
+			PlayerEntity playerentity = this.level.getNearestPlayer(this.x, this.y, this.z, 2.0D, false);
 			if (playerentity != null) {
-				double d0 = playerentity.getPosY();
-				if (this.posY > d0) {
-					this.posY += (d0 - this.posY) * 0.2D;
-					this.motionY += (playerentity.getMotion().y - this.motionY) * 0.2D;
-					this.setPosition(this.posX, this.posY, this.posZ);
+				double d0 = playerentity.getY();
+				if (this.y > d0) {
+					this.y += (d0 - this.y) * 0.2D;
+					this.yd += (playerentity.getDeltaMovement().y - this.yd) * 0.2D;
+					this.setPos(this.x, this.y, this.z);
 				}
 			}
 
 			if (this.onGround) {
-				this.motionX *= 0.7F;
-				this.motionZ *= 0.7F;
+				this.xd *= 0.7F;
+				this.zd *= 0.7F;
 			}
 
 		}
@@ -77,7 +77,7 @@ public class CreeperSporeParticle extends SpriteTexturedParticle {
 			this.spriteSet = spriteSet;
 		}
 
-		public Particle makeParticle(BasicParticleType type, ClientWorld world, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+		public Particle createParticle(BasicParticleType type, ClientWorld world, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
 			return new CreeperSporeParticle(world, x, y, z, xSpeed, ySpeed, zSpeed, this.spriteSet);
 		}
 	}

@@ -25,28 +25,28 @@ public class BurningBannerRenderer extends EntityRenderer<BurningBannerEntity> {
 
 	@Override
 	public void render(BurningBannerEntity entity, float entityYaw, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLightIn) {
-		if (!Minecraft.getInstance().getRenderManager().isDebugBoundingBox())
+		if (!Minecraft.getInstance().getEntityRenderDispatcher().shouldRenderHitBoxes())
 			return;
 
-		World world = entity.world;
+		World world = entity.level;
 		BlockPos bannerPos = entity.getBannerPosition();
-		if (bannerPos == null || !(world.getTileEntity(bannerPos) instanceof BannerTileEntity))
+		if (bannerPos == null || !(world.getBlockEntity(bannerPos) instanceof BannerTileEntity))
 			return;
 
-		matrixStack.push();
-		matrixStack.translate(bannerPos.getX() - entity.getPosX(), bannerPos.getY() - entity.getPosY(), bannerPos.getZ() - entity.getPosZ());
+		matrixStack.pushPose();
+		matrixStack.translate(bannerPos.getX() - entity.getX(), bannerPos.getY() - entity.getY(), bannerPos.getZ() - entity.getZ());
 
-		IVertexBuilder builder = buffer.getBuffer(RenderType.getLines());
-		Matrix4f matrix4f = matrixStack.getLast().getMatrix();
+		IVertexBuilder builder = buffer.getBuffer(RenderType.lines());
+		Matrix4f matrix4f = matrixStack.last().pose();
 		AxisAlignedBB box = entity.getBurningBox();
 		double rotation = entity.getBurningBoxRotation();
 
-		double minX = box.getMin(Direction.Axis.X);
-		double minY = box.getMin(Direction.Axis.Y);
-		double minZ = box.getMin(Direction.Axis.Z);
-		double maxX = box.getMax(Direction.Axis.X);
-		double maxY = box.getMax(Direction.Axis.Y);
-		double maxZ = box.getMax(Direction.Axis.Z);
+		double minX = box.min(Direction.Axis.X);
+		double minY = box.min(Direction.Axis.Y);
+		double minZ = box.min(Direction.Axis.Z);
+		double maxX = box.max(Direction.Axis.X);
+		double maxY = box.max(Direction.Axis.Y);
+		double maxZ = box.max(Direction.Axis.Z);
 
 		// back
 		pos(builder, matrix4f, minX, minY, minZ, rotation);
@@ -78,16 +78,16 @@ public class BurningBannerRenderer extends EntityRenderer<BurningBannerEntity> {
 		pos(builder, matrix4f, minX, minY, minZ, rotation);
 		pos(builder, matrix4f, minX, minY, maxZ, rotation);
 
-		matrixStack.pop();
+		matrixStack.popPose();
 	}
 
 	private static void pos(IVertexBuilder builder, Matrix4f matrix4f, double x, double y, double z, double rotation) {
 		double[] rotatedVertices = BurningBannerEntity.rotate(x, y, z, rotation);
-		builder.pos(matrix4f, (float) rotatedVertices[0], (float) rotatedVertices[1], (float) rotatedVertices[2]).color(255, 0, 255, 255).endVertex();
+		builder.vertex(matrix4f, (float) rotatedVertices[0], (float) rotatedVertices[1], (float) rotatedVertices[2]).color(255, 0, 255, 255).endVertex();
 	}
 
 	@Override
-	public ResourceLocation getEntityTexture(BurningBannerEntity entity) {
-		return PlayerContainer.LOCATION_BLOCKS_TEXTURE;
+	public ResourceLocation getTextureLocation(BurningBannerEntity entity) {
+		return PlayerContainer.BLOCK_ATLAS;
 	}
 }

@@ -25,28 +25,28 @@ import java.util.function.Supplier;
 
 @SuppressWarnings("deprecation")
 public class PottedCreeperSporesBlock extends Block {
-	private static final VoxelShape SHAPE = Block.makeCuboidShape(5.0D, 0.0D, 5.0D, 11.0D, 6.0D, 11.0D);
-	public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
+	private static final VoxelShape SHAPE = Block.box(5.0D, 0.0D, 5.0D, 11.0D, 6.0D, 11.0D);
+	public static final DirectionProperty FACING = HorizontalBlock.FACING;
 	private final Supplier<Item> flower;
 
 	public PottedCreeperSporesBlock(Supplier<Item> flower, Block.Properties properties) {
 		super(properties);
-		this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH));
+		this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
 		this.flower = flower;
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-		ItemStack itemStack = player.getHeldItem(hand);
+	public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+		ItemStack itemStack = player.getItemInHand(hand);
 		ItemStack newItemStack = new ItemStack((this.flower.get()));
 		if (!itemStack.getItem().equals(this.flower.get())) {
 			if (itemStack.isEmpty()) {
-				player.setHeldItem(hand, newItemStack);
-			} else if (!player.addItemStackToInventory(newItemStack)) {
-				player.dropItem(newItemStack, false);
+				player.setItemInHand(hand, newItemStack);
+			} else if (!player.addItem(newItemStack)) {
+				player.drop(newItemStack, false);
 			}
-			world.setBlockState(pos, Blocks.FLOWER_POT.getDefaultState());
-			return ActionResultType.func_233537_a_(world.isRemote());
+			world.setBlockAndUpdate(pos, Blocks.FLOWER_POT.defaultBlockState());
+			return ActionResultType.sidedSuccess(world.isClientSide());
 		} else return ActionResultType.CONSUME;
 	}
 
@@ -56,24 +56,24 @@ public class PottedCreeperSporesBlock extends Block {
 	}
 
 	@Override
-	public ItemStack getItem(IBlockReader worldIn, BlockPos pos, BlockState state) {
+	public ItemStack getCloneItemStack(IBlockReader worldIn, BlockPos pos, BlockState state) {
 		return this.flower == Blocks.AIR ? new ItemStack(Blocks.FLOWER_POT) : new ItemStack(this.flower.get().asItem());
 	}
 
 	@Override
-	public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
-		return facing == Direction.DOWN && !stateIn.isValidPosition(worldIn, currentPos) ? Blocks.AIR.getDefaultState() : super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+	public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
+		return facing == Direction.DOWN && !stateIn.canSurvive(worldIn, currentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
 	}
 
 	public BlockState getDirectionalState(Direction direction) {
-		return this.getDefaultState().with(FACING, direction);
+		return this.defaultBlockState().setValue(FACING, direction);
 	}
 
 	public BlockState mirror(BlockState state, Mirror mirrorIn) {
-		return state.rotate(mirrorIn.toRotation(state.get(FACING)));
+		return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
 	}
 
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
 		builder.add(FACING);
 	}
 
