@@ -30,20 +30,20 @@ public class TotemShieldLayer<E extends Entity, M extends EntityModel<E>> extend
 
 	public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, E entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
 		if ((!(entity instanceof EvokerEntity) || SRConfig.COMMON.evokersUseTotems.get()) && ((IDataManager) entity).getValue(SREntities.TOTEM_SHIELD_TIME) > 0) {
-			float f = (float) entity.ticksExisted + partialTicks;
-			model.setLivingAnimations(entity, limbSwing, limbSwingAmount, partialTicks);
-			this.getEntityModel().copyModelAttributesTo(model);
-			IVertexBuilder ivertexbuilder = bufferIn.getBuffer(RenderType.getEnergySwirl(this.func_225633_a_(), this.func_225634_a_(f), f * 0.01F));
-			model.setRotationAngles(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-			model.render(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 0.5F, 0.5F, 0.5F, 1.0F);
+			float f = (float) entity.tickCount + partialTicks;
+			model.prepareMobModel(entity, limbSwing, limbSwingAmount, partialTicks);
+			this.getParentModel().copyPropertiesTo(model);
+			IVertexBuilder ivertexbuilder = bufferIn.getBuffer(RenderType.energySwirl(this.getTextureLocation(), this.xOffset(f), f * 0.01F));
+			model.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+			model.renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 0.5F, 0.5F, 0.5F, 1.0F);
 		}
 	}
 
-	protected float func_225634_a_(float p_225634_1_) {
+	protected float xOffset(float p_225634_1_) {
 		return p_225634_1_ * 0.01F;
 	}
 
-	protected ResourceLocation func_225633_a_() {
+	protected ResourceLocation getTextureLocation() {
 		return SHIELD_TEXTURE;
 	}
 }

@@ -19,14 +19,14 @@ public class SporeBombRenderer extends EntityRenderer<SporeBombEntity> {
 
 	public SporeBombRenderer(EntityRendererManager renderManagerIn) {
 		super(renderManagerIn);
-		this.shadowSize = 0.5F;
+		this.shadowRadius = 0.5F;
 	}
 
 	public void render(SporeBombEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
-		matrixStackIn.push();
+		matrixStackIn.pushPose();
 		matrixStackIn.translate(0.0D, 0.5D, 0.0D);
-		if ((float) entityIn.getFuse() - partialTicks + 1.0F < 10.0F) {
-			float f = 1.0F - ((float) entityIn.getFuse() - partialTicks + 1.0F) / 10.0F;
+		if ((float) entityIn.getLife() - partialTicks + 1.0F < 10.0F) {
+			float f = 1.0F - ((float) entityIn.getLife() - partialTicks + 1.0F) / 10.0F;
 			f = MathHelper.clamp(f, 0.0F, 1.0F);
 			f = f * f;
 			f = f * f;
@@ -34,27 +34,27 @@ public class SporeBombRenderer extends EntityRenderer<SporeBombEntity> {
 			matrixStackIn.scale(f1, f1, f1);
 		}
 
-		matrixStackIn.rotate(Vector3f.YP.rotationDegrees(-90.0F));
+		matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-90.0F));
 		matrixStackIn.translate(-0.5D, -0.5D, 0.5D);
-		matrixStackIn.rotate(Vector3f.YP.rotationDegrees(90.0F));
-		SporeBombRenderer.renderBombFlash(SRBlocks.SPORE_BOMB.get().getDefaultState(), matrixStackIn, bufferIn, packedLightIn, entityIn.getFuse() / 5 % 2 == 0);
-		matrixStackIn.pop();
+		matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(90.0F));
+		SporeBombRenderer.renderBombFlash(SRBlocks.SPORE_BOMB.get().defaultBlockState(), matrixStackIn, bufferIn, packedLightIn, entityIn.getLife() / 5 % 2 == 0);
+		matrixStackIn.popPose();
 		super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
 	}
 
 	public static void renderBombFlash(BlockState blockStateIn, MatrixStack matrixStackIn, IRenderTypeBuffer renderTypeBuffer, int combinedLight, boolean doFullBright) {
 		int i;
 		if (doFullBright) {
-			i = OverlayTexture.getPackedUV(OverlayTexture.getU(1.0F), 10);
+			i = OverlayTexture.pack(OverlayTexture.u(1.0F), 10);
 		} else {
 			i = OverlayTexture.NO_OVERLAY;
 		}
 
-		Minecraft.getInstance().getBlockRendererDispatcher().renderBlock(blockStateIn, matrixStackIn, renderTypeBuffer, combinedLight, i, EmptyModelData.INSTANCE);
+		Minecraft.getInstance().getBlockRenderer().renderBlock(blockStateIn, matrixStackIn, renderTypeBuffer, combinedLight, i, EmptyModelData.INSTANCE);
 	}
 
 	@Override
-	public ResourceLocation getEntityTexture(SporeBombEntity entity) {
-		return PlayerContainer.LOCATION_BLOCKS_TEXTURE;
+	public ResourceLocation getTextureLocation(SporeBombEntity entity) {
+		return PlayerContainer.BLOCK_ATLAS;
 	}
 }

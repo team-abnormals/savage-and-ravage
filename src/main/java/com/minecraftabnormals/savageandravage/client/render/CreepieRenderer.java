@@ -20,7 +20,7 @@ public class CreepieRenderer extends MobRenderer<CreepieEntity, CreepieModel> {
 	}
 
 	@Override
-	protected void preRenderCallback(CreepieEntity entityLivingBaseIn, MatrixStack matrixStackIn, float partialTickTime) {
+	protected void scale(CreepieEntity entityLivingBaseIn, MatrixStack matrixStackIn, float partialTickTime) {
 		float creeperFlashIntensity = entityLivingBaseIn.getCreeperFlashIntensity(partialTickTime);
 		float mathsThing = 1.0f + MathHelper.sin(creeperFlashIntensity * 100.0f) * creeperFlashIntensity * 0.01f;
 		creeperFlashIntensity = MathHelper.clamp(creeperFlashIntensity, 0.0f, 1.0f);
@@ -33,22 +33,22 @@ public class CreepieRenderer extends MobRenderer<CreepieEntity, CreepieModel> {
 	}
 
 	@Override
-	protected float getOverlayProgress(CreepieEntity livingEntityIn, float partialTicks) {
+	protected float getWhiteOverlayProgress(CreepieEntity livingEntityIn, float partialTicks) {
 		float flashIntensity = livingEntityIn.getCreeperFlashIntensity(partialTicks);
 		return (int) (flashIntensity * 10.0F) % 2 == 0 ? 0.0F : MathHelper.clamp(flashIntensity, 0.5F, 1.0F);
 	}
 
 	@Override
-	public ResourceLocation getEntityTexture(CreepieEntity entity) {
+	public ResourceLocation getTextureLocation(CreepieEntity entity) {
 		return CREEPER_TEXTURE;
 	}
 
 	@Override
-	protected void applyRotations(CreepieEntity entityLiving, MatrixStack matrixStackIn, float ageInTicks, float rotationYaw, float partialTicks) {
+	protected void setupRotations(CreepieEntity entityLiving, MatrixStack matrixStackIn, float ageInTicks, float rotationYaw, float partialTicks) {
 		if (entityLiving.isConverting()) {
-			rotationYaw += (float) (Math.cos((double) entityLiving.ticksExisted * 3.25D) * Math.PI * 0.25D);
+			rotationYaw += (float) (Math.cos((double) entityLiving.tickCount * 3.25D) * Math.PI * 0.25D);
 		}
 
-		super.applyRotations(entityLiving, matrixStackIn, ageInTicks, rotationYaw, partialTicks);
+		super.setupRotations(entityLiving, matrixStackIn, ageInTicks, rotationYaw, partialTicks);
 	}
 }

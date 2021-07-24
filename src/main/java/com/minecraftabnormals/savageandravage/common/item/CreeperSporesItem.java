@@ -29,21 +29,21 @@ public class CreeperSporesItem extends Item implements IPottableItem {
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
-		ItemStack stack = player.getHeldItem(hand);
-		world.playSound(player, player.getPosX(), player.getPosY(), player.getPosZ(), SRSounds.ENTITY_CREEPER_SPORES_THROW.get(), SoundCategory.PLAYERS, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
-		if (!world.isRemote()) {
+	public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+		ItemStack stack = player.getItemInHand(hand);
+		world.playSound(player, player.getX(), player.getY(), player.getZ(), SRSounds.ENTITY_CREEPER_SPORES_THROW.get(), SoundCategory.PLAYERS, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
+		if (!world.isClientSide()) {
 			SporeCloudEntity spores = new SporeCloudEntity(world, player);
-			spores.func_234612_a_(player, player.rotationPitch, player.rotationYaw, 0.0F, 0.99F, 1.0F);
-			spores.setCloudSize(getThrownSporeCloudSize(spores.world.getRandom()));
-			world.addEntity(spores);
+			spores.shootFromRotation(player, player.xRot, player.yRot, 0.0F, 0.99F, 1.0F);
+			spores.setCloudSize(getThrownSporeCloudSize(spores.level.getRandom()));
+			world.addFreshEntity(spores);
 		}
 
-		player.addStat(Stats.ITEM_USED.get(this));
+		player.awardStat(Stats.ITEM_USED.get(this));
 		if (!player.isCreative())
 			stack.shrink(1);
-		player.getCooldownTracker().setCooldown(this, 30);
-		return ActionResult.resultSuccess(stack);
+		player.getCooldowns().addCooldown(this, 30);
+		return ActionResult.success(stack);
 	}
 
 	@Override
@@ -52,7 +52,7 @@ public class CreeperSporesItem extends Item implements IPottableItem {
 	}
 
 	@Override
-	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
+	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {
 		FILLER.fillItem(this, group, items);
 	}
 }

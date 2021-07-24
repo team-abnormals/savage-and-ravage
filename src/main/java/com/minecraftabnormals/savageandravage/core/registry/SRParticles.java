@@ -26,10 +26,10 @@ public class SRParticles {
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public static void registerParticleFactories(ParticleFactoryRegisterEvent event) {
-		ParticleManager manager = Minecraft.getInstance().particles;
+		ParticleManager manager = Minecraft.getInstance().particleEngine;
 		if (CREEPER_SPORES.isPresent())
-			manager.registerFactory(CREEPER_SPORES.get(), CreeperSporeParticle.Factory::new);
-		if (RUNE.isPresent()) manager.registerFactory(RUNE.get(), RuneParticle.Factory::new);
-		if (SNOWFLAKE.isPresent()) manager.registerFactory(SNOWFLAKE.get(), SpellParticle.Factory::new);
+			manager.register(CREEPER_SPORES.get(), CreeperSporeParticle.Factory::new);
+		if (RUNE.isPresent()) manager.register(RUNE.get(), RuneParticle.Factory::new);
+		if (SNOWFLAKE.isPresent()) manager.register(SNOWFLAKE.get(), SpellParticle.Factory::new);
 	}
 }

@@ -25,14 +25,14 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class SRFeatures {
 	public static final DeferredRegister<Feature<?>> FEATURES = DeferredRegister.create(ForgeRegistries.FEATURES, SavageAndRavage.MOD_ID);
 
-	public static final RegistryObject<Feature<NoFeatureConfig>> CREEPER_ENCLOSURE = FEATURES.register("creeper_enclosure", () -> new EnclosureFeature(NoFeatureConfig.field_236558_a_));
+	public static final RegistryObject<Feature<NoFeatureConfig>> CREEPER_ENCLOSURE = FEATURES.register("creeper_enclosure", () -> new EnclosureFeature(NoFeatureConfig.CODEC));
 
 	public static void registerPools() {
-		JigsawPatternRegistry.func_244094_a(new JigsawPattern(new ResourceLocation(SavageAndRavage.MOD_ID, "enclosure/enclosures"), new ResourceLocation("empty"), ImmutableList.of(Pair.of(JigsawPiece.func_242845_a(CREEPER_ENCLOSURE.get().withConfiguration(NoFeatureConfig.field_236559_b_)), 1)), JigsawPattern.PlacementBehaviour.RIGID));
-		JigsawPatternRegistry.func_244094_a(new JigsawPattern(new ResourceLocation(SavageAndRavage.MOD_ID, "pillager_outpost/pillagers"), new ResourceLocation("empty"), ImmutableList.of(Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":pillager_outpost/pillager"), 1)), JigsawPattern.PlacementBehaviour.RIGID));
-		JigsawPatternRegistry.func_244094_a(new JigsawPattern(new ResourceLocation(SavageAndRavage.MOD_ID, "pillager_outpost/vindicators"), new ResourceLocation("empty"), ImmutableList.of(Pair.of(JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":pillager_outpost/vindicator"), 1)), JigsawPattern.PlacementBehaviour.RIGID));
+		JigsawPatternRegistry.register(new JigsawPattern(new ResourceLocation(SavageAndRavage.MOD_ID, "enclosure/enclosures"), new ResourceLocation("empty"), ImmutableList.of(Pair.of(JigsawPiece.feature(CREEPER_ENCLOSURE.get().configured(NoFeatureConfig.INSTANCE)), 1)), JigsawPattern.PlacementBehaviour.RIGID));
+		JigsawPatternRegistry.register(new JigsawPattern(new ResourceLocation(SavageAndRavage.MOD_ID, "pillager_outpost/pillagers"), new ResourceLocation("empty"), ImmutableList.of(Pair.of(JigsawPiece.legacy(SavageAndRavage.MOD_ID + ":pillager_outpost/pillager"), 1)), JigsawPattern.PlacementBehaviour.RIGID));
+		JigsawPatternRegistry.register(new JigsawPattern(new ResourceLocation(SavageAndRavage.MOD_ID, "pillager_outpost/vindicators"), new ResourceLocation("empty"), ImmutableList.of(Pair.of(JigsawPiece.legacy(SavageAndRavage.MOD_ID + ":pillager_outpost/vindicator"), 1)), JigsawPattern.PlacementBehaviour.RIGID));
 		for (String biome : new String[]{"plains", "snowy", "savanna", "desert", "taiga"})
-			DataUtil.addToJigsawPattern(new ResourceLocation("village/" + biome + "/zombie/villagers"), JigsawPiece.func_242849_a(SavageAndRavage.MOD_ID + ":village/skeleton_villager").apply(JigsawPattern.PlacementBehaviour.RIGID), 10);
+			DataUtil.addToJigsawPattern(new ResourceLocation("village/" + biome + "/zombie/villagers"), JigsawPiece.legacy(SavageAndRavage.MOD_ID + ":village/skeleton_villager").apply(JigsawPattern.PlacementBehaviour.RIGID), 10);
 	}
 
 	public static void registerBiomeModifications() {
@@ -44,7 +44,7 @@ public class SRFeatures {
 	public static boolean canHostilesSpawn(ResourceLocation biomeName) {
 		Biome biome = ForgeRegistries.BIOMES.getValue(biomeName);
 		if (biome != null) {
-			if (biome.getCategory() != Biome.Category.MUSHROOM && biome.getCategory() != Biome.Category.NONE) {
+			if (biome.getBiomeCategory() != Biome.Category.MUSHROOM && biome.getBiomeCategory() != Biome.Category.NONE) {
 				return false;
 			} else
 				return biome == ForgeRegistries.BIOMES.getValue(new ResourceLocation("biomesoplenty", "rainbow_hills"));

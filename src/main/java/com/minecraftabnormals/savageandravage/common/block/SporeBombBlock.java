@@ -28,27 +28,27 @@ public class SporeBombBlock extends TNTBlock {
 	@Override
 	public void catchFire(BlockState state, World world, BlockPos pos, @Nullable net.minecraft.util.Direction face, @Nullable LivingEntity igniter) {
 		SporeBombEntity sporebomb = new SporeBombEntity(world, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, igniter);
-		world.addEntity(sporebomb);
-		world.playSound(null, sporebomb.getPosX(), sporebomb.getPosY(), sporebomb.getPosZ(), SoundEvents.ENTITY_CREEPER_PRIMED, SoundCategory.BLOCKS, 1.0F, 0.5F);
+		world.addFreshEntity(sporebomb);
+		world.playSound(null, sporebomb.getX(), sporebomb.getY(), sporebomb.getZ(), SoundEvents.CREEPER_PRIMED, SoundCategory.BLOCKS, 1.0F, 0.5F);
 	}
 
 	@Override
-	public void onExplosionDestroy(World world, BlockPos pos, Explosion explosionIn) {
-		SporeBombEntity sporebomb = new SporeBombEntity(world, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, explosionIn.getExplosivePlacedBy());
-		sporebomb.setFuse((short) (world.getRandom().nextInt(sporebomb.getFuse() / 4) + sporebomb.getFuse() / 8));
-		world.addEntity(sporebomb);
+	public void wasExploded(World world, BlockPos pos, Explosion explosionIn) {
+		SporeBombEntity sporebomb = new SporeBombEntity(world, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, explosionIn.getSourceMob());
+		sporebomb.setFuse((short) (world.getRandom().nextInt(sporebomb.getLife() / 4) + sporebomb.getLife() / 8));
+		world.addFreshEntity(sporebomb);
 	}
 
 	@Override
 	public void neighborChanged(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
-		if (world.isBlockPowered(pos)) {
+		if (world.hasNeighborSignal(pos)) {
 			this.catchFire(state, world, pos, null, null);
 			world.removeBlock(pos, false);
 		}
 	}
 
 	@Override
-	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
+	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {
 		FILLER.fillItem(this.asItem(), group, items);
 	}
 }

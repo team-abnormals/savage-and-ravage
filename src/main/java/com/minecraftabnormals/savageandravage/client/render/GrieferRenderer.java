@@ -21,12 +21,12 @@ public class GrieferRenderer extends BipedRenderer<GrieferEntity, GrieferModel> 
 	}
 
 	@Override
-	public ResourceLocation getEntityTexture(GrieferEntity entity) {
+	public ResourceLocation getTextureLocation(GrieferEntity entity) {
 		return entity.isApeshit() ? APESHIT_MODE_TEXTURE : GRIEFER_TEXTURE;
 	}
 
 	@Override
-	protected void preRenderCallback(GrieferEntity entity, MatrixStack matrixStackIn, float partialTickTime) {
+	protected void scale(GrieferEntity entity, MatrixStack matrixStackIn, float partialTickTime) {
 		matrixStackIn.scale(0.9375F, 0.9375F, 0.9375F);
 	}
 }

@@ -15,6 +15,8 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class RunedGloomyTilesBlock extends ChiseledGloomyTilesBlock {
 
 	public RunedGloomyTilesBlock(Properties blockProperties) {
@@ -22,20 +24,20 @@ public class RunedGloomyTilesBlock extends ChiseledGloomyTilesBlock {
 	}
 
 	@Override
-	public void onEntityWalk(World world, BlockPos pos, Entity entity) {
-		super.onEntityWalk(world, pos, entity);
+	public void stepOn(World world, BlockPos pos, Entity entity) {
+		super.stepOn(world, pos, entity);
 		BlockState state = world.getBlockState(pos);
-		if (!state.get(POWERED) && shouldTrigger(entity)) {
-			world.setBlockState(pos, state.with(POWERED, true));
+		if (!state.getValue(POWERED) && shouldTrigger(entity)) {
+			world.setBlockAndUpdate(pos, state.setValue(POWERED, true));
 			world.playSound(null, pos, SRSounds.BLOCK_RUNED_GLOOMY_TILES_ACTIVATE.get(), SoundCategory.BLOCKS, 1.0F, 1.0F);
 			EvokerFangsEntity evokerFangs = EntityType.EVOKER_FANGS.create(world);
 			if (evokerFangs != null) {
-				evokerFangs.setLocationAndAngles(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 0.0F, 0.0F);
-				world.addEntity(evokerFangs);
+				evokerFangs.moveTo(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 0.0F, 0.0F);
+				world.addFreshEntity(evokerFangs);
 			}
 			RunePrisonEntity runePrison = new RunePrisonEntity(world, pos, 25);
-			runePrison.setLocationAndAngles(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 0.0F, 0.0F);
-			world.addEntity(runePrison);
+			runePrison.moveTo(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 0.0F, 0.0F);
+			world.addFreshEntity(runePrison);
 		}
 	}
 

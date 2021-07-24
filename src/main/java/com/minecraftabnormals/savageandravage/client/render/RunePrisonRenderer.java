@@ -25,23 +25,23 @@ public class RunePrisonRenderer extends EntityRenderer<RunePrisonEntity> {
 
 	public RunePrisonRenderer(EntityRendererManager renderManagerIn) {
 		super(renderManagerIn);
-		this.shadowSize = 0.0F;
+		this.shadowRadius = 0.0F;
 		model = new RunePrisonModel();
 	}
 
 	@Override
 	public void render(RunePrisonEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
-		matrixStackIn.push();
+		matrixStackIn.pushPose();
 		matrixStackIn.translate(0.15F, -0.7F, 0.15F);
-		this.model.setRotationAngles(entityIn, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
-		IVertexBuilder ivertexbuilder = bufferIn.getBuffer(ACRenderTypes.getEmissiveTransluscentEntity(getEntityTexture(entityIn), false));
-		this.model.render(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
-		matrixStackIn.pop();
+		this.model.setupAnim(entityIn, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
+		IVertexBuilder ivertexbuilder = bufferIn.getBuffer(ACRenderTypes.getEmissiveTransluscentEntity(getTextureLocation(entityIn), false));
+		this.model.renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+		matrixStackIn.popPose();
 		super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
 	}
 
 	@Override
-	public ResourceLocation getEntityTexture(RunePrisonEntity entity) {
+	public ResourceLocation getTextureLocation(RunePrisonEntity entity) {
 		return RUNE_PRISON_FRAMES[entity.getCurrentFrame()];
 	}
 }

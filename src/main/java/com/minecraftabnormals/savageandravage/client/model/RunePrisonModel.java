@@ -9,19 +9,19 @@ public class RunePrisonModel extends SegmentedModel<RunePrisonEntity> {
 	public ModelRenderer plane;
 
 	public RunePrisonModel() {
-		this.textureWidth = 42;
-		this.textureHeight = 42;
+		this.texWidth = 42;
+		this.texHeight = 42;
 		this.plane = new ModelRenderer(this, 0, 0);
-		this.plane.setRotationPoint(-8.0F, 24.0F, -8.0F);
+		this.plane.setPos(-8.0F, 24.0F, -8.0F);
 		this.plane.addBox(-5.0F, -5.0F, -5.0F, 21, 0, 21, 0.0F);
 	}
 
 	@Override
-	public void setRotationAngles(RunePrisonEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(RunePrisonEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 	}
 
 	@Override
-	public Iterable<ModelRenderer> getParts() {
+	public Iterable<ModelRenderer> parts() {
 		return ImmutableList.of(this.plane);
 	}
 }

@@ -32,18 +32,18 @@ public class IceChunkRenderer extends EntityRenderer<IceChunkEntity> {
 
 	@Override
 	public void render(IceChunkEntity entity, float entityYaw, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLight) {
-		matrixStack.push();
+		matrixStack.pushPose();
 		matrixStack.translate(-0.5, 0, -0.5);
 
 		IBakedModel model = Minecraft.getInstance().getModelManager().getModel(MODEL_LOCATION);
-		renderModel(model, buffer.getBuffer(RenderType.getSolid()), matrixStack, packedLight);
-		matrixStack.pop();
+		renderModel(model, buffer.getBuffer(RenderType.solid()), matrixStack, packedLight);
+		matrixStack.popPose();
 
 		super.render(entity, entityYaw, partialTicks, matrixStack, buffer, packedLight);
 	}
 
 	@Override
-	public ResourceLocation getEntityTexture(IceChunkEntity entity) {
+	public ResourceLocation getTextureLocation(IceChunkEntity entity) {
 		return TEXTURE_LOCATION;
 	}
 
@@ -60,11 +60,11 @@ public class IceChunkRenderer extends EntityRenderer<IceChunkEntity> {
 		Random random = new Random(42L);
 		for (Direction direction : Direction.values()) {
 			for (BakedQuad quad : model.getQuads(null, direction, random, EmptyModelData.INSTANCE)) {
-				builder.addQuad(matrixStack.getLast(), quad, 1, 1, 1, packedLight, OverlayTexture.NO_OVERLAY);
+				builder.putBulkData(matrixStack.last(), quad, 1, 1, 1, packedLight, OverlayTexture.NO_OVERLAY);
 			}
 		}
 		for (BakedQuad quad : model.getQuads(null, null, random, EmptyModelData.INSTANCE)) {
-			builder.addQuad(matrixStack.getLast(), quad, 1, 1, 1, packedLight, OverlayTexture.NO_OVERLAY);
+			builder.putBulkData(matrixStack.last(), quad, 1, 1, 1, packedLight, OverlayTexture.NO_OVERLAY);
 		}
 	}
 }

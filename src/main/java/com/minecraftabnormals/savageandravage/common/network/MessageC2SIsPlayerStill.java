@@ -21,12 +21,12 @@ public class MessageC2SIsPlayerStill {
     }
 
     public void serialize(PacketBuffer buffer) {
-        buffer.writeUniqueId(this.playerId);
+        buffer.writeUUID(this.playerId);
         buffer.writeBoolean(this.isStill);
     }
 
     public static MessageC2SIsPlayerStill deserialize(PacketBuffer buffer) {
-        return new MessageC2SIsPlayerStill(buffer.readUniqueId(), buffer.readBoolean());
+        return new MessageC2SIsPlayerStill(buffer.readUUID(), buffer.readBoolean());
     }
 
     public static void handle(MessageC2SIsPlayerStill message, Supplier<NetworkEvent.Context> ctx) {
@@ -34,7 +34,7 @@ public class MessageC2SIsPlayerStill {
         if (context.getDirection().getReceptionSide() == LogicalSide.SERVER) {
             context.enqueueWork(() -> {
                 if (context.getSender() != null) {
-                    PlayerEntity player = context.getSender().getServerWorld().getPlayerByUuid(message.playerId);
+                    PlayerEntity player = context.getSender().getLevel().getPlayerByUUID(message.playerId);
                     if (player != null)
                         ((IDataManager) player).setValue(SREntities.MARK_INVISIBLE, message.isStill);
                 }

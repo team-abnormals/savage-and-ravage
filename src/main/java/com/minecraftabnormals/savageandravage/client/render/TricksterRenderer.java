@@ -18,7 +18,7 @@ public class TricksterRenderer extends MobRenderer<TricksterEntity, TricksterMod
     }
 
     @Override
-    public ResourceLocation getEntityTexture(TricksterEntity entity) {
+    public ResourceLocation getTextureLocation(TricksterEntity entity) {
         return entity.getName().getString().equalsIgnoreCase("based") ? BASED : NORMAL;
     }
 }

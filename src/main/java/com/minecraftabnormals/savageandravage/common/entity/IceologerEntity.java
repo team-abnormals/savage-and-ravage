@@ -27,6 +27,10 @@ import javax.annotation.Nullable;
 import java.util.Random;
 import java.util.UUID;
 
+import net.minecraft.entity.monster.SpellcastingIllagerEntity.CastingASpellGoal;
+import net.minecraft.entity.monster.SpellcastingIllagerEntity.SpellType;
+import net.minecraft.entity.monster.SpellcastingIllagerEntity.UseSpellGoal;
+
 /**
  * @author Ocelot
  */
@@ -59,50 +63,50 @@ public class IceologerEntity extends SpellcastingIllagerEntity {
 		this.goalSelector.addGoal(8, new RandomWalkingGoal(this, 0.6D));
 		this.goalSelector.addGoal(9, new LookAtGoal(this, PlayerEntity.class, 3.0F, 1.0F));
 		this.goalSelector.addGoal(10, new LookAtGoal(this, MobEntity.class, 8.0F));
-		this.targetSelector.addGoal(1, (new HurtByTargetGoal(this, AbstractRaiderEntity.class)).setCallsForHelp());
+		this.targetSelector.addGoal(1, (new HurtByTargetGoal(this, AbstractRaiderEntity.class)).setAlertOthers());
 		this.targetSelector.addGoal(2, (new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true)).setUnseenMemoryTicks(300));
 		this.targetSelector.addGoal(3, (new NearestAttackableTargetGoal<>(this, AbstractVillagerEntity.class, false)).setUnseenMemoryTicks(300));
 		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, IronGolemEntity.class, false));
 	}
 
 	public static AttributeModifierMap.MutableAttribute registerAttributes() {
-		return LivingEntity.registerAttributes().createMutableAttribute(Attributes.FOLLOW_RANGE, 16.0D).createMutableAttribute(Attributes.ATTACK_KNOCKBACK);
+		return LivingEntity.createLivingAttributes().add(Attributes.FOLLOW_RANGE, 16.0D).add(Attributes.ATTACK_KNOCKBACK);
 	}
 
 	private void updateCape() {
 		this.prevChasingPosX = this.chasingPosX;
 		this.prevChasingPosY = this.chasingPosY;
 		this.prevChasingPosZ = this.chasingPosZ;
-		double d0 = this.getPosX() - this.chasingPosX;
-		double d1 = this.getPosY() - this.chasingPosY;
-		double d2 = this.getPosZ() - this.chasingPosZ;
+		double d0 = this.getX() - this.chasingPosX;
+		double d1 = this.getY() - this.chasingPosY;
+		double d2 = this.getZ() - this.chasingPosZ;
 		if (d0 > 10.0D) {
-			this.chasingPosX = this.getPosX();
+			this.chasingPosX = this.getX();
 //            this.prevChasingPosX = this.chasingPosX;
 		}
 
 		if (d2 > 10.0D) {
-			this.chasingPosZ = this.getPosZ();
+			this.chasingPosZ = this.getZ();
 //            this.prevChasingPosZ = this.chasingPosZ;
 		}
 
 		if (d1 > 10.0D) {
-			this.chasingPosY = this.getPosY();
+			this.chasingPosY = this.getY();
 //            this.prevChasingPosY = this.chasingPosY;
 		}
 
 		if (d0 < -10.0D) {
-			this.chasingPosX = this.getPosX();
+			this.chasingPosX = this.getX();
 //            this.prevChasingPosX = this.chasingPosX;
 		}
 
 		if (d2 < -10.0D) {
-			this.chasingPosZ = this.getPosZ();
+			this.chasingPosZ = this.getZ();
 //            this.prevChasingPosZ = this.chasingPosZ;
 		}
 
 		if (d1 < -10.0D) {
-			this.chasingPosY = this.getPosY();
+			this.chasingPosY = this.getY();
 //            this.prevChasingPosY = this.chasingPosY;
 		}
 
@@ -118,13 +122,13 @@ public class IceologerEntity extends SpellcastingIllagerEntity {
 	}
 
 	@Override
-	public void livingTick() {
-		super.livingTick();
+	public void aiStep() {
+		super.aiStep();
 
 		this.prevCameraYaw = this.cameraYaw;
 		float f;
-		if (this.onGround && !this.getShouldBeDead() && !this.isSwimming()) {
-			f = Math.min(0.1F, MathHelper.sqrt(horizontalMag(this.getMotion())));
+		if (this.onGround && !this.isDeadOrDying() && !this.isSwimming()) {
+			f = Math.min(0.1F, MathHelper.sqrt(getHorizontalDistanceSqr(this.getDeltaMovement())));
 		} else {
 			f = 0.0F;
 		}
@@ -132,7 +136,7 @@ public class IceologerEntity extends SpellcastingIllagerEntity {
 	}
 
 	@Override
-	public void applyWaveBonus(int wave, boolean p_213660_2_) {
+	public void applyRaidBuffs(int wave, boolean p_213660_2_) {
 	}
 
 	@Override
@@ -151,12 +155,12 @@ public class IceologerEntity extends SpellcastingIllagerEntity {
 	}
 
 	@Override
-	public SoundEvent getRaidLossSound() {
+	public SoundEvent getCelebrateSound() {
 		return SRSounds.ENTITY_ICEOLOGER_CELEBRATE.get();
 	}
 
 	@Override
-	public SoundEvent getSpellSound() {
+	public SoundEvent getCastingSoundEvent() {
 		return SRSounds.ENTITY_ICEOLOGER_CAST_SPELL.get();
 	}
 
@@ -167,27 +171,27 @@ public class IceologerEntity extends SpellcastingIllagerEntity {
 
 	@Nullable
 	public IceChunkEntity getIceChunk() {
-		if (this.iceChunkEntityUUID != null && this.world instanceof ServerWorld) {
-			Entity entity = ((ServerWorld) this.world).getEntityByUuid(this.iceChunkEntityUUID);
+		if (this.iceChunkEntityUUID != null && this.level instanceof ServerWorld) {
+			Entity entity = ((ServerWorld) this.level).getEntity(this.iceChunkEntityUUID);
 			return entity instanceof IceChunkEntity ? (IceChunkEntity) entity : null;
 		} else {
 			if (this.iceChunkEntity == 0)
 				return null;
 
-			Entity entity = this.world.getEntityByID(this.iceChunkEntity);
+			Entity entity = this.level.getEntity(this.iceChunkEntity);
 			return entity instanceof IceChunkEntity ? (IceChunkEntity) entity : null;
 		}
 	}
 
 	public void setIceChunk(@Nullable IceChunkEntity target) {
 		if (target != null) {
-			this.iceChunkEntity = target.getEntityId();
-			this.iceChunkEntityUUID = target.getUniqueID();
+			this.iceChunkEntity = target.getId();
+			this.iceChunkEntityUUID = target.getUUID();
 		}
 	}
 
 	@Override
-	public CreatureAttribute getCreatureAttribute() {
+	public CreatureAttribute getMobType() {
 		return CreatureAttribute.ILLAGER;
 	}
 
@@ -197,7 +201,7 @@ public class IceologerEntity extends SpellcastingIllagerEntity {
 	}
 
 	public static boolean canIceologerSpawn(EntityType<? extends IceologerEntity> patrollerType, IWorld worldIn, SpawnReason reason, BlockPos pos, Random random) {
-		return worldIn.getBlockState(pos).isIn(Blocks.SNOW) && canMonsterSpawn(patrollerType, worldIn, reason, pos, random);
+		return worldIn.getBlockState(pos).is(Blocks.SNOW) && checkAnyLightMonsterSpawnRules(patrollerType, worldIn, reason, pos, random);
 	}
 
 	class AttackIceChunkGoal extends UseSpellGoal {
@@ -205,8 +209,8 @@ public class IceologerEntity extends SpellcastingIllagerEntity {
 		}
 
 		@Override
-		public boolean shouldExecute() {
-			return IceologerEntity.this.getIceChunk() == null && super.shouldExecute();
+		public boolean canUse() {
+			return IceologerEntity.this.getIceChunk() == null && super.canUse();
 		}
 
 		@Override
@@ -220,22 +224,22 @@ public class IceologerEntity extends SpellcastingIllagerEntity {
 		}
 
 		@Override
-		protected void castSpell() {
-			LivingEntity target = IceologerEntity.this.getAttackTarget();
+		protected void performSpellCasting() {
+			LivingEntity target = IceologerEntity.this.getTarget();
 			if (IceologerEntity.this.getIceChunk() == null) {
-				IceChunkEntity iceChunk = new IceChunkEntity(IceologerEntity.this.world, IceologerEntity.this, target);
+				IceChunkEntity iceChunk = new IceChunkEntity(IceologerEntity.this.level, IceologerEntity.this, target);
 				IceologerEntity.this.setIceChunk(iceChunk);
-				IceologerEntity.this.world.addEntity(iceChunk);
+				IceologerEntity.this.level.addFreshEntity(iceChunk);
 			}
 		}
 
 		@Override
 		protected SoundEvent getSpellPrepareSound() {
-			return SoundEvents.ENTITY_EVOKER_PREPARE_ATTACK;
+			return SoundEvents.EVOKER_PREPARE_ATTACK;
 		}
 
 		@Override
-		protected SpellType getSpellType() {
+		protected SpellType getSpell() {
 			return SpellType.FANGS;
 		}
 	}
@@ -255,22 +259,22 @@ public class IceologerEntity extends SpellcastingIllagerEntity {
 		}
 
 		@Override
-		protected void castSpell() {
-			LivingEntity target = IceologerEntity.this.getAttackTarget();
+		protected void performSpellCasting() {
+			LivingEntity target = IceologerEntity.this.getTarget();
 			if (target != null) {
-				IceCloudEntity iceCloud = new IceCloudEntity(IceologerEntity.this.getPosX(), IceologerEntity.this.getPosY(), IceologerEntity.this.getPosZ(), target.getPosX(), target.getPosY(), target.getPosZ(), IceologerEntity.this.world);
-				iceCloud.setShooter(IceologerEntity.this);
-				IceologerEntity.this.world.addEntity(iceCloud);
+				IceCloudEntity iceCloud = new IceCloudEntity(IceologerEntity.this.getX(), IceologerEntity.this.getY(), IceologerEntity.this.getZ(), target.getX(), target.getY(), target.getZ(), IceologerEntity.this.level);
+				iceCloud.setOwner(IceologerEntity.this);
+				IceologerEntity.this.level.addFreshEntity(iceCloud);
 			}
 		}
 
 		@Override
 		protected SoundEvent getSpellPrepareSound() {
-			return SoundEvents.ENTITY_EVOKER_PREPARE_ATTACK;
+			return SoundEvents.EVOKER_PREPARE_ATTACK;
 		}
 
 		@Override
-		protected SpellType getSpellType() {
+		protected SpellType getSpell() {
 			return SpellType.SUMMON_VEX;
 		}
 	}
