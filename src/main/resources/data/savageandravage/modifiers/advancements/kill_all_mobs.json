@@ -75,6 +75,20 @@
                 }
               ]
             }
+          },
+          "savageandravage:trickster": {
+            "trigger": "minecraft:player_killed_entity",
+            "conditions": {
+              "entity": [
+                {
+                  "condition": "minecraft:entity_properties",
+                  "predicate": {
+                    "type": "savageandravage:trickster"
+                  },
+                  "entity": "this"
+                }
+              ]
+            }
           }
         },
         "requirements": [
@@ -92,6 +106,9 @@
           ],
           [
             "savageandravage:iceologer"
+          ],
+          [
+            "savageandravage:trickster"
           ]
         ]
       }
