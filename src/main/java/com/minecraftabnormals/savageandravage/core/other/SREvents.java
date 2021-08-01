@@ -87,7 +87,8 @@ public class SREvents {
 	public static String prevZKey = SavageAndRavage.MOD_ID + ":prevZ";
 
 	@SubscribeEvent
-	public static void onLivingSpawned(EntityJoinWorldEvent event) {
+	public static void onEntityJoinWorld(EntityJoinWorldEvent event) {
+		World world = event.getWorld();
 		if (event.getEntity() instanceof PillagerEntity) {
 			PillagerEntity pillager = (PillagerEntity) event.getEntity();
 			ImprovedCrossbowGoal<PillagerEntity> aiCrossBow = new ImprovedCrossbowGoal<>(pillager, 1.0D, 8.0F, 5.0D);
@@ -95,8 +96,8 @@ public class SREvents {
 				pillager.goalSelector.removeGoal(crossbowGoal);
 				pillager.goalSelector.addGoal(3, aiCrossBow);
 			});
-			if (event.getWorld().random.nextInt(100) == 0 && !event.getWorld().isClientSide()) {
-				pillager.setItemSlot(EquipmentSlotType.OFFHAND, createRocket());
+			if (world.random.nextInt(100) == 0 && !world.isClientSide()) {
+				pillager.setItemSlot(EquipmentSlotType.OFFHAND, createRocket(world.random));
 				pillager.startUsingItem(Hand.OFF_HAND);
 				pillager.setDropChance(EquipmentSlotType.OFFHAND, 2.0F);
 			}
@@ -491,21 +492,32 @@ public class SREvents {
 		return false;
 	}
 
-	public static ItemStack createRocket() {
-		ItemStack rocket = new ItemStack(Items.FIREWORK_ROCKET);
-		ItemStack star = new ItemStack(Items.FIREWORK_STAR);
-		CompoundNBT compoundnbt = star.getOrCreateTagElement("Explosion");
-		compoundnbt.putInt("Type", FireworkRocketItem.Shape.BURST.getId());
-		CompoundNBT compoundnbt1 = rocket.getOrCreateTagElement("Fireworks");
-		ListNBT listnbt = new ListNBT();
-		CompoundNBT compoundnbt2 = star.getTagElement("Explosion");
-		if (compoundnbt2 != null) {
-			listnbt.add(compoundnbt2);
-		}
-		if (!listnbt.isEmpty()) {
-			compoundnbt1.put("Explosions", listnbt);
-		}
+	public static ItemStack createRocket(Random random) {
+		ItemStack rocket = new ItemStack(Items.FIREWORK_ROCKET, random.nextInt(16)+1);
+		CompoundNBT fireworks =  rocket.getOrCreateTagElement("Fireworks");
+		ListNBT explosions = new ListNBT();
+		CompoundNBT explosion = new CompoundNBT();
+		fireworks.put("Explosions", explosions);
+		explosions.add(explosion);
+		explosion.putIntArray("Colors", randomColors(random));
+		if (random.nextInt(2) == 0)
+			explosion.putIntArray("FadeColors", randomColors(random));
+		if (random.nextInt(2) == 0)
+			explosion.putBoolean("Flicker", true);
+		if (random.nextInt(2) == 0)
+			explosion.putBoolean("Trail", true);
+		FireworkRocketItem.Shape[] values = FireworkRocketItem.Shape.values();
+		explosion.putInt("Type", values[random.nextInt(values.length)].getId());
+		fireworks.putInt("Flight", random.nextInt(3)+1);
 		return rocket;
 	}
 
+	public static int[] randomColors(Random random) {
+		int[] colors = new int[random.nextInt(3)+1];
+		DyeColor[] values = DyeColor.values();
+		for (int i=0; i<colors.length; i++) {
+			colors[i] = values[random.nextInt(values.length)].getFireworkColor();
+		}
+		return colors;
+	}
 }
