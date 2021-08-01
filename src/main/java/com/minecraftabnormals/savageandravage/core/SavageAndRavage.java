@@ -79,9 +79,9 @@ public class SavageAndRavage {
 			SRFeatures.registerPools();
 			SRFeatures.registerBiomeModifications();
 			SREntities.registerWaveMembers();
-			SRLoot.registerLootConditions();
 			SRCompat.registerFlammables();
 			SRCompat.registerDispenserBehaviors();
+			SRCompat.registerDataSerializers();
 		});
 	}
 
