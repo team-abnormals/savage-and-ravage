@@ -3,11 +3,17 @@
   "modifiers": [
     {
       "type": "criteria",
+      "conditions": [
+        {
+          "type": "savageandravage:config",
+          "value": "no_bad_omen_on_death"
+        }
+      ],
       "config": {
         "mode": "replace",
         "criteria": {
           "voluntary_exile": {
-            "trigger": "savageandravage:burn_banner"
+            "trigger": "savageandravage:burn_ominous_banner"
           }
         },
         "requirements": [

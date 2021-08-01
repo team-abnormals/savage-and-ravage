@@ -111,14 +111,14 @@ public class BurningBannerEntity extends Entity implements IEntityAdditionalSpaw
 			} else if (this.getTicksTillRemove() == 10) {
 				this.playSound(SoundEvents.FIRE_EXTINGUISH, 2F, this.level.getRandom().nextFloat() * 0.4F + 0.8F);
 				PlayerEntity offender = this.getOffender();
-				if (offender != null && isOminousBanner(this.level, bannerPos) && ((ServerWorld) this.level).getRaidAt(bannerPos) == null && SRConfig.COMMON.noBadOmenOnDeath.get()) {
-					SRTriggers.BURN_BANNER.trigger((ServerPlayerEntity) offender);
-					EffectInstance effect = offender.getEffect(Effects.BAD_OMEN);
-					if (effect != null)
-						offender.removeEffectNoUpdate(Effects.BAD_OMEN);
-
-					if (!this.level.getGameRules().getBoolean(GameRules.RULE_DISABLE_RAIDS))
-						offender.addEffect(new EffectInstance(Effects.BAD_OMEN, 120000, MathHelper.clamp(effect == null ? 0 : effect.getAmplifier() + 1, 0, 4), false, false, true));
+				if (offender != null && isOminousBanner(this.level, bannerPos) && ((ServerWorld) this.level).getRaidAt(bannerPos) == null) {
+					SRTriggers.BURN_OMINOUS_BANNER.trigger((ServerPlayerEntity) offender);
+					if (SRConfig.COMMON.noBadOmenOnDeath.get() && !this.level.getGameRules().getBoolean(GameRules.RULE_DISABLE_RAIDS)) {
+						EffectInstance effect = offender.getEffect(Effects.BAD_OMEN);
+						if (effect != null)
+							offender.removeEffectNoUpdate(Effects.BAD_OMEN);
+						offender.addEffect(new EffectInstance(Effects.BAD_OMEN, 120000, MathHelper.clamp(effect == null ? 0 : (effect.getAmplifier() + 1), 0, 4), false, false, true));
+					}
 				}
 				this.level.removeBlock(bannerPos, false);
 			}
