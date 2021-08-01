@@ -15,8 +15,6 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class RunedGloomyTilesBlock extends ChiseledGloomyTilesBlock {
 
 	public RunedGloomyTilesBlock(Properties blockProperties) {
@@ -29,7 +27,7 @@ public class RunedGloomyTilesBlock extends ChiseledGloomyTilesBlock {
 		BlockState state = world.getBlockState(pos);
 		if (!state.getValue(POWERED) && shouldTrigger(entity)) {
 			world.setBlockAndUpdate(pos, state.setValue(POWERED, true));
-			world.playSound(null, pos, SRSounds.BLOCK_RUNED_GLOOMY_TILES_ACTIVATE.get(), SoundCategory.BLOCKS, 1.0F, 1.0F);
+			world.playSound(null, pos, SRSounds.ENTITY_RUNE_PRISON_APPEAR.get(), SoundCategory.BLOCKS, 1.0F, 1.0F);
 			EvokerFangsEntity evokerFangs = EntityType.EVOKER_FANGS.create(world);
 			if (evokerFangs != null) {
 				evokerFangs.moveTo(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 0.0F, 0.0F);

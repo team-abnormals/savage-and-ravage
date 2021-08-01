@@ -148,7 +148,7 @@ public class TricksterEntity extends SpellcastingIllagerEntity {
 
     @Override
     protected SoundEvent getCastingSoundEvent() {
-        return SRSounds.ENTITY_TRICKSTER_LAUGH.get();
+        return SRSounds.ENTITY_TRICKSTER_CAST_SPELL.get();
     }
 
     @Override
@@ -200,7 +200,7 @@ public class TricksterEntity extends SpellcastingIllagerEntity {
         @Nullable
         @Override
         protected SoundEvent getSpellPrepareSound() {
-            return SRSounds.BLOCK_RUNED_GLOOMY_TILES_ACTIVATE.get(); //TODO change this?
+            return SRSounds.ENTITY_RUNE_PRISON_APPEAR.get();
         }
 
         @Override
