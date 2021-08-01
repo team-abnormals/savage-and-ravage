@@ -1,10 +1,10 @@
 {
   "textures": [
-    "savageandravage:snowflake_0",
-    "savageandravage:snowflake_1",
-    "savageandravage:snowflake_2",
-    "savageandravage:snowflake_3",
-    "savageandravage:snowflake_4",
-    "savageandravage:snowflake_5"
+    "savageandravage:snowflake/snowflake_0",
+    "savageandravage:snowflake/snowflake_1",
+    "savageandravage:snowflake/snowflake_2",
+    "savageandravage:snowflake/snowflake_3",
+    "savageandravage:snowflake/snowflake_4",
+    "savageandravage:snowflake/snowflake_5"
   ]
 }
