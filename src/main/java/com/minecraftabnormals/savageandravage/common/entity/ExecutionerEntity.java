@@ -21,7 +21,7 @@ import net.minecraft.world.raid.Raid;
 import java.util.Map;
 
 public class ExecutionerEntity extends VindicatorEntity {
-
+	//TODO fix attack time
 	public ExecutionerEntity(EntityType<? extends VindicatorEntity> entity, World world) {
 		super(entity, world);
 	}
