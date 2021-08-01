@@ -35,6 +35,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.event.ForgeEventFactory;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -224,7 +225,7 @@ public class CreepieEntity extends MonsterEntity implements IChargeableMob, IOwn
 	 */
 	protected void explode() {
 		if (!this.level.isClientSide()) {
-			Explosion.Mode mode = SRConfig.COMMON.creepieExplosionsDestroyBlocks.get() ? Explosion.Mode.DESTROY : Explosion.Mode.NONE;
+			Explosion.Mode mode = SRConfig.COMMON.creepieExplosionsDestroyBlocks.get() && ForgeEventFactory.getMobGriefingEvent(this.level, this) ? Explosion.Mode.DESTROY : Explosion.Mode.NONE;
 			float chargedModifier = this.isPowered() ? 2.0F : 1.0F;
 			this.dead = true;
 			this.level.explode(this, this.getX(), this.getY(), this.getZ(), this.explosionRadius * chargedModifier, mode);
