@@ -85,8 +85,9 @@
   "subtitles.savageandravage.entity.trickster.death": "Trickster dies",
   "subtitles.savageandravage.entity.trickster.celebrate": "Trickster cheers",
   "subtitles.savageandravage.entity.trickster.laugh": "Trickster laughs",
-  
+  "subtitles.savageandravage.entity.trickster.cast_spell": "Trickster casts spell",
+
   "subtitles.savageandravage.entity.player.cast_spell": "Player casts spell",
-  "subtitles.savageandravage.entity.creeper_spores.throw": "Creeper spores fly",
-  "subtitles.savageandravage.block.runed_gloomy_tiles.activate": "Runed Gloomy Tiles activate"
+  "subtitles.savageandravage.entity.creeper_spores.throw": "Creeper Spores fly",
+  "subtitles.savageandravage.entity.rune_prison.appear": "Rune Prison appears"
 }

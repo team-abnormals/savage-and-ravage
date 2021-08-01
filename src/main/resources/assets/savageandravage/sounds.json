@@ -108,6 +108,13 @@
     ],
     "subtitle": "subtitles.savageandravage.entity.trickster.laugh"
   },
+  "entity.trickster.cast_spell": {
+    "sounds": [
+      "mob/evocation_illager/cast1",
+      "mob/evocation_illager/cast2"
+    ],
+    "subtitle": "subtitles.savageandravage.entity.trickster.cast_spell"
+  },
   "entity.player.cast_spell": {
     "sounds": [
       "mob/evocation_illager/cast1",
@@ -126,6 +133,6 @@
       "mob/evocation_illager/prepare_attack1",
       "mob/evocation_illager/prepare_attack2"
     ],
-    "subtitle": "subtitles.savageandravage.block.runed_gloomy_tiles.activate"
+    "subtitle": "subtitles.savageandravage.entity.rune_prison.appear"
   }
 }

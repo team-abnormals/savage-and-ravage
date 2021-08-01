@@ -27,9 +27,10 @@ public class SRSounds {
 	public static final RegistryObject<SoundEvent> ENTITY_TRICKSTER_HURT = HELPER.createSoundEvent("entity.trickster.hurt");
 	public static final RegistryObject<SoundEvent> ENTITY_TRICKSTER_DEATH = HELPER.createSoundEvent("entity.trickster.death");
 	public static final RegistryObject<SoundEvent> ENTITY_TRICKSTER_CELEBRATE = HELPER.createSoundEvent("entity.trickster.celebrate");
+	public static final RegistryObject<SoundEvent> ENTITY_TRICKSTER_CAST_SPELL = HELPER.createSoundEvent("entity.trickster.cast_spell");
 	public static final RegistryObject<SoundEvent> ENTITY_TRICKSTER_LAUGH = HELPER.createSoundEvent("entity.trickster.laugh");
 
 	public static final RegistryObject<SoundEvent> ENTITY_PLAYER_CAST_SPELL = HELPER.createSoundEvent("entity.player.cast_spell");
 	public static final RegistryObject<SoundEvent> ENTITY_CREEPER_SPORES_THROW = HELPER.createSoundEvent("entity.creeper_spores.throw");
-	public static final RegistryObject<SoundEvent> BLOCK_RUNED_GLOOMY_TILES_ACTIVATE = HELPER.createSoundEvent("block.runed_gloomy_tiles.activate");
+	public static final RegistryObject<SoundEvent> ENTITY_RUNE_PRISON_APPEAR = HELPER.createSoundEvent("entity.rune_prison.appear");
 }
