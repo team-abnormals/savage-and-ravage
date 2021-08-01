@@ -30,7 +30,7 @@
       "rolls": 1,
       "conditions": [
         {
-          "condition": "savageandravage:random_difficulty_chance",
+          "condition": "abnormals_core:random_difficulty_chance",
           "default_chance": 0.65,
           "peaceful": 0,
           "hard": 0.8
