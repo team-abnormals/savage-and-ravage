@@ -15,8 +15,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.network.FMLPlayMessages;
 import net.minecraftforge.fml.network.NetworkHooks;
 
-import net.minecraft.entity.projectile.AbstractArrowEntity.PickupStatus;
-
 public class MischiefArrowEntity extends AbstractArrowEntity {
 	public boolean finished = false;
 

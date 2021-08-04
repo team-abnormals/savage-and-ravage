@@ -6,19 +6,10 @@ import com.minecraftabnormals.savageandravage.core.registry.SRItems;
 import com.minecraftabnormals.savageandravage.core.registry.SRParticles;
 import com.minecraftabnormals.savageandravage.core.registry.SRSounds;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.EntitySize;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.Pose;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.AvoidEntityGoal;
-import net.minecraft.entity.ai.goal.HurtByTargetGoal;
-import net.minecraft.entity.ai.goal.LookAtGoal;
-import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
-import net.minecraft.entity.ai.goal.RandomWalkingGoal;
-import net.minecraft.entity.ai.goal.SwimGoal;
+import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.AbstractRaiderEntity;
 import net.minecraft.entity.monster.MonsterEntity;
@@ -36,10 +27,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-
-import net.minecraft.entity.monster.SpellcastingIllagerEntity.CastingASpellGoal;
-import net.minecraft.entity.monster.SpellcastingIllagerEntity.SpellType;
-import net.minecraft.entity.monster.SpellcastingIllagerEntity.UseSpellGoal;
 
 public class TricksterEntity extends SpellcastingIllagerEntity {
     public TricksterEntity(EntityType<? extends SpellcastingIllagerEntity> type, World p_i48551_2_) {

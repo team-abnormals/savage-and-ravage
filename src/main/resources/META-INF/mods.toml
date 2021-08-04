@@ -7,16 +7,15 @@ license = "https://github.com/team-abnormals/savage-and-ravage/blob/main/LICENSE
     modId = "savageandravage"
     version = "${file.jarVersion}"
     logoFile = "logo.png"
+    itemIcon = "savageandravage:griefer_helmet"
+    configBackground = "savageandravage:textures/block/gloomy_tiles.png"
     authors = "Team Abnormals"
-    credits = "Farcr, bageldotjpg, abigailfails, TallestRed, and MCVinnyQ"
+    credits = "Farcr, bageldotjpg, abigailfails, TallestRed, MCVinnyQ"
+    displayURL = "https://www.teamabnormals.com/mods/savage-and-ravage"
     displayName = "Savage & Ravage"
     description = '''
     A mod that improves and expands on illagers through new structures, enemies and challenges.
     '''
-
-[modproperties.savageandravage]
-    catalogueItemIcon = "savageandravage:griefer_helmet"
-    configuredBackground = "savageandravage:textures/block/gloomy_tiles.png"
 
 [[dependencies.savageandravage]]
     modId = "minecraft"
@@ -28,7 +27,7 @@ license = "https://github.com/team-abnormals/savage-and-ravage/blob/main/LICENSE
 [[dependencies.savageandravage]]
     modId = "forge"
     mandatory = true
-    versionRange = "[36.1.0,)"
+    versionRange = "[36.2.0,)"
     ordering = "NONE"
     side = "BOTH"
 

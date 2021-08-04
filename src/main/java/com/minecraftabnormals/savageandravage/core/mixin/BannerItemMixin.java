@@ -7,8 +7,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.WallOrFloorItem;
 import org.spongepowered.asm.mixin.Mixin;
 
-import net.minecraft.item.Item.Properties;
-
 @Mixin(BannerItem.class)
 public abstract class BannerItemMixin extends WallOrFloorItem {
 

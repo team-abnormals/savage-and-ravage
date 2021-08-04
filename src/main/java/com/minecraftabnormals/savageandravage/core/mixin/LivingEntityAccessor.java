@@ -10,8 +10,8 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(LivingEntity.class)
 public interface LivingEntityAccessor {
 	@Accessor("lastHurtByPlayerTime")
-	int getRecentlyHit();
+	int getLastHurtByPlayerTime();
 
 	@Invoker("createLootContext")
-	LootContext.Builder invokeGetLootContextBuilder(boolean recentlyHit, DamageSource damageSource);
+	LootContext.Builder invokeCreateLootContext(boolean recentlyHit, DamageSource damageSource);
 }
