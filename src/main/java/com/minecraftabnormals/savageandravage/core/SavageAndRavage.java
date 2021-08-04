@@ -38,7 +38,6 @@ public class SavageAndRavage {
 
 	public SavageAndRavage() {
 		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-		MinecraftForge.EVENT_BUS.register(this);
 
 		this.setupMessages();
 
@@ -48,6 +47,7 @@ public class SavageAndRavage {
 		SREffects.EFFECTS.register(bus);
 		SRFeatures.FEATURES.register(bus);
 		SRAttributes.ATTRIBUTES.register(bus);
+		MinecraftForge.EVENT_BUS.register(this);
 
 		bus.addListener(this::commonSetup);
 		bus.addListener(this::clientSetup);
