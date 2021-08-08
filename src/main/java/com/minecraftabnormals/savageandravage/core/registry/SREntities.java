@@ -6,24 +6,34 @@ import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.Track
 import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.TrackedDataManager;
 import com.minecraftabnormals.abnormals_core.core.util.registry.EntitySubRegistryHelper;
 import com.minecraftabnormals.savageandravage.client.render.*;
+import com.minecraftabnormals.savageandravage.client.render.layer.TotemShieldLayer;
 import com.minecraftabnormals.savageandravage.common.entity.*;
 import com.minecraftabnormals.savageandravage.common.entity.block.SporeBombEntity;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 import com.minecraftabnormals.savageandravage.core.other.SRCompat;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.entity.EvokerRenderer;
+import net.minecraft.client.renderer.entity.model.IllagerModel;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.monster.AbstractSkeletonEntity;
+import net.minecraft.entity.monster.EvokerEntity;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.raid.Raid;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -87,6 +97,16 @@ public class SREntities {
 		event.put(ICEOLOGER.get(), IceologerEntity.registerAttributes().build());
 		event.put(EXECUTIONER.get(), ExecutionerEntity.registerAttributes().build());
 		event.put(TRICKSTER.get(), TricksterEntity.registerAttributes().build());
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	public static void registerRenderLayers() {
+		EntityRendererManager manager = Minecraft.getInstance().getEntityRenderDispatcher();
+		EntityRenderer<?> renderer = manager.renderers.get(EntityType.EVOKER);
+		if (renderer instanceof EvokerRenderer) {
+			EvokerRenderer<EvokerEntity> livingRenderer = (EvokerRenderer<EvokerEntity>) renderer;
+			livingRenderer.addLayer(new TotemShieldLayer<>(livingRenderer, new IllagerModel<>(2.0F, 0.0F, 64, 64)));
+		}
 	}
 
 	public static void registerRendering() {

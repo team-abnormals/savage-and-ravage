@@ -17,8 +17,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.World;
 
-import net.minecraft.item.Item.Properties;
-
 public class EldritchConchItem extends Item {
 	private static final TargetedItemGroupFiller FILLER = new TargetedItemGroupFiller(() -> Items.TOTEM_OF_UNDYING);
 

@@ -17,11 +17,8 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-
-import net.minecraft.item.Item.Properties;
 
 @EventBusSubscriber(modid = SavageAndRavage.MOD_ID)
 public class CleaverOfBeheadingItem extends SwordItem {

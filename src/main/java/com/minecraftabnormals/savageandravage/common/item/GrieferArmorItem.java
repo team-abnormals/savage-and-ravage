@@ -20,8 +20,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.UUID;
 
-import net.minecraft.item.Item.Properties;
-
 public class GrieferArmorItem extends ArmorItem {
 	private static final UUID MODIFIER = UUID.fromString("B77CAE62-FCEB-40F9-BD4D-A15F8F44CB91");
 	private final LazyValue<Multimap<Attribute, AttributeModifier>> attributes;

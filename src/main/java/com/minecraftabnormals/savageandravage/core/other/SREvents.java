@@ -12,11 +12,7 @@ import com.minecraftabnormals.savageandravage.common.network.MessageC2SIsPlayerS
 import com.minecraftabnormals.savageandravage.core.SRConfig;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 import com.minecraftabnormals.savageandravage.core.mixin.LivingEntityAccessor;
-import com.minecraftabnormals.savageandravage.core.registry.SRAttributes;
-import com.minecraftabnormals.savageandravage.core.registry.SRBlocks;
-import com.minecraftabnormals.savageandravage.core.registry.SREffects;
-import com.minecraftabnormals.savageandravage.core.registry.SREntities;
-import com.minecraftabnormals.savageandravage.core.registry.SRItems;
+import com.minecraftabnormals.savageandravage.core.registry.*;
 import net.minecraft.block.AbstractBannerBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -63,22 +59,14 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
-import net.minecraftforge.event.entity.living.LivingDropsEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
-import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @Mod.EventBusSubscriber(modid = SavageAndRavage.MOD_ID)
 public class SREvents {
@@ -161,7 +149,7 @@ public class SREvents {
 			if (event.getSource().isExplosion() && SRConfig.COMMON.creepersDropSporesAfterExplosionDeath.get() && server != null) {
 				LootTable loottable = server.getLootTables().get(SRLoot.CREEPER_EXPLOSION_DROPS);
 				LivingEntityAccessor accessor = (LivingEntityAccessor) creeper;
-				LootContext ctx = accessor.invokeGetLootContextBuilder(accessor.getRecentlyHit() > 0, event.getSource()).create(LootParameterSets.ENTITY);
+				LootContext ctx = accessor.invokeCreateLootContext(accessor.getLastHurtByPlayerTime() > 0, event.getSource()).create(LootParameterSets.ENTITY);
 				loottable.getRandomItems(ctx).forEach(creeper::spawnAtLocation);
 			}
 		} else if (entity instanceof PillagerEntity) {
@@ -170,7 +158,7 @@ public class SREvents {
 			if (!pillager.level.isClientSide() && ((ServerWorld) pillager.getCommandSenderWorld()).getRaidAt(pillager.blockPosition()) != null && server != null) {
 				LootTable loottable = server.getLootTables().get(SRLoot.PILLAGER_RAID_DROPS);
 				LivingEntityAccessor accessor = (LivingEntityAccessor) entity;
-				LootContext ctx = accessor.invokeGetLootContextBuilder(accessor.getRecentlyHit() > 0, event.getSource()).create(LootParameterSets.ENTITY);
+				LootContext ctx = accessor.invokeCreateLootContext(accessor.getLastHurtByPlayerTime() > 0, event.getSource()).create(LootParameterSets.ENTITY);
 				loottable.getRandomItems(ctx).forEach(pillager::spawnAtLocation);
 			}
 		} else if (entity instanceof EvokerEntity) {
@@ -179,7 +167,7 @@ public class SREvents {
 				LootTable loottable = server.getLootTables().get(SRLoot.EVOKER_TOTEM_REPLACEMENT);
 				LivingEntityAccessor accessor = (LivingEntityAccessor) entity;
 				//TODO this is just breaking?
-				LootContext ctx = accessor.invokeGetLootContextBuilder(accessor.getRecentlyHit() > 0, event.getSource()).create(LootParameterSets.ENTITY);
+				LootContext ctx = accessor.invokeCreateLootContext(accessor.getLastHurtByPlayerTime() > 0, event.getSource()).create(LootParameterSets.ENTITY);
 				List<ItemStack> stacks = loottable.getRandomItems(ctx);
 				if (!stacks.isEmpty()) {
 					Collection<ItemEntity> drops = event.getDrops();
