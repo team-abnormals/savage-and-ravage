@@ -1,8 +1,10 @@
 package com.minecraftabnormals.savageandravage.core.other;
 
-import com.google.common.collect.ImmutableList;
+import  com.google.common.collect.ImmutableList;
+import com.minecraftabnormals.abnormals_core.common.world.modification.BiomeModificationContext;
 import com.minecraftabnormals.abnormals_core.common.world.modification.BiomeModificationManager;
 import com.minecraftabnormals.abnormals_core.common.world.modification.BiomeModificationPredicates;
+import com.minecraftabnormals.abnormals_core.common.world.modification.BiomeModifier;
 import com.minecraftabnormals.abnormals_core.common.world.modification.BiomeSpawnsModifier;
 import com.minecraftabnormals.abnormals_core.core.util.DataUtil;
 import com.minecraftabnormals.savageandravage.common.world.gen.feature.EnclosureFeature;
@@ -10,8 +12,11 @@ import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 import com.minecraftabnormals.savageandravage.core.registry.SREntities;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.entity.EntityClassification;
+import net.minecraft.entity.EntityType;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.MobSpawnInfo;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.jigsaw.JigsawPattern;
@@ -21,6 +26,9 @@ import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+
+import java.util.function.BiPredicate;
+import java.util.function.Supplier;
 
 public class SRFeatures {
 	public static final DeferredRegister<Feature<?>> FEATURES = DeferredRegister.create(ForgeRegistries.FEATURES, SavageAndRavage.MOD_ID);
@@ -37,18 +45,27 @@ public class SRFeatures {
 
 	public static void registerBiomeModifications() {
 		BiomeModificationManager manager = BiomeModificationManager.INSTANCE;
-		manager.addModifier(BiomeSpawnsModifier.createSpawnAdder((key, biome) -> BiomeDictionary.hasType(key, BiomeDictionary.Type.OVERWORLD) && canHostilesSpawn(biome.getRegistryName()), EntityClassification.MONSTER, SREntities.SKELETON_VILLAGER::get, 5, 1, 1));
+		manager.addModifier(CustomSpawnsModifier.createSpawnAdder((key, biome) -> BiomeDictionary.hasType(key, BiomeDictionary.Type.OVERWORLD) && !BiomeModificationPredicates.forCategory(Biome.Category.MUSHROOM, Biome.Category.NONE).test(key, biome), EntityClassification.MONSTER, SREntities.SKELETON_VILLAGER::get, 5, 1, 1));
 		manager.addModifier(BiomeSpawnsModifier.createSpawnAdder((key, biome) -> BiomeDictionary.hasType(key, BiomeDictionary.Type.OVERWORLD) && BiomeModificationPredicates.forCategory(Biome.Category.ICY, Biome.Category.EXTREME_HILLS).test(key, biome), EntityClassification.MONSTER, SREntities.ICEOLOGER::get, 8, 1, 1));
 	}
 
-	public static boolean canHostilesSpawn(ResourceLocation biomeName) {
-		Biome biome = ForgeRegistries.BIOMES.getValue(biomeName);
-		if (biome != null) {
-			if (biome.getBiomeCategory() != Biome.Category.MUSHROOM && biome.getBiomeCategory() != Biome.Category.NONE) {
-				return false;
-			} else
-				return biome == ForgeRegistries.BIOMES.getValue(new ResourceLocation("biomesoplenty", "rainbow_hills"));
+	//All this is hacky and won't be needed after AC refactors this system
+	static class CustomSpawnsModifier extends BiomeModifier {
+		private final BiomeSpawnsModifier modifier;
+
+		public CustomSpawnsModifier(BiPredicate<RegistryKey<Biome>, Biome> shouldModify, EntityClassification classification, Supplier<EntityType<?>> typeSupplier, int weight, int minCount, int maxCount) {
+			super(shouldModify, (context) -> context.event.getSpawns().addSpawn(classification, new MobSpawnInfo.Spawners(typeSupplier.get(), weight, minCount, maxCount)));
+			this.modifier = BiomeSpawnsModifier.createSpawnAdder(shouldModify, classification, typeSupplier, weight, minCount, maxCount);
 		}
-		return true;
+
+		@Override
+		public boolean test(BiomeModificationContext context) {
+			ResourceLocation name = context.event.getName();
+			return this.modifier.test(context) && (name == null || !name.equals(new ResourceLocation("biomesoplenty", "rainbow_hills")));
+		}
+
+		public static CustomSpawnsModifier createSpawnAdder(BiPredicate<RegistryKey<Biome>, Biome> shouldModify, EntityClassification classification, Supplier<EntityType<?>> typeSupplier, int weight, int minCount, int maxCount) {
+			return new CustomSpawnsModifier(shouldModify, classification, typeSupplier, weight, minCount, maxCount);
+		}
 	}
 }
