@@ -19,14 +19,14 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Optional;
 
-public class RunePrisonEntity extends Entity {
+public class RunePrisonEntity extends Entity implements ITracksAffected {
 	private static final DataParameter<Integer> TICKS_TILL_REMOVE = EntityDataManager.defineId(RunePrisonEntity.class, DataSerializers.INT);
 	private static final DataParameter<Optional<BlockPos>> BLOCK_POS = EntityDataManager.defineId(RunePrisonEntity.class, DataSerializers.OPTIONAL_BLOCK_POS);
 	private int currentFrame = 0;
 	private boolean isBackwardsFrameCycle = false;
+	private LivingEntity lastTriggered = null;
 
 	public RunePrisonEntity(EntityType<? extends RunePrisonEntity> type, World worldIn) {
 		super(type, worldIn);
@@ -99,10 +99,10 @@ public class RunePrisonEntity extends Entity {
 			setTicksTillRemove(getTicksTillRemove() - 1);
 		}
 
-		List<LivingEntity> intersectingEntityList = this.level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox());
-		for (LivingEntity livingEntity : intersectingEntityList) {
+		for (LivingEntity livingEntity : this.level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox())) {
 			if (livingEntity.isAffectedByPotions() && RunedGloomyTilesBlock.shouldTrigger(livingEntity)) {
-				livingEntity.addEffect(new EffectInstance(SREffects.WEIGHT.get(), 20, 2));
+				livingEntity.addEffect(new EffectInstance(SREffects.WEIGHT.get(), 60, 2));
+				this.lastTriggered = livingEntity;
 			}
 		}
 
@@ -110,16 +110,19 @@ public class RunePrisonEntity extends Entity {
 			this.remove();
 
 			BlockPos pos = this.getBlockPos();
-			if (pos == null)
-				return;
-
-			if (this.level.getBlockState(pos).getBlock() instanceof RunedGloomyTilesBlock)
-				this.level.setBlockAndUpdate(pos, SRBlocks.GLOOMY_TILES.get().defaultBlockState());
+			if (pos != null) {
+				if (this.level.getBlockState(pos).getBlock() instanceof RunedGloomyTilesBlock)
+					this.level.setBlockAndUpdate(pos, SRBlocks.GLOOMY_TILES.get().defaultBlockState());
+			}
 		}
 	}
 
 	public int getCurrentFrame() {
 		return this.currentFrame;
+	}
+
+	public Entity getLastAffected() {
+		return this.lastTriggered;
 	}
 
 	@Override

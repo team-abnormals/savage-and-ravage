@@ -21,6 +21,9 @@ import net.minecraft.item.BannerItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.IDataSerializer;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
@@ -36,7 +39,29 @@ import static com.minecraftabnormals.abnormals_core.core.util.BlockUtil.getEntit
 import static com.minecraftabnormals.abnormals_core.core.util.BlockUtil.offsetPos;
 
 public class SRCompat {
-	public static final IDataProcessor<Optional<Vector3d>> OPTIONAL_VECTOR3D = new IDataProcessor<Optional<Vector3d>>() {
+	public static final IDataSerializer<Optional<Vector3d>> OPTIONAL_VECTOR3D_SERIALIZER = new IDataSerializer<Optional<Vector3d>>() {
+		@Override
+		public void write(PacketBuffer buffer, Optional<Vector3d> optionalVector) {
+			buffer.writeBoolean(optionalVector.isPresent());
+			if (optionalVector.isPresent()) {
+				Vector3d vector = optionalVector.get();
+				buffer.writeDouble(vector.x);
+				buffer.writeDouble(vector.y);
+				buffer.writeDouble(vector.z);
+			}
+		}
+
+		@Override
+		public Optional<Vector3d> read(PacketBuffer buffer) {
+			return !buffer.readBoolean() ? Optional.empty() : Optional.of(new Vector3d(buffer.readDouble(), buffer.readDouble(), buffer.readDouble()));
+		}
+
+		@Override
+		public Optional<Vector3d> copy(Optional<Vector3d> optionalVector) {
+			return optionalVector;
+		}
+	};
+	public static final IDataProcessor<Optional<Vector3d>> OPTIONAL_VECTOR3D_PROCESSOR = new IDataProcessor<Optional<Vector3d>>() {
 		@Override
 		public CompoundNBT write(Optional<Vector3d> optionalVector) {
 			CompoundNBT nbt = new CompoundNBT();
@@ -100,5 +125,9 @@ public class SRCompat {
 				return stack;
 			}
 		});
+	}
+
+	public static void registerDataSerializers() {
+		DataSerializers.registerSerializer(OPTIONAL_VECTOR3D_SERIALIZER);
 	}
 }

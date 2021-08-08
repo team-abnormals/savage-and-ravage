@@ -1,7 +1,6 @@
 package com.minecraftabnormals.savageandravage.core.other;
 
 import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.IDataManager;
-import com.minecraftabnormals.abnormals_core.core.AbnormalsCore;
 import com.minecraftabnormals.abnormals_core.core.util.NetworkUtil;
 import com.minecraftabnormals.savageandravage.common.entity.*;
 import com.minecraftabnormals.savageandravage.common.entity.block.SporeBombEntity;
@@ -57,10 +56,10 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -70,9 +69,6 @@ import java.util.*;
 
 @Mod.EventBusSubscriber(modid = SavageAndRavage.MOD_ID)
 public class SREvents {
-	public static String prevXKey = SavageAndRavage.MOD_ID + ":prevX";
-	public static String prevYKey = SavageAndRavage.MOD_ID + ":prevY";
-	public static String prevZKey = SavageAndRavage.MOD_ID + ":prevZ";
 
 	@SubscribeEvent
 	public static void onEntityJoinWorld(EntityJoinWorldEvent event) {
@@ -136,10 +132,12 @@ public class SREvents {
 			villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, GrieferEntity.class, 8.0F, 0.8D, 0.8D));
 			villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, IceologerEntity.class, 8.0F, 0.8D, 0.8D));
 			villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, ExecutionerEntity.class, 8.0F, 0.8D, 0.8D));
+			villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, TricksterEntity.class, 8.0F, 0.8D, 0.8D));
 			villager.goalSelector.addGoal(1, new AvoidGrieferOwnedCreepiesGoal<>(villager, CreepieEntity.class, 8.0F, 0.8D, 0.8D));
 		}
 	}
 
+	//TODO replace with loot modifiers
 	@SubscribeEvent
 	public static void onLivingDrops(LivingDropsEvent event) {
 		Entity entity = event.getEntity();
@@ -166,7 +164,6 @@ public class SREvents {
 			if (server != null) {
 				LootTable loottable = server.getLootTables().get(SRLoot.EVOKER_TOTEM_REPLACEMENT);
 				LivingEntityAccessor accessor = (LivingEntityAccessor) entity;
-				//TODO this is just breaking?
 				LootContext ctx = accessor.invokeCreateLootContext(accessor.getLastHurtByPlayerTime() > 0, event.getSource()).create(LootParameterSets.ENTITY);
 				List<ItemStack> stacks = loottable.getRandomItems(ctx);
 				if (!stacks.isEmpty()) {
@@ -190,10 +187,11 @@ public class SREvents {
 			entity.setDeltaMovement(entity.getDeltaMovement().x(), 0.0D, entity.getDeltaMovement().z());
 	}
 
+	/* TODO work out how to properly do input listening for weight and confusion
 	@SubscribeEvent
 	public static void onKeyInput(InputEvent.KeyInputEvent event) {
-		//do player stuff
-	}
+		if (InputMappings.getKey(event.getKey(), event.getScanCode()) == Input)
+	}*/
 
 	@SubscribeEvent
 	public static void onLivingSetAttackTarget(LivingSetAttackTargetEvent event) {
@@ -393,7 +391,6 @@ public class SREvents {
 				data.setValue(SREntities.INVISIBLE_DUE_TO_MASK, canBeInvisible);
 				spawnMaskParticles(entity);
 			}
-
 			if (maskStateChanged || (canBeInvisible && !entity.isInvisible()))
 				entity.setInvisible(canBeInvisible || entity.hasEffect(Effects.INVISIBILITY));
 
@@ -404,11 +401,11 @@ public class SREvents {
 				data.getValue(SREntities.PREVIOUS_POSITION).ifPresent(prevPos -> {
 					if (!prevPos.equals(currentPos)) {
 						data.setValue(SREntities.ILLEGAL_MASK_TICKS, illegalTicks + 1);
-						AbnormalsCore.LOGGER.debug("Incremented illegal mask ticks, value is now " + data.getValue(SREntities.ILLEGAL_MASK_TICKS));
+						//AbnormalsCore.LOGGER.debug("Incremented illegal mask ticks, value is now " + data.getValue(SREntities.ILLEGAL_MASK_TICKS));
 					} else if (illegalTicks > 0)
 						data.setValue(SREntities.ILLEGAL_MASK_TICKS, illegalTicks - 1);
 				});
-				if (data.getValue(SREntities.ILLEGAL_MASK_TICKS) > 80)
+				if (data.getValue(SREntities.ILLEGAL_MASK_TICKS) > 40)
 					((ServerPlayerEntity) entity).connection.disconnect(new TranslationTextComponent("multiplayer.savageandravage.disconnect.invisible_while_moving"));
 				data.setValue(SREntities.PREVIOUS_POSITION, Optional.of(currentPos));
 			}

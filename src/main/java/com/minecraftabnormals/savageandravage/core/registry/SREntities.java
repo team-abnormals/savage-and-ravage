@@ -33,7 +33,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -65,7 +64,7 @@ public class SREntities {
 	public static final TrackedData<Integer> TOTEM_SHIELD_COOLDOWN = TrackedData.Builder.create(DataProcessors.INT, () -> 0).enableSaving().build();
 	public static final TrackedData<Boolean> MARK_INVISIBLE = TrackedData.Builder.create(DataProcessors.BOOLEAN, () -> false).enableSaving().setSyncType(SyncType.TO_CLIENTS).build();
 	public static final TrackedData<Boolean> INVISIBLE_DUE_TO_MASK = TrackedData.Builder.create(DataProcessors.BOOLEAN, () -> false).enableSaving().setSyncType(SyncType.TO_CLIENTS).build();
-	public static final TrackedData<Optional<Vector3d>> PREVIOUS_POSITION = TrackedData.Builder.create(SRCompat.OPTIONAL_VECTOR3D, Optional::empty).setSyncType(SyncType.NOPE).build();
+	public static final TrackedData<Optional<Vector3d>> PREVIOUS_POSITION = TrackedData.Builder.create(SRCompat.OPTIONAL_VECTOR3D_PROCESSOR, Optional::empty).setSyncType(SyncType.NOPE).build();
 	public static final TrackedData<Integer> ILLEGAL_MASK_TICKS = TrackedData.Builder.create(DataProcessors.INT, () -> 0).setSyncType(SyncType.NOPE).build();
 
 	public static void registerEntitySpawns() {
@@ -86,7 +85,7 @@ public class SREntities {
 	public static void registerWaveMembers() {
 		Raid.WaveMember.create("GRIEFER", SREntities.GRIEFER.get(), new int[]{0, 1, 0, 1, 2, 2, 3, 2});
 		Raid.WaveMember.create("EXECUTIONER", SREntities.EXECUTIONER.get(), new int[]{0, 0, 1, 0, 0, 1, 2, 2});
-		Raid.WaveMember.create("TRICKSTER", SREntities.TRICKSTER.get(), new int[]{0, 0, 1, 0, 0, 1, 2, 2});
+		Raid.WaveMember.create("TRICKSTER", SREntities.TRICKSTER.get(), new int[]{0, 0, 0, 0, 0, 1, 1, 2});
 	}
 
 	@SubscribeEvent

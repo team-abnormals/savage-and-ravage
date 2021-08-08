@@ -9,6 +9,7 @@
     "BannerItemMixin",
     "IronGolemEntityMixin",
     "LivingEntityAccessor",
+    "SpellcastingIllagerEntityMixin",
     "ZoglinEntityMixin"
   ],
   "injectors": {

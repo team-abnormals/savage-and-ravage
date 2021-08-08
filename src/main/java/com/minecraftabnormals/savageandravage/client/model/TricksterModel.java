@@ -91,14 +91,17 @@ public class TricksterModel extends BipedModel<TricksterEntity> {
         AbstractIllagerEntity.ArmPose pose = entityIn.getArmPose();
         //TODO fix rotation points considering different arm length
         if (pose == AbstractIllagerEntity.ArmPose.SPELLCASTING || pose == AbstractIllagerEntity.ArmPose.CELEBRATING) {
-            this.rightArm.z = 0.0F; //Initial adjustments
-            this.rightArm.x = -5.0F; //Initial adjustments
-            this.leftArm.z = 0.0F; //Initial adjustments
-            this.leftArm.x = 5.0F; //Initial adjustments
+            //Initial adjustments
+            this.rightArm.z = 0.0F;
+            this.rightArm.y = 8.0F;
+            this.rightArm.x = -1.5F;
+            this.leftArm.z = 0.0F;
+            this.leftArm.y = 8.0F;
+            this.leftArm.x = 1.5F;
             this.rightArm.xRot = MathHelper.cos(ageInTicks * 0.6662F) * 0.25F; //Right arm wave from -14.3 to 14.3 degrees
             this.leftArm.xRot = MathHelper.cos(ageInTicks * 0.6662F) * 0.25F; //Left arm wave from -14.3 to 14.3 degrees
-            this.rightArm.zRot = 2.3561945F; //Constant z rotation for arm
-            this.leftArm.zRot = -2.3561945F; //Constant z rotation for arm
+            this.rightArm.zRot = 1.9F; //Constant z rotation for arm
+            this.leftArm.zRot = -1.9F; //Constant z rotation for arm
             this.rightArm.yRot = 0.0F; //Constant y rotation for arm
             this.leftArm.yRot = 0.0F;//Constant y rotation for arm
         }
