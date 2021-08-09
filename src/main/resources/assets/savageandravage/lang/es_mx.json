@@ -85,8 +85,9 @@
   "subtitles.savageandravage.entity.trickster.death": "Bribón muerto",
   "subtitles.savageandravage.entity.trickster.celebrate": "Bribón festejando",
   "subtitles.savageandravage.entity.trickster.laugh": "Risa de bribón",
+  "subtitles.savageandravage.entity.trickster.cast_spell": "Bribón lanza hechizo",
 
   "subtitles.savageandravage.entity.player.cast_spell": "Un hechizo es lanzado",
   "subtitles.savageandravage.entity.creeper_spores.throw": "Esporas de creeper volando",
-  "subtitles.savageandravage.entity.rune_prison.appear": "Azulejo sombrío rúnico activado"
+  "subtitles.savageandravage.entity.rune_prison.appear": "Prisión rúnica apareciendo"
 }
