@@ -28,7 +28,6 @@ public class ChiseledGloomyTilesBlock extends Block {
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
 		if (!worldIn.isClientSide()) {
 			boolean flag = state.getValue(POWERED);
@@ -43,7 +42,6 @@ public class ChiseledGloomyTilesBlock extends Block {
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public void tick(BlockState state, ServerWorld world, BlockPos pos, Random rand) {
 		if (state.getValue(POWERED) && !world.hasNeighborSignal(pos)) {
 			world.setBlock(pos, state.cycle(POWERED), 2);

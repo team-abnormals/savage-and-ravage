@@ -39,47 +39,11 @@ import static com.minecraftabnormals.abnormals_core.core.util.BlockUtil.getEntit
 import static com.minecraftabnormals.abnormals_core.core.util.BlockUtil.offsetPos;
 
 public class SRCompat {
-	public static final IDataSerializer<Optional<Vector3d>> OPTIONAL_VECTOR3D_SERIALIZER = new IDataSerializer<Optional<Vector3d>>() {
-		@Override
-		public void write(PacketBuffer buffer, Optional<Vector3d> optionalVector) {
-			buffer.writeBoolean(optionalVector.isPresent());
-			if (optionalVector.isPresent()) {
-				Vector3d vector = optionalVector.get();
-				buffer.writeDouble(vector.x);
-				buffer.writeDouble(vector.y);
-				buffer.writeDouble(vector.z);
-			}
-		}
 
-		@Override
-		public Optional<Vector3d> read(PacketBuffer buffer) {
-			return !buffer.readBoolean() ? Optional.empty() : Optional.of(new Vector3d(buffer.readDouble(), buffer.readDouble(), buffer.readDouble()));
-		}
-
-		@Override
-		public Optional<Vector3d> copy(Optional<Vector3d> optionalVector) {
-			return optionalVector;
-		}
-	};
-	public static final IDataProcessor<Optional<Vector3d>> OPTIONAL_VECTOR3D_PROCESSOR = new IDataProcessor<Optional<Vector3d>>() {
-		@Override
-		public CompoundNBT write(Optional<Vector3d> optionalVector) {
-			CompoundNBT nbt = new CompoundNBT();
-			if (optionalVector.isPresent()) {
-				Vector3d vector = optionalVector.get();
-				nbt.putDouble("x", vector.x);
-				nbt.putDouble("y", vector.y);
-				nbt.putDouble("z", vector.z);
-			}
-			else nbt.putBoolean("null", true);
-			return nbt;
-		}
-
-		@Override
-		public Optional<Vector3d> read(CompoundNBT nbt) {
-			return Optional.ofNullable(nbt.getBoolean("null") ? null : new Vector3d(nbt.getDouble("x"), nbt.getDouble("y"), nbt.getDouble("z")));
-		}
-	};
+	public static void registerCompat() {
+		registerFlammables();
+		registerDispenserBehaviors();
+	}
 
 	public static void registerFlammables() {
 		DataUtil.registerFlammable(SRBlocks.CREEPER_SPORE_SACK.get(), 30, 60);
@@ -125,9 +89,5 @@ public class SRCompat {
 				return stack;
 			}
 		});
-	}
-
-	public static void registerDataSerializers() {
-		DataSerializers.registerSerializer(OPTIONAL_VECTOR3D_SERIALIZER);
 	}
 }

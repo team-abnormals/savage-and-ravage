@@ -14,7 +14,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class RunePrisonRenderer extends EntityRenderer<RunePrisonEntity> {
 
-	public static final ResourceLocation[] RUNE_PRISON_FRAMES = new ResourceLocation[] {
+	public static final ResourceLocation[] RUNE_PRISON_FRAMES = new ResourceLocation[]{
 			new ResourceLocation(SavageAndRavage.MOD_ID, "textures/entity/rune_prison/rune_prison_0.png"),
 			new ResourceLocation(SavageAndRavage.MOD_ID, "textures/entity/rune_prison/rune_prison_1.png"),
 			new ResourceLocation(SavageAndRavage.MOD_ID, "textures/entity/rune_prison/rune_prison_2.png"),

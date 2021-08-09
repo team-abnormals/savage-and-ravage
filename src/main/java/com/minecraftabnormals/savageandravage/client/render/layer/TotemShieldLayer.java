@@ -2,6 +2,7 @@ package com.minecraftabnormals.savageandravage.client.render.layer;
 
 import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.IDataManager;
 import com.minecraftabnormals.savageandravage.core.SRConfig;
+import com.minecraftabnormals.savageandravage.core.other.SRDataProcessors;
 import com.minecraftabnormals.savageandravage.core.registry.SREntities;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -28,7 +29,7 @@ public class TotemShieldLayer<E extends Entity, M extends EntityModel<E>> extend
 	}
 
 	public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, E entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-		if ((!(entity instanceof EvokerEntity) || SRConfig.COMMON.evokersUseTotems.get()) && ((IDataManager) entity).getValue(SREntities.TOTEM_SHIELD_TIME) > 0) {
+		if ((!(entity instanceof EvokerEntity) || SRConfig.COMMON.evokersUseTotems.get()) && ((IDataManager) entity).getValue(SRDataProcessors.TOTEM_SHIELD_TIME) > 0) {
 			float f = (float) entity.tickCount + partialTicks;
 			model.prepareMobModel(entity, limbSwing, limbSwingAmount, partialTicks);
 			this.getParentModel().copyPropertiesTo(model);

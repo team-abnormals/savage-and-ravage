@@ -33,10 +33,6 @@ public class FollowMobOwnerGoal extends Goal {
 		}
 	}
 
-	/**
-	 * Returns whether execution should begin. You can also read and cache any state necessary for execution in this
-	 * method as well.
-	 */
 	public boolean canUse() {
 		LivingEntity livingentity = ((IOwnableMob) this.ownedMob).getOwner();
 		if (livingentity == null) {

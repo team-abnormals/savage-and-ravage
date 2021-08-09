@@ -5,8 +5,9 @@ import com.minecraftabnormals.abnormals_core.core.util.registry.RegistryHelper;
 import com.minecraftabnormals.savageandravage.client.render.IceChunkRenderer;
 import com.minecraftabnormals.savageandravage.common.network.MessageC2SIsPlayerStill;
 import com.minecraftabnormals.savageandravage.core.other.SRCompat;
+import com.minecraftabnormals.savageandravage.core.other.SRDataProcessors;
+import com.minecraftabnormals.savageandravage.core.other.SRDataSerializers;
 import com.minecraftabnormals.savageandravage.core.other.SRFeatures;
-import com.minecraftabnormals.savageandravage.core.other.SRLoot;
 import com.minecraftabnormals.savageandravage.core.registry.*;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -38,8 +39,10 @@ public class SavageAndRavage {
 
 	public SavageAndRavage() {
 		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+		ModLoadingContext context = ModLoadingContext.get();
 
 		this.setupMessages();
+		SRDataProcessors.registerTrackedData();
 
 		REGISTRY_HELPER.register(bus);
 		SREntities.ENTITIES.register(bus);
@@ -47,6 +50,7 @@ public class SavageAndRavage {
 		SREffects.EFFECTS.register(bus);
 		SRFeatures.FEATURES.register(bus);
 		SRAttributes.ATTRIBUTES.register(bus);
+		SRDataSerializers.SERIALIZERS.register(bus);
 		MinecraftForge.EVENT_BUS.register(this);
 
 		bus.addListener(this::commonSetup);
@@ -56,26 +60,23 @@ public class SavageAndRavage {
 			bus.addListener(this::registerModels);
 		});
 
-		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, SRConfig.COMMON_SPEC);
-		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, SRConfig.CLIENT_SPEC);
+		context.registerConfig(ModConfig.Type.COMMON, SRConfig.COMMON_SPEC);
+		context.registerConfig(ModConfig.Type.CLIENT, SRConfig.CLIENT_SPEC);
 		DataUtil.registerConfigCondition(SavageAndRavage.MOD_ID, SRConfig.COMMON, SRConfig.CLIENT);
 	}
 
 	private void commonSetup(FMLCommonSetupEvent event) {
 		event.enqueueWork(() -> {
 			SREntities.registerEntitySpawns();
-			SREntities.registerTrackedData();
 			SRFeatures.registerPools();
 			SRFeatures.registerBiomeModifications();
 			SREntities.registerWaveMembers();
-			SRCompat.registerFlammables();
-			SRCompat.registerDispenserBehaviors();
-			SRCompat.registerDataSerializers();
+			SRCompat.registerCompat();
 		});
 	}
 
 	private void clientSetup(FMLClientSetupEvent event) {
-		SREntities.registerRendering();
+		SREntities.registerRenderers();
 		event.enqueueWork(() -> {
 			SRItems.registerItemProperties();
 			SREntities.registerRenderLayers();

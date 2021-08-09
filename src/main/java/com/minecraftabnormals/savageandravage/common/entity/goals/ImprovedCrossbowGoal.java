@@ -83,7 +83,7 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 	@Override
 	public void tick() {
 		LivingEntity target = this.entity.getTarget();
-		this.entity.setAggressive(true); // Minecraft doesn't think shooting an arrow at another entity is aggression.
+		this.entity.setAggressive(true);
 		if (target == null)
 			return;
 
@@ -99,7 +99,7 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 		if (distance <= blocksUntilBackupSq && !(target instanceof AbstractVillagerEntity)) {
 			this.entity.lookAt(target, 30.0F, 30.0F);
 			if (this.isWalkable())
-				this.entity.getMoveControl().strafe(entity.isUsingItem() ? -0.5F : -3.0F, 0); // note: when an entity is "charging" their crossbow they set an active hand
+				this.entity.getMoveControl().strafe(entity.isUsingItem() ? -0.5F : -3.0F, 0);
 		}
 		ItemStack activeStack = this.entity.getUseItem();
 		boolean shouldMoveTowardsEnemy = (distanceSq > (double) this.radiusSq || this.seeTime < 5) && this.wait == 0;
@@ -161,11 +161,11 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 			List<ItemStack> projectiles = CrossbowItem.getChargedProjectiles(weapon);
 			float[] pitches = CrossbowItem.getShotPitches(world.getRandom());
 
-			for(int i = 0; i < Math.min(projectiles.size(), 3); i++) {
+			for (int i = 0; i < Math.min(projectiles.size(), 3); i++) {
 				ItemStack projectile = projectiles.get(i);
 				if (!projectile.isEmpty()) {
 					if (!world.isClientSide) {
-						FireworkRocketEntity fireworkRocket = new FireworkRocketEntity(world, projectile, shooter, shooter.getX(), shooter.getEyeY() - (double)0.15F, shooter.getZ(), true);
+						FireworkRocketEntity fireworkRocket = new FireworkRocketEntity(world, projectile, shooter, shooter.getX(), shooter.getEyeY() - (double) 0.15F, shooter.getZ(), true);
 						//shoot crossbow projectile method
 						double xDistance = target.getX() - shooter.getX();
 						double yDistance = target.getY() - fireworkRocket.getY();

@@ -59,7 +59,6 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
-import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -91,7 +90,7 @@ public class SREvents {
 			evoker.goalSelector.addGoal(1, new AvoidEntityGoal<IronGolemEntity>(evoker, IronGolemEntity.class, 8.0F, 0.6D, 1.0D) {
 				@Override
 				public boolean canUse() {
-					return super.canUse() && SRConfig.COMMON.evokersUseTotems.get() && ((IDataManager) this.mob).getValue(SREntities.TOTEM_SHIELD_TIME) > 0;
+					return super.canUse() && SRConfig.COMMON.evokersUseTotems.get() && ((IDataManager) this.mob).getValue(SRDataProcessors.TOTEM_SHIELD_TIME) > 0;
 				}
 			});
 		}
@@ -203,7 +202,7 @@ public class SREvents {
 					((GolemEntity) entity).setTarget(null);
 				}
 			}
-			if (entity instanceof EvokerEntity && SRConfig.COMMON.evokersUseTotems.get() && ((IDataManager) entity).getValue(SREntities.TOTEM_SHIELD_TIME) > 0)
+			if (entity instanceof EvokerEntity && SRConfig.COMMON.evokersUseTotems.get() && ((IDataManager) entity).getValue(SRDataProcessors.TOTEM_SHIELD_TIME) > 0)
 				((MobEntity) entity).setTarget(null);
 		}
 	}
@@ -283,10 +282,10 @@ public class SREvents {
 		IDataManager data = (IDataManager) entity;
 		if (entity instanceof EvokerEntity && SRConfig.COMMON.evokersUseTotems.get()) {
 			if (entity.getHealth() - event.getAmount() <= 0 && event.getSource().getDirectEntity() instanceof ProjectileEntity) {
-				if (data.getValue(SREntities.TOTEM_SHIELD_TIME) <= 0 && data.getValue(SREntities.TOTEM_SHIELD_COOLDOWN) <= 0) {
+				if (data.getValue(SRDataProcessors.TOTEM_SHIELD_TIME) <= 0 && data.getValue(SRDataProcessors.TOTEM_SHIELD_COOLDOWN) <= 0) {
 					event.setCanceled(true);
 					entity.setHealth(2.0F);
-					data.setValue(SREntities.TOTEM_SHIELD_TIME, 600);
+					data.setValue(SRDataProcessors.TOTEM_SHIELD_TIME, 600);
 					if (!entity.level.isClientSide())
 						entity.level.broadcastEntityEvent(entity, (byte) 35);
 				}
@@ -299,7 +298,7 @@ public class SREvents {
 		Entity entity = event.getEntity();
 		if (entity instanceof EvokerEntity && SRConfig.COMMON.evokersUseTotems.get()) {
 			IDataManager data = (IDataManager) entity;
-			if (data.getValue(SREntities.TOTEM_SHIELD_TIME) > 0) {
+			if (data.getValue(SRDataProcessors.TOTEM_SHIELD_TIME) > 0) {
 				if (event.getSource().getDirectEntity() instanceof ProjectileEntity)
 					event.setCanceled(true);
 			}
@@ -385,10 +384,10 @@ public class SREvents {
 			entity.removeEffect(SREffects.FROSTBITE.get());
 		if (!entity.level.isClientSide()) {
 			boolean canBeInvisible = maskCanMakeInvisible(entity);
-			boolean invisibleDueToMask = data.getValue(SREntities.INVISIBLE_DUE_TO_MASK);
+			boolean invisibleDueToMask = data.getValue(SRDataProcessors.INVISIBLE_DUE_TO_MASK);
 			boolean maskStateChanged = canBeInvisible != invisibleDueToMask;
 			if (maskStateChanged) {
-				data.setValue(SREntities.INVISIBLE_DUE_TO_MASK, canBeInvisible);
+				data.setValue(SRDataProcessors.INVISIBLE_DUE_TO_MASK, canBeInvisible);
 				spawnMaskParticles(entity);
 			}
 			if (maskStateChanged || (canBeInvisible && !entity.isInvisible()))
@@ -396,48 +395,48 @@ public class SREvents {
 
 			//Mitigation against hacking
 			if (canBeInvisible && entity.getServer() != null && entity.getServer().isDedicatedServer() && entity instanceof PlayerEntity) {
-				int illegalTicks = data.getValue(SREntities.ILLEGAL_MASK_TICKS);
+				int illegalTicks = data.getValue(SRDataProcessors.ILLEGAL_MASK_TICKS);
 				Vector3d currentPos = entity.position();
-				data.getValue(SREntities.PREVIOUS_POSITION).ifPresent(prevPos -> {
+				data.getValue(SRDataProcessors.PREVIOUS_POSITION).ifPresent(prevPos -> {
 					if (!prevPos.equals(currentPos)) {
-						data.setValue(SREntities.ILLEGAL_MASK_TICKS, illegalTicks + 1);
+						data.setValue(SRDataProcessors.ILLEGAL_MASK_TICKS, illegalTicks + 1);
 						//AbnormalsCore.LOGGER.debug("Incremented illegal mask ticks, value is now " + data.getValue(SREntities.ILLEGAL_MASK_TICKS));
 					} else if (illegalTicks > 0)
-						data.setValue(SREntities.ILLEGAL_MASK_TICKS, illegalTicks - 1);
+						data.setValue(SRDataProcessors.ILLEGAL_MASK_TICKS, illegalTicks - 1);
 				});
-				if (data.getValue(SREntities.ILLEGAL_MASK_TICKS) > 40)
+				if (data.getValue(SRDataProcessors.ILLEGAL_MASK_TICKS) > 40)
 					((ServerPlayerEntity) entity).connection.disconnect(new TranslationTextComponent("multiplayer.savageandravage.disconnect.invisible_while_moving"));
-				data.setValue(SREntities.PREVIOUS_POSITION, Optional.of(currentPos));
+				data.setValue(SRDataProcessors.PREVIOUS_POSITION, Optional.of(currentPos));
 			}
 		} else if (entity instanceof PlayerEntity) {
 			boolean canBeInvisible = maskCanMakeInvisible(entity);
-			if (((IDataManager) entity).getValue(SREntities.MARK_INVISIBLE) != canBeInvisible)
+			if (((IDataManager) entity).getValue(SRDataProcessors.MARK_INVISIBLE) != canBeInvisible)
 				SavageAndRavage.CHANNEL.sendToServer(new MessageC2SIsPlayerStill(entity.getUUID(), canBeInvisible));
-			data.setValue(SREntities.PREVIOUS_POSITION, Optional.of(entity.position()));
+			data.setValue(SRDataProcessors.PREVIOUS_POSITION, Optional.of(entity.position()));
 		}
 		if (entity instanceof EvokerEntity) {
-			int shieldTime = data.getValue(SREntities.TOTEM_SHIELD_TIME);
+			int shieldTime = data.getValue(SRDataProcessors.TOTEM_SHIELD_TIME);
 			if (shieldTime > 0)
-				data.setValue(SREntities.TOTEM_SHIELD_TIME, shieldTime - 1);
+				data.setValue(SRDataProcessors.TOTEM_SHIELD_TIME, shieldTime - 1);
 			else if (shieldTime == 0) {
-				data.setValue(SREntities.TOTEM_SHIELD_COOLDOWN, 1800);
-				data.setValue(SREntities.TOTEM_SHIELD_TIME, -1);
+				data.setValue(SRDataProcessors.TOTEM_SHIELD_COOLDOWN, 1800);
+				data.setValue(SRDataProcessors.TOTEM_SHIELD_TIME, -1);
 			}
-			int cooldown = data.getValue(SREntities.TOTEM_SHIELD_COOLDOWN);
+			int cooldown = data.getValue(SRDataProcessors.TOTEM_SHIELD_COOLDOWN);
 			if (cooldown > 0)
-				data.setValue(SREntities.TOTEM_SHIELD_COOLDOWN, cooldown - 1);
+				data.setValue(SRDataProcessors.TOTEM_SHIELD_COOLDOWN, cooldown - 1);
 		}
 	}
 
 	@SubscribeEvent
 	public static void visibilityMultiplierEvent(LivingEvent.LivingVisibilityEvent event) {
 		LivingEntity entity = event.getEntityLiving();
-		if (((IDataManager) entity).getValue(SREntities.INVISIBLE_DUE_TO_MASK)) {
+		if (((IDataManager) entity).getValue(SRDataProcessors.INVISIBLE_DUE_TO_MASK)) {
 			double armorCover = entity.getArmorCoverPercentage();
 			if (armorCover < 0.1F) {
 				armorCover = 0.1F;
 			}
-			event.modifyVisibility(1/armorCover); //potentially slightly inaccurate
+			event.modifyVisibility(1 / armorCover); //potentially slightly inaccurate
 			event.modifyVisibility(0.1);
 		}
 	}
@@ -447,15 +446,15 @@ public class SREvents {
 			IDataManager data = (IDataManager) entity;
 			if (entity.getCommandSenderWorld().isClientSide() || !(entity instanceof PlayerEntity)) {
 				Vector3d motion = entity.getDeltaMovement();
-				return (motion.x == 0 && (entity.isOnGround() || motion.y == 0) && motion.z == 0) && data.getValue(SREntities.PREVIOUS_POSITION).map(previous -> previous.equals(entity.position())).orElse(true);
-			} else return data.getValue(SREntities.MARK_INVISIBLE);
+				return (motion.x == 0 && (entity.isOnGround() || motion.y == 0) && motion.z == 0) && data.getValue(SRDataProcessors.PREVIOUS_POSITION).map(previous -> previous.equals(entity.position())).orElse(true);
+			} else return data.getValue(SRDataProcessors.MARK_INVISIBLE);
 		}
 		return false;
 	}
 
 	public static void spawnMaskParticles(LivingEntity entity) {
 		Random rand = entity.getRandom();
-		for (int i=0; i<3; i++) {
+		for (int i = 0; i < 3; i++) {
 			AxisAlignedBB box = entity.getBoundingBox();
 			double randomPositionX = box.min(Direction.Axis.X) + (rand.nextFloat() * box.getXsize());
 			double randomPositionY = box.min(Direction.Axis.Y) + (rand.nextFloat() * box.getYsize());
@@ -478,8 +477,8 @@ public class SREvents {
 	}
 
 	public static ItemStack createRocket(Random random) {
-		ItemStack rocket = new ItemStack(Items.FIREWORK_ROCKET, random.nextInt(16)+1);
-		CompoundNBT fireworks =  rocket.getOrCreateTagElement("Fireworks");
+		ItemStack rocket = new ItemStack(Items.FIREWORK_ROCKET, random.nextInt(16) + 1);
+		CompoundNBT fireworks = rocket.getOrCreateTagElement("Fireworks");
 		ListNBT explosions = new ListNBT();
 		CompoundNBT explosion = new CompoundNBT();
 		fireworks.put("Explosions", explosions);
@@ -493,14 +492,14 @@ public class SREvents {
 			explosion.putBoolean("Trail", true);
 		FireworkRocketItem.Shape[] values = FireworkRocketItem.Shape.values();
 		explosion.putInt("Type", values[random.nextInt(values.length)].getId());
-		fireworks.putInt("Flight", random.nextInt(3)+1);
+		fireworks.putInt("Flight", random.nextInt(3) + 1);
 		return rocket;
 	}
 
 	public static int[] randomColors(Random random) {
-		int[] colors = new int[random.nextInt(3)+1];
+		int[] colors = new int[random.nextInt(3) + 1];
 		DyeColor[] values = DyeColor.values();
-		for (int i=0; i<colors.length; i++) {
+		for (int i = 0; i < colors.length; i++) {
 			colors[i] = values[random.nextInt(values.length)].getFireworkColor();
 		}
 		return colors;

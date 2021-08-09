@@ -21,7 +21,6 @@ public class MobOwnerHurtByTargetGoal extends TargetGoal {
 		this.setFlags(EnumSet.of(Goal.Flag.TARGET));
 	}
 
-
 	@Override
 	public boolean canUse() {
 		if (this.defendingEntity.getOwnerId() != null) {
@@ -37,7 +36,6 @@ public class MobOwnerHurtByTargetGoal extends TargetGoal {
 			return false;
 		}
 	}
-
 
 	@Override
 	public void start() {

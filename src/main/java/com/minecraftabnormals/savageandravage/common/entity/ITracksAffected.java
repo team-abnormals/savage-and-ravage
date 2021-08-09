@@ -9,12 +9,12 @@ import javax.annotation.Nullable;
  */
 public interface ITracksAffected {
 
-    /**
-     * 'Affected' entails that something happened e.g. damage or potion effect application - if an entity intersects but
-     * no change occurs then this method doesn't fire.
-     *
-     * @return the last entity affected
-     */
-    @Nullable
-    Entity getLastAffected();
+	/**
+	 * 'Affected' entails that something happened e.g. damage or potion effect application - if an entity intersects but
+	 * no change occurs then this method doesn't fire.
+	 *
+	 * @return the last entity affected
+	 */
+	@Nullable
+	Entity getLastAffected();
 }
