@@ -79,7 +79,7 @@ public class SREvents {
 				pillager.goalSelector.removeGoal(crossbowGoal);
 				pillager.goalSelector.addGoal(3, aiCrossBow);
 			});
-			if (world.random.nextInt(100) == 0 && !world.isClientSide()) {
+			if (!world.isClientSide() && world.random.nextInt(100) == 0) {
 				pillager.setItemSlot(EquipmentSlotType.OFFHAND, createRocket(world.random));
 				pillager.startUsingItem(Hand.OFF_HAND);
 				pillager.setDropChance(EquipmentSlotType.OFFHAND, 2.0F);

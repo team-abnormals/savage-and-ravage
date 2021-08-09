@@ -13,6 +13,8 @@ import net.minecraft.network.IPacket;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
@@ -109,10 +111,17 @@ public class SporeCloudEntity extends ThrowableEntity implements IEntityAddition
 
 	@Override
 	protected void onHit(RayTraceResult result) {
+		Vector3d hitVec = result.getLocation();
 		if (!this.level.isClientSide()) {
-			Vector3d hitVec = result.getLocation();
 			this.spawnAreaEffectCloud(hitVec.x(), hitVec.y(), hitVec.z());
+		} else for (int i=0; i<16; i++) {
+			this.level.addParticle(SRParticles.CREEPER_SPORE_SPRINKLES.get(), this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
 		}
+		this.hit = true;
+		if (result instanceof BlockRayTraceResult)
+			this.onHitBlock((BlockRayTraceResult) result);
+		if (result instanceof EntityRayTraceResult)
+			this.onHitEntity((EntityRayTraceResult) result);
 	}
 
 	@Override
