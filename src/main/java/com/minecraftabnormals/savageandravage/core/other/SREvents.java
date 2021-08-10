@@ -10,7 +10,6 @@ import com.minecraftabnormals.savageandravage.common.item.IPottableItem;
 import com.minecraftabnormals.savageandravage.common.network.MessageC2SIsPlayerStill;
 import com.minecraftabnormals.savageandravage.core.SRConfig;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
-import com.minecraftabnormals.savageandravage.core.mixin.LivingEntityAccessor;
 import com.minecraftabnormals.savageandravage.core.registry.*;
 import net.minecraft.block.AbstractBannerBlock;
 import net.minecraft.block.BlockState;
@@ -40,13 +39,9 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootParameterSets;
-import net.minecraft.loot.LootTable;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.potion.Effects;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -55,7 +50,6 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
@@ -103,18 +97,18 @@ public class SREvents {
 				vex.setHealth(vex.getMaxHealth());
 			}
 		}
-		if (event.getEntity() instanceof IronGolemEntity && !SRConfig.COMMON.creeperExplosionsDestroyBlocks.get()) {
-			IronGolemEntity golem = (IronGolemEntity) event.getEntity();
-			golem.targetSelector.availableGoals.stream().map(it -> it.goal).filter(it -> it instanceof NearestAttackableTargetGoal<?>).findFirst().ifPresent(noAngryAtCreeper -> {
-				golem.targetSelector.removeGoal(noAngryAtCreeper);
-				golem.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(golem, MobEntity.class, 5, false, false, (p_213619_0_) -> p_213619_0_ instanceof IMob));
-			});
+		if (!SRConfig.COMMON.creeperExplosionsDestroyBlocks.get()) {
+			if (event.getEntity() instanceof IronGolemEntity) {
+				IronGolemEntity golem = (IronGolemEntity) event.getEntity();
+				golem.targetSelector.availableGoals.stream().map(it -> it.goal).filter(it -> it instanceof NearestAttackableTargetGoal<?>).findFirst().ifPresent(noAngryAtCreeper -> {
+					golem.targetSelector.removeGoal(noAngryAtCreeper);
+					golem.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(golem, MobEntity.class, 5, false, false, (p_213619_0_) -> p_213619_0_ instanceof IMob));
+				});
+			} else if (event.getEntity().getType() == EntityType.CREEPER) {
+				CreeperEntity creeper = (CreeperEntity) event.getEntity();
+				creeper.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(creeper, IronGolemEntity.class, true));
+			}
 		}
-		if (event.getEntity().getType() == EntityType.CREEPER && !SRConfig.COMMON.creeperExplosionsDestroyBlocks.get()) {
-			CreeperEntity creeper = (CreeperEntity) event.getEntity();
-			creeper.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(creeper, IronGolemEntity.class, true));
-		}
-
 		if (event.getEntity() instanceof CatEntity) {
 			CatEntity cat = (CatEntity) event.getEntity();
 			cat.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(cat, CreepieEntity.class, false));
@@ -124,7 +118,6 @@ public class SREvents {
 			OcelotEntity ocelot = (OcelotEntity) event.getEntity();
 			ocelot.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(ocelot, CreepieEntity.class, false));
 		}
-
 		if (event.getEntity() instanceof AbstractVillagerEntity) {
 			AbstractVillagerEntity villager = (AbstractVillagerEntity) event.getEntity();
 			villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, SkeletonVillagerEntity.class, 8.0F, 0.6D, 0.6D));
@@ -136,61 +129,12 @@ public class SREvents {
 		}
 	}
 
-	//TODO replace with loot modifiers
-	@SubscribeEvent
-	public static void onLivingDrops(LivingDropsEvent event) {
-		Entity entity = event.getEntity();
-		if (entity.getType() == EntityType.CREEPER) {
-			CreeperEntity creeper = (CreeperEntity) entity;
-			MinecraftServer server = entity.getServer();
-			if (event.getSource().isExplosion() && SRConfig.COMMON.creepersDropSporesAfterExplosionDeath.get() && server != null) {
-				LootTable loottable = server.getLootTables().get(SRLoot.CREEPER_EXPLOSION_DROPS);
-				LivingEntityAccessor accessor = (LivingEntityAccessor) creeper;
-				LootContext ctx = accessor.invokeCreateLootContext(accessor.getLastHurtByPlayerTime() > 0, event.getSource()).create(LootParameterSets.ENTITY);
-				loottable.getRandomItems(ctx).forEach(creeper::spawnAtLocation);
-			}
-		} else if (entity instanceof PillagerEntity) {
-			PillagerEntity pillager = (PillagerEntity) entity;
-			MinecraftServer server = entity.getServer();
-			if (!pillager.level.isClientSide() && ((ServerWorld) pillager.getCommandSenderWorld()).getRaidAt(pillager.blockPosition()) != null && server != null) {
-				LootTable loottable = server.getLootTables().get(SRLoot.PILLAGER_RAID_DROPS);
-				LivingEntityAccessor accessor = (LivingEntityAccessor) entity;
-				LootContext ctx = accessor.invokeCreateLootContext(accessor.getLastHurtByPlayerTime() > 0, event.getSource()).create(LootParameterSets.ENTITY);
-				loottable.getRandomItems(ctx).forEach(pillager::spawnAtLocation);
-			}
-		} else if (entity instanceof EvokerEntity) {
-			MinecraftServer server = entity.getServer();
-			if (server != null) {
-				LootTable loottable = server.getLootTables().get(SRLoot.EVOKER_TOTEM_REPLACEMENT);
-				LivingEntityAccessor accessor = (LivingEntityAccessor) entity;
-				LootContext ctx = accessor.invokeCreateLootContext(accessor.getLastHurtByPlayerTime() > 0, event.getSource()).create(LootParameterSets.ENTITY);
-				List<ItemStack> stacks = loottable.getRandomItems(ctx);
-				if (!stacks.isEmpty()) {
-					Collection<ItemEntity> drops = event.getDrops();
-					for (ItemEntity item : new ArrayList<>(drops)) {
-						if (item.getItem().getItem() == Items.TOTEM_OF_UNDYING) {
-							drops.remove(item);
-							for (ItemStack stack : stacks)
-								entity.spawnAtLocation(stack);
-						}
-					}
-				}
-			}
-		}
-	}
-
 	@SubscribeEvent
 	public static void onLivingJump(LivingEvent.LivingJumpEvent event) {
 		LivingEntity entity = event.getEntityLiving();
 		if (entity.getEffect(SREffects.WEIGHT.get()) != null)
 			entity.setDeltaMovement(entity.getDeltaMovement().x(), 0.0D, entity.getDeltaMovement().z());
 	}
-
-	/* TODO work out how to properly do input listening for weight and confusion
-	@SubscribeEvent
-	public static void onKeyInput(InputEvent.KeyInputEvent event) {
-		if (InputMappings.getKey(event.getKey(), event.getScanCode()) == Input)
-	}*/
 
 	@SubscribeEvent
 	public static void onLivingSetAttackTarget(LivingSetAttackTargetEvent event) {

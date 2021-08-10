@@ -1,0 +1,28 @@
+{
+  "target": "entities/vindicator",
+  "modifiers": [
+    {
+      "type": "pools",
+      "config": {
+        "replace": false,
+        "pools": [
+          {
+            "name": "savageandravage:vindicator_raid_drops",
+            "rolls": 1,
+            "conditions": [
+              {
+                "condition": "abnormals_core:raid_check"
+              }
+            ],
+            "entries": [
+              {
+                "type": "loot_table",
+                "name": "savageandravage:entities/raider_drops"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
