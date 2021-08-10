@@ -1,10 +1,8 @@
 package com.minecraftabnormals.savageandravage.common.entity;
 
 import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.IDataManager;
-import com.minecraftabnormals.savageandravage.core.other.SRCompat;
 import com.minecraftabnormals.savageandravage.core.other.SRDataProcessors;
 import com.minecraftabnormals.savageandravage.core.other.SRDataSerializers;
-import com.minecraftabnormals.savageandravage.core.registry.SREntities;
 import com.minecraftabnormals.savageandravage.core.registry.SRItems;
 import com.minecraftabnormals.savageandravage.core.registry.SRParticles;
 import com.minecraftabnormals.savageandravage.core.registry.SRSounds;

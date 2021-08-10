@@ -19,10 +19,9 @@ public class GrieferModel extends BipedModel<GrieferEntity> {
 	public ModelRenderer tnt;
 	public ModelRenderer pouch;
 	public ModelRenderer shoulderPad;
-	public float kickingTime;
 
-	public GrieferModel(float f) {
-		super(f);
+	public GrieferModel(float size) {
+		super(size);
 		this.texWidth = 64;
 		this.texHeight = 64;
 		this.body = new ModelRenderer(this, 36, 0);
@@ -94,7 +93,6 @@ public class GrieferModel extends BipedModel<GrieferEntity> {
 
 	@Override
 	public void prepareMobModel(GrieferEntity entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
-		this.kickingTime = (float) entityIn.getKickTicks();
 		ItemStack itemstack = entityIn.getMainHandItem();
 		UseAction useaction = itemstack.getUseAnimation();
 		this.rightArmPose = BipedModel.ArmPose.EMPTY;

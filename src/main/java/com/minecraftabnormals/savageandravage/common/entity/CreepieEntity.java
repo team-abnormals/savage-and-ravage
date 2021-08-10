@@ -13,6 +13,7 @@ import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.CreeperEntity;
+import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.CatEntity;
 import net.minecraft.entity.passive.OcelotEntity;
@@ -78,22 +79,12 @@ public class CreepieEntity extends MonsterEntity implements IChargeableMob, IOwn
 		this.targetSelector.addGoal(2, new MobOwnerHurtByTargetGoal(this));
 		this.targetSelector.addGoal(2, new MobOwnerHurtTargetGoal(this));
 		this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
-		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<MobEntity>(this, MobEntity.class, true) {
-			@Override
-			public boolean canUse() {
-				return super.canUse()
-						&& ((CreepieEntity) mob).getOwnerId() == null
-						&& !(this.target instanceof CreepieEntity)
-						&& !(this.target instanceof CreeperEntity)
-						&& !((CreepieEntity) mob).attackPlayersOnly;
-			}
-		});
-		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<PlayerEntity>(this, PlayerEntity.class, true) {
-			@Override
-			public boolean canUse() {
-				return super.canUse() && ((CreepieEntity) mob).getOwnerId() == null;
-			}
-		});
+		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, MobEntity.class, 5, false, false, (target) -> {
+			return this.getOwnerId() == null && !(target instanceof CreepieEntity) && !(target instanceof CreeperEntity) && !this.attackPlayersOnly;
+		}));
+		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<PlayerEntity>(this, PlayerEntity.class, 5, false, false, (target) -> {
+			return this.getOwnerId() == null;
+		}));
 	}
 
 	public static AttributeModifierMap.MutableAttribute registerAttributes() {

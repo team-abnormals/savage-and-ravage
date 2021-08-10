@@ -112,7 +112,7 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 		this.entity.getLookControl().setLookAt(target, 30.0F, 30.0F);
 		if (this.crossbowState == ImprovedCrossbowGoal.CrossbowState.UNCHARGED && !CrossbowItem.isCharged(activeStack)) {
 			if (canSeeEnemy) {
-				this.entity.startUsingItem(ProjectileHelper.getWeaponHoldingHand(this.entity, Items.CROSSBOW));
+				this.entity.startUsingItem(ProjectileHelper.getWeaponHoldingHand(this.entity, item -> item instanceof CrossbowItem));
 				this.crossbowState = ImprovedCrossbowGoal.CrossbowState.CHARGING;
 				this.entity.setChargingCrossbow(true);
 			}
@@ -138,9 +138,9 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 			}
 		} else if (this.crossbowState == ImprovedCrossbowGoal.CrossbowState.READY_TO_ATTACK && canSeeEnemy) {
 			if (this.entity.getOffhandItem().getItem() instanceof FireworkRocketItem)
-				performFireworkCrossbowAttack(target);
+				this.performFireworkCrossbowAttack(target);
 			else this.entity.performRangedAttack(target, 1.0F);
-			CrossbowItem.setCharged(this.entity.getItemInHand(ProjectileHelper.getWeaponHoldingHand(this.entity, Items.CROSSBOW)), false);
+			CrossbowItem.setCharged(this.entity.getItemInHand(ProjectileHelper.getWeaponHoldingHand(this.entity, item -> item instanceof CrossbowItem)), false);
 			this.crossbowState = ImprovedCrossbowGoal.CrossbowState.UNCHARGED;
 		}
 	}
@@ -152,7 +152,7 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 	//Needs to aim at the floor, not the entity itself
 	private void performFireworkCrossbowAttack(LivingEntity target) {
 		//perform crossbow attack method
-		Hand hand = ProjectileHelper.getWeaponHoldingHand(this.entity, Items.CROSSBOW);
+		Hand hand = ProjectileHelper.getWeaponHoldingHand(this.entity, item -> item instanceof CrossbowItem);
 		ItemStack weapon = this.entity.getItemInHand(hand);
 		T shooter = this.entity;
 		World world = this.entity.level;
@@ -174,7 +174,6 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 						//TODO if this method fails just use griefer stuff
 						fireworkRocket.shoot(vector3f.x(), vector3f.y(), vector3f.z(), 1.6F, (float) (14 - shooter.level.getDifficulty().getId() * 4));
 						shooter.playSound(SoundEvents.CROSSBOW_SHOOT, 1.0F, 1.0F / (shooter.getRandom().nextFloat() * 0.4F + 0.8F));
-
 						weapon.hurtAndBreak(3, shooter, (entityLiving) -> {
 							entityLiving.broadcastBreakEvent(hand);
 						});

@@ -71,7 +71,7 @@ public class SkeletonVillagerEntity extends AbstractSkeletonEntity implements IC
 	public void reassessWeaponGoal() {
 		this.goalSelector.removeGoal(this.aiMelee);
 		this.goalSelector.removeGoal(this.aiCrossBow);
-		ItemStack itemstack = this.getItemInHand(ProjectileHelper.getWeaponHoldingHand(this, Items.CROSSBOW));
+		ItemStack itemstack = this.getItemInHand(ProjectileHelper.getWeaponHoldingHand(this, item -> item instanceof CrossbowItem));
 		if (itemstack.getItem() instanceof CrossbowItem) {
 			this.goalSelector.addGoal(3, this.aiCrossBow);
 		} else {
