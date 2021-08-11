@@ -30,7 +30,6 @@ public class SporeCloudEntity extends ThrowableEntity implements IEntityAddition
 
 	private AreaEffectCloudEntity cloudEntity;
 	private UUID cloudId;
-
 	private int cloudSize;
 	private boolean charged = false;
 	private boolean spawnCloudInstantly;

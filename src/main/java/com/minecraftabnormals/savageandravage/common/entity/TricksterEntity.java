@@ -59,25 +59,15 @@ public class TricksterEntity extends SpellcastingIllagerEntity {
 		this.goalSelector.addGoal(8, new RandomWalkingGoal(this, 0.6D));
 		this.goalSelector.addGoal(1, new AvoidEntityGoal<>(this, PlayerEntity.class, 8.0F, 0.6D, 1.0D));
 		this.goalSelector.addGoal(1, new AvoidEntityGoal<>(this, IronGolemEntity.class, 8.0F, 0.6D, 1.0D));
-		this.targetSelector.addGoal(2, (new NearestAttackableTargetGoal<PlayerEntity>(this, PlayerEntity.class, true) {
-			@Override
-			public boolean canUse() {
-				return super.canUse() && ((IDataManager) this.mob).getValue(SRDataProcessors.TOTEM_SHIELD_TIME) <= 0;
-			}
-		}.setUnseenMemoryTicks(300)));
-		this.targetSelector.addGoal(3, (new NearestAttackableTargetGoal<AbstractVillagerEntity>(this, AbstractVillagerEntity.class, true) {
-			@Override
-			public boolean canUse() {
-				return super.canUse() && ((IDataManager) this.mob).getValue(SRDataProcessors.TOTEM_SHIELD_TIME) <= 0;
-			}
-		}.setUnseenMemoryTicks(300)));
-		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<IronGolemEntity>(this, IronGolemEntity.class, true) {
-			@Override
-			public boolean canUse() {
-				return super.canUse() && ((IDataManager) this.mob).getValue(SRDataProcessors.TOTEM_SHIELD_TIME) <= 0;
-			}
-		}.setUnseenMemoryTicks(300));
-
+		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, AbstractVillagerEntity.class, 10, true, false, (target) -> {
+			return ((IDataManager) this).getValue(SRDataProcessors.TOTEM_SHIELD_TIME) <= 0;
+		}).setUnseenMemoryTicks(300));         
+		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, IronGolemEntity.class, 10, true, false, (target) -> {
+			return ((IDataManager) this).getValue(SRDataProcessors.TOTEM_SHIELD_TIME) <= 0;
+		}).setUnseenMemoryTicks(300));         
+		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 10, true, false, (target) -> {
+			return ((IDataManager) this).getValue(SRDataProcessors.TOTEM_SHIELD_TIME) <= 0;
+		}).setUnseenMemoryTicks(300));         
 		this.goalSelector.addGoal(9, new LookAtGoal(this, PlayerEntity.class, 3.0F, 1.0F));
 		this.goalSelector.addGoal(10, new LookAtGoal(this, MobEntity.class, 8.0F));
 		this.targetSelector.addGoal(1, (new HurtByTargetGoal(this, AbstractRaiderEntity.class)).setAlertOthers());
