@@ -20,20 +20,14 @@ import net.minecraft.item.ArmorItem;
 import net.minecraft.item.BannerItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.IDataSerializer;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Map;
-import java.util.Optional;
 
 import static com.minecraftabnormals.abnormals_core.core.util.BlockUtil.getEntitiesAtOffsetPos;
 import static com.minecraftabnormals.abnormals_core.core.util.BlockUtil.offsetPos;
@@ -77,6 +71,10 @@ public class SRCompat {
 				return stack;
 			}
 		});
+	}
+
+	//TODO move to static{} after AC update
+	public static void registerAlternativeDispenseBehaviors() {
 		ForgeRegistries.ITEMS.getEntries().stream().map(Map.Entry::getValue).filter(i -> i instanceof BannerItem).forEach(i -> DataUtil.registerAlternativeDispenseBehavior(i, (source, stack) -> !getEntitiesAtOffsetPos(source, LivingEntity.class, EntityPredicates.NO_SPECTATORS.and(new EntityPredicates.ArmoredMob(stack))).isEmpty(), ArmorItem.DISPENSE_ITEM_BEHAVIOR));
 		DataUtil.registerAlternativeDispenseBehavior(Items.FLINT_AND_STEEL, (source, stack) -> SREvents.isValidBurningBannerPos(source.getLevel(), offsetPos(source)), new DefaultDispenseItemBehavior() {
 			@Override

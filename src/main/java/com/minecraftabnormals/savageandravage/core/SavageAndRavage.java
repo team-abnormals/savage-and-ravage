@@ -14,6 +14,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -21,6 +22,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
@@ -55,6 +57,7 @@ public class SavageAndRavage {
 
 		bus.addListener(this::commonSetup);
 		bus.addListener(this::clientSetup);
+		bus.addListener(EventPriority.LOWEST, this::postLoadSetup);
 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 			bus.addListener(this::registerModels);
@@ -81,6 +84,10 @@ public class SavageAndRavage {
 			SRItems.registerItemProperties();
 			SREntities.registerRenderLayers();
 		});
+	}
+
+	private void postLoadSetup(FMLLoadCompleteEvent event) {
+		event.enqueueWork(SRCompat::registerAlternativeDispenseBehaviors);
 	}
 
 	private void registerModels(ModelRegistryEvent event) {
