@@ -52,7 +52,6 @@ public class SREntities {
 	public static final RegistryObject<EntityType<ConfusionBoltEntity>> CONFUSION_BOLT = ENTITIES.register("confusion_bolt", () -> EntityType.Builder.<ConfusionBoltEntity>of(ConfusionBoltEntity::new, EntityClassification.MISC).fireImmune().sized(1.0F, 1.0F).build(SavageAndRavage.MOD_ID + ":confusion_bolt"));
 
 
-
 	public static void registerEntitySpawns() {
 		EntitySpawnPlacementRegistry.register(SREntities.SKELETON_VILLAGER.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::checkMonsterSpawnRules);
 		EntitySpawnPlacementRegistry.register(SREntities.EXECUTIONER.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::checkMonsterSpawnRules);

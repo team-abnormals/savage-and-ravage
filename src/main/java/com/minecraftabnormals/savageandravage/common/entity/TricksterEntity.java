@@ -27,11 +27,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Direction;
-import net.minecraft.util.IndirectEntityDamageSource;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -41,7 +37,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 
 public class TricksterEntity extends SpellcastingIllagerEntity implements ITracksHits {
 	private static final DataParameter<Integer> PRISON_CHARGING_TIME = EntityDataManager.defineId(TricksterEntity.class, DataSerializers.INT);
@@ -70,10 +69,10 @@ public class TricksterEntity extends SpellcastingIllagerEntity implements ITrack
 		}).setUnseenMemoryTicks(300));
 		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, IronGolemEntity.class, 10, true, false, (target) -> {
 			return ((IDataManager) this).getValue(SRDataProcessors.TOTEM_SHIELD_TIME) <= 0;
-		}).setUnseenMemoryTicks(300));         
+		}).setUnseenMemoryTicks(300));
 		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 10, true, false, (target) -> {
 			return ((IDataManager) this).getValue(SRDataProcessors.TOTEM_SHIELD_TIME) <= 0;
-		}).setUnseenMemoryTicks(300));         
+		}).setUnseenMemoryTicks(300));
 		this.goalSelector.addGoal(9, new LookAtGoal(this, PlayerEntity.class, 3.0F, 1.0F));
 		this.goalSelector.addGoal(10, new LookAtGoal(this, MobEntity.class, 8.0F));
 		this.targetSelector.addGoal(1, (new HurtByTargetGoal(this, AbstractRaiderEntity.class)).setAlertOthers());
@@ -153,7 +152,7 @@ public class TricksterEntity extends SpellcastingIllagerEntity implements ITrack
 				 * is the distance between the middle and the start of the 'outer ring'*/
 				this.entityData.set(PRISON_CHARGING_TIME, time - 1);
 			} else if (time == 0) {
-				RunePrisonEntity runePrison = new RunePrisonEntity(this.level, null, prisonTime, false,this);
+				RunePrisonEntity runePrison = new RunePrisonEntity(this.level, null, prisonTime, false, this);
 				runePrison.moveTo(pos.x, pos.y + 0.5, pos.z, 0.0F, 0.0F);
 				this.level.addFreshEntity(runePrison);
 				this.trackedSpellEntities.add(runePrison);
@@ -187,7 +186,7 @@ public class TricksterEntity extends SpellcastingIllagerEntity implements ITrack
 		if (this.isAlive()) {
 			double randomX = this.getX() + (this.random.nextDouble() - 0.5D) * 64.0D;
 			double randomZ = this.getZ() + (this.random.nextDouble() - 0.5D) * 64.0D;
-			BlockState state = this.level.getBlockState(new BlockPos.Mutable(randomX, this.getY()-1, randomZ));
+			BlockState state = this.level.getBlockState(new BlockPos.Mutable(randomX, this.getY() - 1, randomZ));
 			if (state.getMaterial().blocksMotion() && !state.getFluidState().is(FluidTags.LAVA)) {
 				AxisAlignedBB oldBox = this.getBoundingBox().inflate(0.5D);
 				BlockPos oldPos = this.blockPosition();
@@ -331,8 +330,8 @@ public class TricksterEntity extends SpellcastingIllagerEntity implements ITrack
 				ConfusionBoltEntity bolt = new ConfusionBoltEntity(world, TricksterEntity.this, 240);
 				Vector3d pos = TricksterEntity.this.position();
 				Vector3d targetPos = target.position();
-				bolt.setPos(bolt.getX(), bolt.getY()-0.5, bolt.getZ());
-				bolt.setDeltaMovement(new Vector3d(targetPos.x-pos.x, targetPos.y-pos.y, targetPos.z-pos.z).normalize().scale(0.25));
+				bolt.setPos(bolt.getX(), bolt.getY() - 0.5, bolt.getZ());
+				bolt.setDeltaMovement(new Vector3d(targetPos.x - pos.x, targetPos.y - pos.y, targetPos.z - pos.z).normalize().scale(0.25));
 				world.addFreshEntity(bolt);
 				TricksterEntity.this.trackedSpellEntities.add(bolt);
 			}

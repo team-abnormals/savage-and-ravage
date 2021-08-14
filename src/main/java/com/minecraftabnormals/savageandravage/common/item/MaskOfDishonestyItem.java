@@ -5,7 +5,6 @@ import com.minecraftabnormals.abnormals_core.core.util.item.filling.TargetedItem
 import com.minecraftabnormals.savageandravage.client.model.MaskOfDishonestyModel;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 import com.minecraftabnormals.savageandravage.core.other.SRDataProcessors;
-import com.minecraftabnormals.savageandravage.core.registry.SREntities;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;

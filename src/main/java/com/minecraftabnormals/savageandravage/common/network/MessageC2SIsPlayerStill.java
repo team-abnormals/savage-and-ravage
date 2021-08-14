@@ -2,7 +2,6 @@ package com.minecraftabnormals.savageandravage.common.network;
 
 import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.IDataManager;
 import com.minecraftabnormals.savageandravage.core.other.SRDataProcessors;
-import com.minecraftabnormals.savageandravage.core.registry.SREntities;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.LogicalSide;

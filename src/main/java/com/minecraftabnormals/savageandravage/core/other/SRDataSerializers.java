@@ -10,8 +10,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Optional;
 
-import static com.minecraftabnormals.abnormals_core.core.util.BlockUtil.getEntitiesAtOffsetPos;
-
 public class SRDataSerializers {
 	public static final DeferredRegister<DataSerializerEntry> SERIALIZERS = DeferredRegister.create(ForgeRegistries.DATA_SERIALIZERS, SavageAndRavage.MOD_ID);
 

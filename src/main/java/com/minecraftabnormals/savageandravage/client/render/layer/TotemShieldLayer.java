@@ -3,7 +3,6 @@ package com.minecraftabnormals.savageandravage.client.render.layer;
 import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.IDataManager;
 import com.minecraftabnormals.savageandravage.core.SRConfig;
 import com.minecraftabnormals.savageandravage.core.other.SRDataProcessors;
-import com.minecraftabnormals.savageandravage.core.registry.SREntities;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;

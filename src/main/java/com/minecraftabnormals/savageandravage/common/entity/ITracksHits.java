@@ -1,7 +1,6 @@
 package com.minecraftabnormals.savageandravage.common.entity;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 
 import javax.annotation.Nullable;
 
@@ -16,7 +15,7 @@ public interface ITracksHits {
 	 * in the entity's {@code tick} or by {@code hitter}.
 	 *
 	 * @param hitter - the projectile or other entity doing the hitting
-	 * @param hit - the {@code LivingEntity} that was hit
+	 * @param hit    - the {@code LivingEntity} that was hit
 	 */
 	@Nullable
 	void onTrackedHit(Entity hitter, Entity hit);

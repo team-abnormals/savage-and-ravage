@@ -2,7 +2,6 @@ package com.minecraftabnormals.savageandravage.core.other;
 
 import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.IDataManager;
 import com.minecraftabnormals.abnormals_core.core.util.NetworkUtil;
-import com.minecraftabnormals.savageandravage.common.block.ChiseledGloomyTilesBlock;
 import com.minecraftabnormals.savageandravage.common.entity.*;
 import com.minecraftabnormals.savageandravage.common.entity.block.SporeBombEntity;
 import com.minecraftabnormals.savageandravage.common.entity.goals.AvoidGrieferOwnedCreepiesGoal;
@@ -15,7 +14,6 @@ import com.minecraftabnormals.savageandravage.core.registry.*;
 import net.minecraft.block.AbstractBannerBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.client.particle.Particle;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
@@ -50,13 +48,15 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.living.*;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -343,9 +343,9 @@ public class SREvents {
 				if (canBeInvisible) {
 					BlockPos.Mutable searchPos = new BlockPos.Mutable();
 					BlockPos entityPos = entity.blockPosition();
-					for (int x=entityPos.getX()-1; x<=entityPos.getX()+1; x++) {
-						for (int y=entityPos.getY()-1; y<=entityPos.getY()+1; y++) {
-							for (int z=entityPos.getZ()-1; z<=entityPos.getZ()+1; z++) {
+					for (int x = entityPos.getX() - 1; x <= entityPos.getX() + 1; x++) {
+						for (int y = entityPos.getY() - 1; y <= entityPos.getY() + 1; y++) {
+							for (int z = entityPos.getZ() - 1; z <= entityPos.getZ() + 1; z++) {
 								searchPos.set(x, y, z);
 								if (world.getBlockState(searchPos).getBlock() == SRBlocks.GLOOMY_TILES.get()) {
 									world.setBlock(searchPos, SRBlocks.RUNED_GLOOMY_TILES.get().defaultBlockState(), 2);
