@@ -26,6 +26,7 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.world.World;
 
+//TODO needs actual shooting, firework compat, and pathfinding
 public class AttackTargetBlockRandomlyGoal<T extends MobEntity & ICrossbowUser> extends Goal {
 	private final T goalOwner;
 	private int focusTime;
@@ -38,17 +39,17 @@ public class AttackTargetBlockRandomlyGoal<T extends MobEntity & ICrossbowUser> 
 	}
 
 	@Override
-	public boolean shouldExecute() {
-		if (this.goalOwner.getRNG().nextFloat() < 0.005F && this.goalOwner.getAttackTarget() == null && this.goalOwner.getHeldItemMainhand().getItem() instanceof CrossbowItem) {
-			World world = this.goalOwner.world;
-			BlockPos.Mutable checkingPos = new BlockPos.Mutable();
-			for (double x = this.goalOwner.getPosX() - 15; x <= this.goalOwner.getPosX() + 15; x++) {
-				for (double y = this.goalOwner.getPosY() - 5; y <= this.goalOwner.getPosY() + 5; y++) {
-					for (double z = this.goalOwner.getPosZ() - 15; z <= this.goalOwner.getPosZ() + 15; z++) {
-						checkingPos.setPos(x, y, z);
-						if (world.getBlockState(checkingPos).getBlock() instanceof TargetBlock) {
-							this.nearestTargetPos = checkingPos.toImmutable();
-							this.focusTime = 200 + this.goalOwner.getRNG().nextInt(70);
+	public boolean canUse() {
+		if (this.goalOwner.getRandom().nextFloat() < 0.005F && this.goalOwner.getTarget() == null && this.goalOwner.getMainHandItem().getItem() instanceof CrossbowItem) {
+			World world = this.goalOwner.level;
+			BlockPos.Mutable searchPos = new BlockPos.Mutable();
+			for (double x = this.goalOwner.getX() - 16; x <= this.goalOwner.getX() + 16; x++) {
+				for (double y = this.goalOwner.getY() - 8; y <= this.goalOwner.getY() + 8; y++) {
+					for (double z = this.goalOwner.getZ() - 16; z <= this.goalOwner.getZ() + 16; z++) {
+						searchPos.set(x, y, z);
+						if (world.getBlockState(searchPos).getBlock() instanceof TargetBlock) {
+							this.nearestTargetPos = searchPos.immutable();
+							this.focusTime = 200 + this.goalOwner.getRandom().nextInt(70);
 							return true;
 						}
 					}
@@ -59,41 +60,43 @@ public class AttackTargetBlockRandomlyGoal<T extends MobEntity & ICrossbowUser> 
 	}
 
 	@Override
-	public boolean shouldContinueExecuting() {
-		return this.focusTime > 0 && this.goalOwner.getAttackTarget() == null;
+	public boolean canContinueToUse() {
+		return this.focusTime > 0 && this.goalOwner.getTarget() == null;
 	}
 
+
+
 	@Override
-	public void startExecuting() {
-		this.timeTillNextShoot = goalOwner.getRNG().nextInt(15) + 15;
+	public void start() {
+		this.timeTillNextShoot = goalOwner.getRandom().nextInt(15) + 15;
 	}
 
 	@Override
 	public void tick() {
 		this.focusTime--;
 		this.timeTillNextShoot--;
-		this.goalOwner.getNavigator().clearPath();
-		ItemStack activeStack = this.goalOwner.getActiveItemStack();
-		this.goalOwner.getLookController().setLookPosition(this.nearestTargetPos.getX(), this.nearestTargetPos.getY() + 1, this.nearestTargetPos.getZ());
+		this.goalOwner.getNavigation().stop();
+		ItemStack useStack = this.goalOwner.getUseItem();
+		this.goalOwner.getLookControl().setLookAt(this.nearestTargetPos.getX(), this.nearestTargetPos.getY() + 1, this.nearestTargetPos.getZ());
 		if (this.timeTillNextShoot <= 0 && this.state == CrossbowState.UNCHARGED) {
-			this.goalOwner.setActiveHand(ProjectileHelper.getHandWith(this.goalOwner, Items.CROSSBOW));
+			this.goalOwner.startUsingItem(ProjectileHelper.getWeaponHoldingHand(this.goalOwner, i -> i instanceof CrossbowItem));
 			this.state = CrossbowState.CHARGING;
-			this.goalOwner.setCharging(true);
-			this.timeTillNextShoot = goalOwner.getRNG().nextInt(25) + 40;
+			this.goalOwner.setChargingCrossbow(true);
+			this.timeTillNextShoot = goalOwner.getRandom().nextInt(25) + 40;
 		} else if (this.state == CrossbowState.CHARGING) {
-			if (!this.goalOwner.isHandActive()) {
+			if (!this.goalOwner.isUsingItem()) {
 				this.state = CrossbowState.UNCHARGED;
 			}
 
-			int i = this.goalOwner.getItemInUseMaxCount();
-			if (i >= CrossbowItem.getChargeTime(activeStack) || CrossbowItem.isCharged(activeStack)) {
-				this.goalOwner.stopActiveHand();
+			int i = this.goalOwner.getTicksUsingItem();
+			if (i >= CrossbowItem.getChargeDuration(useStack) || CrossbowItem.isCharged(useStack)) {
+				this.goalOwner.stopUsingItem();
 				this.state = CrossbowState.CHARGED;
-				this.goalOwner.setCharging(false);
+				this.goalOwner.setChargingCrossbow(false);
 			}
-		} else if (this.state == CrossbowState.CHARGED && this.goalOwner.getAttackTarget() == null && this.timeTillNextShoot == 0) {
-			Hand hand = ProjectileHelper.getHandWith(this.goalOwner, Items.CROSSBOW);
-			ItemStack heldStack = this.goalOwner.getHeldItem(hand);
+		} else if (this.state == CrossbowState.CHARGED && this.goalOwner.getTarget() == null && this.timeTillNextShoot == 0) {
+			Hand hand = ProjectileHelper.getWeaponHoldingHand(this.goalOwner, i -> i instanceof CrossbowItem);
+			ItemStack heldStack = this.goalOwner.getItemInHand(hand);
 			this.shootArrow(heldStack);
 			CrossbowItem.setCharged(heldStack, false);
 			this.state = CrossbowState.UNCHARGED;
@@ -101,24 +104,22 @@ public class AttackTargetBlockRandomlyGoal<T extends MobEntity & ICrossbowUser> 
 	}
 
 	private void shootArrow(ItemStack stack) {
-		List<ItemStack> stackList = this.getChargedProjectilesFromStack(stack);
-		for (int i = 0; i < stackList.size(); ++i) {
-			ItemStack chosenProjectile = stackList.get(i);
+		for (ItemStack projectileStack : this.getChargedProjectilesFromStack(stack)) {
 			Vector3d vector3d1 = this.goalOwner.getUpVector(1.0F);
-			ArrowEntity arrow = new ArrowEntity(this.goalOwner.getEntityWorld(), this.goalOwner);
-			FireworkRocketEntity rocket = new FireworkRocketEntity(this.goalOwner.getEntityWorld(), chosenProjectile, this.goalOwner, this.goalOwner.getPosX(), this.goalOwner.getPosYEye() - (double) 0.15F, this.goalOwner.getPosZ(), true);
-			ProjectileEntity projectile = chosenProjectile.getItem() == Items.FIREWORK_ROCKET ? rocket : arrow;
+			ArrowEntity arrow = new ArrowEntity(this.goalOwner.level, this.goalOwner);
+			FireworkRocketEntity rocket = new FireworkRocketEntity(this.goalOwner.level, projectileStack, this.goalOwner, this.goalOwner.getX(), this.goalOwner.getEyeY() - (double) 0.15F, this.goalOwner.getZ(), true);
+			ProjectileEntity projectile = projectileStack.getItem() == Items.FIREWORK_ROCKET ? rocket : arrow;
 			Quaternion quaternion = new Quaternion(new Vector3f(vector3d1), 1.0F, true);
-			Vector3d vector3d = this.goalOwner.getLook(1.0F);
+			Vector3d vector3d = this.goalOwner.getViewVector(1.0F);
 			Vector3f vector3f = new Vector3f(vector3d);
 			if (projectile == arrow) {
 				arrow.setShotFromCrossbow(true);
-				int pierce = EnchantmentHelper.getEnchantmentLevel(Enchantments.PIERCING, this.goalOwner.getHeldItemMainhand());
+				int pierce = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PIERCING, this.goalOwner.getMainHandItem());
 				arrow.setPierceLevel((byte) pierce);
 			}
 			vector3f.transform(quaternion);
-			this.goalOwner.getEntityWorld().addEntity(projectile);
-			projectile.shoot((double) vector3f.getX(), (double) vector3f.getY(), (double) vector3f.getZ(), 1.6F, 0.0F);
+			this.goalOwner.level.addFreshEntity(projectile);
+			projectile.shoot(vector3f.x(), vector3f.y(), vector3f.z(), 1.6F, 0.0F);
 			CompoundNBT compoundnbt = stack.getTag();
 			if (compoundnbt != null) {
 				ListNBT listnbt = compoundnbt.getList("ChargedProjectiles", 9);
@@ -131,14 +132,12 @@ public class AttackTargetBlockRandomlyGoal<T extends MobEntity & ICrossbowUser> 
 
 	private List<ItemStack> getChargedProjectilesFromStack(ItemStack stack) {
 		List<ItemStack> list = Lists.newArrayList();
-		CompoundNBT compoundnbt = stack.getTag();
-		if (compoundnbt != null && compoundnbt.contains("ChargedProjectiles", 9)) {
-			ListNBT listnbt = compoundnbt.getList("ChargedProjectiles", 10);
-			if (listnbt != null) {
-				for (int i = 0; i < listnbt.size(); ++i) {
-					CompoundNBT compoundnbt1 = listnbt.getCompound(i);
-					list.add(ItemStack.read(compoundnbt1));
-				}
+		CompoundNBT nbt = stack.getTag();
+		if (nbt != null && nbt.contains("ChargedProjectiles", 9)) {
+			ListNBT listnbt = nbt.getList("ChargedProjectiles", 10);
+			for (int i = 0; i < listnbt.size(); ++i) {
+				CompoundNBT compoundnbt1 = listnbt.getCompound(i);
+				list.add(ItemStack.of(compoundnbt1));
 			}
 		}
 
@@ -146,10 +145,10 @@ public class AttackTargetBlockRandomlyGoal<T extends MobEntity & ICrossbowUser> 
 	}
 
 	@Override
-	public void resetTask() {
-		if (this.goalOwner.isHandActive()) {
-			this.goalOwner.resetActiveHand();
-			this.goalOwner.setCharging(false);
+	public void stop() {
+		if (this.goalOwner.isUsingItem()) {
+			this.goalOwner.stopUsingItem();
+			this.goalOwner.setChargingCrossbow(false);
 		}
 	}
 
