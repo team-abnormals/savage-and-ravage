@@ -25,6 +25,7 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -116,15 +117,28 @@ public class IceChunkEntity extends Entity implements IEntityAdditionalSpawnData
 			this.setTarget(null);
 		}
 
-		RayTraceResult raytraceresult = ProjectileHelper.getHitResult(this, entity -> !entity.isSpectator() && entity.isAlive() && entity.isPickable() && !entity.noPhysics);
+		RayTraceResult raytraceresult = ProjectileHelper.getHitResult(this, this::canHitEntity);
 		if (raytraceresult.getType() != RayTraceResult.Type.MISS) {
 			this.onImpact(raytraceresult);
+		} else if (!this.level.isClientSide()){
+			List<Entity> intersecting = this.level.getEntitiesOfClass(Entity.class, this.getBoundingBox(), this::canHitEntity);
+			if (!intersecting.isEmpty())
+				this.onImpact(new EntityRayTraceResult(intersecting.get(0)));
 		}
 
 		if (target == null) {
 			this.setDeltaMovement(this.getDeltaMovement().add(0, -0.05, 0));
 
 			this.setPos(this.getX() + this.getDeltaMovement().x(), this.getY() + this.getDeltaMovement().y(), this.getZ() + this.getDeltaMovement().z());
+		}
+	}
+
+	protected boolean canHitEntity(Entity entity) {
+		if (!entity.isSpectator() && entity.isAlive() && entity.isPickable() && !entity.noPhysics) {
+			Entity caster = this.getCaster();
+			return caster == null || !caster.isPassengerOfSameVehicle(entity);
+		} else {
+			return false;
 		}
 	}
 
