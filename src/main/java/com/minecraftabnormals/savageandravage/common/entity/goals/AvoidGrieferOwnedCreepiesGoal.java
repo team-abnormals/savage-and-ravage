@@ -13,7 +13,7 @@ public class AvoidGrieferOwnedCreepiesGoal<T extends LivingEntity> extends Avoid
 	}
 
 	@Override
-	public boolean shouldExecute() {
-		return super.shouldExecute() && this.avoidTarget instanceof CreepieEntity && ((CreepieEntity) this.avoidTarget).getOwner() instanceof GrieferEntity;
+	public boolean canUse() {
+		return super.canUse() && this.toAvoid instanceof CreepieEntity && ((CreepieEntity) this.toAvoid).getOwner() instanceof GrieferEntity;
 	}
 }

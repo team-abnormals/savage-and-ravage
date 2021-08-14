@@ -14,7 +14,7 @@ public class MischiefArrowRenderer extends ArrowRenderer<MischiefArrowEntity> {
 	}
 
 	@Override
-	public ResourceLocation getEntityTexture(MischiefArrowEntity entity) {
+	public ResourceLocation getTextureLocation(MischiefArrowEntity entity) {
 		return MISCHIEF_ARROW_TEXTURE;
 	}
 }

@@ -25,6 +25,7 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -48,23 +49,23 @@ public class IceChunkEntity extends Entity implements IEntityAdditionalSpawnData
 	public IceChunkEntity(World world, @Nullable Entity caster, @Nullable Entity target) {
 		this(SREntities.ICE_CHUNK.get(), world);
 		if (target != null)
-			this.setPositionAndRotation(target.getPosX(), target.getPosYHeight(1) + HOVER_DISTANCE, target.getPosZ(), this.rotationYaw, this.rotationPitch);
+			this.absMoveTo(target.getX(), target.getY(1) + HOVER_DISTANCE, target.getZ(), this.yRot, this.xRot);
 		this.setCaster(caster);
 		this.setTarget(target);
 	}
 
 	private void onImpact(RayTraceResult result) {
-		if (!this.world.isRemote()) {
-			BlockState state = Blocks.PACKED_ICE.getDefaultState();
-			SoundType soundtype = state.getSoundType(this.world, this.getPosition(), null);
+		if (!this.level.isClientSide()) {
+			BlockState state = Blocks.PACKED_ICE.defaultBlockState();
+			SoundType soundtype = state.getSoundType(this.level, this.blockPosition(), null);
 			this.playSound(soundtype.getBreakSound(), (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-			((ServerWorld) this.world).spawnParticle(new BlockParticleData(ParticleTypes.BLOCK, state), this.getPosX(), this.getPosY() + this.getHeight() / 2.0, this.getPosZ(), 256, this.getWidth() / 2.0, this.getHeight() / 2.0, this.getWidth() / 2.0, 1);
+			((ServerWorld) this.level).sendParticles(new BlockParticleData(ParticleTypes.BLOCK, state), this.getX(), this.getY() + this.getBbHeight() / 2.0, this.getZ(), 256, this.getBbWidth() / 2.0, this.getBbHeight() / 2.0, this.getBbWidth() / 2.0, 1);
 
 			if (result.getType() == RayTraceResult.Type.ENTITY) {
 				Entity entity = ((EntityRayTraceResult) result).getEntity();
-				entity.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, this.getCaster()), 8.0f);
+				entity.hurt(DamageSource.indirectMagic(this, this.getCaster()), 8.0f);
 				if (entity instanceof LivingEntity) {
-					((LivingEntity) entity).addPotionEffect(new EffectInstance(SREffects.FROSTBITE.get(), 160, 0, false, false, true));
+					((LivingEntity) entity).addEffect(new EffectInstance(SREffects.FROSTBITE.get(), 160, 0, false, false, true));
 				}
 			}
 		}
@@ -74,30 +75,30 @@ public class IceChunkEntity extends Entity implements IEntityAdditionalSpawnData
 
 	@Nullable
 	public Entity getCaster() {
-		if (this.casterEntityUUID != null && this.world instanceof ServerWorld) {
-			return ((ServerWorld) this.world).getEntityByUuid(this.casterEntityUUID);
+		if (this.casterEntityUUID != null && this.level instanceof ServerWorld) {
+			return ((ServerWorld) this.level).getEntity(this.casterEntityUUID);
 		} else {
-			return this.casterEntity != 0 ? this.world.getEntityByID(this.casterEntity) : null;
+			return this.casterEntity != 0 ? this.level.getEntity(this.casterEntity) : null;
 		}
 	}
 
 	public void setCaster(@Nullable Entity caster) {
-		this.casterEntity = caster == null ? 0 : caster.getEntityId();
-		this.casterEntityUUID = caster == null ? null : caster.getUniqueID();
+		this.casterEntity = caster == null ? 0 : caster.getId();
+		this.casterEntityUUID = caster == null ? null : caster.getUUID();
 	}
 
 	@Nullable
 	public Entity getTarget() {
-		if (this.targetEntityUUID != null && this.world instanceof ServerWorld) {
-			return ((ServerWorld) this.world).getEntityByUuid(this.targetEntityUUID);
+		if (this.targetEntityUUID != null && this.level instanceof ServerWorld) {
+			return ((ServerWorld) this.level).getEntity(this.targetEntityUUID);
 		} else {
-			return this.targetEntity != 0 ? this.world.getEntityByID(this.targetEntity) : null;
+			return this.targetEntity != 0 ? this.level.getEntity(this.targetEntity) : null;
 		}
 	}
 
 	public void setTarget(@Nullable Entity target) {
-		this.targetEntity = target == null ? 0 : target.getEntityId();
-		this.targetEntityUUID = target == null ? null : target.getUniqueID();
+		this.targetEntity = target == null ? 0 : target.getId();
+		this.targetEntityUUID = target == null ? null : target.getUUID();
 	}
 
 	@Override
@@ -108,55 +109,68 @@ public class IceChunkEntity extends Entity implements IEntityAdditionalSpawnData
 		Entity target = this.getTarget();
 		if (this.hoverTicks < HOVER_TIME) {
 			if (target != null) {
-				this.setPosition(target.getPosX(), target.getPosYHeight(1) + HOVER_DISTANCE, target.getPosZ());
+				this.setPos(target.getX(), target.getY(1) + HOVER_DISTANCE, target.getZ());
 			}
 		} else if (this.hoverTicks >= HOVER_TIME + 20) {
 			if (target != null)
-				this.setMotion(Vector3d.ZERO);
+				this.setDeltaMovement(Vector3d.ZERO);
 			this.setTarget(null);
 		}
 
-		RayTraceResult raytraceresult = ProjectileHelper.func_234618_a_(this, entity -> !entity.isSpectator() && entity.isAlive() && entity.canBeCollidedWith() && !entity.noClip);
+		RayTraceResult raytraceresult = ProjectileHelper.getHitResult(this, this::canHitEntity);
 		if (raytraceresult.getType() != RayTraceResult.Type.MISS) {
 			this.onImpact(raytraceresult);
+		} else if (!this.level.isClientSide()){
+			List<Entity> intersecting = this.level.getEntitiesOfClass(Entity.class, this.getBoundingBox(), this::canHitEntity);
+			if (!intersecting.isEmpty())
+				this.onImpact(new EntityRayTraceResult(intersecting.get(0)));
 		}
 
 		if (target == null) {
-			this.setMotion(this.getMotion().add(0, -0.05, 0));
+			this.setDeltaMovement(this.getDeltaMovement().add(0, -0.05, 0));
 
-			this.setPosition(this.getPosX() + this.getMotion().getX(), this.getPosY() + this.getMotion().getY(), this.getPosZ() + this.getMotion().getZ());
+			this.setPos(this.getX() + this.getDeltaMovement().x(), this.getY() + this.getDeltaMovement().y(), this.getZ() + this.getDeltaMovement().z());
+		}
+	}
+
+	protected boolean canHitEntity(Entity entity) {
+		if (!entity.isSpectator() && entity.isAlive() && entity.isPickable() && !entity.noPhysics) {
+			Entity caster = this.getCaster();
+			return caster == null || !caster.isPassengerOfSameVehicle(entity);
+		} else {
+			return false;
 		}
 	}
 
 	@Override
-	protected void registerData() {
+	protected void defineSynchedData() {
 	}
 
 	@Override
-	protected void readAdditional(CompoundNBT nbt) {
-		this.casterEntityUUID = nbt.hasUniqueId("Caster") ? nbt.getUniqueId("Caster") : null;
-		this.targetEntityUUID = nbt.hasUniqueId("Target") ? nbt.getUniqueId("Target") : null;
+	protected void readAdditionalSaveData(CompoundNBT nbt) {
+		this.casterEntityUUID = nbt.hasUUID("Caster") ? nbt.getUUID("Caster") : null;
+		this.targetEntityUUID = nbt.hasUUID("Target") ? nbt.getUUID("Target") : null;
 		this.hoverTicks = nbt.getInt("HoverTicks");
 	}
 
 	@Override
-	protected void writeAdditional(CompoundNBT nbt) {
+	protected void addAdditionalSaveData(CompoundNBT nbt) {
 		if (this.casterEntityUUID != null)
-			nbt.putUniqueId("Caster", this.casterEntityUUID);
+			nbt.putUUID("Caster", this.casterEntityUUID);
 		if (this.targetEntityUUID != null)
-			nbt.putUniqueId("Target", this.targetEntityUUID);
+			nbt.putUUID("Target", this.targetEntityUUID);
 		nbt.putInt("HoverTicks", this.hoverTicks);
 	}
 
 	@Override
-	public IPacket<?> createSpawnPacket() {
+	public IPacket<?> getAddEntityPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 
 	@Override
 	public void writeSpawnData(PacketBuffer buf) {
 		Entity target = this.getTarget();
-		buf.writeVarInt(target == null ? 0 : target.getEntityId());
+		buf.writeVarInt(target == null ? 0 : target.getId());
 		buf.writeVarInt(this.hoverTicks);
 	}
 

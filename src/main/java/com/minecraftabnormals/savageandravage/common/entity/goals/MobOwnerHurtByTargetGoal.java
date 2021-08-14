@@ -18,35 +18,33 @@ public class MobOwnerHurtByTargetGoal extends TargetGoal {
 	public MobOwnerHurtByTargetGoal(MobEntity defendingEntityIn) {
 		super(defendingEntityIn, false);
 		this.defendingEntity = (IOwnableMob) defendingEntityIn;
-		this.setMutexFlags(EnumSet.of(Goal.Flag.TARGET));
+		this.setFlags(EnumSet.of(Goal.Flag.TARGET));
 	}
 
-
 	@Override
-	public boolean shouldExecute() {
+	public boolean canUse() {
 		if (this.defendingEntity.getOwnerId() != null) {
 			LivingEntity livingentity = this.defendingEntity.getOwner();
 			if (livingentity == null) {
 				return false;
 			} else {
-				this.attacker = livingentity.getRevengeTarget();
-				int i = livingentity.getRevengeTimer();
-				return i != this.timestamp && this.isSuitableTarget(this.attacker, EntityPredicate.DEFAULT) && this.defendingEntity.shouldAttackEntity(this.attacker, livingentity);
+				this.attacker = livingentity.getLastHurtByMob();
+				int i = livingentity.getLastHurtByMobTimestamp();
+				return i != this.timestamp && this.canAttack(this.attacker, EntityPredicate.DEFAULT) && this.defendingEntity.shouldAttackEntity(this.attacker, livingentity);
 			}
 		} else {
 			return false;
 		}
 	}
 
-
 	@Override
-	public void startExecuting() {
-		this.goalOwner.setAttackTarget(this.attacker);
+	public void start() {
+		this.mob.setTarget(this.attacker);
 		LivingEntity livingentity = this.defendingEntity.getOwner();
 		if (livingentity != null) {
-			this.timestamp = livingentity.getRevengeTimer();
+			this.timestamp = livingentity.getLastHurtByMobTimestamp();
 		}
 
-		super.startExecuting();
+		super.start();
 	}
 }

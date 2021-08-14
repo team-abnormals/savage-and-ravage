@@ -12,21 +12,21 @@ import net.minecraft.util.ResourceLocation;
 
 public class GrieferRenderer extends BipedRenderer<GrieferEntity, GrieferModel> {
 
-	private static final ResourceLocation GRIEFER_TEXTURE = new ResourceLocation(SavageAndRavage.MOD_ID, "textures/entity/griefer.png");
-	private static final ResourceLocation APESHIT_MODE_TEXTURE = new ResourceLocation(SavageAndRavage.MOD_ID, "textures/entity/griefer_melee.png");
+	private static final ResourceLocation GRIEFER_TEXTURE = new ResourceLocation(SavageAndRavage.MOD_ID, "textures/entity/griefer/griefer.png");
+	private static final ResourceLocation APESHIT_MODE_TEXTURE = new ResourceLocation(SavageAndRavage.MOD_ID, "textures/entity/griefer/griefer_melee.png");
 
 	public GrieferRenderer(EntityRendererManager renderManagerIn) {
-		super(renderManagerIn, new GrieferModel(0), 0.5f);
+		super(renderManagerIn, new GrieferModel(0.0F), 0.5F);
 		this.addLayer(new BipedArmorLayer<>(this, new VillagerArmorModel<>(0.5F), new VillagerArmorModel<>(1.0F)));
 	}
 
 	@Override
-	public ResourceLocation getEntityTexture(GrieferEntity entity) {
+	public ResourceLocation getTextureLocation(GrieferEntity entity) {
 		return entity.isApeshit() ? APESHIT_MODE_TEXTURE : GRIEFER_TEXTURE;
 	}
 
 	@Override
-	protected void preRenderCallback(GrieferEntity entity, MatrixStack matrixStackIn, float partialTickTime) {
+	protected void scale(GrieferEntity entity, MatrixStack matrixStackIn, float partialTickTime) {
 		matrixStackIn.scale(0.9375F, 0.9375F, 0.9375F);
 	}
 }

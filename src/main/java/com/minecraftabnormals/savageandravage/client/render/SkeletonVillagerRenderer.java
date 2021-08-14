@@ -28,12 +28,12 @@ public class SkeletonVillagerRenderer extends MobRenderer<SkeletonVillagerEntity
 	}
 
 	@Override
-	protected void preRenderCallback(SkeletonVillagerEntity entity, MatrixStack matrixStackIn, float partialTickTime) {
+	protected void scale(SkeletonVillagerEntity entity, MatrixStack matrixStackIn, float partialTickTime) {
 		matrixStackIn.scale(0.9375F, 0.9375F, 0.9375F);
 	}
 
 	@Override
-	public ResourceLocation getEntityTexture(SkeletonVillagerEntity entity) {
+	public ResourceLocation getTextureLocation(SkeletonVillagerEntity entity) {
 		return SKELETON_VILLAGER_TEXTURES;
 	}
 }

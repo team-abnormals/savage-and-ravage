@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "savageandravage:gloomy_tile_stairs"
+    "savageandravage:gloomy_tile_stairs",
+    "savageandravage:blast_proof_stairs"
   ]
 }

@@ -9,15 +9,16 @@ import net.minecraft.client.renderer.entity.layers.HeadLayer;
 import net.minecraft.util.ResourceLocation;
 
 public class TricksterRenderer extends MobRenderer<TricksterEntity, TricksterModel> {
-    private static final ResourceLocation TRICKSTER_TEXTURE = new ResourceLocation(SavageAndRavage.MOD_ID, "textures/entity/trickster.png");
+	private static final ResourceLocation NORMAL = new ResourceLocation(SavageAndRavage.MOD_ID, "textures/entity/trickster/trickster.png");
+	private static final ResourceLocation BASED = new ResourceLocation(SavageAndRavage.MOD_ID, "textures/entity/trickster/trickster_based.png");
 
-    public TricksterRenderer(EntityRendererManager rendererManager) {
-        super(rendererManager, new TricksterModel(), 0.5f);
-        this.addLayer(new HeadLayer<>(this));
-    }
+	public TricksterRenderer(EntityRendererManager rendererManager) {
+		super(rendererManager, new TricksterModel(), 0.5f);
+		this.addLayer(new HeadLayer<>(this));
+	}
 
-    @Override
-    public ResourceLocation getEntityTexture(TricksterEntity entity) {
-        return TRICKSTER_TEXTURE;
-    }
+	@Override
+	public ResourceLocation getTextureLocation(TricksterEntity entity) {
+		return entity.getName().getString().equalsIgnoreCase("based") ? BASED : NORMAL;
+	}
 }

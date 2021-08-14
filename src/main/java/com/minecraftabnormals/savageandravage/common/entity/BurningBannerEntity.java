@@ -41,9 +41,9 @@ import java.util.UUID;
 
 public class BurningBannerEntity extends Entity implements IEntityAdditionalSpawnData {
 
-	public static final DataParameter<Integer> TICKS_TILL_REMOVE = EntityDataManager.createKey(BurningBannerEntity.class, DataSerializers.VARINT);
-	public static final DataParameter<Optional<BlockPos>> BLOCK_POS = EntityDataManager.createKey(BurningBannerEntity.class, DataSerializers.OPTIONAL_BLOCK_POS);
-	public static final DataParameter<Optional<UUID>> OFFENDER_UUID = EntityDataManager.createKey(BurningBannerEntity.class, DataSerializers.OPTIONAL_UNIQUE_ID);
+	public static final DataParameter<Integer> TICKS_TILL_REMOVE = EntityDataManager.defineId(BurningBannerEntity.class, DataSerializers.INT);
+	public static final DataParameter<Optional<BlockPos>> BLOCK_POS = EntityDataManager.defineId(BurningBannerEntity.class, DataSerializers.OPTIONAL_BLOCK_POS);
+	public static final DataParameter<Optional<UUID>> OFFENDER_UUID = EntityDataManager.defineId(BurningBannerEntity.class, DataSerializers.OPTIONAL_UUID);
 
 	private static final double[] ROTATED_VERTICES = new double[3];
 	private AxisAlignedBB burningBox;
@@ -58,18 +58,18 @@ public class BurningBannerEntity extends Entity implements IEntityAdditionalSpaw
 	public BurningBannerEntity(World world, BlockPos pos, @Nullable PlayerEntity player) {
 		super(SREntities.BURNING_BANNER.get(), world);
 		this.setBannerPosition(pos);
-		if (player != null) this.setOffenderId(player.getUniqueID());
+		if (player != null) this.setOffenderId(player.getUUID());
 		BlockState state = world.getBlockState(pos);
-		this.setPosition(pos.getX() + 0.5, pos.getY() - (state.getBlock() instanceof WallBannerBlock ? 1 : 0), pos.getZ() + 0.5);
+		this.setPos(pos.getX() + 0.5, pos.getY() - (state.getBlock() instanceof WallBannerBlock ? 1 : 0), pos.getZ() + 0.5);
 		this.burningBox = getBurningBox(state);
 		this.burningBoxRotation = getBurningBoxRotation(state);
 	}
 
 	@Override
-	protected void registerData() {
-		this.dataManager.register(BLOCK_POS, Optional.empty());
-		this.dataManager.register(OFFENDER_UUID, Optional.empty());
-		this.dataManager.register(TICKS_TILL_REMOVE, 110);
+	protected void defineSynchedData() {
+		this.entityData.define(BLOCK_POS, Optional.empty());
+		this.entityData.define(OFFENDER_UUID, Optional.empty());
+		this.entityData.define(TICKS_TILL_REMOVE, 110);
 	}
 
 	@Override
@@ -81,108 +81,108 @@ public class BurningBannerEntity extends Entity implements IEntityAdditionalSpaw
 		if (bannerPos == null || ticksRemaining <= 0) {
 			this.remove();
 			return;
-		} else if (ticksRemaining > 10 && !(this.world.getTileEntity(bannerPos) instanceof BannerTileEntity)) {
+		} else if (ticksRemaining > 10 && !(this.level.getBlockEntity(bannerPos) instanceof BannerTileEntity)) {
 			extinguishFire();
 			return;
 		}
 
-		if (this.world.isRemote()) {
+		if (this.level.isClientSide()) {
 			for (int i = 0; i < 5; i++) {
-				double randomPositionX = this.burningBox.getMin(Direction.Axis.X) + (this.world.getRandom().nextFloat() * this.burningBox.getXSize());
-				double randomPositionY = this.burningBox.getMin(Direction.Axis.Y) + (this.world.getRandom().nextFloat() * this.burningBox.getYSize());
-				double randomPositionZ = this.burningBox.getMin(Direction.Axis.Z) + (this.world.getRandom().nextFloat() * this.burningBox.getZSize());
+				double randomPositionX = this.burningBox.min(Direction.Axis.X) + (this.level.getRandom().nextFloat() * this.burningBox.getXsize());
+				double randomPositionY = this.burningBox.min(Direction.Axis.Y) + (this.level.getRandom().nextFloat() * this.burningBox.getYsize());
+				double randomPositionZ = this.burningBox.min(Direction.Axis.Z) + (this.level.getRandom().nextFloat() * this.burningBox.getZsize());
 				double[] rotatedPosition = rotate(randomPositionX, randomPositionY, randomPositionZ, this.burningBoxRotation);
 				randomPositionX = bannerPos.getX() + rotatedPosition[0];
 				randomPositionY = bannerPos.getY() + rotatedPosition[1];
 				randomPositionZ = bannerPos.getZ() + rotatedPosition[2];
 
 				if (ticksRemaining > 10) {
-					if (this.rand.nextInt(5) == 2)
-						this.world.addParticle(ParticleTypes.FLAME, randomPositionX, randomPositionY, randomPositionZ, 0.0D, 0.0D, 0.0D);
-					if (this.rand.nextInt(5) == 3)
-						this.world.addParticle(ParticleTypes.LAVA, randomPositionX, randomPositionY, randomPositionZ, 0.0D, 0.0D, 0.0D);
+					if (this.random.nextInt(5) == 2)
+						this.level.addParticle(ParticleTypes.FLAME, randomPositionX, randomPositionY, randomPositionZ, 0.0D, 0.0D, 0.0D);
+					if (this.random.nextInt(5) == 3)
+						this.level.addParticle(ParticleTypes.LAVA, randomPositionX, randomPositionY, randomPositionZ, 0.0D, 0.0D, 0.0D);
 				} else {
-					this.world.addParticle(ParticleTypes.LARGE_SMOKE, randomPositionX, randomPositionY, randomPositionZ, 0.0D, 0.0D, 0.0D);
+					this.level.addParticle(ParticleTypes.LARGE_SMOKE, randomPositionX, randomPositionY, randomPositionZ, 0.0D, 0.0D, 0.0D);
 				}
 			}
 		} else {
 			if (this.getTicksTillRemove() > 10) {
-				this.playSound(this.world.getTileEntity(bannerPos) instanceof BannerTileEntity ? SoundEvents.BLOCK_FIRE_AMBIENT : SoundEvents.BLOCK_FIRE_EXTINGUISH, 2F, this.world.getRandom().nextFloat() * 0.4F + 0.8F);
+				this.playSound(this.level.getBlockEntity(bannerPos) instanceof BannerTileEntity ? SoundEvents.FIRE_AMBIENT : SoundEvents.FIRE_EXTINGUISH, 2F, this.level.getRandom().nextFloat() * 0.4F + 0.8F);
 			} else if (this.getTicksTillRemove() == 10) {
-				this.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH, 2F, this.world.getRandom().nextFloat() * 0.4F + 0.8F);
+				this.playSound(SoundEvents.FIRE_EXTINGUISH, 2F, this.level.getRandom().nextFloat() * 0.4F + 0.8F);
 				PlayerEntity offender = this.getOffender();
-				if (offender != null && isOminousBanner(this.world, bannerPos) && ((ServerWorld) this.world).findRaid(bannerPos) == null && SRConfig.COMMON.noBadOmenOnDeath.get()) {
-					SRTriggers.BURN_BANNER.trigger((ServerPlayerEntity) offender);
-					EffectInstance effect = offender.getActivePotionEffect(Effects.BAD_OMEN);
-					if (effect != null)
-						offender.removeActivePotionEffect(Effects.BAD_OMEN);
-
-					if (!this.world.getGameRules().getBoolean(GameRules.DISABLE_RAIDS))
-						offender.addPotionEffect(new EffectInstance(Effects.BAD_OMEN, 120000, MathHelper.clamp(effect == null ? 0 : effect.getAmplifier() + 1, 0, 4), false, false, true));
+				if (offender != null && isOminousBanner(this.level, bannerPos) && ((ServerWorld) this.level).getRaidAt(bannerPos) == null) {
+					SRTriggers.BURN_OMINOUS_BANNER.trigger((ServerPlayerEntity) offender);
+					if (SRConfig.COMMON.noBadOmenOnDeath.get() && !this.level.getGameRules().getBoolean(GameRules.RULE_DISABLE_RAIDS)) {
+						EffectInstance effect = offender.getEffect(Effects.BAD_OMEN);
+						if (effect != null)
+							offender.removeEffectNoUpdate(Effects.BAD_OMEN);
+						offender.addEffect(new EffectInstance(Effects.BAD_OMEN, 120000, MathHelper.clamp(effect == null ? 0 : (effect.getAmplifier() + 1), 0, 4), false, false, true));
+					}
 				}
-				this.world.removeBlock(bannerPos, false);
+				this.level.removeBlock(bannerPos, false);
 			}
 		}
 	}
 
 	public void extinguishFire() {
-		this.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH, 0.5F, this.world.getRandom().nextFloat() * 0.4F + 0.8F);
+		this.playSound(SoundEvents.FIRE_EXTINGUISH, 0.5F, this.level.getRandom().nextFloat() * 0.4F + 0.8F);
 		this.remove();
 	}
 
 	@Override
-	public void recalculateSize() {
+	public void refreshDimensions() {
 	}
 
 	@Override
-	protected void writeAdditional(CompoundNBT compound) {
+	protected void addAdditionalSaveData(CompoundNBT compound) {
 		compound.putInt("Size", 0);
 		compound.putInt("TicksTillRemove", this.getTicksTillRemove());
 		if (this.getBannerPosition() != null)
 			compound.put("BannerPosition", NBTUtil.writeBlockPos(this.getBannerPosition()));
 		if (this.getOffenderId() != null)
-			compound.putUniqueId("Offender", this.getOffenderId());
+			compound.putUUID("Offender", this.getOffenderId());
 	}
 
 	@Override
-	protected void readAdditional(CompoundNBT compound) {
+	protected void readAdditionalSaveData(CompoundNBT compound) {
 		this.setTicksTillRemove(compound.getInt("TicksTillRemove"));
 		if (compound.contains("BannerPosition", 10))
 			this.setBannerPosition(NBTUtil.readBlockPos(compound.getCompound("BannerPosition")));
-		if (compound.hasUniqueId("Offender"))
-			this.setOffenderId(compound.getUniqueId("Offender"));
+		if (compound.hasUUID("Offender"))
+			this.setOffenderId(compound.getUUID("Offender"));
 	}
 
 	public int getTicksTillRemove() {
-		return this.dataManager.get(TICKS_TILL_REMOVE);
+		return this.entityData.get(TICKS_TILL_REMOVE);
 	}
 
 	public void setTicksTillRemove(int tickCount) {
-		this.dataManager.set(TICKS_TILL_REMOVE, tickCount);
+		this.entityData.set(TICKS_TILL_REMOVE, tickCount);
 	}
 
 	@Nullable
 	public BlockPos getBannerPosition() {
-		return this.dataManager.get(BLOCK_POS).orElse(null);
+		return this.entityData.get(BLOCK_POS).orElse(null);
 	}
 
 	private void setBannerPosition(@Nullable BlockPos positionIn) {
-		this.dataManager.set(BLOCK_POS, Optional.ofNullable(positionIn));
+		this.entityData.set(BLOCK_POS, Optional.ofNullable(positionIn));
 	}
 
 	@Nullable
 	public UUID getOffenderId() {
-		return this.dataManager.get(OFFENDER_UUID).orElse(null);
+		return this.entityData.get(OFFENDER_UUID).orElse(null);
 	}
 
 	public void setOffenderId(@Nullable UUID ownerId) {
-		this.dataManager.set(OFFENDER_UUID, Optional.ofNullable(ownerId));
+		this.entityData.set(OFFENDER_UUID, Optional.ofNullable(ownerId));
 	}
 
 	@Nullable
 	public PlayerEntity getOffender() {
 		UUID uuid = this.getOffenderId();
-		return uuid == null ? null : this.world.getPlayerByUuid(uuid);
+		return uuid == null ? null : this.level.getPlayerByUUID(uuid);
 	}
 
 	public AxisAlignedBB getBurningBox() {
@@ -194,13 +194,13 @@ public class BurningBannerEntity extends Entity implements IEntityAdditionalSpaw
 	}
 
 	@Override
-	public IPacket<?> createSpawnPacket() {
+	public IPacket<?> getAddEntityPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 
 	public static boolean isOminousBanner(IBlockReader world, BlockPos pos) {
-		if (world.getTileEntity(pos) instanceof BannerTileEntity) {
-			BannerTileEntity banner = (BannerTileEntity) Objects.requireNonNull(world.getTileEntity(pos));
+		if (world.getBlockEntity(pos) instanceof BannerTileEntity) {
+			BannerTileEntity banner = (BannerTileEntity) Objects.requireNonNull(world.getBlockEntity(pos));
 			if (banner.getName() instanceof TranslationTextComponent) {
 				return ((TranslationTextComponent) banner.getName()).getKey().contains("block.minecraft.ominous_banner");
 			}
@@ -209,12 +209,12 @@ public class BurningBannerEntity extends Entity implements IEntityAdditionalSpaw
 	}
 
 	public static AxisAlignedBB getBurningBox(BlockState state) {
-		return state.hasProperty(WallBannerBlock.HORIZONTAL_FACING) ? new AxisAlignedBB(1 * 0.0625, -13.5 * 0.0625, 1.5 * 0.0625, 15 * 0.0625, 14 * 0.0625, 4 * 0.0625) : new AxisAlignedBB(1 * 0.0625, 2.5 * 0.0625, 8.5 * 0.0625, 15 * 0.0625, 29.5 * 0.0625, 11 * 0.0625);
+		return state.hasProperty(WallBannerBlock.FACING) ? new AxisAlignedBB(1 * 0.0625, -13.5 * 0.0625, 1.5 * 0.0625, 15 * 0.0625, 14 * 0.0625, 4 * 0.0625) : new AxisAlignedBB(1 * 0.0625, 2.5 * 0.0625, 8.5 * 0.0625, 15 * 0.0625, 29.5 * 0.0625, 11 * 0.0625);
 	}
 
 	public static double getBurningBoxRotation(BlockState state) {
-		Direction direction = state.hasProperty(WallBannerBlock.HORIZONTAL_FACING) ? state.get(WallBannerBlock.HORIZONTAL_FACING) : null;
-		return direction != null ? Math.toRadians(direction.getHorizontalAngle()) : (float) (state.get(BannerBlock.ROTATION) / 8.0 * Math.PI);
+		Direction direction = state.hasProperty(WallBannerBlock.FACING) ? state.getValue(WallBannerBlock.FACING) : null;
+		return direction != null ? Math.toRadians(direction.toYRot()) : (float) (state.getValue(BannerBlock.ROTATION) / 8.0 * Math.PI);
 	}
 
 	public static double[] rotate(double x, double y, double z, double angle) {
@@ -238,7 +238,7 @@ public class BurningBannerEntity extends Entity implements IEntityAdditionalSpaw
 	public void readSpawnData(PacketBuffer buf) {
 		BlockPos bannerPos = buf.readBoolean() ? buf.readBlockPos() : null;
 		if (bannerPos != null) {
-			BlockState state = this.world.getBlockState(bannerPos);
+			BlockState state = this.level.getBlockState(bannerPos);
 			this.burningBox = getBurningBox(state);
 			this.burningBoxRotation = getBurningBoxRotation(state);
 		}

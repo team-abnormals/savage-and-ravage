@@ -19,33 +19,41 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Optional;
 
 public class RunePrisonEntity extends Entity {
-	private static final DataParameter<Integer> TICKS_TILL_REMOVE = EntityDataManager.createKey(RunePrisonEntity.class, DataSerializers.VARINT);
-	private static final DataParameter<Optional<BlockPos>> BLOCK_POS = EntityDataManager.createKey(RunePrisonEntity.class, DataSerializers.OPTIONAL_BLOCK_POS);
+	private static final DataParameter<Integer> TICKS_TILL_REMOVE = EntityDataManager.defineId(RunePrisonEntity.class, DataSerializers.INT);
+	private static final DataParameter<Optional<BlockPos>> BLOCK_POS = EntityDataManager.defineId(RunePrisonEntity.class, DataSerializers.OPTIONAL_BLOCK_POS);
+	private final boolean fromTrap;
+	private ITracksHits caster = null;
 	private int currentFrame = 0;
 	private boolean isBackwardsFrameCycle = false;
 
-	public RunePrisonEntity(EntityType<? extends RunePrisonEntity> type, World worldIn) {
-		super(type, worldIn);
+	public RunePrisonEntity(EntityType<? extends RunePrisonEntity> type, World world) {
+		super(type, world);
+		this.fromTrap = false;
 	}
 
-	public RunePrisonEntity(World worldIn, BlockPos positionIn, int ticksTillRemove) {
-		super(SREntities.RUNE_PRISON.get(), worldIn);
-		this.setBlockPos(positionIn);
+	public RunePrisonEntity(World world, BlockPos position, int ticksTillRemove, boolean fromTrap) {
+		super(SREntities.RUNE_PRISON.get(), world);
+		this.setBlockPos(position);
+		this.fromTrap = fromTrap;
 		this.setTicksTillRemove(ticksTillRemove);
 	}
 
-	@Override
-	protected void registerData() {
-		this.dataManager.register(BLOCK_POS, Optional.empty());
-		this.dataManager.register(TICKS_TILL_REMOVE, 0);
+	public RunePrisonEntity(World world, BlockPos position, int ticksTillRemove, boolean fromTrap, ITracksHits caster) {
+		this(world, position, ticksTillRemove, fromTrap);
+		this.caster = caster;
 	}
 
 	@Override
-	protected void readAdditional(CompoundNBT compound) {
+	protected void defineSynchedData() {
+		this.entityData.define(BLOCK_POS, Optional.empty());
+		this.entityData.define(TICKS_TILL_REMOVE, 0);
+	}
+
+	@Override
+	protected void readAdditionalSaveData(CompoundNBT compound) {
 		this.setTicksTillRemove(compound.getInt("TicksTillRemove"));
 		if (compound.contains("GloomyTilePosition", 10)) {
 			this.setBlockPos(NBTUtil.readBlockPos(compound.getCompound("GloomyTilePosition")));
@@ -53,7 +61,7 @@ public class RunePrisonEntity extends Entity {
 	}
 
 	@Override
-	protected void writeAdditional(CompoundNBT compound) {
+	protected void addAdditionalSaveData(CompoundNBT compound) {
 		compound.putInt("TicksTillRemove", this.getTicksTillRemove());
 		if (this.getBlockPos() != null) {
 			compound.put("GloomyTilePosition", NBTUtil.writeBlockPos(this.getBlockPos()));
@@ -61,27 +69,27 @@ public class RunePrisonEntity extends Entity {
 	}
 
 	public int getTicksTillRemove() {
-		return this.dataManager.get(TICKS_TILL_REMOVE);
+		return this.entityData.get(TICKS_TILL_REMOVE);
 	}
 
 	public void setTicksTillRemove(int tickCount) {
-		this.dataManager.set(TICKS_TILL_REMOVE, tickCount);
+		this.entityData.set(TICKS_TILL_REMOVE, tickCount);
 	}
 
 	@Nullable
 	public BlockPos getBlockPos() {
-		return this.dataManager.get(BLOCK_POS).orElse(null);
+		return this.entityData.get(BLOCK_POS).orElse(null);
 	}
 
 	private void setBlockPos(@Nullable BlockPos positionIn) {
-		this.dataManager.set(BLOCK_POS, Optional.ofNullable(positionIn));
+		this.entityData.set(BLOCK_POS, Optional.ofNullable(positionIn));
 	}
 
 	@Override
 	public void tick() {
 		super.tick();
 
-		if (world.isRemote() && getTicksTillRemove() % 5 == 0) {
+		if (level.isClientSide() && getTicksTillRemove() % 5 == 0) {
 			if (!isBackwardsFrameCycle) {
 				currentFrame++;
 				if (currentFrame == 4) {
@@ -95,14 +103,14 @@ public class RunePrisonEntity extends Entity {
 			}
 		}
 
-		if (getTicksTillRemove() > 0) {
+		if (getTicksTillRemove() > 0)
 			setTicksTillRemove(getTicksTillRemove() - 1);
-		}
 
-		List<LivingEntity> intersectingEntityList = this.world.getEntitiesWithinAABB(LivingEntity.class, this.getBoundingBox());
-		for (LivingEntity livingEntity : intersectingEntityList) {
-			if (livingEntity.canBeHitWithPotion() && RunedGloomyTilesBlock.shouldTrigger(livingEntity)) {
-				livingEntity.addPotionEffect(new EffectInstance(SREffects.WEIGHT.get(), 20, 2));
+		for (LivingEntity livingEntity : this.level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox())) {
+			if (livingEntity.isAffectedByPotions()) {
+				livingEntity.addEffect(new EffectInstance(SREffects.WEIGHT.get(), 60, 2));
+				if (this.caster != null)
+					this.caster.onTrackedHit(this, livingEntity);
 			}
 		}
 
@@ -110,11 +118,10 @@ public class RunePrisonEntity extends Entity {
 			this.remove();
 
 			BlockPos pos = this.getBlockPos();
-			if (pos == null)
-				return;
-
-			if (this.world.getBlockState(pos).getBlock() instanceof RunedGloomyTilesBlock)
-				this.world.setBlockState(pos, SRBlocks.GLOOMY_TILES.get().getDefaultState());
+			if (pos != null && this.fromTrap) {
+				if (this.level.getBlockState(pos).getBlock() instanceof RunedGloomyTilesBlock)
+					this.level.setBlockAndUpdate(pos, SRBlocks.GLOOMY_TILES.get().defaultBlockState());
+			}
 		}
 	}
 
@@ -123,7 +130,7 @@ public class RunePrisonEntity extends Entity {
 	}
 
 	@Override
-	public IPacket<?> createSpawnPacket() {
+	public IPacket<?> getAddEntityPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 }

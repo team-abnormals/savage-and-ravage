@@ -27,12 +27,12 @@ public class ExecutionerRenderer extends MobRenderer<VindicatorEntity, Execution
 	}
 
 	@Override
-	public ResourceLocation getEntityTexture(VindicatorEntity entity) {
+	public ResourceLocation getTextureLocation(VindicatorEntity entity) {
 		return TEXTURE;
 	}
 
 	@Override
-	protected void preRenderCallback(VindicatorEntity entity, MatrixStack matrixStackIn, float partialTickTime) {
+	protected void scale(VindicatorEntity entity, MatrixStack matrixStackIn, float partialTickTime) {
 		matrixStackIn.scale(0.9375F, 0.9375F, 0.9375F);
 	}
 }

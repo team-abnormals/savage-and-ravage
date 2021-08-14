@@ -23,6 +23,7 @@
   "item.savageandravage.wand_of_freezing": "Wand of Freezing",
   "item.savageandravage.cleaver_of_beheading": "Cleaver of Beheading",
   "item.savageandravage.eldritch_conch": "Eldritch Conch",
+  "item.savageandravage.mask_of_dishonesty": "Mask of Dishonesty",
 
   "item.savageandravage.creeper_spores": "Creeper Spores",
   "item.savageandravage.mischief_arrow": "Mischief Arrow",
@@ -58,7 +59,9 @@
   "advancements.savageandravage.adventure.griefer_armor.title": "Dynamite with a Laser Beam",
   "advancements.savageandravage.adventure.griefer_armor.description": "Collect a full set of Griefer armor",
   "advancements.savageandravage.adventure.relic_collector.title": "Relic Collector",
-  "advancements.savageandravage.adventure.relic_collector.description": "Obtain a Totem of Undying, Cleaver of Beheading, and Wand of Freezing",
+  "advancements.savageandravage.adventure.relic_collector.description": "Obtain a Totem of Undying, Cleaver of Beheading, Wand of Freezing, Mask of Dishonesty and an Eldritch Conch",
+  "advancements.savageandravage.adventure.mask_of_dishonesty.title": "A Little Tricking",
+  "advancements.savageandravage.adventure.mask_of_dishonesty.description": "Obtain a Mask of Dishonesty by killing a Trickster",
 
   "advancements.savageandravage.adventure.voluntary_exile.description": "Set fire to an Ominous Banner.\nMaybe consider staying away from villages for the time being...",
 
@@ -67,12 +70,23 @@
   "subtitles.savageandravage.entity.creepie.fuse": "Creepie hisses",
   "subtitles.savageandravage.entity.creepie.convert": "Creepie converts",
   "subtitles.savageandravage.entity.creepie.grow": "Creepie grows",
+  
   "subtitles.savageandravage.entity.iceologer.ambient": "Iceologer murmurs",
   "subtitles.savageandravage.entity.iceologer.hurt": "Iceologer hurts",
   "subtitles.savageandravage.entity.iceologer.death": "Iceologer dies",
   "subtitles.savageandravage.entity.iceologer.celebrate": "Iceologer cheers",
   "subtitles.savageandravage.entity.iceologer.cast_spell": "Iceologer casts spell",
+
+  "subtitles.savageandravage.entity.trickster.ambient": "Trickster murmurs",
+  "subtitles.savageandravage.entity.trickster.step": "Trickster jingles",
+  "subtitles.savageandravage.entity.trickster.hurt": "Trickster hurts",
+  "subtitles.savageandravage.entity.trickster.death": "Trickster dies",
+  "subtitles.savageandravage.entity.trickster.celebrate": "Trickster cheers",
+  "subtitles.savageandravage.entity.trickster.laugh": "Trickster laughs",
+  "subtitles.savageandravage.entity.trickster.cast_spell": "Trickster casts spell",
+
   "subtitles.savageandravage.entity.player.cast_spell": "Player casts spell",
-  "subtitles.savageandravage.entity.creeper_spores.throw": "Creeper spores fly",
-  "subtitles.savageandravage.block.runed_gloomy_tiles.activate": "Runed Gloomy Tiles activate"
+  "subtitles.savageandravage.entity.creeper_spores.throw": "Creeper Spores fly",
+  "subtitles.savageandravage.generic.prepare_attack": "Something prepares attack",
+  "subtitles.savageandravage.generic.puff_of_smoke": "Puff of smoke"
 }

@@ -19,39 +19,37 @@ public class ChiseledGloomyTilesBlock extends Block {
 
 	public ChiseledGloomyTilesBlock(AbstractBlock.Properties properties) {
 		super(properties);
-		this.setDefaultState(this.stateContainer.getBaseState().with(POWERED, false));
+		this.registerDefaultState(this.stateDefinition.any().setValue(POWERED, false));
 	}
 
 	@Nullable
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		return this.getDefaultState().with(POWERED, context.getWorld().isBlockPowered(context.getPos()));
+		return this.defaultBlockState().setValue(POWERED, context.getLevel().hasNeighborSignal(context.getClickedPos()));
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-		if (!worldIn.isRemote()) {
-			boolean flag = state.get(POWERED);
-			if (flag != worldIn.isBlockPowered(pos)) {
+		if (!worldIn.isClientSide()) {
+			boolean flag = state.getValue(POWERED);
+			if (flag != worldIn.hasNeighborSignal(pos)) {
 				if (flag) {
-					worldIn.getPendingBlockTicks().scheduleTick(pos, this, 4);
+					worldIn.getBlockTicks().scheduleTick(pos, this, 4);
 				} else {
-					worldIn.setBlockState(pos, state.func_235896_a_(POWERED), 2);
+					worldIn.setBlock(pos, state.cycle(POWERED), 2);
 				}
 			}
 		}
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public void tick(BlockState state, ServerWorld world, BlockPos pos, Random rand) {
-		if (state.get(POWERED) && !world.isBlockPowered(pos)) {
-			world.setBlockState(pos, state.func_235896_a_(POWERED), 2);
+		if (state.getValue(POWERED) && !world.hasNeighborSignal(pos)) {
+			world.setBlock(pos, state.cycle(POWERED), 2);
 		}
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
 		builder.add(POWERED);
 	}
 }

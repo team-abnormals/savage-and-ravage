@@ -16,7 +16,7 @@ import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
@@ -37,21 +37,21 @@ public class CleaverOfBeheadingItem extends SwordItem {
 		Multimap<Attribute, AttributeModifier> multimap = HashMultimap.create();
 
 		if (slot == EquipmentSlotType.MAINHAND) {
-			multimap.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", this.attackDamage, AttributeModifier.Operation.ADDITION));
-			multimap.put(Attributes.ATTACK_SPEED, new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", this.attackSpeed, AttributeModifier.Operation.ADDITION));
+			multimap.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", this.attackDamage, AttributeModifier.Operation.ADDITION));
+			multimap.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", this.attackSpeed, AttributeModifier.Operation.ADDITION));
 		}
 
 		return multimap;
 	}
 
 	@SubscribeEvent
-	public static void onExecutionerCleaverKill(LivingDeathEvent event) {
-		if (event.getSource().getTrueSource() instanceof LivingEntity && event.getEntity() instanceof PlayerEntity) {
-			LivingEntity wielder = (LivingEntity) event.getSource().getTrueSource();
+	public static void onExecutionerCleaverKill(LivingDamageEvent event) {
+		if (event.getSource().getEntity() instanceof LivingEntity && event.getEntity() instanceof PlayerEntity) {
+			LivingEntity wielder = (LivingEntity) event.getSource().getEntity();
 			PlayerEntity targetPlayer = (PlayerEntity) event.getEntity();
-			World world = wielder.world;
+			World world = wielder.level;
 
-			if (wielder.getHeldItemMainhand().getItem() != SRItems.CLEAVER_OF_BEHEADING.get() || targetPlayer == null)
+			if (wielder.getMainHandItem().getItem() != SRItems.CLEAVER_OF_BEHEADING.get() || targetPlayer == null || targetPlayer.getHealth() - event.getAmount() > 0)
 				return;
 
 			CompoundNBT skullNbt = new CompoundNBT();
@@ -60,13 +60,13 @@ public class CleaverOfBeheadingItem extends SwordItem {
 			ItemStack stack = new ItemStack(Items.PLAYER_HEAD);
 			stack.setTag(skullNbt);
 
-			if (!world.isRemote())
-				world.addEntity(new ItemEntity(world, targetPlayer.getPosX(), targetPlayer.getPosY(), targetPlayer.getPosZ(), stack));
+			if (!world.isClientSide())
+				world.addFreshEntity(new ItemEntity(world, targetPlayer.getX(), targetPlayer.getY(), targetPlayer.getZ(), stack));
 		}
 	}
 
 	@Override
-	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
+	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {
 		FILLER.fillItem(this, group, items);
 	}
 }

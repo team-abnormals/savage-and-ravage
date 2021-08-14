@@ -39,7 +39,7 @@ public class SRConfig {
 			creepersDropSporesAfterExplosionDeath = builder.define("Creepers drop Creeper Spores after they die from an explosion", true);
 			creepieExplosionsDestroyBlocks = builder.define("Creepie explosions destroy blocks", false);
 			builder.pop();
-			
+
 			builder.push("illagers");
 			noBadOmenOnDeath = builder
 					.comment("Illagers with banners will no longer give Bad Omen when you kill them", "Instead, you will have to place and burn the banner that they drop with flint and steel or a fire charge")
@@ -49,7 +49,7 @@ public class SRConfig {
 					.define("Evokers use totems", true);
 			reducedVexHealth = builder.define("Vex health is reduced to 2", true);
 			builder.pop();
-			
+
 			builder.pop();
 		}
 	}

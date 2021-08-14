@@ -21,26 +21,26 @@ import net.minecraft.world.raid.Raid;
 import java.util.Map;
 
 public class ExecutionerEntity extends VindicatorEntity {
-
+	//TODO fix attack time
 	public ExecutionerEntity(EntityType<? extends VindicatorEntity> entity, World world) {
 		super(entity, world);
 	}
 
 	@Override
-	protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty) {
-		if (this.getRaid() == null) {
-			this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(SRItems.CLEAVER_OF_BEHEADING.get()));
-			this.inventoryHandsDropChances[EquipmentSlotType.MAINHAND.getIndex()] = 0.5F;
+	protected void populateDefaultEquipmentSlots(DifficultyInstance difficulty) {
+		if (this.getCurrentRaid() == null) {
+			this.setItemSlot(EquipmentSlotType.MAINHAND, new ItemStack(SRItems.CLEAVER_OF_BEHEADING.get()));
+			this.handDropChances[EquipmentSlotType.MAINHAND.getIndex()] = 0.5F;
 		}
 	}
 
 	public static AttributeModifierMap.MutableAttribute registerAttributes() {
-		return MonsterEntity.func_234295_eP_()
-				.createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.30F)
-				.createMutableAttribute(Attributes.FOLLOW_RANGE, 14.0D)
-				.createMutableAttribute(Attributes.MAX_HEALTH, 35.0D)
-				.createMutableAttribute(Attributes.ATTACK_DAMAGE, 7.0D)
-				.createMutableAttribute(Attributes.ARMOR, 3.0D);
+		return MonsterEntity.createMonsterAttributes()
+				.add(Attributes.MOVEMENT_SPEED, 0.30F)
+				.add(Attributes.FOLLOW_RANGE, 14.0D)
+				.add(Attributes.MAX_HEALTH, 35.0D)
+				.add(Attributes.ATTACK_DAMAGE, 7.0D)
+				.add(Attributes.ARMOR, 3.0D);
 	}
 
 	@Override
@@ -49,24 +49,24 @@ public class ExecutionerEntity extends VindicatorEntity {
 	}
 
 	@Override
-	public void applyWaveBonus(int wave, boolean p_213660_2_) {
+	public void applyRaidBuffs(int wave, boolean p_213660_2_) {
 		ItemStack itemstack = new ItemStack(SRItems.CLEAVER_OF_BEHEADING.get());
-		Raid raid = this.getRaid();
+		Raid raid = this.getCurrentRaid();
 		if (raid == null)
 			return;
 		int i = 1;
-		if (wave > raid.getWaves(Difficulty.NORMAL)) {
+		if (wave > raid.getNumGroups(Difficulty.NORMAL)) {
 			i = 2;
 		}
 
-		boolean flag = this.rand.nextFloat() <= raid.getEnchantOdds();
+		boolean flag = this.random.nextFloat() <= raid.getEnchantOdds();
 		if (flag) {
 			Map<Enchantment, Integer> map = Maps.newHashMap();
 			map.put(Enchantments.SHARPNESS, i);
 			EnchantmentHelper.setEnchantments(map, itemstack);
 		}
 
-		this.setItemStackToSlot(EquipmentSlotType.MAINHAND, itemstack);
-		this.inventoryHandsDropChances[EquipmentSlotType.MAINHAND.getIndex()] = 0.5F;
+		this.setItemSlot(EquipmentSlotType.MAINHAND, itemstack);
+		this.handDropChances[EquipmentSlotType.MAINHAND.getIndex()] = 0.5F;
 	}
 }

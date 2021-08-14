@@ -66,6 +66,55 @@
     ],
     "subtitle": "subtitles.savageandravage.entity.iceologer.cast_spell"
   },
+  "entity.trickster.ambient": {
+    "sounds": [
+      "savageandravage:mob/trickster/idle1",
+      "savageandravage:mob/trickster/idle2",
+      "savageandravage:mob/trickster/idle3"
+    ],
+    "subtitle": "subtitles.savageandravage.entity.trickster.ambient"
+  },
+  "entity.trickster.step": {
+    "sounds": [
+      "savageandravage:mob/trickster/step1",
+      "savageandravage:mob/trickster/step2",
+      "savageandravage:mob/trickster/step3"
+    ],
+    "subtitle": "subtitles.savageandravage.entity.trickster.step"
+  },
+  "entity.trickster.hurt": {
+    "sounds": [
+      "savageandravage:mob/trickster/hurt1",
+      "savageandravage:mob/trickster/hurt2"
+    ],
+    "subtitle": "subtitles.savageandravage.entity.trickster.hurt"
+  },
+  "entity.trickster.death": {
+    "sounds": [
+      "savageandravage:mob/trickster/death"
+    ],
+    "subtitle": "subtitles.savageandravage.entity.trickster.death"
+  },
+  "entity.trickster.celebrate": {
+    "sounds": [
+      "savageandravage:mob/trickster/celebrate1",
+      "savageandravage:mob/trickster/celebrate2"
+    ],
+    "subtitle": "subtitles.savageandravage.entity.trickster.celebrate"
+  },
+  "entity.trickster.laugh": {
+    "sounds": [
+      "savageandravage:mob/trickster/laugh"
+    ],
+    "subtitle": "subtitles.savageandravage.entity.trickster.laugh"
+  },
+  "entity.trickster.cast_spell": {
+    "sounds": [
+      "mob/evocation_illager/cast1",
+      "mob/evocation_illager/cast2"
+    ],
+    "subtitle": "subtitles.savageandravage.entity.trickster.cast_spell"
+  },
   "entity.player.cast_spell": {
     "sounds": [
       "mob/evocation_illager/cast1",
@@ -79,29 +128,17 @@
     ],
     "subtitle": "subtitles.savageandravage.entity.creeper_spores.throw"
   },
-  "block.runed_gloomy_tiles.activate": {
+  "generic.prepare_attack": {
     "sounds": [
       "mob/evocation_illager/prepare_attack1",
       "mob/evocation_illager/prepare_attack2"
     ],
-    "subtitle": "subtitles.savageandravage.block.runed_gloomy_tiles.activate"
+    "subtitle": "subtitles.savageandravage.generic.prepare_attack"
   },
-  "block.note_block.hit_marker": {
+  "generic.puff_of_smoke": {
     "sounds": [
-      "savageandravage:block/note_block/hit_marker"
+      "fireworks/blast1"
     ],
-    "subtitle": "subtitles.block.note_block.note"
-  },
-  "block.note_block.harpsichord": {
-    "sounds": [
-      "savageandravage:block/note_block/harpsichord"
-    ],
-    "subtitle": "subtitles.block.note_block.note"
-  },
-  "block.note_block.orchestral_hit": {
-    "sounds": [
-      "savageandravage:block/note_block/orchestral_hit"
-    ],
-    "subtitle": "subtitles.block.note_block.note"
+    "subtitle": "subtitles.savageandravage.generic.puff_of_smoke"
   }
 }

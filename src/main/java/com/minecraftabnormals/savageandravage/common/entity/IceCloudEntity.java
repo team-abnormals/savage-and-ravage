@@ -31,32 +31,32 @@ public class IceCloudEntity extends DamagingProjectileEntity {
 	public void tick() {
 		super.tick();
 
-		for (Entity entity : this.world.getEntitiesInAABBexcluding(this.func_234616_v_(), this.getBoundingBox().expand(2, 2, 2), this::func_230298_a_)) {
+		for (Entity entity : this.level.getEntities(this.getOwner(), this.getBoundingBox().expandTowards(2, 2, 2), this::canHitEntity)) {
 			if (entity instanceof LivingEntity && !(entity instanceof IceologerEntity)) {
-				((LivingEntity) entity).addPotionEffect(new EffectInstance(SREffects.FROSTBITE.get(), 80, 0, false, false, true));
+				((LivingEntity) entity).addEffect(new EffectInstance(SREffects.FROSTBITE.get(), 80, 0, false, false, true));
 			}
 		}
 
-		if (!this.world.isRemote()) {
-			((ServerWorld) this.world).spawnParticle(this.getParticle(), this.getPosX(), this.getPosY(), this.getPosZ(), 30, 1.5, 1.5, 1.5, 1);
+		if (!this.level.isClientSide()) {
+			((ServerWorld) this.level).sendParticles(this.getTrailParticle(), this.getX(), this.getY(), this.getZ(), 30, 1.5, 1.5, 1.5, 1);
 		}
 
-		if (this.ticksExisted > 100)
+		if (this.tickCount > 100)
 			this.remove();
 	}
 
 	@Override
-	protected boolean isFireballFiery() {
+	protected boolean shouldBurn() {
 		return false;
 	}
 
 	@Override
-	protected IParticleData getParticle() {
+	protected IParticleData getTrailParticle() {
 		return SRParticles.SNOWFLAKE.get();
 	}
 
 	@Override
-	public IPacket<?> createSpawnPacket() {
+	public IPacket<?> getAddEntityPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 }

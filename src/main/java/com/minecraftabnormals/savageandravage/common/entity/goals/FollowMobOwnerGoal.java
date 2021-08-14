@@ -24,28 +24,24 @@ public class FollowMobOwnerGoal extends Goal {
 	public FollowMobOwnerGoal(MobEntity entityIn, double followSpeed, float minimumDistance, float maximumDistance) {
 		this.ownedMob = entityIn;
 		this.followSpeed = followSpeed;
-		this.navigator = entityIn.getNavigator();
+		this.navigator = entityIn.getNavigation();
 		this.minDist = minimumDistance;
 		this.maxDist = maximumDistance;
-		this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
-		if (!(entityIn.getNavigator() instanceof GroundPathNavigator) && !(entityIn.getNavigator() instanceof FlyingPathNavigator)) {
+		this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+		if (!(entityIn.getNavigation() instanceof GroundPathNavigator) && !(entityIn.getNavigation() instanceof FlyingPathNavigator)) {
 			throw new IllegalArgumentException("Unsupported mob type for FollowMobOwnerGoal");
 		}
 	}
 
-	/**
-	 * Returns whether execution should begin. You can also read and cache any state necessary for execution in this
-	 * method as well.
-	 */
-	public boolean shouldExecute() {
+	public boolean canUse() {
 		LivingEntity livingentity = ((IOwnableMob) this.ownedMob).getOwner();
 		if (livingentity == null) {
 			return false;
 		} else if (livingentity.isSpectator()) {
 			return false;
-		} else if (this.ownedMob.getDistanceSq(livingentity) <= (double) (this.minDist * this.minDist) || this.ownedMob.getDistanceSq(livingentity) >= (double) (this.maxDist * this.maxDist)) {
+		} else if (this.ownedMob.distanceToSqr(livingentity) <= (double) (this.minDist * this.minDist) || this.ownedMob.distanceToSqr(livingentity) >= (double) (this.maxDist * this.maxDist)) {
 			return false;
-		} else if (this.ownedMob.getAttackTarget() != null) {
+		} else if (this.ownedMob.getTarget() != null) {
 			return false;
 		} else {
 			this.owner = livingentity;
@@ -54,35 +50,35 @@ public class FollowMobOwnerGoal extends Goal {
 	}
 
 	@Override
-	public boolean shouldContinueExecuting() {
-		if (this.navigator.noPath()) {
+	public boolean canContinueToUse() {
+		if (this.navigator.isDone()) {
 			return false;
-		} else if ((this.ownedMob.getDistanceSq(this.owner) <= (double) (this.minDist * this.minDist)) || (this.ownedMob.getDistanceSq(this.owner) >= (double) (this.maxDist * this.maxDist))) {
+		} else if ((this.ownedMob.distanceToSqr(this.owner) <= (double) (this.minDist * this.minDist)) || (this.ownedMob.distanceToSqr(this.owner) >= (double) (this.maxDist * this.maxDist))) {
 			return false;
-		} else return this.ownedMob.getAttackTarget() == null;
+		} else return this.ownedMob.getTarget() == null;
 	}
 
 	@Override
-	public void startExecuting() {
+	public void start() {
 		this.timeToRecalcPath = 0;
-		this.oldWaterCost = this.ownedMob.getPathPriority(PathNodeType.WATER);
-		this.ownedMob.setPathPriority(PathNodeType.WATER, 0.0F);
+		this.oldWaterCost = this.ownedMob.getPathfindingMalus(PathNodeType.WATER);
+		this.ownedMob.setPathfindingMalus(PathNodeType.WATER, 0.0F);
 	}
 
 	@Override
-	public void resetTask() {
+	public void stop() {
 		this.owner = null;
-		this.navigator.clearPath();
-		this.ownedMob.setPathPriority(PathNodeType.WATER, this.oldWaterCost);
+		this.navigator.stop();
+		this.ownedMob.setPathfindingMalus(PathNodeType.WATER, this.oldWaterCost);
 	}
 
 	@Override
 	public void tick() {
-		this.ownedMob.getLookController().setLookPositionWithEntity(this.owner, 10.0F, (float) this.ownedMob.getVerticalFaceSpeed());
+		this.ownedMob.getLookControl().setLookAt(this.owner, 10.0F, (float) this.ownedMob.getMaxHeadXRot());
 		if (--this.timeToRecalcPath <= 0) {
 			this.timeToRecalcPath = 10;
-			if (!this.ownedMob.getLeashed() && !this.ownedMob.isPassenger()) {
-				this.navigator.tryMoveToEntityLiving(this.owner, this.followSpeed);
+			if (!this.ownedMob.isLeashed() && !this.ownedMob.isPassenger()) {
+				this.navigator.moveTo(this.owner, this.followSpeed);
 			}
 		}
 	}
