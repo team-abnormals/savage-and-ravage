@@ -2,6 +2,7 @@ package com.minecraftabnormals.savageandravage.common.entity;
 
 import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.IDataManager;
 import com.minecraftabnormals.abnormals_core.core.util.NetworkUtil;
+import com.minecraftabnormals.savageandravage.common.block.RunedGloomyTilesBlock;
 import com.minecraftabnormals.savageandravage.core.other.SRDataProcessors;
 import com.minecraftabnormals.savageandravage.core.other.SRDataSerializers;
 import com.minecraftabnormals.savageandravage.core.registry.SRBlocks;
@@ -131,7 +132,7 @@ public class TricksterEntity extends SpellcastingIllagerEntity implements ITrack
 		this.entityData.get(PRISON_POS).ifPresent(pos -> {
 			int time = this.entityData.get(PRISON_CHARGING_TIME);
 			if (time > 0) {
-				int loops = 15 * ((chargeTime - time)) + 1; //Adds more loops (therefore more particles) as the spell progresses
+				int loops = 10 * ((chargeTime - time)) + 1; //Adds more loops (therefore more particles) as the spell progresses
 				for (int i = 0; i < loops; i++) {
 					/* progress - as the charge goes down the particles get closer to the edge instead of the middle.
 					 * This value increases mid-tick, because of the second part of the expression*/
@@ -160,7 +161,6 @@ public class TricksterEntity extends SpellcastingIllagerEntity implements ITrack
 				this.entityData.set(PRISON_CHARGING_TIME, -1);
 			}
 		});
-		//Checking to see if laugh should be played
 		this.trackedSpellEntities.removeIf(Objects::isNull);
 	}
 
@@ -281,9 +281,11 @@ public class TricksterEntity extends SpellcastingIllagerEntity implements ITrack
 	@Nullable
 	@Override
 	public void onTrackedHit(Entity hitter, Entity hit) {
-		if (trackedSpellEntities.contains(hitter)) {
-			this.level.playSound(null, this.blockPosition(), SRSounds.ENTITY_TRICKSTER_LAUGH.get(), SoundCategory.HOSTILE, 1.0f, 1.0f);
-			trackedSpellEntities.remove(hitter);
+		if (RunedGloomyTilesBlock.shouldTrigger(hit, false)) {
+			if (trackedSpellEntities.contains(hitter)) {
+				this.level.playSound(null, this.blockPosition(), SRSounds.ENTITY_TRICKSTER_LAUGH.get(), SoundCategory.HOSTILE, 1.0f, 1.0f);
+				trackedSpellEntities.remove(hitter);
+			}
 		}
 	}
 

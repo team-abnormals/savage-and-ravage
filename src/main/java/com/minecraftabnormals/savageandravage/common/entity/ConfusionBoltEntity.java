@@ -11,6 +11,7 @@ import net.minecraft.command.arguments.EntityAnchorArgument;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.projectile.ProjectileHelper;
 import net.minecraft.entity.projectile.ThrowableEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
@@ -23,7 +24,6 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.Direction;
-import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -35,6 +35,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.List;
 import java.util.Random;
 
 public class ConfusionBoltEntity extends ThrowableEntity {
@@ -42,15 +43,18 @@ public class ConfusionBoltEntity extends ThrowableEntity {
 
 	public ConfusionBoltEntity(EntityType<? extends ConfusionBoltEntity> type, World world) {
 		super(type, world);
+		this.setNoGravity(true);
 	}
 
 	public ConfusionBoltEntity(World world, LivingEntity thrower, int ticksTillRemove) {
 		super(SREntities.CONFUSION_BOLT.get(), thrower, world);
+		this.setNoGravity(true);
 		this.entityData.set(TICKS_TILL_REMOVE, ticksTillRemove);
 	}
 
 	public ConfusionBoltEntity(World world, double x, double y, double z, int ticksTillRemove) {
 		super(SREntities.CONFUSION_BOLT.get(), x, y, z, world);
+		this.setNoGravity(true);
 		this.entityData.set(TICKS_TILL_REMOVE, ticksTillRemove);
 	}
 
@@ -71,33 +75,43 @@ public class ConfusionBoltEntity extends ThrowableEntity {
 
 	@Override
 	public void tick() {
+		Vector3d deltaMovement = this.getDeltaMovement();
 		super.tick();
-		spawnGaussianParticles(this.random, this.getBoundingBox(), SRParticles.CONFUSION_BOLT.get(), 20);
+		this.setDeltaMovement(deltaMovement); //Undo tampering by superclass
+		spawnGaussianParticles(this.random, this.getBoundingBox(), SRParticles.CONFUSION_BOLT.get(), 5);
 		this.entityData.set(TICKS_TILL_REMOVE, this.entityData.get(TICKS_TILL_REMOVE) - 1);
 		if (this.entityData.get(TICKS_TILL_REMOVE) <= 0)
 			this.remove();
+		//Normal projectile hit detection is bad
+		if (!this.level.isClientSide()) {
+			RayTraceResult result = ProjectileHelper.getHitResult(this, this::canHitEntity);
+			if (result.getType() == RayTraceResult.Type.MISS && this.isAlive()) {
+				List<Entity> intersecting = this.level.getEntitiesOfClass(Entity.class, this.getBoundingBox(), this::canHitEntity);
+				if (!intersecting.isEmpty())
+					this.onHit(new EntityRayTraceResult(intersecting.get(0)));
+			}
+		}
 	}
 
 	public static void spawnGaussianParticles(Random random, AxisAlignedBB box, IParticleData type, int loops) {
-		for (int i = 0; i < loops; i++) {
-			double randomPositionX = box.min(Direction.Axis.X) + ((0.5 + (random.nextGaussian() * 0.25)) * box.getXsize());
-			double randomPositionY = box.min(Direction.Axis.Y) + ((0.5 + (random.nextGaussian() * 0.25)) * box.getYsize());
-			double randomPositionZ = box.min(Direction.Axis.Z) + ((0.5 + (random.nextGaussian() * 0.25)) * box.getZsize());
-			ResourceLocation particleID = ForgeRegistries.PARTICLE_TYPES.getKey((ParticleType<?>) type);
-			if (particleID != null)
+		ResourceLocation particleID = ForgeRegistries.PARTICLE_TYPES.getKey((ParticleType<?>) type);
+		if (particleID != null) {
+			for (int i = 0; i < loops; i++) {
+				double randomPositionX = box.min(Direction.Axis.X) + ((0.5 + (random.nextGaussian() * 0.25)) * box.getXsize());
+				double randomPositionY = box.min(Direction.Axis.Y) + ((0.5 + (random.nextGaussian() * 0.25)) * box.getYsize());
+				double randomPositionZ = box.min(Direction.Axis.Z) + ((0.5 + (random.nextGaussian() * 0.25)) * box.getZsize());
 				NetworkUtil.spawnParticle(particleID.toString(), randomPositionX, randomPositionY, randomPositionZ, 0.0f, 0.0f, 0.0f);
 
+			}
 		}
 	}
 
 	@Override
 	protected void onHit(RayTraceResult result) {
-		if (!(result instanceof EntityRayTraceResult) || EntityPredicates.NO_CREATIVE_OR_SPECTATOR.test(((EntityRayTraceResult) result).getEntity())) {
-			this.playSound(SRSounds.GENERIC_PUFF_OF_SMOKE.get(), 5.0F, 1.0F);
-			spawnGaussianParticles(this.random, this.getBoundingBox().inflate(0.5D), ParticleTypes.POOF, 25);
-			super.onHit(result);
-			this.remove();
-		}
+		this.playSound(SRSounds.GENERIC_PUFF_OF_SMOKE.get(), 5.0F, 1.0F);
+		spawnGaussianParticles(this.random, this.getBoundingBox().inflate(0.5D), ParticleTypes.POOF, 25);
+		super.onHit(result);
+		this.remove();
 	}
 
 	@Override
@@ -115,7 +129,7 @@ public class ConfusionBoltEntity extends ThrowableEntity {
 				livingEntity.addEffect(new EffectInstance(Effects.WEAKNESS, 140, 1));
 				livingEntity.addEffect(new EffectInstance(Effects.BLINDNESS, 30));
 			}
-			if (owner instanceof ITracksHits && RunedGloomyTilesBlock.shouldTrigger(entity, false))
+			if (owner instanceof ITracksHits)
 				((ITracksHits) owner).onTrackedHit(this, entity);
 		}
 	}

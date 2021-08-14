@@ -25,7 +25,7 @@ public class RunePrisonEntity extends Entity {
 	private static final DataParameter<Integer> TICKS_TILL_REMOVE = EntityDataManager.defineId(RunePrisonEntity.class, DataSerializers.INT);
 	private static final DataParameter<Optional<BlockPos>> BLOCK_POS = EntityDataManager.defineId(RunePrisonEntity.class, DataSerializers.OPTIONAL_BLOCK_POS);
 	private final boolean fromTrap;
-	private ITracksHits shooter = null;
+	private ITracksHits caster = null;
 	private int currentFrame = 0;
 	private boolean isBackwardsFrameCycle = false;
 
@@ -41,9 +41,9 @@ public class RunePrisonEntity extends Entity {
 		this.setTicksTillRemove(ticksTillRemove);
 	}
 
-	public RunePrisonEntity(World world, BlockPos position, int ticksTillRemove, boolean fromTrap, ITracksHits shooter) {
+	public RunePrisonEntity(World world, BlockPos position, int ticksTillRemove, boolean fromTrap, ITracksHits caster) {
 		this(world, position, ticksTillRemove, fromTrap);
-		this.shooter = shooter;
+		this.caster = caster;
 	}
 
 	@Override
@@ -109,8 +109,8 @@ public class RunePrisonEntity extends Entity {
 		for (LivingEntity livingEntity : this.level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox())) {
 			if (livingEntity.isAffectedByPotions()) {
 				livingEntity.addEffect(new EffectInstance(SREffects.WEIGHT.get(), 60, 2));
-				if (this.shooter != null && RunedGloomyTilesBlock.shouldTrigger(livingEntity, false))
-					this.shooter.onTrackedHit(this, livingEntity);
+				if (this.caster != null)
+					this.caster.onTrackedHit(this, livingEntity);
 			}
 		}
 

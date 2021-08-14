@@ -354,7 +354,6 @@ public class SREvents {
 			}
 			if (maskStateChanged || (canBeInvisible && !entity.isInvisible()))
 				entity.setInvisible(canBeInvisible || entity.hasEffect(Effects.INVISIBILITY));
-
 		}
 		if (entity instanceof EvokerEntity) {
 			int shieldTime = data.getValue(SRDataProcessors.TOTEM_SHIELD_TIME);
@@ -390,13 +389,14 @@ public class SREvents {
 	}
 
 	public static void spawnMaskParticles(Random random, AxisAlignedBB box, int loops) {
-		for (int i = 0; i < loops; i++) {
-			double randomPositionX = box.min(Direction.Axis.X) + (random.nextFloat() * box.getXsize());
-			double randomPositionY = box.min(Direction.Axis.Y) + (random.nextFloat() * box.getYsize());
-			double randomPositionZ = box.min(Direction.Axis.Z) + (random.nextFloat() * box.getZsize());
-			ResourceLocation poofId = ForgeRegistries.PARTICLE_TYPES.getKey(ParticleTypes.POOF);
-			if (poofId != null)
+		ResourceLocation poofId = ForgeRegistries.PARTICLE_TYPES.getKey(ParticleTypes.POOF);
+		if (poofId != null) {
+			for (int i = 0; i < loops; i++) {
+				double randomPositionX = box.min(Direction.Axis.X) + (random.nextFloat() * box.getXsize());
+				double randomPositionY = box.min(Direction.Axis.Y) + (random.nextFloat() * box.getYsize());
+				double randomPositionZ = box.min(Direction.Axis.Z) + (random.nextFloat() * box.getZsize());
 				NetworkUtil.spawnParticle(poofId.toString(), randomPositionX, randomPositionY, randomPositionZ, 0.0f, 0.0f, 0.0f);
+			}
 		}
 	}
 
