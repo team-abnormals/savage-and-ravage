@@ -65,7 +65,6 @@ public class SREvents {
 
 	@SubscribeEvent
 	public static void onEntityJoinWorld(EntityJoinWorldEvent event) {
-		World world = event.getWorld();
 		if (event.getEntity() instanceof PillagerEntity) {
 			PillagerEntity pillager = (PillagerEntity) event.getEntity();
 			ImprovedCrossbowGoal<PillagerEntity> aiCrossBow = new ImprovedCrossbowGoal<>(pillager, 1.0D, 8.0F, 5.0D);
@@ -73,11 +72,6 @@ public class SREvents {
 				pillager.goalSelector.removeGoal(crossbowGoal);
 				pillager.goalSelector.addGoal(3, aiCrossBow);
 			});
-			if (!world.isClientSide() && world.random.nextInt(100) == 0) {
-				pillager.setItemSlot(EquipmentSlotType.OFFHAND, createRocket(world.random));
-				pillager.startUsingItem(Hand.OFF_HAND);
-				pillager.setDropChance(EquipmentSlotType.OFFHAND, 2.0F);
-			}
 		}
 		if (SRConfig.COMMON.evokersUseTotems.get() && event.getEntity() instanceof EvokerEntity) {
 			EvokerEntity evoker = (EvokerEntity) event.getEntity();
