@@ -17,7 +17,6 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.IAngerable;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -26,7 +25,6 @@ import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.ai.goal.RangedCrossbowAttackGoal;
-import net.minecraft.entity.item.ArmorStandEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.*;
@@ -142,8 +140,6 @@ public class SREvents {
 	public static void onLivingSetAttackTarget(LivingSetAttackTargetEvent event) {
 		LivingEntity entity = event.getEntityLiving();
 		LivingEntity target = event.getTarget();
-		if (getTarget(entity) != null && maskCanMakeInvisible(target))
-			setTarget(entity, null);
 		if (entity instanceof GolemEntity && !(entity instanceof ShulkerEntity) && target instanceof IOwnableMob) {
 			if (((IOwnableMob) target).getOwner() instanceof PlayerEntity && ((MobEntity) target).getTarget() != entity) {
 				((GolemEntity) entity).setTarget(null);
@@ -151,21 +147,6 @@ public class SREvents {
 		}
 		if (entity instanceof EvokerEntity && SRConfig.COMMON.evokersUseTotems.get() && ((IDataManager) entity).getValue(SRDataProcessors.TOTEM_SHIELD_TIME) > 0)
 			((MobEntity) entity).setTarget(null);
-	}
-
-	public static LivingEntity getTarget(Entity entity) {
-		if (entity instanceof MobEntity)
-			return ((MobEntity) entity).getTarget();
-		else if (entity instanceof IAngerable)
-			return ((IAngerable) entity).getTarget();
-		return null;
-	}
-
-	public static void setTarget(Entity entity, LivingEntity target) {
-		if (entity instanceof MobEntity)
-			((MobEntity) entity).setTarget(target);
-		else if (entity instanceof IAngerable)
-			((IAngerable) entity).setTarget(target);
 	}
 
 	@SubscribeEvent
