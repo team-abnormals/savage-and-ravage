@@ -35,4 +35,8 @@ public class SRSounds {
 	public static final RegistryObject<SoundEvent> GENERIC_PREPARE_ATTACK = HELPER.createSoundEvent("generic.prepare_attack");
 	public static final RegistryObject<SoundEvent> GENERIC_PUFF_OF_SMOKE = HELPER.createSoundEvent("generic.puff_of_smoke");
 
+	public static final RegistryObject<SoundEvent> BLOCK_NOTE_BLOCK_HIT_MARKER = HELPER.createSoundEvent("block.note_block.hit_marker");
+	public static final RegistryObject<SoundEvent> BLOCK_NOTE_BLOCK_HARPSICHORD = HELPER.createSoundEvent("block.note_block.harpsichord");
+	public static final RegistryObject<SoundEvent> BLOCK_NOTE_BLOCK_ORCHESTRAL_HIT = HELPER.createSoundEvent("block.note_block.orchestral_hit");
+
 }
