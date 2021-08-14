@@ -7,7 +7,6 @@ import com.minecraftabnormals.savageandravage.common.entity.block.SporeBombEntit
 import com.minecraftabnormals.savageandravage.common.entity.goals.AvoidGrieferOwnedCreepiesGoal;
 import com.minecraftabnormals.savageandravage.common.entity.goals.ImprovedCrossbowGoal;
 import com.minecraftabnormals.savageandravage.common.item.IPottableItem;
-import com.minecraftabnormals.savageandravage.common.network.MessageC2SIsPlayerStill;
 import com.minecraftabnormals.savageandravage.core.SRConfig;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 import com.minecraftabnormals.savageandravage.core.registry.*;
@@ -18,6 +17,7 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.IAngerable;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -35,7 +35,6 @@ import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.passive.OcelotEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
@@ -47,8 +46,6 @@ import net.minecraft.stats.Stats;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -145,15 +142,30 @@ public class SREvents {
 	public static void onLivingSetAttackTarget(LivingSetAttackTargetEvent event) {
 		LivingEntity entity = event.getEntityLiving();
 		LivingEntity target = event.getTarget();
-		if (target != null) {
-			if (entity instanceof GolemEntity && !(entity instanceof ShulkerEntity) && target instanceof IOwnableMob) {
-				if (((IOwnableMob) target).getOwner() instanceof PlayerEntity && ((MobEntity) target).getTarget() != entity) {
-					((GolemEntity) entity).setTarget(null);
-				}
+		if (getTarget(entity) != null && maskCanMakeInvisible(target))
+			setTarget(entity, null);
+		if (entity instanceof GolemEntity && !(entity instanceof ShulkerEntity) && target instanceof IOwnableMob) {
+			if (((IOwnableMob) target).getOwner() instanceof PlayerEntity && ((MobEntity) target).getTarget() != entity) {
+				((GolemEntity) entity).setTarget(null);
 			}
-			if (entity instanceof EvokerEntity && SRConfig.COMMON.evokersUseTotems.get() && ((IDataManager) entity).getValue(SRDataProcessors.TOTEM_SHIELD_TIME) > 0)
-				((MobEntity) entity).setTarget(null);
 		}
+		if (entity instanceof EvokerEntity && SRConfig.COMMON.evokersUseTotems.get() && ((IDataManager) entity).getValue(SRDataProcessors.TOTEM_SHIELD_TIME) > 0)
+			((MobEntity) entity).setTarget(null);
+	}
+
+	public static LivingEntity getTarget(Entity entity) {
+		if (entity instanceof MobEntity)
+			return ((MobEntity) entity).getTarget();
+		else if (entity instanceof IAngerable)
+			return ((IAngerable) entity).getTarget();
+		return null;
+	}
+
+	public static void setTarget(Entity entity, LivingEntity target) {
+		if (entity instanceof MobEntity)
+			((MobEntity) entity).setTarget(target);
+		else if (entity instanceof IAngerable)
+			((IAngerable) entity).setTarget(target);
 	}
 
 	@SubscribeEvent
@@ -338,51 +350,11 @@ public class SREvents {
 			boolean maskStateChanged = canBeInvisible != invisibleDueToMask;
 			if (maskStateChanged) {
 				data.setValue(SRDataProcessors.INVISIBLE_DUE_TO_MASK, canBeInvisible);
-				Random random = entity.getRandom();
-				spawnMaskParticles(random, entity.getBoundingBox(), 3);
-				if (canBeInvisible) {
-					BlockPos.Mutable searchPos = new BlockPos.Mutable();
-					BlockPos entityPos = entity.blockPosition();
-					for (int x = entityPos.getX() - 1; x <= entityPos.getX() + 1; x++) {
-						for (int y = entityPos.getY() - 1; y <= entityPos.getY() + 1; y++) {
-							for (int z = entityPos.getZ() - 1; z <= entityPos.getZ() + 1; z++) {
-								searchPos.set(x, y, z);
-								if (world.getBlockState(searchPos).getBlock() == SRBlocks.GLOOMY_TILES.get()) {
-									world.setBlock(searchPos, SRBlocks.RUNED_GLOOMY_TILES.get().defaultBlockState(), 2);
-									searchPos.move(Direction.UP);
-									if (!world.getBlockState(searchPos).isSolidRender(world, searchPos)) {
-										for (int i = 0; i < 3; i++)
-											NetworkUtil.spawnParticle(SRParticles.RUNE.getId().toString(), x + random.nextDouble(), y + 1.25, z + random.nextDouble(), 0.0D, 0.0D, 0.0D);
-									}
-								}
-							}
-						}
-					}
-				}
+				spawnMaskParticles(entity.getRandom(), entity.getBoundingBox(), 3);
 			}
 			if (maskStateChanged || (canBeInvisible && !entity.isInvisible()))
 				entity.setInvisible(canBeInvisible || entity.hasEffect(Effects.INVISIBILITY));
 
-			//Mitigation against hacking
-			if (canBeInvisible && entity.getServer() != null && entity.getServer().isDedicatedServer() && entity instanceof PlayerEntity) {
-				int illegalTicks = data.getValue(SRDataProcessors.ILLEGAL_MASK_TICKS);
-				Vector3d currentPos = entity.position();
-				data.getValue(SRDataProcessors.PREVIOUS_POSITION).ifPresent(prevPos -> {
-					if (!prevPos.equals(currentPos)) {
-						data.setValue(SRDataProcessors.ILLEGAL_MASK_TICKS, illegalTicks + 1);
-						//AbnormalsCore.LOGGER.debug("Incremented illegal mask ticks, value is now " + data.getValue(SREntities.ILLEGAL_MASK_TICKS));
-					} else if (illegalTicks > 0)
-						data.setValue(SRDataProcessors.ILLEGAL_MASK_TICKS, illegalTicks - 1);
-				});
-				if (data.getValue(SRDataProcessors.ILLEGAL_MASK_TICKS) > 40)
-					((ServerPlayerEntity) entity).connection.disconnect(new TranslationTextComponent("multiplayer.savageandravage.disconnect.invisible_while_moving"));
-				data.setValue(SRDataProcessors.PREVIOUS_POSITION, Optional.of(currentPos));
-			}
-		} else if (entity instanceof PlayerEntity) {
-			boolean canBeInvisible = maskCanMakeInvisible(entity);
-			if (((IDataManager) entity).getValue(SRDataProcessors.MARK_INVISIBLE) != canBeInvisible)
-				SavageAndRavage.CHANNEL.sendToServer(new MessageC2SIsPlayerStill(entity.getUUID(), canBeInvisible));
-			data.setValue(SRDataProcessors.PREVIOUS_POSITION, Optional.of(entity.position()));
 		}
 		if (entity instanceof EvokerEntity) {
 			int shieldTime = data.getValue(SRDataProcessors.TOTEM_SHIELD_TIME);
@@ -412,13 +384,8 @@ public class SREvents {
 	}
 
 	private static boolean maskCanMakeInvisible(LivingEntity entity) {
-		if (!(entity instanceof ArmorStandEntity) && entity.getItemBySlot(EquipmentSlotType.HEAD).getItem() == SRItems.MASK_OF_DISHONESTY.get()) {
-			IDataManager data = (IDataManager) entity;
-			if (entity.getCommandSenderWorld().isClientSide() || !(entity instanceof PlayerEntity)) {
-				Vector3d motion = entity.getDeltaMovement();
-				return (motion.x == 0 && (entity.isOnGround() || motion.y == 0) && motion.z == 0) && data.getValue(SRDataProcessors.PREVIOUS_POSITION).map(previous -> previous.equals(entity.position())).orElse(true);
-			} else return data.getValue(SRDataProcessors.MARK_INVISIBLE);
-		}
+		if (entity.getItemBySlot(EquipmentSlotType.HEAD).getItem() == SRItems.MASK_OF_DISHONESTY.get())
+			return entity.isCrouching();
 		return false;
 	}
 

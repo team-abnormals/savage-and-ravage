@@ -2,6 +2,7 @@ package com.minecraftabnormals.savageandravage.common.entity;
 
 import com.minecraftabnormals.abnormals_core.core.util.NetworkUtil;
 import com.minecraftabnormals.savageandravage.common.block.RunedGloomyTilesBlock;
+import com.minecraftabnormals.savageandravage.core.registry.SRBlocks;
 import com.minecraftabnormals.savageandravage.core.registry.SREffects;
 import com.minecraftabnormals.savageandravage.core.registry.SREntities;
 import com.minecraftabnormals.savageandravage.core.registry.SRParticles;
@@ -25,6 +26,8 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
@@ -114,6 +117,19 @@ public class ConfusionBoltEntity extends ThrowableEntity {
 			}
 			if (owner instanceof ITracksHits && RunedGloomyTilesBlock.shouldTrigger(entity, false))
 				((ITracksHits) owner).onTrackedHit(this, entity);
+		}
+	}
+
+	@Override
+	protected void onHitBlock(BlockRayTraceResult result) {
+		BlockPos.Mutable pos = result.getBlockPos().mutable();
+		if (this.level.getBlockState(pos).getBlock() == SRBlocks.GLOOMY_TILES.get()) {
+			this.level.setBlock(pos, SRBlocks.RUNED_GLOOMY_TILES.get().defaultBlockState(), 2);
+			pos.move(Direction.UP);
+			if (!this.level.getBlockState(pos).isSolidRender(this.level, pos)) {
+				for (int i = 0; i < 3; i++)
+					NetworkUtil.spawnParticle(SRParticles.RUNE.getId().toString(), pos.getX() + random.nextDouble(), pos.getY() + 0.25, pos.getZ() + random.nextDouble(), 0.0D, 0.0D, 0.0D);
+			}
 		}
 	}
 
