@@ -128,11 +128,17 @@
     ],
     "subtitle": "subtitles.savageandravage.entity.creeper_spores.throw"
   },
-  "block.runed_gloomy_tiles.activate": {
+  "generic.prepare_attack": {
     "sounds": [
       "mob/evocation_illager/prepare_attack1",
       "mob/evocation_illager/prepare_attack2"
     ],
-    "subtitle": "subtitles.savageandravage.entity.rune_prison.appear"
+    "subtitle": "subtitles.savageandravage.generic.prepare_attack"
+  },
+  "generic.puff_of_smoke": {
+    "sounds": [
+      "fireworks/blast1"
+    ],
+    "subtitle": "subtitles.savageandravage.generic.puff_of_smoke"
   }
 }

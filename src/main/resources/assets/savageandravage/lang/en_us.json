@@ -89,5 +89,6 @@
 
   "subtitles.savageandravage.entity.player.cast_spell": "Player casts spell",
   "subtitles.savageandravage.entity.creeper_spores.throw": "Creeper Spores fly",
-  "subtitles.savageandravage.entity.rune_prison.appear": "Rune Prison appears"
+  "subtitles.savageandravage.generic.prepare_attack": "Something prepares attack",
+  "subtitles.savageandravage.generic.puff_of_smoke": "Puff of smoke"
 }

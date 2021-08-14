@@ -32,5 +32,7 @@ public class SRSounds {
 
 	public static final RegistryObject<SoundEvent> ENTITY_PLAYER_CAST_SPELL = HELPER.createSoundEvent("entity.player.cast_spell");
 	public static final RegistryObject<SoundEvent> ENTITY_CREEPER_SPORES_THROW = HELPER.createSoundEvent("entity.creeper_spores.throw");
-	public static final RegistryObject<SoundEvent> ENTITY_RUNE_PRISON_APPEAR = HELPER.createSoundEvent("entity.rune_prison.appear");
+	public static final RegistryObject<SoundEvent> GENERIC_PREPARE_ATTACK = HELPER.createSoundEvent("generic.prepare_attack");
+	public static final RegistryObject<SoundEvent> GENERIC_PUFF_OF_SMOKE = HELPER.createSoundEvent("generic.puff_of_smoke");
+
 }

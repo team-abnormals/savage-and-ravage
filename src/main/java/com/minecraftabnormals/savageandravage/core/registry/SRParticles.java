@@ -1,5 +1,6 @@
 package com.minecraftabnormals.savageandravage.core.registry;
 
+import com.minecraftabnormals.savageandravage.client.particle.ConfusionBoltParticle;
 import com.minecraftabnormals.savageandravage.client.particle.CreeperSporeSprinklesParticle;
 import com.minecraftabnormals.savageandravage.client.particle.CreeperSporesParticle;
 import com.minecraftabnormals.savageandravage.client.particle.RuneParticle;
@@ -33,7 +34,7 @@ public class SRParticles {
 		if (CREEPER_SPORES.isPresent()) manager.register(CREEPER_SPORES.get(), CreeperSporesParticle.Factory::new);
 		if (CREEPER_SPORE_SPRINKLES.isPresent()) manager.register(CREEPER_SPORE_SPRINKLES.get(), CreeperSporeSprinklesParticle.Factory::new);
 		if (RUNE.isPresent()) manager.register(RUNE.get(), RuneParticle.Factory::new);
-		if (CONFUSION_BOLT.isPresent()) manager.register(CONFUSION_BOLT.get(), SpellParticle.Factory::new);
+		if (CONFUSION_BOLT.isPresent()) manager.register(CONFUSION_BOLT.get(), ConfusionBoltParticle.Factory::new);
 		if (SNOWFLAKE.isPresent()) manager.register(SNOWFLAKE.get(), SpellParticle.Factory::new);
 	}
 }

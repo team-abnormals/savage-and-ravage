@@ -15,7 +15,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
@@ -231,7 +230,7 @@ public class IceologerEntity extends SpellcastingIllagerEntity {
 
 		@Override
 		protected SoundEvent getSpellPrepareSound() {
-			return SoundEvents.EVOKER_PREPARE_ATTACK;
+			return SRSounds.GENERIC_PREPARE_ATTACK.get();
 		}
 
 		@Override
@@ -266,7 +265,7 @@ public class IceologerEntity extends SpellcastingIllagerEntity {
 
 		@Override
 		protected SoundEvent getSpellPrepareSound() {
-			return SoundEvents.EVOKER_PREPARE_ATTACK;
+			return SRSounds.GENERIC_PREPARE_ATTACK.get();
 		}
 
 		@Override

@@ -21,21 +21,29 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-public class RunePrisonEntity extends Entity implements ITracksAffected {
+public class RunePrisonEntity extends Entity {
 	private static final DataParameter<Integer> TICKS_TILL_REMOVE = EntityDataManager.defineId(RunePrisonEntity.class, DataSerializers.INT);
 	private static final DataParameter<Optional<BlockPos>> BLOCK_POS = EntityDataManager.defineId(RunePrisonEntity.class, DataSerializers.OPTIONAL_BLOCK_POS);
+	private final boolean fromTrap;
+	private ITracksHits shooter = null;
 	private int currentFrame = 0;
 	private boolean isBackwardsFrameCycle = false;
-	private LivingEntity lastTriggered = null;
 
-	public RunePrisonEntity(EntityType<? extends RunePrisonEntity> type, World worldIn) {
-		super(type, worldIn);
+	public RunePrisonEntity(EntityType<? extends RunePrisonEntity> type, World world) {
+		super(type, world);
+		this.fromTrap = false;
 	}
 
-	public RunePrisonEntity(World worldIn, BlockPos positionIn, int ticksTillRemove) {
-		super(SREntities.RUNE_PRISON.get(), worldIn);
-		this.setBlockPos(positionIn);
+	public RunePrisonEntity(World world, BlockPos position, int ticksTillRemove, boolean fromTrap) {
+		super(SREntities.RUNE_PRISON.get(), world);
+		this.setBlockPos(position);
+		this.fromTrap = fromTrap;
 		this.setTicksTillRemove(ticksTillRemove);
+	}
+
+	public RunePrisonEntity(World world, BlockPos position, int ticksTillRemove, boolean fromTrap, ITracksHits shooter) {
+		this(world, position, ticksTillRemove, fromTrap);
+		this.shooter = shooter;
 	}
 
 	@Override
@@ -95,14 +103,14 @@ public class RunePrisonEntity extends Entity implements ITracksAffected {
 			}
 		}
 
-		if (getTicksTillRemove() > 0) {
+		if (getTicksTillRemove() > 0)
 			setTicksTillRemove(getTicksTillRemove() - 1);
-		}
 
 		for (LivingEntity livingEntity : this.level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox())) {
-			if (livingEntity.isAffectedByPotions() && RunedGloomyTilesBlock.shouldTrigger(livingEntity)) {
+			if (livingEntity.isAffectedByPotions()) {
 				livingEntity.addEffect(new EffectInstance(SREffects.WEIGHT.get(), 60, 2));
-				this.lastTriggered = livingEntity;
+				if (this.shooter != null && RunedGloomyTilesBlock.shouldTrigger(livingEntity, false))
+					this.shooter.onTrackedHit(this, livingEntity);
 			}
 		}
 
@@ -110,7 +118,7 @@ public class RunePrisonEntity extends Entity implements ITracksAffected {
 			this.remove();
 
 			BlockPos pos = this.getBlockPos();
-			if (pos != null) {
+			if (pos != null && this.fromTrap) {
 				if (this.level.getBlockState(pos).getBlock() instanceof RunedGloomyTilesBlock)
 					this.level.setBlockAndUpdate(pos, SRBlocks.GLOOMY_TILES.get().defaultBlockState());
 			}
@@ -119,10 +127,6 @@ public class RunePrisonEntity extends Entity implements ITracksAffected {
 
 	public int getCurrentFrame() {
 		return this.currentFrame;
-	}
-
-	public Entity getLastAffected() {
-		return this.lastTriggered;
 	}
 
 	@Override

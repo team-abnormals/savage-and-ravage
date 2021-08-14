@@ -2,6 +2,7 @@ package com.minecraftabnormals.savageandravage.core.other;
 
 import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.IDataManager;
 import com.minecraftabnormals.abnormals_core.core.util.NetworkUtil;
+import com.minecraftabnormals.savageandravage.common.block.ChiseledGloomyTilesBlock;
 import com.minecraftabnormals.savageandravage.common.entity.*;
 import com.minecraftabnormals.savageandravage.common.entity.block.SporeBombEntity;
 import com.minecraftabnormals.savageandravage.common.entity.goals.AvoidGrieferOwnedCreepiesGoal;
@@ -14,6 +15,7 @@ import com.minecraftabnormals.savageandravage.core.registry.*;
 import net.minecraft.block.AbstractBannerBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
@@ -41,12 +43,14 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.Effects;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
@@ -57,6 +61,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.*;
 
@@ -323,16 +328,37 @@ public class SREvents {
 	@SubscribeEvent
 	public static void livingUpdate(LivingUpdateEvent event) {
 		LivingEntity entity = event.getEntityLiving();
+		World world = entity.level;
 		IDataManager data = (IDataManager) entity;
 		if (entity.getRemainingFireTicks() > 0 && entity.getEffect(SREffects.FROSTBITE.get()) != null)
 			entity.removeEffect(SREffects.FROSTBITE.get());
-		if (!entity.level.isClientSide()) {
+		if (!world.isClientSide()) {
 			boolean canBeInvisible = maskCanMakeInvisible(entity);
 			boolean invisibleDueToMask = data.getValue(SRDataProcessors.INVISIBLE_DUE_TO_MASK);
 			boolean maskStateChanged = canBeInvisible != invisibleDueToMask;
 			if (maskStateChanged) {
 				data.setValue(SRDataProcessors.INVISIBLE_DUE_TO_MASK, canBeInvisible);
-				spawnMaskParticles(entity);
+				Random random = entity.getRandom();
+				spawnMaskParticles(random, entity.getBoundingBox(), 3);
+				if (canBeInvisible) {
+					BlockPos.Mutable searchPos = new BlockPos.Mutable();
+					BlockPos entityPos = entity.blockPosition();
+					for (int x=entityPos.getX()-1; x<=entityPos.getX()+1; x++) {
+						for (int y=entityPos.getY()-1; y<=entityPos.getY()+1; y++) {
+							for (int z=entityPos.getZ()-1; z<=entityPos.getZ()+1; z++) {
+								searchPos.set(x, y, z);
+								if (world.getBlockState(searchPos).getBlock() == SRBlocks.GLOOMY_TILES.get()) {
+									world.setBlock(searchPos, SRBlocks.RUNED_GLOOMY_TILES.get().defaultBlockState(), 2);
+									searchPos.move(Direction.UP);
+									if (!world.getBlockState(searchPos).isSolidRender(world, searchPos)) {
+										for (int i = 0; i < 3; i++)
+											NetworkUtil.spawnParticle(SRParticles.RUNE.getId().toString(), x + random.nextDouble(), y + 1.25, z + random.nextDouble(), 0.0D, 0.0D, 0.0D);
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 			if (maskStateChanged || (canBeInvisible && !entity.isInvisible()))
 				entity.setInvisible(canBeInvisible || entity.hasEffect(Effects.INVISIBILITY));
@@ -396,14 +422,14 @@ public class SREvents {
 		return false;
 	}
 
-	public static void spawnMaskParticles(LivingEntity entity) {
-		Random rand = entity.getRandom();
-		for (int i = 0; i < 3; i++) {
-			AxisAlignedBB box = entity.getBoundingBox();
-			double randomPositionX = box.min(Direction.Axis.X) + (rand.nextFloat() * box.getXsize());
-			double randomPositionY = box.min(Direction.Axis.Y) + (rand.nextFloat() * box.getYsize());
-			double randomPositionZ = box.min(Direction.Axis.Z) + (rand.nextFloat() * box.getZsize());
-			NetworkUtil.spawnParticle("minecraft:poof", randomPositionX, randomPositionY, randomPositionZ, 0.0f, 0.0f, 0.0f);
+	public static void spawnMaskParticles(Random random, AxisAlignedBB box, int loops) {
+		for (int i = 0; i < loops; i++) {
+			double randomPositionX = box.min(Direction.Axis.X) + (random.nextFloat() * box.getXsize());
+			double randomPositionY = box.min(Direction.Axis.Y) + (random.nextFloat() * box.getYsize());
+			double randomPositionZ = box.min(Direction.Axis.Z) + (random.nextFloat() * box.getZsize());
+			ResourceLocation poofId = ForgeRegistries.PARTICLE_TYPES.getKey(ParticleTypes.POOF);
+			if (poofId != null)
+				NetworkUtil.spawnParticle(poofId.toString(), randomPositionX, randomPositionY, randomPositionZ, 0.0f, 0.0f, 0.0f);
 		}
 	}
 

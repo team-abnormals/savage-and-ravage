@@ -6,29 +6,29 @@
 	"block.savageandravage.chiseled_gloomy_tiles": "Azulejos sombrios talhados",
 	"block.savageandravage.gloomy_tile_vertical_slab": "Laje de azulejos sombrios vertical",
 	"block.savageandravage.runed_gloomy_tiles": "Azulejos sombrios rúnicos",
-	
+
 	"block.savageandravage.blast_proof_plates": "Chapas à prova de explosões",
 	"block.savageandravage.blast_proof_slab": "Laje à prova de explosões",
 	"block.savageandravage.blast_proof_stairs": "Escadas à prova de explosões",
 	"block.savageandravage.blast_proof_vertical_slab": "Laje à prova de explosões vertical",
 	"block.savageandravage.creeper_spore_sack": "Saco de esporos de creeper",
 	"block.savageandravage.spore_bomb": "Bomba de esporos",
-	
+
 	"item.savageandravage.blast_proof_plating": "Chapeamento à prova de explosões",
 	"item.savageandravage.griefer_helmet": "Capacete de griefer",
 	"item.savageandravage.griefer_chestplate": "Peitoral de griefer",
 	"item.savageandravage.griefer_leggings": "Calças de griefer",
 	"item.savageandravage.griefer_boots": "Botas de griefer",
-	
+
 	"item.savageandravage.wand_of_freezing": "Varinha de congelamento",
   	"item.savageandravage.cleaver_of_beheading": "Cutelo de decapitamento",
-	
+
 	"item.savageandravage.creeper_spores": "Esporos de creeper",
 	"item.savageandravage.mischief_arrow": "Flecha travessa",
-	
+
 	"item.savageandravage.skeleton_villager_spawn_egg": "Ovo gerador de aldeão esqueleto",
 	"item.savageandravage.griefer_spawn_egg": "Ovo gerador de griefer",
-	
+
 	"entity.savageandravage.skeleton_villager": "Aldeão esqueleto",
 	"entity.savageandravage.griefer": "Griefer",
 	"entity.savageandravage.creepie": "Creepie",
@@ -41,23 +41,23 @@
   	"entity.savageandravage.iceologer": "Glaciólogo",
   	"entity.savageandravage.ice_chunk": "Pedaço de gelo",
   	"entity.savageandravage.ice_cloud": "Nuvem de gelo",
-	
+
 	"effect.savageandravage.frostbite": "Queimadura de gelo",
-	
+
 	"attribute.name.generic.explosive_damage_reduction": "Redução de dano explosivo",
-	
+
 	"advancements.savageandravage.adventure.griefer_armor.title": "Dinamite com um raio laser",
   	"advancements.savageandravage.adventure.griefer_armor.description": "Obtenha um conjunto completo de armadura griefer",
-  
+
   	"advancements.savageandravage.adventure.relic_collector.title": "Coletor de rélicas",
   	"advancements.savageandravage.adventure.relic_collector.description": "Obtenha um totem da imortalidade, cutelo de decapitamento e varinha de congelamento",
-	
+
 	"subtitles.savageandravage.entity.creepie.hurt": "Creepie ferido",
 	"subtitles.savageandravage.entity.creepie.death": "Creepie morre",
 	"subtitles.savageandravage.entity.creepie.fuse": "Creepie sibilando",
 	"subtitles.savageandravage.entity.creepie.convert": "Creepie começa a se converter",
 	"subtitles.savageandravage.entity.creepie.grow": "Creepie vira creeper",
-	"subtitles.savageandravage.entity.rune_prison.appear": "Azulejos sombrios rúnicos ativam",
+	"subtitles.savageandravage.generic.prepare_attack": "Azulejos sombrios rúnicos ativam",
 
 	"advancements.savageandravage.adventure.voluntary_exile.description": "Ateie fogo a um estandarte sinistro.\nTalvez seja melhor ficar longe de vilas por enquanto..."
 }

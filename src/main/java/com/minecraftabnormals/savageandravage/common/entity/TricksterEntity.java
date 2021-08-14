@@ -1,8 +1,10 @@
 package com.minecraftabnormals.savageandravage.common.entity;
 
 import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.IDataManager;
+import com.minecraftabnormals.abnormals_core.core.util.NetworkUtil;
 import com.minecraftabnormals.savageandravage.core.other.SRDataProcessors;
 import com.minecraftabnormals.savageandravage.core.other.SRDataSerializers;
+import com.minecraftabnormals.savageandravage.core.registry.SRBlocks;
 import com.minecraftabnormals.savageandravage.core.registry.SRItems;
 import com.minecraftabnormals.savageandravage.core.registry.SRParticles;
 import com.minecraftabnormals.savageandravage.core.registry.SRSounds;
@@ -17,7 +19,6 @@ import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.monster.SpellcastingIllagerEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
@@ -25,19 +26,24 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.Direction;
+import net.minecraft.util.IndirectEntityDamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
+import net.minecraftforge.event.ForgeEventFactory;
 
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class TricksterEntity extends SpellcastingIllagerEntity {
+public class TricksterEntity extends SpellcastingIllagerEntity implements ITracksHits {
 	private static final DataParameter<Integer> PRISON_CHARGING_TIME = EntityDataManager.defineId(TricksterEntity.class, DataSerializers.INT);
 	private static final DataParameter<Optional<Vector3d>> PRISON_POS = EntityDataManager.defineId(TricksterEntity.class, SRDataSerializers.OPTIONAL_VECTOR3D);
 	private static final int chargeTime = 4;
@@ -55,13 +61,13 @@ public class TricksterEntity extends SpellcastingIllagerEntity {
 		this.goalSelector.addGoal(1, new CastingASpellGoal());
 		this.goalSelector.addGoal(2, new AvoidEntityGoal<>(this, PlayerEntity.class, 8.0F, 0.6D, 1.0D));
 		this.goalSelector.addGoal(5, new CreatePrisonGoal());
-		//this.goalSelector.addGoal(6, new ThrowBoltGoal());
+		this.goalSelector.addGoal(6, new ThrowBoltGoal());
 		this.goalSelector.addGoal(8, new RandomWalkingGoal(this, 0.6D));
 		this.goalSelector.addGoal(1, new AvoidEntityGoal<>(this, PlayerEntity.class, 8.0F, 0.6D, 1.0D));
 		this.goalSelector.addGoal(1, new AvoidEntityGoal<>(this, IronGolemEntity.class, 8.0F, 0.6D, 1.0D));
 		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, AbstractVillagerEntity.class, 10, true, false, (target) -> {
 			return ((IDataManager) this).getValue(SRDataProcessors.TOTEM_SHIELD_TIME) <= 0;
-		}).setUnseenMemoryTicks(300));         
+		}).setUnseenMemoryTicks(300));
 		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, IronGolemEntity.class, 10, true, false, (target) -> {
 			return ((IDataManager) this).getValue(SRDataProcessors.TOTEM_SHIELD_TIME) <= 0;
 		}).setUnseenMemoryTicks(300));         
@@ -147,7 +153,7 @@ public class TricksterEntity extends SpellcastingIllagerEntity {
 				 * is the distance between the middle and the start of the 'outer ring'*/
 				this.entityData.set(PRISON_CHARGING_TIME, time - 1);
 			} else if (time == 0) {
-				RunePrisonEntity runePrison = new RunePrisonEntity(this.level, null, prisonTime);
+				RunePrisonEntity runePrison = new RunePrisonEntity(this.level, null, prisonTime, false,this);
 				runePrison.moveTo(pos.x, pos.y + 0.5, pos.z, 0.0F, 0.0F);
 				this.level.addFreshEntity(runePrison);
 				this.trackedSpellEntities.add(runePrison);
@@ -156,32 +162,67 @@ public class TricksterEntity extends SpellcastingIllagerEntity {
 			}
 		});
 		//Checking to see if laugh should be played
-		for (Iterator<Entity> it = this.trackedSpellEntities.iterator(); it.hasNext(); ) {
-			Entity entity = it.next();
-			if (entity == null)
-				it.remove();
-			else if (entity instanceof ITracksAffected && Objects.equals(((ITracksAffected) entity).getLastAffected(), this.getTarget())) { //TODO confusion bolt should implement too
-				this.level.playSound(null, this.blockPosition(), SRSounds.ENTITY_TRICKSTER_LAUGH.get(), SoundCategory.HOSTILE, 1.0f, 1.0f);
-				it.remove();
-			}
-		}
+		this.trackedSpellEntities.removeIf(Objects::isNull);
 	}
 
 	@Override
 	public boolean hurt(DamageSource source, float amount) {
 		IDataManager data = (IDataManager) this;
-		if (source.getDirectEntity() instanceof ProjectileEntity) {
-			if (this.getHealth() - amount <= 0 && data.getValue(SRDataProcessors.TOTEM_SHIELD_COOLDOWN) <= 0) {
-				this.setHealth(2.0F);
-				data.setValue(SRDataProcessors.TOTEM_SHIELD_COOLDOWN, 1800);
-				if (!this.level.isClientSide())
-					this.level.broadcastEntityEvent(this, (byte) 35);
-				this.level.playSound(null, this.blockPosition(), SRSounds.ENTITY_TRICKSTER_LAUGH.get(), SoundCategory.HOSTILE, 1.0f, 1.0f);
-				return false;
+		if (source instanceof IndirectEntityDamageSource && this.getHealth() - amount <= 0 && data.getValue(SRDataProcessors.TOTEM_SHIELD_COOLDOWN) <= 0) {
+			this.setHealth(2.0F);
+			data.setValue(SRDataProcessors.TOTEM_SHIELD_COOLDOWN, 1800);
+			if (!this.level.isClientSide()) {
+				this.level.broadcastEntityEvent(this, (byte) 35);
+				for (int i = 0; i < 64; i++) { //why does this not work!!!
+					if (this.teleport())
+						return true;
+				}
 			}
+			return false;
 		}
 		return super.hurt(source, amount);
 	}
+
+	protected boolean teleport() {
+		if (this.isAlive()) {
+			double randomX = this.getX() + (this.random.nextDouble() - 0.5D) * 64.0D;
+			double randomZ = this.getZ() + (this.random.nextDouble() - 0.5D) * 64.0D;
+			BlockState state = this.level.getBlockState(new BlockPos.Mutable(randomX, this.getY()-1, randomZ));
+			if (state.getMaterial().blocksMotion() && !state.getFluidState().is(FluidTags.LAVA)) {
+				AxisAlignedBB oldBox = this.getBoundingBox().inflate(0.5D);
+				BlockPos oldPos = this.blockPosition();
+				boolean successful = this.randomTeleport(randomX, this.getY(), randomZ, true);
+				if (successful) {
+					this.level.playSound(null, oldPos, SRSounds.GENERIC_PUFF_OF_SMOKE.get(), this.getSoundSource(), 10.0F, 1.0F);
+					this.level.playSound(null, this.blockPosition(), SRSounds.GENERIC_PUFF_OF_SMOKE.get(), this.getSoundSource(), 10.0F, 1.0F);
+					this.level.playSound(null, oldPos, SRSounds.ENTITY_TRICKSTER_LAUGH.get(), SoundCategory.HOSTILE, 1.0F, 1.0F);
+					ConfusionBoltEntity.spawnGaussianParticles(this.random, oldBox, ParticleTypes.POOF, 50);
+					ConfusionBoltEntity.spawnGaussianParticles(this.random, this.getBoundingBox().inflate(0.5D), ParticleTypes.POOF, 50);
+					if (ForgeEventFactory.getMobGriefingEvent(this.level, this)) {
+						BlockPos.Mutable searchPos = new BlockPos.Mutable();
+						for (int x = oldPos.getX() - 2; x <= oldPos.getX() + 2; x++) {
+							for (int y = oldPos.getY() - 2; y <= oldPos.getY() + 2; y++) {
+								for (int z = oldPos.getZ() - 2; z <= oldPos.getZ() + 2; z++) {
+									searchPos.set(x, y, z);
+									if (this.level.getBlockState(searchPos).getBlock() == SRBlocks.GLOOMY_TILES.get()) {
+										this.level.setBlock(searchPos, SRBlocks.RUNED_GLOOMY_TILES.get().defaultBlockState(), 2);
+										searchPos.move(Direction.UP);
+										if (!this.level.getBlockState(searchPos).isSolidRender(this.level, searchPos)) {
+											for (int i = 0; i < 3; i++)
+												NetworkUtil.spawnParticle(SRParticles.RUNE.getId().toString(), x + random.nextDouble(), y + 1.25, z + random.nextDouble(), 0.0D, 0.0D, 0.0D);
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				return successful;
+			}
+		}
+		return false;
+	}
+
 
 	@Nullable
 	@Override
@@ -201,7 +242,7 @@ public class TricksterEntity extends SpellcastingIllagerEntity {
 
 	@Override
 	public void playAmbientSound() {
-		if (this.entityData.get(PRISON_CHARGING_TIME) < 0 && this.trackedSpellEntities.isEmpty()) //Prevents overla
+		if (this.entityData.get(PRISON_CHARGING_TIME) < 0 && this.trackedSpellEntities.isEmpty()) //Prevents overlap
 			super.playAmbientSound();
 	}
 
@@ -238,20 +279,29 @@ public class TricksterEntity extends SpellcastingIllagerEntity {
 				.add(Attributes.FOLLOW_RANGE, 16.0D);
 	}
 
+	@Nullable
+	@Override
+	public void onTrackedHit(Entity hitter, Entity hit) {
+		if (trackedSpellEntities.contains(hitter)) {
+			this.level.playSound(null, this.blockPosition(), SRSounds.ENTITY_TRICKSTER_LAUGH.get(), SoundCategory.HOSTILE, 1.0f, 1.0f);
+			trackedSpellEntities.remove(hitter);
+		}
+	}
+
 	class CreatePrisonGoal extends UseSpellGoal {
 
 		@Override
 		protected void performSpellCasting() {
 			LivingEntity target = TricksterEntity.this.getTarget();
 			if (target != null) {
-				TricksterEntity.this.entityData.set(PRISON_POS, Optional.of(target.position()/*.add(5.0F, 0.0F, 5.0F)*/));
+				TricksterEntity.this.entityData.set(PRISON_POS, Optional.of(target.position()));
 				TricksterEntity.this.entityData.set(PRISON_CHARGING_TIME, chargeTime);
 			}
 		}
 
 		@Override
 		protected int getCastingTime() {
-			return chargeTime + prisonTime + 30;
+			return 40;
 		}
 
 		@Override
@@ -262,7 +312,7 @@ public class TricksterEntity extends SpellcastingIllagerEntity {
 		@Nullable
 		@Override
 		protected SoundEvent getSpellPrepareSound() {
-			return SRSounds.ENTITY_RUNE_PRISON_APPEAR.get();
+			return SRSounds.GENERIC_PREPARE_ATTACK.get();
 		}
 
 		@Override
@@ -275,28 +325,38 @@ public class TricksterEntity extends SpellcastingIllagerEntity {
 
 		@Override
 		protected void performSpellCasting() {
-
+			World world = TricksterEntity.this.level;
+			LivingEntity target = TricksterEntity.this.getTarget();
+			if (target != null) {
+				ConfusionBoltEntity bolt = new ConfusionBoltEntity(world, TricksterEntity.this, 240);
+				Vector3d pos = TricksterEntity.this.position();
+				Vector3d targetPos = target.position();
+				bolt.setPos(bolt.getX(), bolt.getY()-0.5, bolt.getZ());
+				bolt.setDeltaMovement(new Vector3d(targetPos.x-pos.x, targetPos.y-pos.y, targetPos.z-pos.z).normalize().scale(0.25));
+				world.addFreshEntity(bolt);
+				TricksterEntity.this.trackedSpellEntities.add(bolt);
+			}
 		}
 
 		@Override
 		protected int getCastingTime() {
-			return 0;
+			return 80;
 		}
 
 		@Override
 		protected int getCastingInterval() {
-			return 0;
+			return 340;
 		}
 
 		@Nullable
 		@Override
 		protected SoundEvent getSpellPrepareSound() {
-			return null;
+			return SRSounds.GENERIC_PREPARE_ATTACK.get();
 		}
 
 		@Override
 		protected SpellType getSpell() {
-			return null;
+			return SpellType.SUMMON_VEX;
 		}
 	}
 }

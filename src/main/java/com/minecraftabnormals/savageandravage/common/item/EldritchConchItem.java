@@ -1,6 +1,7 @@
 package com.minecraftabnormals.savageandravage.common.item;
 
 import com.minecraftabnormals.abnormals_core.core.util.item.filling.TargetedItemGroupFiller;
+import com.minecraftabnormals.savageandravage.core.registry.SRSounds;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.EvokerFangsEntity;
@@ -50,6 +51,7 @@ public class EldritchConchItem extends Item {
 		}
 		ItemStack stack = player.getItemInHand(hand);
 		if (hasSucceeded) {
+			player.playSound(SRSounds.GENERIC_PREPARE_ATTACK.get(), 1.0F, 1.0F);
 			player.getCooldowns().addCooldown(this, 60);
 			stack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
 			return ActionResult.success(stack);

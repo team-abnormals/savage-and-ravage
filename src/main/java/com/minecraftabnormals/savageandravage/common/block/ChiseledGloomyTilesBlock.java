@@ -27,6 +27,7 @@ public class ChiseledGloomyTilesBlock extends Block {
 		return this.defaultBlockState().setValue(POWERED, context.getLevel().hasNeighborSignal(context.getClickedPos()));
 	}
 
+	@SuppressWarnings("deprecation") //In vanilla, deprecation for AbstractBlock methods means "override but not call"
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
 		if (!worldIn.isClientSide()) {
@@ -41,6 +42,7 @@ public class ChiseledGloomyTilesBlock extends Block {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void tick(BlockState state, ServerWorld world, BlockPos pos, Random rand) {
 		if (state.getValue(POWERED) && !world.hasNeighborSignal(pos)) {
