@@ -4,7 +4,6 @@ import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.IData
 import com.minecraftabnormals.abnormals_core.core.util.NetworkUtil;
 import com.minecraftabnormals.savageandravage.common.entity.*;
 import com.minecraftabnormals.savageandravage.common.entity.block.SporeBombEntity;
-import com.minecraftabnormals.savageandravage.common.entity.goals.AvoidGrieferOwnedCreepiesGoal;
 import com.minecraftabnormals.savageandravage.common.entity.goals.ImprovedCrossbowGoal;
 import com.minecraftabnormals.savageandravage.common.item.IPottableItem;
 import com.minecraftabnormals.savageandravage.core.SRConfig;
@@ -65,63 +64,53 @@ public class SREvents {
 
 	@SubscribeEvent
 	public static void onEntityJoinWorld(EntityJoinWorldEvent event) {
-		if (event.getEntity() instanceof PillagerEntity) {
-			PillagerEntity pillager = (PillagerEntity) event.getEntity();
-			ImprovedCrossbowGoal<PillagerEntity> aiCrossBow = new ImprovedCrossbowGoal<>(pillager, 1.0D, 8.0F, 5.0D);
-			pillager.goalSelector.availableGoals.stream().map(it -> it.goal).filter(it -> it instanceof RangedCrossbowAttackGoal<?>).findFirst().ifPresent(crossbowGoal -> {
-				pillager.goalSelector.removeGoal(crossbowGoal);
-				pillager.goalSelector.addGoal(3, aiCrossBow);
-			});
-		}
-		if (SRConfig.COMMON.evokersUseTotems.get() && event.getEntity() instanceof EvokerEntity) {
-			EvokerEntity evoker = (EvokerEntity) event.getEntity();
-			evoker.goalSelector.addGoal(1, new AvoidEntityGoal<IronGolemEntity>(evoker, IronGolemEntity.class, 8.0F, 0.6D, 1.0D) {
-				@Override
-				public boolean canUse() {
-					return super.canUse() && SRConfig.COMMON.evokersUseTotems.get() && ((IDataManager) this.mob).getValue(SRDataProcessors.TOTEM_SHIELD_TIME) > 0;
-				}
-			});
-		}
-		if (SRConfig.COMMON.reducedVexHealth.get() && event.getEntity() instanceof VexEntity) {
-			VexEntity vex = (VexEntity) event.getEntity();
-			ModifiableAttributeInstance maxHealth = vex.getAttribute(Attributes.MAX_HEALTH);
-			if (maxHealth != null)
-				maxHealth.setBaseValue(2.0);
-			if (vex.getHealth() > vex.getMaxHealth()) {
-				vex.setHealth(vex.getMaxHealth());
-			}
-		}
-		if (!SRConfig.COMMON.creeperExplosionsDestroyBlocks.get()) {
-			if (event.getEntity() instanceof IronGolemEntity) {
-				IronGolemEntity golem = (IronGolemEntity) event.getEntity();
-				golem.targetSelector.availableGoals.stream().map(it -> it.goal).filter(it -> it instanceof NearestAttackableTargetGoal<?>).findFirst().ifPresent(noAngryAtCreeper -> {
-					golem.targetSelector.removeGoal(noAngryAtCreeper);
-					golem.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(golem, MobEntity.class, 5, false, false, (p_213619_0_) -> p_213619_0_ instanceof IMob));
+		Entity entity = event.getEntity();
+		if (entity instanceof MobEntity) {
+			MobEntity mob = (MobEntity) entity;
+			if (mob instanceof AbstractVillagerEntity) {
+				AbstractVillagerEntity villager = (AbstractVillagerEntity) mob;
+				villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, SkeletonVillagerEntity.class, 8.0F, 0.6D, 0.6D));
+				villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, GrieferEntity.class, 8.0F, 0.8D, 0.8D));
+				villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, IceologerEntity.class, 8.0F, 0.8D, 0.8D));
+				villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, ExecutionerEntity.class, 8.0F, 0.8D, 0.8D));
+				villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, TricksterEntity.class, 8.0F, 0.8D, 0.8D));
+				villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, CreepieEntity.class, 8.0F, 0.8D, 0.8D, e -> {
+					CreepieEntity creepie = ((CreepieEntity) e);
+					return creepie.getOwnerId() == null || creepie.getOwner() instanceof GrieferEntity;
+				}));
+			} else if (mob instanceof PillagerEntity)
+				mob.goalSelector.availableGoals.stream().map(it -> it.goal).filter(it -> it instanceof RangedCrossbowAttackGoal<?>).findFirst().ifPresent(goal -> {
+					mob.goalSelector.removeGoal(goal);
+					mob.goalSelector.addGoal(3, new ImprovedCrossbowGoal<>((PillagerEntity) mob, 1.0D, 8.0F, 5.0D));
 				});
-			} else if (event.getEntity().getType() == EntityType.CREEPER) {
-				CreeperEntity creeper = (CreeperEntity) event.getEntity();
-				creeper.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(creeper, IronGolemEntity.class, true));
+			else if (mob instanceof CatEntity || mob instanceof OcelotEntity)
+				mob.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(mob, CreepieEntity.class, false));
+			else if (mob instanceof EvokerEntity && SRConfig.COMMON.evokersUseTotems.get())
+				mob.goalSelector.addGoal(1, new AvoidEntityGoal<IronGolemEntity>((EvokerEntity) mob, IronGolemEntity.class, 8.0F, 0.6D, 1.0D) {
+					@Override
+					public boolean canUse() {
+						return super.canUse() && SRConfig.COMMON.evokersUseTotems.get() && ((IDataManager) this.mob).getValue(SRDataProcessors.TOTEM_SHIELD_TIME) > 0;
+					}
+				});
+			else if (mob instanceof VexEntity && SRConfig.COMMON.reducedVexHealth.get()) {
+				ModifiableAttributeInstance maxHealth = mob.getAttribute(Attributes.MAX_HEALTH);
+				if (maxHealth != null)
+					maxHealth.setBaseValue(2.0);
+				if (mob.getHealth() > mob.getMaxHealth())
+					mob.setHealth(mob.getMaxHealth());
 			}
-		}
-		if (event.getEntity() instanceof CatEntity) {
-			CatEntity cat = (CatEntity) event.getEntity();
-			cat.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(cat, CreepieEntity.class, false));
-		}
-
-		if (event.getEntity() instanceof OcelotEntity) {
-			OcelotEntity ocelot = (OcelotEntity) event.getEntity();
-			ocelot.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(ocelot, CreepieEntity.class, false));
-		}
-		if (event.getEntity() instanceof AbstractVillagerEntity) {
-			AbstractVillagerEntity villager = (AbstractVillagerEntity) event.getEntity();
-			villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, SkeletonVillagerEntity.class, 8.0F, 0.6D, 0.6D));
-			villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, GrieferEntity.class, 8.0F, 0.8D, 0.8D));
-			villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, IceologerEntity.class, 8.0F, 0.8D, 0.8D));
-			villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, ExecutionerEntity.class, 8.0F, 0.8D, 0.8D));
-			villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, TricksterEntity.class, 8.0F, 0.8D, 0.8D));
-			villager.goalSelector.addGoal(1, new AvoidGrieferOwnedCreepiesGoal<>(villager, CreepieEntity.class, 8.0F, 0.8D, 0.8D));
+			if (!SRConfig.COMMON.creeperExplosionsDestroyBlocks.get()) {
+				if (mob instanceof IronGolemEntity)
+					mob.targetSelector.availableGoals.stream().map(it -> it.goal).filter(it -> it instanceof NearestAttackableTargetGoal<?>).findFirst().ifPresent(goal -> {
+						mob.targetSelector.removeGoal(goal);
+						mob.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(mob, MobEntity.class, 5, false, false, e -> e instanceof IMob));
+					});
+				else if (mob.getType() == EntityType.CREEPER)
+					mob.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(mob, IronGolemEntity.class, true));
+			}
 		}
 	}
+
 
 	@SubscribeEvent
 	public static void onLivingJump(LivingEvent.LivingJumpEvent event) {
@@ -134,13 +123,13 @@ public class SREvents {
 	public static void onLivingSetAttackTarget(LivingSetAttackTargetEvent event) {
 		LivingEntity entity = event.getEntityLiving();
 		LivingEntity target = event.getTarget();
-		if (entity instanceof GolemEntity && !(entity instanceof ShulkerEntity) && target instanceof IOwnableMob) {
-			if (((IOwnableMob) target).getOwner() instanceof PlayerEntity && ((MobEntity) target).getTarget() != entity) {
-				((GolemEntity) entity).setTarget(null);
-			}
+		if (target != null) {
+			if (entity instanceof GolemEntity && !(entity instanceof ShulkerEntity) && target instanceof IOwnableMob)
+				if (((IOwnableMob) target).getOwner() instanceof PlayerEntity && ((MobEntity) target).getTarget() != entity)
+					((GolemEntity) entity).setTarget(null);
+			if (entity instanceof EvokerEntity && SRConfig.COMMON.evokersUseTotems.get() && ((IDataManager) entity).getValue(SRDataProcessors.TOTEM_SHIELD_TIME) > 0)
+				((EvokerEntity) entity).setTarget(null);
 		}
-		if (entity instanceof EvokerEntity && SRConfig.COMMON.evokersUseTotems.get() && ((IDataManager) entity).getValue(SRDataProcessors.TOTEM_SHIELD_TIME) > 0)
-			((MobEntity) entity).setTarget(null);
 	}
 
 	@SubscribeEvent
@@ -149,9 +138,8 @@ public class SREvents {
 		Explosion explosion = event.getExplosion();
 		if (explosion.getSourceMob() != null) {
 			if (explosion.getSourceMob().getType() == EntityType.CREEPER) {
-				if (!SRConfig.COMMON.creeperExplosionsDestroyBlocks.get()) {
+				if (!SRConfig.COMMON.creeperExplosionsDestroyBlocks.get())
 					event.getAffectedBlocks().clear();
-				}
 				if (SRConfig.COMMON.creeperExplosionsSpawnCreepies.get()) {
 					CreeperEntity creeper = (CreeperEntity) explosion.getSourceMob();
 					SporeCloudEntity spores = SREntities.SPORE_CLOUD.get().create(world);

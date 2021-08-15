@@ -20,6 +20,7 @@ import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.monster.SpellcastingIllagerEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
@@ -167,7 +168,7 @@ public class TricksterEntity extends SpellcastingIllagerEntity implements ITrack
 	@Override
 	public boolean hurt(DamageSource source, float amount) {
 		IDataManager data = (IDataManager) this;
-		if (source instanceof IndirectEntityDamageSource && this.getHealth() - amount <= 0 && data.getValue(SRDataProcessors.TOTEM_SHIELD_COOLDOWN) <= 0) {
+		if (source.getDirectEntity() instanceof ProjectileEntity && this.getHealth() - amount <= 0 && data.getValue(SRDataProcessors.TOTEM_SHIELD_COOLDOWN) <= 0) {
 			this.setHealth(2.0F);
 			data.setValue(SRDataProcessors.TOTEM_SHIELD_COOLDOWN, 1800);
 			if (!this.level.isClientSide()) {

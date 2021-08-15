@@ -31,6 +31,7 @@ public abstract class IronGolemEntityMixin extends GolemEntity {
 			this.setTarget((LivingEntity) entity);
 		}
 		super.doPush(entity);
+		ci.cancel();
 	}
 
 	@Inject(at = @At("RETURN"), method = "canAttackType(Lnet/minecraft/entity/EntityType;)Z", cancellable = true)
