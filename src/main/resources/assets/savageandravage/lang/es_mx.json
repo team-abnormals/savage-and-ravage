@@ -87,5 +87,6 @@
 
   "subtitles.savageandravage.entity.player.cast_spell": "Un hechizo es lanzado",
   "subtitles.savageandravage.entity.creeper_spores.throw": "Esporas de creeper volando",
-  "subtitles.savageandravage.generic.prepare_attack": "Prisión rúnica apareciendo"
+  "subtitles.savageandravage.generic.prepare_attack": "Algo prepara un ataque",
+  "subtitles.savageandravage.generic.puff_of_smoke": "Ráfaga de humo"
 }
