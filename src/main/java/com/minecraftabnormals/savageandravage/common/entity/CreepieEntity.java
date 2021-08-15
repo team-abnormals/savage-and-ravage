@@ -81,7 +81,7 @@ public class CreepieEntity extends MonsterEntity implements IChargeableMob, IOwn
 		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, MobEntity.class, 5, false, false, (target) -> {
 			return this.getOwnerId() == null && !(target instanceof CreepieEntity) && !(target instanceof CreeperEntity) && !this.attackPlayersOnly;
 		}));
-		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<PlayerEntity>(this, PlayerEntity.class, 5, false, false, (target) -> {
+		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 5, false, false, (target) -> {
 			return this.getOwnerId() == null;
 		}));
 	}

@@ -52,6 +52,8 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 			for (int i = 0; i <= 5 + rand.nextInt(5); i++) {
 				edgePositions = expandHole(edgePositions, holePositions, centerPos, reader, rand);
 			}
+			if (holePositions.size() <= 1)
+				return false; // Stops those dumb 1 block holes in forests from existing in the first place
 			generateEdges(edgePositions, reader, rand);
 			outlinePositions = findOutlines(edgePositions, holePositions, reader);
 			generateHole(holePositions, minY, reader, rand);
