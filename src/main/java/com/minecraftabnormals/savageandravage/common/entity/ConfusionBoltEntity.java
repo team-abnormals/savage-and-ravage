@@ -116,9 +116,9 @@ public class ConfusionBoltEntity extends ThrowableEntity {
 
 	@Override
 	protected void onHitEntity(EntityRayTraceResult result) {
+		super.onHitEntity(result);
 		Entity entity = result.getEntity();
 		Entity owner = this.getOwner();
-		super.onHitEntity(result);
 		if (owner != null && entity instanceof LivingEntity) {
 			LivingEntity livingEntity = (LivingEntity) entity;
 			Vector3d oldPos = owner.position();
@@ -129,6 +129,8 @@ public class ConfusionBoltEntity extends ThrowableEntity {
 				livingEntity.addEffect(new EffectInstance(Effects.WEAKNESS, 140, 1));
 				livingEntity.addEffect(new EffectInstance(Effects.BLINDNESS, 30));
 			}
+			livingEntity.playSound(SRSounds.GENERIC_PUFF_OF_SMOKE.get(), 5.0F, 1.0F);
+			spawnGaussianParticles(this.random, livingEntity.getBoundingBox().inflate(0.5D), ParticleTypes.POOF, 25);
 			if (owner instanceof ITracksHits)
 				((ITracksHits) owner).onTrackedHit(this, entity);
 		}
@@ -136,6 +138,7 @@ public class ConfusionBoltEntity extends ThrowableEntity {
 
 	@Override
 	protected void onHitBlock(BlockRayTraceResult result) {
+		super.onHitBlock(result);
 		BlockPos.Mutable pos = result.getBlockPos().mutable();
 		if (this.level.getBlockState(pos).getBlock() == SRBlocks.GLOOMY_TILES.get()) {
 			this.level.setBlock(pos, SRBlocks.RUNED_GLOOMY_TILES.get().defaultBlockState(), 2);

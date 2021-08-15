@@ -60,17 +60,16 @@ public class IceChunkEntity extends Entity implements IEntityAdditionalSpawnData
 			SoundType soundtype = state.getSoundType(this.level, this.blockPosition(), null);
 			this.playSound(soundtype.getBreakSound(), (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
 			((ServerWorld) this.level).sendParticles(new BlockParticleData(ParticleTypes.BLOCK, state), this.getX(), this.getY() + this.getBbHeight() / 2.0, this.getZ(), 256, this.getBbWidth() / 2.0, this.getBbHeight() / 2.0, this.getBbWidth() / 2.0, 1);
-
-			if (result.getType() == RayTraceResult.Type.ENTITY) {
-				Entity entity = ((EntityRayTraceResult) result).getEntity();
-				entity.hurt(DamageSource.indirectMagic(this, this.getCaster()), 8.0f);
-				if (entity instanceof LivingEntity) {
-					((LivingEntity) entity).addEffect(new EffectInstance(SREffects.FROSTBITE.get(), 160, 0, false, false, true));
-				}
-			}
 		}
-
 		this.remove();
+	}
+
+	private void onImpactEntity(EntityRayTraceResult result) {
+		Entity entity = result.getEntity();
+		entity.hurt(DamageSource.indirectMagic(this, this.getCaster()), 8.0f);
+		if (entity instanceof LivingEntity) {
+			((LivingEntity) entity).addEffect(new EffectInstance(SREffects.FROSTBITE.get(), 160, 0, false, false, true));
+		}
 	}
 
 	@Nullable
@@ -117,13 +116,15 @@ public class IceChunkEntity extends Entity implements IEntityAdditionalSpawnData
 			this.setTarget(null);
 		}
 
-		RayTraceResult raytraceresult = ProjectileHelper.getHitResult(this, this::canHitEntity);
-		if (raytraceresult.getType() != RayTraceResult.Type.MISS) {
-			this.onImpact(raytraceresult);
-		} else if (!this.level.isClientSide()){
+		if (!this.level.isClientSide()) {
+			RayTraceResult result = ProjectileHelper.getHitResult(this, this::canHitEntity);
 			List<Entity> intersecting = this.level.getEntitiesOfClass(Entity.class, this.getBoundingBox(), this::canHitEntity);
-			if (!intersecting.isEmpty())
-				this.onImpact(new EntityRayTraceResult(intersecting.get(0)));
+			if (result.getType() != RayTraceResult.Type.MISS || !intersecting.isEmpty()) {
+				intersecting.forEach(e -> this.onImpactEntity(new EntityRayTraceResult(e)));
+				if (result.getType() == RayTraceResult.Type.ENTITY && intersecting.isEmpty())
+					this.onImpactEntity((EntityRayTraceResult) result);
+				this.onImpact(result);
+			}
 		}
 
 		if (target == null) {
