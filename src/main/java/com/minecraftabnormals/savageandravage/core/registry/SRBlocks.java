@@ -13,6 +13,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
 
@@ -40,9 +41,9 @@ public class SRBlocks {
 	public static final RegistryObject<Block> CREEPER_SPORE_SACK = HELPER.createCompatBlock("quark", "creeper_spore_sack", () -> new Block(Block.Properties.of(Material.WOOL, MaterialColor.TERRACOTTA_LIGHT_GREEN).strength(0.5F).sound(SoundType.WOOL)), ItemGroup.TAB_DECORATIONS);
 
 	public static class Properties {
-		public static final Block.Properties GLOOMY_TILES = Block.Properties.of(Material.STONE, MaterialColor.TERRACOTTA_LIGHT_BLUE).requiresCorrectToolForDrops().strength(1.5F, 6.0F);
-		public static final Block.Properties LIGHTABLE_GLOOMY_TILES = Block.Properties.of(Material.STONE, MaterialColor.TERRACOTTA_LIGHT_BLUE).requiresCorrectToolForDrops().strength(1.5F, 6.0F).lightLevel(getLightValuePowered(7));
-		public static final Block.Properties BLAST_PROOF_PLATES = Block.Properties.of(Material.METAL, MaterialColor.COLOR_GREEN).requiresCorrectToolForDrops().strength(2.0F, 1200.0F).sound(SoundType.METAL);
+		public static final Block.Properties GLOOMY_TILES = Block.Properties.of(Material.STONE, MaterialColor.TERRACOTTA_LIGHT_BLUE).requiresCorrectToolForDrops().strength(1.5F, 6.0F).sound(SoundType.STONE);
+		public static final Block.Properties LIGHTABLE_GLOOMY_TILES = Block.Properties.of(Material.STONE, MaterialColor.TERRACOTTA_LIGHT_BLUE).requiresCorrectToolForDrops().strength(1.5F, 6.0F).lightLevel(getLightValuePowered(7)).sound(SoundType.STONE);
+		public static final Block.Properties BLAST_PROOF_PLATES = Block.Properties.of(Material.METAL, MaterialColor.COLOR_GREEN).requiresCorrectToolForDrops().harvestTool(ToolType.PICKAXE).harvestLevel(2).strength(3.0F, 1200.0F).sound(SoundType.METAL);
 
 		public static ToIntFunction<BlockState> getLightValuePowered(int lightValue) {
 			return (stateHolder) -> stateHolder.getValue(BlockStateProperties.POWERED) ? lightValue : 0;
