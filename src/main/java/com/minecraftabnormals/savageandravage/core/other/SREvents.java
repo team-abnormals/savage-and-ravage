@@ -385,13 +385,16 @@ public class SREvents {
 	public static void onNoteBlockPlay(NoteBlockEvent.Play event) {
 		BlockPos pos = event.getPos();
 		BlockState state = event.getWorld().getBlockState(pos.relative(Direction.DOWN));
-		SoundEvent sound = state.is(Blocks.TARGET) ? SRSounds.BLOCK_NOTE_BLOCK_HIT_MARKER.get() : state.is(SRBlocks.GLOOMY_TILES.get()) ? SRSounds.BLOCK_NOTE_BLOCK_HARPSICHORD.get() : state.is(SRBlocks.BLAST_PROOF_PLATES.get()) ? SRSounds.BLOCK_NOTE_BLOCK_ORCHESTRAL_HIT.get() : null;
+		SoundEvent sound = state.is(Blocks.TARGET) ? SRSounds.BLOCK_NOTE_BLOCK_HIT_MARKER.get() : state.is(SRTags.GLOOMY_TILES) ? SRSounds.BLOCK_NOTE_BLOCK_HARPSICHORD.get() : state.is(SRTags.BLAST_PROOF) ? SRSounds.BLOCK_NOTE_BLOCK_ORCHESTRAL_HIT.get() : null;
 		if (sound != null) {
 			int note = event.getVanillaNoteId();
 			float f = (float)Math.pow(2.0D, (double)(note - 12) / 12.0D);
 			event.getWorld().playSound(null, pos, sound, SoundCategory.RECORDS, 3.0F, f);
-			if (!event.getWorld().isClientSide())
-				NetworkUtil.spawnParticle("note",  pos.getX() + 0.5D, pos.getY() + 1.2D, pos.getZ() + 0.5D, (double) note / 24.0D, 0.0D, 0.0D);
+			if (!event.getWorld().isClientSide()) {
+				ResourceLocation noteKey = ForgeRegistries.PARTICLE_TYPES.getKey(ParticleTypes.NOTE);
+				if (noteKey != null)
+					NetworkUtil.spawnParticle(noteKey.toString(), pos.getX() + 0.5D, pos.getY() + 1.2D, pos.getZ() + 0.5D, (double) note / 24.0D, 0.0D, 0.0D);
+			}
 			event.setCanceled(true);
 		}
 	}

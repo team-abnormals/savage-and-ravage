@@ -143,19 +143,19 @@
   },
   "block.note_block.hit_marker": {
     "sounds": [
-      "savageandravage:block/note_block/hit_marker"
+      "savageandravage:note/hit_marker"
     ],
     "subtitle": "subtitles.block.note_block.note"
   },
   "block.note_block.harpsichord": {
     "sounds": [
-      "savageandravage:block/note_block/harpsichord"
+      "savageandravage:note/harpsichord"
     ],
     "subtitle": "subtitles.block.note_block.note"
   },
   "block.note_block.orchestral_hit": {
     "sounds": [
-      "savageandravage:block/note_block/orchestral_hit"
+      "savageandravage:note/orchestral_hit"
     ],
     "subtitle": "subtitles.block.note_block.note"
   }

@@ -263,7 +263,7 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
             AxisAlignedBB axisalignedbb = this.mob.getBoundingBox().expandTowards(lookVec.scale(16));
             EntityRayTraceResult result = ProjectileHelper.getEntityHitResult(this.mob.level, this.mob, seerPos, pos, axisalignedbb, entity -> entity instanceof LivingEntity && !entity.isSpectator() && entity.isPickable());
             if (result != null)
-                canSee = canSee && result.getType() == RayTraceResult.Type.MISS;
+                canSee = canSee && (result.getType() == RayTraceResult.Type.MISS);
         }
         this.mob.level.getProfiler().pop();
         return canSee;
