@@ -7,6 +7,7 @@
   "mixins": [
     "AbstractRaiderEntityMixin",
     "BannerItemMixin",
+    "IRaiderAccessor",
     "IronGolemEntityMixin",
     "PillagerEntityMixin",
     "SpellcastingIllagerEntityMixin",

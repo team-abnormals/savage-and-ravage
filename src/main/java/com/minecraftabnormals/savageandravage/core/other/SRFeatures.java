@@ -24,6 +24,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.BiPredicate;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class SRFeatures {
@@ -37,6 +38,15 @@ public class SRFeatures {
 		JigsawPatternRegistry.register(new JigsawPattern(new ResourceLocation(SavageAndRavage.MOD_ID, "pillager_outpost/vindicators"), new ResourceLocation("empty"), ImmutableList.of(Pair.of(JigsawPiece.legacy(SavageAndRavage.MOD_ID + ":pillager_outpost/vindicator"), 1)), JigsawPattern.PlacementBehaviour.RIGID));
 		for (String biome : new String[]{"plains", "snowy", "savanna", "desert", "taiga"})
 			DataUtil.addToJigsawPattern(new ResourceLocation("village/" + biome + "/zombie/villagers"), JigsawPiece.legacy(SavageAndRavage.MOD_ID + ":village/skeleton_villager").apply(JigsawPattern.PlacementBehaviour.RIGID), 10);
+		DataUtil.addToJigsawPattern(new ResourceLocation("pillager_outpost/features"), JigsawPiece.legacy(SavageAndRavage.MOD_ID + ":pillager_outpost/feature_targets_arrow").apply(JigsawPattern.PlacementBehaviour.RIGID), 2);
+		JigsawPatternRegistry.register(new JigsawPattern(new ResourceLocation(SavageAndRavage.MOD_ID, "pillager_outpost/note_blocks"), new ResourceLocation("empty"), noteBlocks(), JigsawPattern.PlacementBehaviour.RIGID));
+	}
+
+	private static ImmutableList<Pair<Function<JigsawPattern.PlacementBehaviour, ? extends JigsawPiece>, Integer>> noteBlocks() {
+		ImmutableList.Builder<Pair<Function<JigsawPattern.PlacementBehaviour, ? extends JigsawPiece>, Integer>> builder = ImmutableList.builder();
+		for (int i=0; i<=24; i++)
+			builder.add(Pair.of(JigsawPiece.legacy(SavageAndRavage.MOD_ID + ":pillager_outpost/note_blocks/note_block"+i), 1));
+		return builder.build();
 	}
 
 	public static void registerBiomeModifications() {

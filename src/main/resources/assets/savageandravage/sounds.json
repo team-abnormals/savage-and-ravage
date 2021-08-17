@@ -140,5 +140,23 @@
       "fireworks/blast1"
     ],
     "subtitle": "subtitles.savageandravage.generic.puff_of_smoke"
+  },
+  "block.note_block.hit_marker": {
+    "sounds": [
+      "savageandravage:note/hit_marker"
+    ],
+    "subtitle": "subtitles.block.note_block.note"
+  },
+  "block.note_block.harpsichord": {
+    "sounds": [
+      "savageandravage:note/harpsichord"
+    ],
+    "subtitle": "subtitles.block.note_block.note"
+  },
+  "block.note_block.orchestral_hit": {
+    "sounds": [
+      "savageandravage:note/orchestral_hit"
+    ],
+    "subtitle": "subtitles.block.note_block.note"
   }
 }
