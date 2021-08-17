@@ -4,6 +4,7 @@ import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.IData
 import com.minecraftabnormals.abnormals_core.core.util.NetworkUtil;
 import com.minecraftabnormals.savageandravage.common.entity.*;
 import com.minecraftabnormals.savageandravage.common.entity.block.SporeBombEntity;
+import com.minecraftabnormals.savageandravage.common.entity.goals.CelebrateTargetBlockHitGoal;
 import com.minecraftabnormals.savageandravage.common.entity.goals.ImprovedCrossbowGoal;
 import com.minecraftabnormals.savageandravage.common.item.IPottableItem;
 import com.minecraftabnormals.savageandravage.core.SRConfig;
@@ -43,9 +44,13 @@ import net.minecraft.stats.Stats;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -53,6 +58,7 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
+import net.minecraftforge.event.world.NoteBlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -78,11 +84,14 @@ public class SREvents {
 					CreepieEntity creepie = ((CreepieEntity) e);
 					return creepie.getOwnerId() == null || creepie.getOwner() instanceof GrieferEntity;
 				}));
-			} else if (mob instanceof PillagerEntity)
+			} else if (mob instanceof PillagerEntity) {
+				PillagerEntity pillager = (PillagerEntity) mob;
 				mob.goalSelector.availableGoals.stream().map(it -> it.goal).filter(it -> it instanceof RangedCrossbowAttackGoal<?>).findFirst().ifPresent(goal -> {
 					mob.goalSelector.removeGoal(goal);
-					mob.goalSelector.addGoal(3, new ImprovedCrossbowGoal<>((PillagerEntity) mob, 1.0D, 8.0F, 5.0D));
+					mob.goalSelector.addGoal(3, new ImprovedCrossbowGoal<>(pillager, 1.0D, 8.0F, 5.0D));
 				});
+				mob.goalSelector.addGoal(5, new CelebrateTargetBlockHitGoal(pillager));
+			}
 			else if (mob instanceof CatEntity || mob instanceof OcelotEntity)
 				mob.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(mob, CreepieEntity.class, false));
 			else if (mob instanceof EvokerEntity && SRConfig.COMMON.evokersUseTotems.get())
@@ -308,6 +317,11 @@ public class SREvents {
 		if (entity.getRemainingFireTicks() > 0 && entity.getEffect(SREffects.FROSTBITE.get()) != null)
 			entity.removeEffect(SREffects.FROSTBITE.get());
 		if (!world.isClientSide()) {
+			if (entity instanceof AbstractRaiderEntity) {
+				int celebrationTime = data.getValue(SRDataProcessors.CELEBRATION_TIME);
+				if (celebrationTime > 0)
+					data.setValue(SRDataProcessors.CELEBRATION_TIME, celebrationTime-1);
+			}
 			boolean canBeInvisible = maskCanMakeInvisible(entity);
 			boolean invisibleDueToMask = data.getValue(SRDataProcessors.INVISIBLE_DUE_TO_MASK);
 			boolean maskStateChanged = canBeInvisible != invisibleDueToMask;
@@ -342,6 +356,43 @@ public class SREvents {
 			}
 			event.modifyVisibility(1 / armorCover); //potentially slightly inaccurate
 			event.modifyVisibility(0.1);
+		}
+	}
+
+	@SubscribeEvent
+	public static void onProjectileImpact(ProjectileImpactEvent event) {
+		RayTraceResult result = event.getRayTraceResult();
+		if (result instanceof BlockRayTraceResult) {
+			BlockRayTraceResult blockResult = (BlockRayTraceResult) result;
+			Entity entity = event.getEntity();
+			if (entity.level.getBlockState(blockResult.getBlockPos()).is(Blocks.TARGET)) {
+				if (!entity.level.isClientSide()) {
+					IDataManager data = (IDataManager) entity;
+					UUID id = data.getValue(SRDataProcessors.CROSSBOW_OWNER).orElse(null);
+					if (id != null) {
+						Entity crossbowOwner = ((ServerWorld) entity.level).getEntity(id);
+						if (crossbowOwner != null) {
+							((IDataManager) crossbowOwner).setValue(SRDataProcessors.TARGET_HIT, true);
+							data.setValue(SRDataProcessors.CROSSBOW_OWNER, Optional.empty());
+						}
+					}
+				}
+			}
+ 		}
+	}
+
+	@SubscribeEvent
+	public static void onNoteBlockPlay(NoteBlockEvent.Play event) {
+		BlockPos pos = event.getPos();
+		BlockState state = event.getWorld().getBlockState(pos.relative(Direction.DOWN));
+		SoundEvent sound = state.is(Blocks.TARGET) ? SRSounds.BLOCK_NOTE_BLOCK_HIT_MARKER.get() : state.is(SRBlocks.GLOOMY_TILES.get()) ? SRSounds.BLOCK_NOTE_BLOCK_HARPSICHORD.get() : state.is(SRBlocks.BLAST_PROOF_PLATES.get()) ? SRSounds.BLOCK_NOTE_BLOCK_ORCHESTRAL_HIT.get() : null;
+		if (sound != null) {
+			int note = event.getVanillaNoteId();
+			float f = (float)Math.pow(2.0D, (double)(note - 12) / 12.0D);
+			event.getWorld().playSound(null, pos, sound, SoundCategory.RECORDS, 3.0F, f);
+			if (!event.getWorld().isClientSide())
+				NetworkUtil.spawnParticle("note",  pos.getX() + 0.5D, pos.getY() + 1.2D, pos.getZ() + 0.5D, (double) note / 24.0D, 0.0D, 0.0D);
+			event.setCanceled(true);
 		}
 	}
 

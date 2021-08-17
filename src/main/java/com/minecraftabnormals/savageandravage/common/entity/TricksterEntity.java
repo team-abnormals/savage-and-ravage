@@ -279,6 +279,11 @@ public class TricksterEntity extends SpellcastingIllagerEntity implements ITrack
 				.add(Attributes.FOLLOW_RANGE, 16.0D);
 	}
 
+	@Override
+	public LivingEntity getThisEntity() {
+		return this;
+	}
+
 	@Nullable
 	@Override
 	public void onTrackedHit(Entity hitter, Entity hit) {
