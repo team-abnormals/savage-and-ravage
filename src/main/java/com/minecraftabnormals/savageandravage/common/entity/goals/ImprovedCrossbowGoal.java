@@ -1,6 +1,6 @@
 package com.minecraftabnormals.savageandravage.common.entity.goals;
 
-import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.IDataManager;
+import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.TrackedDataManager;
 import com.minecraftabnormals.savageandravage.core.mixin.IRaiderAccessor;
 import com.minecraftabnormals.savageandravage.core.other.SRDataProcessors;
 import net.minecraft.block.Blocks;
@@ -39,7 +39,6 @@ import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & ICrossbowUser> extends Goal {
     private static final float targetBlockChance = 0.001F;
@@ -51,7 +50,7 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
     private int wait;
     private final double blocksUntilBackupSq;
     private int targetFocusTime;
-    private UUID projectileUUID = null;
+    private boolean practising = false;
 
     public ImprovedCrossbowGoal(T mob, double speedChanger, float radius, double blocksUntilBackup) {
         this.mob = mob;
@@ -71,40 +70,37 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 
     @Override
     public boolean canUse() {
+        Vector3d targetBlockPos = this.getTargetBlockPos();
         if (this.hasCrossbowOnMainHand()) {
             World world = this.mob.level;
-            Vector3d targetBlockPos = this.getTargetBlockPos();
             if (this.hasAttackTarget())
                 return true;
             else if (this.mob instanceof AbstractRaiderEntity && ((ServerWorld)world).getRaidAt(this.mob.blockPosition()) == null) {
                 boolean isCelebrating = this.mob.getEntityData().get(((IRaiderAccessor) this.mob).getIsCelebrating());
-                if (targetBlockPos != null) {
-                    if (isPractising())
+                if (targetBlockPos != null && (this.practising || (Math.abs(targetBlockPos.x()-this.mob.getX()) <= 17 && Math.abs(targetBlockPos.y()-this.mob.getY()) <= 6 && Math.abs(targetBlockPos.z()-this.mob.getZ()) <= 17))) {
+                    if (this.practising)
                         return true;
-                    else if (Math.abs(targetBlockPos.x()-this.mob.getX()) > 16 || Math.abs(targetBlockPos.y()-this.mob.getY()) > 8 || Math.abs(targetBlockPos.z()-this.mob.getZ()) > 16) {
-                        if (this.isTargetAtPos(world, targetBlockPos)) {
-                            if (this.mob.getRandom().nextFloat() < targetBlockChance) {
-                                this.setPractising(true);
-                                return true;
-                            }
-                        } else this.setTargetBlockPos(null);
-                    }
-                } else if (!isCelebrating && this.mob.getRandom().nextFloat() < targetBlockChance /*&& !practisingNearby()*/ && world.isAreaLoaded(this.mob.blockPosition(), 18)) {
+                    else if (!isCelebrating && this.isTargetAtPos(world, targetBlockPos)) {
+                        if (this.mob.getRandom().nextFloat() < targetBlockChance) {
+                            this.practising = true;
+                            return true;
+                        }
+                    } else this.setTargetBlockPos(null);
+                } else if (!isCelebrating && this.mob.getRandom().nextFloat() < targetBlockChance && world.isAreaLoaded(this.mob.blockPosition(), 18)) {
                     BlockPos.Mutable searchPos = new BlockPos.Mutable();
-                    int x = (int) Math.floor(this.mob.getX());
-                    int y = (int) Math.floor(this.mob.getY());
-                    int z = (int) Math.floor(this.mob.getZ());
-                    for (int xSearch = x - 8; xSearch <= x + 8; xSearch++) {
-                        for (int ySearch = y - 4; ySearch <= y + 4; ySearch++) {
-                            for (int zSearch = z - 8; zSearch <= z + 8; zSearch++) {
+                    int x = MathHelper.floor(this.mob.getX());
+                    int y = MathHelper.floor(this.mob.getY());
+                    int z = MathHelper.floor(this.mob.getZ());
+                    for (int xSearch = x - 16; xSearch <= x + 16; xSearch++) {
+                        for (int ySearch = y - 5; ySearch <= y + 5; ySearch++) {
+                            for (int zSearch = z - 16; zSearch <= z + 16; zSearch++) {
                                 searchPos.set(xSearch, ySearch, zSearch);
-                                    if (world.getBlockState(searchPos).is(Blocks.TARGET)) {
-                                        Vector3d targetPos = new Vector3d(xSearch, ySearch, zSearch);
-                                        this.setTargetBlockPos(targetPos);
-                                        this.targetFocusTime = 200 + this.mob.getRandom().nextInt(160);
-                                        this.setPractising(true);
-                                        return true;
-                                    }
+                                if (world.getBlockState(searchPos).is(Blocks.TARGET)) {
+                                    this.setTargetBlockPos(new Vector3d(xSearch, ySearch, zSearch));
+                                    this.targetFocusTime = 200 + this.mob.getRandom().nextInt(160);
+                                    this.practising = true;
+                                    return true;
+                                }
                             }
                         }
                     }
@@ -123,7 +119,7 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 
     @Override
     public boolean canContinueToUse() {
-        return (this.hasAttackTarget() || this.isPractising()) && (this.canUse() || !this.mob.getNavigation().isDone()) && this.hasCrossbowOnMainHand();
+        return (this.hasAttackTarget() || this.practising) && (this.canUse() || !this.mob.getNavigation().isDone()) && this.hasCrossbowOnMainHand();
     }
 
     @Override
@@ -136,9 +132,8 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
             this.mob.stopUsingItem();
             this.mob.setChargingCrossbow(false);
         }
-        this.setProjectile(null);
         this.targetFocusTime = 0;
-        this.setPractising(false);
+        this.practising = false;
     }
 
     private boolean isWalkable() {
@@ -146,53 +141,49 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
         NodeProcessor nodeprocessor = pathnavigator.getNodeEvaluator();
         return nodeprocessor.getBlockPathType(this.mob.level, MathHelper.floor(this.mob.getX() + 1.0D), MathHelper.floor(this.mob.getY()), MathHelper.floor(this.mob.getZ() + 1.0D)) == PathNodeType.WALKABLE;
     }
-    
+
     @Nullable
     private Vector3d getTargetBlockPos() {
-        return ((IDataManager) this.mob).getValue(SRDataProcessors.TARGET_BLOCK_POS).orElse(null);
+        return TrackedDataManager.INSTANCE.getValue(this.mob, SRDataProcessors.TARGET_BLOCK_POS).orElse(null);
     }
 
     private void setTargetBlockPos(Vector3d pos) {
-        ((IDataManager) this.mob).setValue(SRDataProcessors.TARGET_BLOCK_POS, pos != null ? Optional.of(pos) : Optional.empty());
-    }
-
-    @Nullable
-    private boolean isPractising() {
-        return ((IDataManager) this.mob).getValue(SRDataProcessors.IS_PRACTISING);
-    }
-
-    private void setPractising(boolean isPractising) {
-        ((IDataManager) this.mob).setValue(SRDataProcessors.IS_PRACTISING, isPractising);
+        TrackedDataManager.INSTANCE.setValue(this.mob, SRDataProcessors.TARGET_BLOCK_POS, pos != null ? Optional.of(pos) : Optional.empty());
     }
 
     private void setCelebrationTime(int time) {
         if (this.mob instanceof AbstractRaiderEntity)
-            ((IDataManager) this.mob).setValue(SRDataProcessors.CELEBRATION_TIME, time);
+            TrackedDataManager.INSTANCE.setValue(this.mob, SRDataProcessors.CELEBRATION_TIME, time);
     }
     
     @Override
     public void tick() {
         LivingEntity target = this.mob.getTarget();
-        ProjectileEntity projectile = this.getProjectile();
-        if (this.targetFocusTime > 0 && target == null && this.getTargetBlockPos() != null && this.mob.level.getBlockState(new BlockPos(this.getTargetBlockPos())).is(Blocks.TARGET))
+        if (this.targetFocusTime > 0 && target == null && this.practising)
             this.targetFocusTime--;
-        else this.setTargetBlockPos(null);
-        if (projectile != null && ((IDataManager) this.mob).getValue(SRDataProcessors.TARGET_HIT)) {
+        else this.practising = false;
+        if (TrackedDataManager.INSTANCE.getValue(this.mob, SRDataProcessors.TARGET_HIT)) {
             this.setCelebrationTime(100 + this.mob.getRandom().nextInt(100));
-            ((IDataManager) this.mob).setValue(SRDataProcessors.TARGET_HIT, false);
-            this.setProjectile(null);
-            this.setTargetBlockPos(null);
+            TrackedDataManager.INSTANCE.setValue(this.mob, SRDataProcessors.TARGET_HIT, false);
+            this.practising = false;
         }
 
-        if (target == null && this.getTargetBlockPos() == null)
+        if (target == null && (!practising || this.getTargetBlockPos() == null))
             return;
 
-        boolean canSeeEnemy = target != null ? this.mob.getSensing().canSee(target) : this.canSeePos(this.getTargetBlockPos(), true);
+        Vector3d currentTargetPos = this.getTargetBlockPos();
+        if (target == null && !this.mob.level.getBlockState(new BlockPos(currentTargetPos)).is(Blocks.TARGET)) {
+            this.setTargetBlockPos(null);
+            this.practising = false;
+            return;
+        }
+
+        boolean canSeeEnemy = target != null ? this.mob.getSensing().canSee(target) : this.canSeePos(currentTargetPos, true);
         if (canSeeEnemy)
             ++this.seeTime;
         else {
-            if (target == null && !this.canSeePos(this.getTargetBlockPos(), false)) {
-                this.setTargetBlockPos(null);
+            if (target == null) {
+                this.practising = false;
                 return;
             }
             this.seeTime = 0;
@@ -214,12 +205,12 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
             if (target != null)
                 this.mob.getNavigation().moveTo(target, speedChange);
             else
-                this.mob.getNavigation().moveTo(this.getTargetBlockPos().x(), this.getTargetBlockPos().y(), this.getTargetBlockPos().z(), speedChange);
+                this.mob.getNavigation().moveTo(currentTargetPos.x(), currentTargetPos.y(), currentTargetPos.z(), speedChange);
         } else this.mob.getNavigation().stop();
 
         if (target != null)
             this.mob.getLookControl().setLookAt(target, 30.0F, 30.0F);
-        else this.mob.getLookControl().setLookAt(this.getTargetBlockPos().x(), this.getTargetBlockPos().y(), this.getTargetBlockPos().z(), 30.0F, 30.0F);
+        else this.mob.getLookControl().setLookAt(currentTargetPos.x(), currentTargetPos.y(), currentTargetPos.z(), 30.0F, 30.0F);
 
         if (this.crossbowState == ImprovedCrossbowGoal.CrossbowState.UNCHARGED && !CrossbowItem.isCharged(activeStack)) {
             if (canSeeEnemy) {
@@ -248,7 +239,7 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
                 this.crossbowState = ImprovedCrossbowGoal.CrossbowState.READY_TO_ATTACK;
             }
         } else if (this.crossbowState == ImprovedCrossbowGoal.CrossbowState.READY_TO_ATTACK && canSeeEnemy) {
-            this.performRangedAttack(target != null ? target.position() : this.getTargetBlockPos());
+            this.performRangedAttack(target != null ? target.position() : currentTargetPos.add(0.5D, 0.0D, 0.5D));
             CrossbowItem.setCharged(this.mob.getItemInHand(ProjectileHelper.getWeaponHoldingHand(this.mob, item -> item instanceof CrossbowItem)), false);
             this.crossbowState = ImprovedCrossbowGoal.CrossbowState.UNCHARGED;
         }
@@ -293,10 +284,8 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
             if (!projectileStack.isEmpty()) {
                 if (!world.isClientSide()) {
                     ProjectileEntity shot = shootProjectile(world, shooter, targetPos, hand, weapon, projectileStack, soundPitches[i], i == 0 ? 0.0F : i == 1 ? -10.0F : 10.0F);
-                    if (i == 0) {
-                        ((IDataManager) shot).setValue(SRDataProcessors.CROSSBOW_OWNER, Optional.of(this.mob.getUUID()));
-                        this.setProjectile(shot);
-                    }
+                    if (i == 0)
+                        TrackedDataManager.INSTANCE.setValue(shot, SRDataProcessors.CROSSBOW_OWNER, Optional.of(this.mob.getUUID()));
                 }
             }
         }
@@ -316,8 +305,8 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
     }
 
     private void shootCrossbowProjectile(T shooter, Vector3d targetPos, ProjectileEntity projectile, float yaw, boolean isFirework) {
-        double x = (targetPos.x() + (shooter.getTarget() == null ? 0.5D : 0.0D)) - shooter.getX();
-        double z = (targetPos.z() + (shooter.getTarget() == null ? 0.5D : 0.0D)) - shooter.getZ();
+        double x = targetPos.x() - shooter.getX();
+        double z = targetPos.z() - shooter.getZ();
         double distance = MathHelper.sqrt(x * x + z * z);
         double y = isFirework ? (targetPos.y() + 0.5D) - projectile.getY() : getYIntoBox(targetPos.y()) - projectile.getY() + distance * (double) 0.2F;
         Vector3f vector3f = shooter.getProjectileShotVector(shooter, new Vector3d(x, y, z), yaw);
@@ -328,17 +317,6 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
     private double getYIntoBox(double y) {
         LivingEntity target = this.mob.getTarget();
         return y + (target != null ? target.getBbHeight() * 0.3333333333333333D : -0.5D);
-    }
-
-    @Nullable
-    public ProjectileEntity getProjectile() {
-        if (this.projectileUUID != null && this.mob.level instanceof ServerWorld)
-            return (ProjectileEntity) ((ServerWorld) this.mob.level).getEntity(this.projectileUUID);
-        return null;
-    }
-
-    public void setProjectile(@Nullable ProjectileEntity projectile) {
-        this.projectileUUID = projectile == null ? null : projectile.getUUID();
     }
 
     enum CrossbowState {

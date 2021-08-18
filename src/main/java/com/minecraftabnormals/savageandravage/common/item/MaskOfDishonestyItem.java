@@ -1,6 +1,6 @@
 package com.minecraftabnormals.savageandravage.common.item;
 
-import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.IDataManager;
+import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.TrackedDataManager;
 import com.minecraftabnormals.abnormals_core.core.util.item.filling.TargetedItemGroupFiller;
 import com.minecraftabnormals.savageandravage.client.model.MaskOfDishonestyModel;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
@@ -44,7 +44,7 @@ public class MaskOfDishonestyItem extends ArmorItem {
 
 	@SubscribeEvent
 	public static void livingRender(RenderLivingEvent.Pre<?, ?> event) {
-		if (((IDataManager) event.getEntity()).getValue(SRDataProcessors.INVISIBLE_DUE_TO_MASK))
+		if ((TrackedDataManager.INSTANCE.getValue(event.getEntity(), SRDataProcessors.INVISIBLE_DUE_TO_MASK)))
 			event.setCanceled(true);
 	}
 }

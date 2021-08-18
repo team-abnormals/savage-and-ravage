@@ -1,6 +1,6 @@
 package com.minecraftabnormals.savageandravage.common.entity.goals;
 
-import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.IDataManager;
+import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.TrackedDataManager;
 import com.minecraftabnormals.savageandravage.core.other.SRDataProcessors;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.monster.AbstractRaiderEntity;
@@ -16,7 +16,7 @@ public class CelebrateTargetBlockHitGoal extends Goal {
     }
 
     public boolean canUse() {
-        return this.mob.isAlive() && this.mob.getTarget() == null && ((IDataManager) this.mob).getValue(SRDataProcessors.CELEBRATION_TIME) > 0;
+        return this.mob.isAlive() && this.mob.getTarget() == null && TrackedDataManager.INSTANCE.getValue(this.mob, SRDataProcessors.CELEBRATION_TIME) > 0;
     }
 
     public void start() {
@@ -26,7 +26,7 @@ public class CelebrateTargetBlockHitGoal extends Goal {
 
     public void stop() {
         this.mob.setCelebrating(false);
-        ((IDataManager) this.mob).setValue(SRDataProcessors.CELEBRATION_TIME, 0);
+        TrackedDataManager.INSTANCE.setValue(this.mob, SRDataProcessors.CELEBRATION_TIME, 0);
         super.stop();
     }
 

@@ -1,6 +1,7 @@
 package com.minecraftabnormals.savageandravage.common.entity;
 
 import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.IDataManager;
+import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.TrackedDataManager;
 import com.minecraftabnormals.abnormals_core.core.util.NetworkUtil;
 import com.minecraftabnormals.savageandravage.common.block.RunedGloomyTilesBlock;
 import com.minecraftabnormals.savageandravage.core.other.SRDataProcessors;
@@ -67,13 +68,13 @@ public class TricksterEntity extends SpellcastingIllagerEntity implements ITrack
 		this.goalSelector.addGoal(1, new AvoidEntityGoal<>(this, PlayerEntity.class, 8.0F, 0.6D, 1.0D));
 		this.goalSelector.addGoal(1, new AvoidEntityGoal<>(this, IronGolemEntity.class, 8.0F, 0.6D, 1.0D));
 		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, AbstractVillagerEntity.class, 10, true, false, (target) -> {
-			return ((IDataManager) this).getValue(SRDataProcessors.TOTEM_SHIELD_TIME) <= 0;
+			return TrackedDataManager.INSTANCE.getValue(this, SRDataProcessors.TOTEM_SHIELD_TIME) <= 0;
 		}).setUnseenMemoryTicks(300));
 		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, IronGolemEntity.class, 10, true, false, (target) -> {
-			return ((IDataManager) this).getValue(SRDataProcessors.TOTEM_SHIELD_TIME) <= 0;
+			return TrackedDataManager.INSTANCE.getValue(this, SRDataProcessors.TOTEM_SHIELD_TIME) <= 0;
 		}).setUnseenMemoryTicks(300));
 		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 10, true, false, (target) -> {
-			return ((IDataManager) this).getValue(SRDataProcessors.TOTEM_SHIELD_TIME) <= 0;
+			return TrackedDataManager.INSTANCE.getValue(this, SRDataProcessors.TOTEM_SHIELD_TIME) <= 0;
 		}).setUnseenMemoryTicks(300));
 		this.goalSelector.addGoal(9, new LookAtGoal(this, PlayerEntity.class, 3.0F, 1.0F));
 		this.goalSelector.addGoal(10, new LookAtGoal(this, MobEntity.class, 8.0F));

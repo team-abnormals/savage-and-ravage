@@ -98,7 +98,7 @@ public class SREvents {
 				mob.goalSelector.addGoal(1, new AvoidEntityGoal<IronGolemEntity>((EvokerEntity) mob, IronGolemEntity.class, 8.0F, 0.6D, 1.0D) {
 					@Override
 					public boolean canUse() {
-						return super.canUse() && SRConfig.COMMON.evokersUseTotems.get() && ((IDataManager) this.mob).getValue(SRDataProcessors.TOTEM_SHIELD_TIME) > 0;
+						return SRConfig.COMMON.evokersUseTotems.get() && TrackedDataManager.INSTANCE.getValue(this.mob, SRDataProcessors.TOTEM_SHIELD_TIME) > 0 && super.canUse();
 					}
 				});
 			else if (mob instanceof VexEntity && SRConfig.COMMON.reducedVexHealth.get()) {
@@ -136,7 +136,7 @@ public class SREvents {
 			if (entity instanceof GolemEntity && !(entity instanceof ShulkerEntity) && target instanceof IOwnableMob)
 				if (((IOwnableMob) target).getOwner() instanceof PlayerEntity && ((MobEntity) target).getTarget() != entity)
 					((GolemEntity) entity).setTarget(null);
-			if (entity instanceof EvokerEntity && SRConfig.COMMON.evokersUseTotems.get() && ((IDataManager) entity).getValue(SRDataProcessors.TOTEM_SHIELD_TIME) > 0)
+			if (entity instanceof EvokerEntity && SRConfig.COMMON.evokersUseTotems.get() && TrackedDataManager.INSTANCE.getValue(entity, SRDataProcessors.TOTEM_SHIELD_TIME) > 0)
 				((EvokerEntity) entity).setTarget(null);
 		}
 	}
@@ -230,8 +230,7 @@ public class SREvents {
 	public static void onLivingAttack(LivingAttackEvent event) {
 		Entity entity = event.getEntity();
 		if (entity instanceof EvokerEntity && SRConfig.COMMON.evokersUseTotems.get()) {
-			IDataManager data = (IDataManager) entity;
-			if (data.getValue(SRDataProcessors.TOTEM_SHIELD_TIME) > 0) {
+			if (TrackedDataManager.INSTANCE.getValue(entity, SRDataProcessors.TOTEM_SHIELD_TIME) > 0) {
 				if (event.getSource().getDirectEntity() instanceof ProjectileEntity)
 					event.setCanceled(true);
 			}
@@ -349,7 +348,7 @@ public class SREvents {
 	@SubscribeEvent
 	public static void visibilityMultiplierEvent(LivingEvent.LivingVisibilityEvent event) {
 		LivingEntity entity = event.getEntityLiving();
-		if (((IDataManager) entity).getValue(SRDataProcessors.INVISIBLE_DUE_TO_MASK)) {
+		if (TrackedDataManager.INSTANCE.getValue(entity, SRDataProcessors.INVISIBLE_DUE_TO_MASK)) {
 			double armorCover = entity.getArmorCoverPercentage();
 			if (armorCover < 0.1F) {
 				armorCover = 0.1F;
@@ -372,7 +371,7 @@ public class SREvents {
 					if (id != null) {
 						Entity crossbowOwner = ((ServerWorld) entity.level).getEntity(id);
 						if (crossbowOwner != null) {
-							((IDataManager) crossbowOwner).setValue(SRDataProcessors.TARGET_HIT, true);
+							TrackedDataManager.INSTANCE.setValue(crossbowOwner, SRDataProcessors.TARGET_HIT, true);
 							data.setValue(SRDataProcessors.CROSSBOW_OWNER, Optional.empty());
 						}
 					}
