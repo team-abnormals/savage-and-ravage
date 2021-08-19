@@ -1,11 +1,13 @@
 package com.minecraftabnormals.savageandravage.common.entity;
 
+import com.minecraftabnormals.abnormals_core.common.network.particle.MessageS2CSpawnParticle;
 import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.IDataManager;
 import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.TrackedDataManager;
-import com.minecraftabnormals.abnormals_core.core.util.NetworkUtil;
+import com.minecraftabnormals.abnormals_core.core.AbnormalsCore;
 import com.minecraftabnormals.savageandravage.common.block.RunedGloomyTilesBlock;
 import com.minecraftabnormals.savageandravage.core.other.SRDataProcessors;
 import com.minecraftabnormals.savageandravage.core.other.SRDataSerializers;
+import com.minecraftabnormals.savageandravage.core.other.SREvents;
 import com.minecraftabnormals.savageandravage.core.registry.SRBlocks;
 import com.minecraftabnormals.savageandravage.core.registry.SRItems;
 import com.minecraftabnormals.savageandravage.core.registry.SRParticles;
@@ -38,6 +40,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 import javax.annotation.Nullable;
 import java.util.HashSet;
@@ -197,8 +200,8 @@ public class TricksterEntity extends SpellcastingIllagerEntity implements ITrack
 					this.level.playSound(null, oldPos, SRSounds.GENERIC_PUFF_OF_SMOKE.get(), this.getSoundSource(), 10.0F, 1.0F);
 					this.level.playSound(null, this.blockPosition(), SRSounds.GENERIC_PUFF_OF_SMOKE.get(), this.getSoundSource(), 10.0F, 1.0F);
 					this.level.playSound(null, oldPos, SRSounds.ENTITY_TRICKSTER_LAUGH.get(), SoundCategory.HOSTILE, 1.0F, 1.0F);
-					ConfusionBoltEntity.spawnGaussianParticles(this.random, oldBox, ParticleTypes.POOF, 50);
-					ConfusionBoltEntity.spawnGaussianParticles(this.random, this.getBoundingBox().inflate(0.5D), ParticleTypes.POOF, 50);
+					ConfusionBoltEntity.spawnGaussianParticles(this.level, oldBox, SREvents.POOF_KEY, 50);
+					ConfusionBoltEntity.spawnGaussianParticles(this.level, this.getBoundingBox().inflate(0.5D), SREvents.POOF_KEY, 50);
 					if (ForgeEventFactory.getMobGriefingEvent(this.level, this)) {
 						BlockPos.Mutable searchPos = new BlockPos.Mutable();
 						for (int x = oldPos.getX() - 2; x <= oldPos.getX() + 2; x++) {
@@ -210,7 +213,7 @@ public class TricksterEntity extends SpellcastingIllagerEntity implements ITrack
 										searchPos.move(Direction.UP);
 										if (!this.level.getBlockState(searchPos).isSolidRender(this.level, searchPos)) {
 											for (int i = 0; i < 3; i++)
-												NetworkUtil.spawnParticle(SRParticles.RUNE.getId().toString(), x + random.nextDouble(), y + 1.25, z + random.nextDouble(), 0.0D, 0.0D, 0.0D);
+												AbnormalsCore.CHANNEL.send(PacketDistributor.DIMENSION.with(this.level::dimension), new MessageS2CSpawnParticle(SRParticles.RUNE.getId().toString(), x + random.nextDouble(), y + 1.25, z + random.nextDouble(), 0.0D, 0.0D, 0.0D));
 										}
 									}
 								}

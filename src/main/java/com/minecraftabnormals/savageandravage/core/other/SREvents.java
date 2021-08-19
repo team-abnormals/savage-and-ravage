@@ -1,7 +1,9 @@
 package com.minecraftabnormals.savageandravage.core.other;
 
+import com.minecraftabnormals.abnormals_core.common.network.particle.MessageS2CSpawnParticle;
 import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.IDataManager;
-import com.minecraftabnormals.abnormals_core.core.util.NetworkUtil;
+import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.TrackedDataManager;
+import com.minecraftabnormals.abnormals_core.core.AbnormalsCore;
 import com.minecraftabnormals.savageandravage.common.entity.*;
 import com.minecraftabnormals.savageandravage.common.entity.block.SporeBombEntity;
 import com.minecraftabnormals.savageandravage.common.entity.goals.CelebrateTargetBlockHitGoal;
@@ -38,7 +40,6 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
-import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.Effects;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.*;
@@ -61,12 +62,15 @@ import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.event.world.NoteBlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.util.*;
 
 @Mod.EventBusSubscriber(modid = SavageAndRavage.MOD_ID)
 public class SREvents {
+	public static String POOF_KEY = "minecraft:poof";
+	public static String NOTE_KEY = "minecraft:note";
+
 
 	@SubscribeEvent
 	public static void onEntityJoinWorld(EntityJoinWorldEvent event) {
@@ -326,7 +330,7 @@ public class SREvents {
 			boolean maskStateChanged = canBeInvisible != invisibleDueToMask;
 			if (maskStateChanged) {
 				data.setValue(SRDataProcessors.INVISIBLE_DUE_TO_MASK, canBeInvisible);
-				spawnMaskParticles(entity.getRandom(), entity.getBoundingBox(), 3);
+				spawnMaskParticles(world, entity.getBoundingBox(), 3);
 			}
 			if (maskStateChanged || (canBeInvisible && !entity.isInvisible()))
 				entity.setInvisible(canBeInvisible || entity.hasEffect(Effects.INVISIBILITY));
@@ -370,10 +374,9 @@ public class SREvents {
 					UUID id = data.getValue(SRDataProcessors.CROSSBOW_OWNER).orElse(null);
 					if (id != null) {
 						Entity crossbowOwner = ((ServerWorld) entity.level).getEntity(id);
-						if (crossbowOwner != null) {
+						if (crossbowOwner instanceof AbstractRaiderEntity)
 							TrackedDataManager.INSTANCE.setValue(crossbowOwner, SRDataProcessors.TARGET_HIT, true);
-							data.setValue(SRDataProcessors.CROSSBOW_OWNER, Optional.empty());
-						}
+						data.setValue(SRDataProcessors.CROSSBOW_OWNER, Optional.empty());
 					}
 				}
 			}
@@ -386,14 +389,11 @@ public class SREvents {
 		BlockState state = event.getWorld().getBlockState(pos.relative(Direction.DOWN));
 		SoundEvent sound = state.is(Blocks.TARGET) ? SRSounds.BLOCK_NOTE_BLOCK_HIT_MARKER.get() : state.is(SRTags.GLOOMY_TILES) ? SRSounds.BLOCK_NOTE_BLOCK_HARPSICHORD.get() : state.is(SRTags.BLAST_PROOF) ? SRSounds.BLOCK_NOTE_BLOCK_ORCHESTRAL_HIT.get() : null;
 		if (sound != null) {
-			int note = event.getVanillaNoteId();
-			float f = (float)Math.pow(2.0D, (double)(note - 12) / 12.0D);
-			event.getWorld().playSound(null, pos, sound, SoundCategory.RECORDS, 3.0F, f);
-			if (!event.getWorld().isClientSide()) {
-				ResourceLocation noteKey = ForgeRegistries.PARTICLE_TYPES.getKey(ParticleTypes.NOTE);
-				if (noteKey != null)
-					NetworkUtil.spawnParticle(noteKey.toString(), pos.getX() + 0.5D, pos.getY() + 1.2D, pos.getZ() + 0.5D, (double) note / 24.0D, 0.0D, 0.0D);
-			}
+			World world = (World) event.getWorld();
+			double note = event.getVanillaNoteId();
+			event.getWorld().playSound(null, pos, sound, SoundCategory.RECORDS, 3.0F, (float) Math.pow(2.0D, (note - 12) / 12.0D));
+			if (!event.getWorld().isClientSide())
+				AbnormalsCore.CHANNEL.send(PacketDistributor.DIMENSION.with(world::dimension), new MessageS2CSpawnParticle(NOTE_KEY, pos.getX() + 0.5D, pos.getY() + 1.2D, pos.getZ() + 0.5D, note / 24.0D, 0.0D, 0.0D));
 			event.setCanceled(true);
 		}
 	}
@@ -404,15 +404,13 @@ public class SREvents {
 		return false;
 	}
 
-	public static void spawnMaskParticles(Random random, AxisAlignedBB box, int loops) {
-		ResourceLocation poofId = ForgeRegistries.PARTICLE_TYPES.getKey(ParticleTypes.POOF);
-		if (poofId != null) {
-			for (int i = 0; i < loops; i++) {
-				double randomPositionX = box.min(Direction.Axis.X) + (random.nextFloat() * box.getXsize());
-				double randomPositionY = box.min(Direction.Axis.Y) + (random.nextFloat() * box.getYsize());
-				double randomPositionZ = box.min(Direction.Axis.Z) + (random.nextFloat() * box.getZsize());
-				NetworkUtil.spawnParticle(poofId.toString(), randomPositionX, randomPositionY, randomPositionZ, 0.0f, 0.0f, 0.0f);
-			}
+	public static void spawnMaskParticles(World world, AxisAlignedBB box, int loops) {
+		Random random = world.getRandom();
+		for (int i = 0; i < loops; i++) {
+			double x = box.min(Direction.Axis.X) + (random.nextFloat() * box.getXsize());
+			double y = box.min(Direction.Axis.Y) + (random.nextFloat() * box.getYsize());
+			double z = box.min(Direction.Axis.Z) + (random.nextFloat() * box.getZsize());
+			AbnormalsCore.CHANNEL.send(PacketDistributor.DIMENSION.with(world::dimension), new MessageS2CSpawnParticle(POOF_KEY, x, y, z, 0.0D, 0.0D, 0.0D));
 		}
 	}
 

@@ -1,7 +1,9 @@
 package com.minecraftabnormals.savageandravage.common.entity;
 
+import com.minecraftabnormals.abnormals_core.common.network.particle.MessageS2CSpawnParticle;
+import com.minecraftabnormals.abnormals_core.core.AbnormalsCore;
 import com.minecraftabnormals.abnormals_core.core.util.NetworkUtil;
-import com.minecraftabnormals.savageandravage.common.block.RunedGloomyTilesBlock;
+import com.minecraftabnormals.savageandravage.core.other.SREvents;
 import com.minecraftabnormals.savageandravage.core.registry.SRBlocks;
 import com.minecraftabnormals.savageandravage.core.registry.SREffects;
 import com.minecraftabnormals.savageandravage.core.registry.SREntities;
@@ -18,13 +20,9 @@ import net.minecraft.network.IPacket;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.particles.IParticleData;
-import net.minecraft.particles.ParticleType;
-import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -33,7 +31,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.util.List;
 import java.util.Random;
@@ -78,7 +76,7 @@ public class ConfusionBoltEntity extends ThrowableEntity {
 		Vector3d deltaMovement = this.getDeltaMovement();
 		super.tick();
 		this.setDeltaMovement(deltaMovement); //Undo tampering by superclass
-		spawnGaussianParticles(this.random, this.getBoundingBox(), SRParticles.CONFUSION_BOLT.get(), 5);
+		spawnGaussianParticles(this.level, this.getBoundingBox(), SRParticles.CONFUSION_BOLT.getId().toString(), 5);
 		this.entityData.set(TICKS_TILL_REMOVE, this.entityData.get(TICKS_TILL_REMOVE) - 1);
 		if (this.entityData.get(TICKS_TILL_REMOVE) <= 0)
 			this.remove();
@@ -93,23 +91,20 @@ public class ConfusionBoltEntity extends ThrowableEntity {
 		}
 	}
 
-	public static void spawnGaussianParticles(Random random, AxisAlignedBB box, IParticleData type, int loops) {
-		ResourceLocation particleID = ForgeRegistries.PARTICLE_TYPES.getKey((ParticleType<?>) type);
-		if (particleID != null) {
-			for (int i = 0; i < loops; i++) {
-				double randomPositionX = box.min(Direction.Axis.X) + ((0.5 + (random.nextGaussian() * 0.25)) * box.getXsize());
-				double randomPositionY = box.min(Direction.Axis.Y) + ((0.5 + (random.nextGaussian() * 0.25)) * box.getYsize());
-				double randomPositionZ = box.min(Direction.Axis.Z) + ((0.5 + (random.nextGaussian() * 0.25)) * box.getZsize());
-				NetworkUtil.spawnParticle(particleID.toString(), randomPositionX, randomPositionY, randomPositionZ, 0.0f, 0.0f, 0.0f);
-
-			}
+	public static void spawnGaussianParticles(World world, AxisAlignedBB box, String name, int loops) {
+		Random random = world.getRandom();
+		for (int i = 0; i < loops; i++) {
+			double x = box.min(Direction.Axis.X) + ((0.5 + (random.nextGaussian() * 0.25)) * box.getXsize());
+			double y = box.min(Direction.Axis.Y) + ((0.5 + (random.nextGaussian() * 0.25)) * box.getYsize());
+			double z = box.min(Direction.Axis.Z) + ((0.5 + (random.nextGaussian() * 0.25)) * box.getZsize());
+			AbnormalsCore.CHANNEL.send(PacketDistributor.DIMENSION.with(world::dimension), new MessageS2CSpawnParticle(name, x, y, z, 0.0D, 0.0D, 0.0D));
 		}
 	}
 
 	@Override
 	protected void onHit(RayTraceResult result) {
 		this.playSound(SRSounds.GENERIC_PUFF_OF_SMOKE.get(), 5.0F, 1.0F);
-		spawnGaussianParticles(this.random, this.getBoundingBox().inflate(0.5D), ParticleTypes.POOF, 25);
+		spawnGaussianParticles(this.level, this.getBoundingBox().inflate(0.5D), SREvents.POOF_KEY, 25);
 		super.onHit(result);
 		this.remove();
 	}
@@ -130,7 +125,7 @@ public class ConfusionBoltEntity extends ThrowableEntity {
 				livingEntity.addEffect(new EffectInstance(Effects.BLINDNESS, 30));
 			}
 			livingEntity.playSound(SRSounds.GENERIC_PUFF_OF_SMOKE.get(), 5.0F, 1.0F);
-			spawnGaussianParticles(this.random, livingEntity.getBoundingBox().inflate(0.5D), ParticleTypes.POOF, 25);
+			spawnGaussianParticles(this.level, livingEntity.getBoundingBox().inflate(0.5D), SREvents.POOF_KEY, 25);
 			if (owner instanceof ITracksHits)
 				((ITracksHits) owner).onTrackedHit(this, entity);
 		}
@@ -142,10 +137,12 @@ public class ConfusionBoltEntity extends ThrowableEntity {
 		BlockPos.Mutable pos = result.getBlockPos().mutable();
 		if (this.level.getBlockState(pos).getBlock() == SRBlocks.GLOOMY_TILES.get()) {
 			this.level.setBlock(pos, SRBlocks.RUNED_GLOOMY_TILES.get().defaultBlockState(), 2);
-			pos.move(Direction.UP);
-			if (!this.level.getBlockState(pos).isSolidRender(this.level, pos)) {
-				for (int i = 0; i < 3; i++)
-					NetworkUtil.spawnParticle(SRParticles.RUNE.getId().toString(), pos.getX() + random.nextDouble(), pos.getY() + 0.25, pos.getZ() + random.nextDouble(), 0.0D, 0.0D, 0.0D);
+			for (Direction direction : Direction.values()) {
+				pos.move(direction);
+				if (!this.level.getBlockState(pos).isSolidRender(this.level, pos))
+					for (int i = 0; i < 3; i++)
+						AbnormalsCore.CHANNEL.send(PacketDistributor.DIMENSION.with(this.level::dimension), new MessageS2CSpawnParticle(SRParticles.RUNE.getId().toString(), pos.getX() + random.nextDouble(), pos.getY() + 0.25, pos.getZ() + random.nextDouble(), 0.0D, 0.0D, 0.0D));
+				pos.move(direction.getOpposite());
 			}
 		}
 	}
