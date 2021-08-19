@@ -2,6 +2,9 @@ package com.minecraftabnormals.savageandravage.client.render.layer;
 
 import com.minecraftabnormals.savageandravage.client.model.CreepieModel;
 import com.minecraftabnormals.savageandravage.common.entity.CreepieEntity;
+import com.minecraftabnormals.savageandravage.core.SRConfig;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.EnergyLayer;
 import net.minecraft.client.renderer.entity.model.EntityModel;
@@ -16,6 +19,12 @@ public class CreepieChargeLayer extends EnergyLayer<CreepieEntity, CreepieModel>
 
 	public CreepieChargeLayer(IEntityRenderer<CreepieEntity, CreepieModel> entityRenderer) {
 		super(entityRenderer);
+	}
+
+	@Override
+	public void render(MatrixStack stack, IRenderTypeBuffer buffer, int packedLight, CreepieEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+		super.render(stack, buffer, packedLight, entity, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch);
+		this.creepieModel.sprout.visible = SRConfig.CLIENT.creepieSprout.get();
 	}
 
 	@Override
