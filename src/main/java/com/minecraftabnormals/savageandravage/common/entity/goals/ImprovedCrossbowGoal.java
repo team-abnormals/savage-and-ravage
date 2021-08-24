@@ -24,9 +24,8 @@ import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.EntityRayTraceResult;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceResult;
@@ -50,8 +49,9 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
     private final double blocksUntilBackupSq;
     private int ticksTillSearch;
     private int practisingTicks;
-    private BlockPos  blockPos;
+    private BlockPos blockPos;
     private Vector3d blockPosVector;
+    private Vector3d blockPosVectorCentred;
 
     public ImprovedCrossbowGoal(T mob, double speedChanger, float radius, double blocksUntilBackup) {
         this.mob = mob;
@@ -99,8 +99,10 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
     public void start() {
         super.start();
         this.practisingTicks = 200 + this.mob.getRandom().nextInt(160);
-        if (this.blockPos != null)
+        if (this.blockPos != null) {
             this.blockPosVector = new Vector3d(this.blockPos.getX(), this.blockPos.getY(), this.blockPos.getZ());
+            this.blockPosVectorCentred = this.blockPosVector.add(0.5D, 0.5D, 0.5D);
+        }
     }
 
     @Override
@@ -132,12 +134,11 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
         if (target == null && practisingTicks <= 0)
             return;
 
-        boolean checkEntities = this.crossbowState == CrossbowState.CHARGED;
-        boolean canSeeEnemy = target != null ? this.mob.getSensing().canSee(target) : this.canSeePos(this.blockPosVector, checkEntities);
+        boolean canSeeEnemy = target != null ? this.mob.getSensing().canSee(target) : this.canSeeTarget();
         if (canSeeEnemy)
             ++this.seeTime;
         else {
-            if (target == null && checkEntities) {
+            if (target == null) {
                 this.practisingTicks = 0;
                 return;
             }
@@ -220,7 +221,8 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
         for(int y = 0; y <= vDiameter; y = y > 0 ? -y : 1 - y) {
             for(int hDist = 0; hDist < hDiameter; hDist++) {
                 for(int x = 0; x <= hDist; x = x > 0 ? -x : 1 - x) {
-                    for(int z = x < hDist && x > -hDist ? hDist : 0; z <= hDist; z = z > 0 ? -z : 1 - z) {
+                    for(int z =
+                        x < hDist && x > -hDist ? hDist : 0; z <= hDist; z = z > 0 ? -z : 1 - z) {
                         searchPos.setWithOffset(pos, x, y - 1, z);
                         if (this.mob.isWithinRestriction(searchPos) && this.isValidTarget(this.mob.level, searchPos)) {
                             this.blockPos = searchPos;
@@ -235,22 +237,18 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
     }
 
     protected int ticksTillSearch(CreatureEntity creature) {
-        return 1000 + creature.getRandom().nextInt(600);
+        return 1000 + creature.getRandom().nextInt(1200);
     }
 
     protected boolean isValidTarget(IWorldReader world, BlockPos pos) {
         return pos != null && world.getBlockState(pos).is(Blocks.TARGET);
     }
 
-    private boolean canSeePos(Vector3d pos, boolean checkEntities) {
+    private boolean canSeeTarget() {
         this.mob.level.getProfiler().push("canSee");
-        boolean canSee = this.mob.level.clip(new RayTraceContext(this.blockPosVector, pos, RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, this.mob)).getType() == RayTraceResult.Type.MISS;
-        if (checkEntities) {
-            AxisAlignedBB box = this.mob.getBoundingBox().expandTowards(new Vector3d(pos.x - this.blockPosVector.x, pos.y - this.blockPosVector.y, pos.z - this.blockPosVector.z).normalize().scale(16));
-            EntityRayTraceResult result = ProjectileHelper.getEntityHitResult(this.mob.level, this.mob, this.blockPosVector, pos, box, entity -> entity instanceof LivingEntity && !entity.isSpectator() && entity.isPickable());
-            if (result != null)
-                canSee = canSee && (result.getType() == RayTraceResult.Type.MISS);
-        }
+        Vector3d mobPos = new Vector3d(this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
+        BlockRayTraceResult result = this.mob.level.clip(new RayTraceContext(mobPos, this.blockPosVectorCentred, RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, this.mob));
+        boolean canSee = result.getBlockPos().equals(this.blockPos) || result.getType() == RayTraceResult.Type.MISS;
         this.mob.level.getProfiler().pop();
         return canSee;
     }
