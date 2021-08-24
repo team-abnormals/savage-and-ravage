@@ -52,7 +52,7 @@ public class SRFeatures {
 	public static void registerBiomeModifications() {
 		BiomeModificationManager manager = BiomeModificationManager.INSTANCE;
 		manager.addModifier(CustomSpawnsModifier.createSpawnAdder((key, biome) -> BiomeDictionary.hasType(key, BiomeDictionary.Type.OVERWORLD) && !BiomeModificationPredicates.forCategory(Biome.Category.MUSHROOM, Biome.Category.NONE).test(key, biome), EntityClassification.MONSTER, SREntities.SKELETON_VILLAGER::get, 5, 1, 1));
-		manager.addModifier(BiomeSpawnsModifier.createSpawnAdder((key, biome) -> BiomeDictionary.hasType(key, BiomeDictionary.Type.OVERWORLD) && BiomeModificationPredicates.forCategory(Biome.Category.ICY, Biome.Category.EXTREME_HILLS).test(key, biome), EntityClassification.MONSTER, SREntities.ICEOLOGER::get, 8, 1, 1));
+		manager.addModifier(BiomeSpawnsModifier.createSpawnAdder((key, biome) -> BiomeDictionary.hasType(key, BiomeDictionary.Type.OVERWORLD) && BiomeModificationPredicates.forCategory(Biome.Category.ICY, Biome.Category.EXTREME_HILLS).test(key, biome), EntityClassification.MONSTER, SREntities.ICEOLOGER::get, 5, 1, 1));
 	}
 
 	//All this is hacky and won't be needed after AC refactors this system
