@@ -235,7 +235,7 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
     }
 
     protected int ticksTillSearch(CreatureEntity creature) {
-        return 1000 + creature.getRandom().nextInt(400);
+        return 1000 + creature.getRandom().nextInt(600);
     }
 
     protected boolean isValidTarget(IWorldReader world, BlockPos pos) {
