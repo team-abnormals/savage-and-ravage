@@ -34,8 +34,6 @@ public class SRDataProcessors {
 	public static final TrackedData<Optional<UUID>> CROSSBOW_OWNER = TrackedData.Builder.create(SRDataProcessors.OPTIONAL_UUID, Optional::empty).setSyncType(SyncType.NOPE).build();
 	public static final TrackedData<Integer> CELEBRATION_TIME = TrackedData.Builder.create(DataProcessors.INT, () -> 0).setSyncType(SyncType.NOPE).build();
 
-	public static final TrackedData<Boolean> FROZEN = TrackedData.Builder.create(DataProcessors.BOOLEAN, () -> false).enableSaving().build();
-
 	public static void registerTrackedData() {
 		TrackedDataManager.INSTANCE.registerData(new ResourceLocation(SavageAndRavage.MOD_ID, "evoker_shield_time"), TOTEM_SHIELD_TIME);
 		TrackedDataManager.INSTANCE.registerData(new ResourceLocation(SavageAndRavage.MOD_ID, "evoker_shield_cooldown"), TOTEM_SHIELD_COOLDOWN);
@@ -43,6 +41,5 @@ public class SRDataProcessors {
 		TrackedDataManager.INSTANCE.registerData(new ResourceLocation(SavageAndRavage.MOD_ID, "target_hit"), TARGET_HIT);
 		TrackedDataManager.INSTANCE.registerData(new ResourceLocation(SavageAndRavage.MOD_ID, "crossbow_owner"), CROSSBOW_OWNER);
 		TrackedDataManager.INSTANCE.registerData(new ResourceLocation(SavageAndRavage.MOD_ID, "celebration_time"), CELEBRATION_TIME);
-		TrackedDataManager.INSTANCE.registerData(new ResourceLocation(SavageAndRavage.MOD_ID, "frozen"), FROZEN);
 	}
 }
