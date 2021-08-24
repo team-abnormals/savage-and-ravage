@@ -134,7 +134,7 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
         if (target == null && practisingTicks <= 0)
             return;
 
-        boolean canSeeEnemy = target != null ? this.mob.getSensing().canSee(target) : this.canSeeTarget();
+        boolean canSeeEnemy = target != null ? this.mob.getSensing().canSee(target) : this.canSeeTargetBlock();
         if (canSeeEnemy)
             ++this.seeTime;
         else {
@@ -244,7 +244,7 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
         return pos != null && world.getBlockState(pos).is(Blocks.TARGET);
     }
 
-    private boolean canSeeTarget() {
+    private boolean canSeeTargetBlock() {
         this.mob.level.getProfiler().push("canSee");
         Vector3d mobPos = new Vector3d(this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
         BlockRayTraceResult result = this.mob.level.clip(new RayTraceContext(mobPos, this.blockPosVectorCentred, RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, this.mob));
