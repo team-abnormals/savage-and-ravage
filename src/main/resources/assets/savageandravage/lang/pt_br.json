@@ -1,20 +1,20 @@
 {
-	"block.savageandravage.gloomy_tiles": "Azulejos sombrios",
-	"block.savageandravage.gloomy_tile_stairs": "Escadas de azulejos sombrios",
-	"block.savageandravage.gloomy_tile_slab": "Laje de azulejos sombrios",
-	"block.savageandravage.gloomy_tile_wall": "Muro de azulejos sombrios",
-	"block.savageandravage.chiseled_gloomy_tiles": "Azulejos sombrios talhados",
-	"block.savageandravage.gloomy_tile_vertical_slab": "Laje de azulejos sombrios vertical",
-	"block.savageandravage.runed_gloomy_tiles": "Azulejos sombrios rúnicos",
+	"block.savageandravage.gloomy_tiles": "Ladrilhos sombrios",
+	"block.savageandravage.gloomy_tile_stairs": "Escadas de ladrilhos sombrios",
+	"block.savageandravage.gloomy_tile_slab": "Laje de ladrilhos sombrios",
+	"block.savageandravage.gloomy_tile_wall": "Muro de ladrilhos sombrios",
+	"block.savageandravage.chiseled_gloomy_tiles": "ladrilhos sombrios talhados",
+	"block.savageandravage.gloomy_tile_vertical_slab": "Laje vertical de ladrilhos sombrios",
+	"block.savageandravage.runed_gloomy_tiles": "Ladrilhos sombrios com runas",
 
-	"block.savageandravage.blast_proof_plates": "Chapas à prova de explosões",
+	"block.savageandravage.blast_proof_plates": "Chapeamento à prova de explosões",
 	"block.savageandravage.blast_proof_slab": "Laje à prova de explosões",
 	"block.savageandravage.blast_proof_stairs": "Escadas à prova de explosões",
-	"block.savageandravage.blast_proof_vertical_slab": "Laje à prova de explosões vertical",
+	"block.savageandravage.blast_proof_vertical_slab": "Laje vertical à prova de explosões",
 	"block.savageandravage.creeper_spore_sack": "Saco de esporos de creeper",
 	"block.savageandravage.spore_bomb": "Bomba de esporos",
 
-	"item.savageandravage.blast_proof_plating": "Chapeamento à prova de explosões",
+	"item.savageandravage.blast_proof_plating": "Chapas à prova de explosões",
 	"item.savageandravage.griefer_helmet": "Capacete de griefer",
 	"item.savageandravage.griefer_chestplate": "Peitoral de griefer",
 	"item.savageandravage.griefer_leggings": "Calças de griefer",
@@ -22,12 +22,17 @@
 
 	"item.savageandravage.wand_of_freezing": "Varinha de congelamento",
   	"item.savageandravage.cleaver_of_beheading": "Cutelo de decapitamento",
+	"item.savageandravage.eldritch_conch": "Eldritch Conch",
+        "item.savageandravage.mask_of_dishonesty": "Mask of Dishonesty",
 
 	"item.savageandravage.creeper_spores": "Esporos de creeper",
 	"item.savageandravage.mischief_arrow": "Flecha travessa",
 
 	"item.savageandravage.skeleton_villager_spawn_egg": "Ovo gerador de aldeão esqueleto",
 	"item.savageandravage.griefer_spawn_egg": "Ovo gerador de griefer",
+	"item.savageandravage.executioner_spawn_egg": "Executioner Spawn Egg",
+        "item.savageandravage.iceologer_spawn_egg": "Iceologer Spawn Egg",
+        "item.savageandravage.trickster_spawn_egg": "Trickster Spawn Egg",
 
 	"entity.savageandravage.skeleton_villager": "Aldeão esqueleto",
 	"entity.savageandravage.griefer": "Griefer",
@@ -41,23 +46,47 @@
   	"entity.savageandravage.iceologer": "Glaciólogo",
   	"entity.savageandravage.ice_chunk": "Pedaço de gelo",
   	"entity.savageandravage.ice_cloud": "Nuvem de gelo",
+	"entity.savageandravage.trickster": "Trickster",
 
+	"effect.savageandravage.confusion": "Confusion",
 	"effect.savageandravage.frostbite": "Queimadura de gelo",
+	"effect.savageandravage.weight": "Weight",
 
 	"attribute.name.generic.explosive_damage_reduction": "Redução de dano explosivo",
 
+	"advancements.savageandravage.adventure.creeper_spores.title": "Provando do próprio veneno",
+        "advancements.savageandravage.adventure.creeper_spores.description": "Mate um creeper com uma explosão para obter esporos de creeper",
 	"advancements.savageandravage.adventure.griefer_armor.title": "Dinamite com um raio laser",
   	"advancements.savageandravage.adventure.griefer_armor.description": "Obtenha um conjunto completo de armadura griefer",
-
-  	"advancements.savageandravage.adventure.relic_collector.title": "Coletor de rélicas",
+        "advancements.savageandravage.adventure.relic_collector.title": "Coletor de relíquias",
   	"advancements.savageandravage.adventure.relic_collector.description": "Obtenha um totem da imortalidade, cutelo de decapitamento e varinha de congelamento",
+	"advancements.savageandravage.adventure.mask_of_dishonesty.title": "A Little Tricking",*
+        "advancements.savageandravage.adventure.mask_of_dishonesty.description": "Obtain a Mask of Dishonesty by killing a Trickster",*
+	
+	"advancements.savageandravage.adventure.voluntary_exile.description": "Ateie fogo a um estandarte sinistro.\nTalvez seja melhor ficar longe de vilas por enquanto...",
 
 	"subtitles.savageandravage.entity.creepie.hurt": "Creepie ferido",
 	"subtitles.savageandravage.entity.creepie.death": "Creepie morre",
 	"subtitles.savageandravage.entity.creepie.fuse": "Creepie sibilando",
-	"subtitles.savageandravage.entity.creepie.convert": "Creepie começa a se converter",
-	"subtitles.savageandravage.entity.creepie.grow": "Creepie vira creeper",
-	"subtitles.savageandravage.generic.prepare_attack": "Azulejos sombrios rúnicos ativam",
+	"subtitles.savageandravage.entity.creepie.convert": "Creepie se converte",
+	"subtitles.savageandravage.entity.creepie.grow": "Creepie cresce",
 
-	"advancements.savageandravage.adventure.voluntary_exile.description": "Ateie fogo a um estandarte sinistro.\nTalvez seja melhor ficar longe de vilas por enquanto..."
+	"subtitles.savageandravage.entity.iceologer.ambient": "Glaciólago murmurando",
+        "subtitles.savageandravage.entity.iceologer.hurt": "Glaciólogo ferido",
+        "subtitles.savageandravage.entity.iceologer.death": "Glaciólogo morre",
+        "subtitles.savageandravage.entity.iceologer.celebrate": "Glaciólogo comemora",
+        "subtitles.savageandravage.entity.iceologer.cast_spell": "Glaciólogo lança um feitiço",
+
+        "subtitles.savageandravage.entity.trickster.ambient": "Trickster murmurs",
+        "subtitles.savageandravage.entity.trickster.step": "Trickster jingles",
+        "subtitles.savageandravage.entity.trickster.hurt": "Trickster hurts",
+        "subtitles.savageandravage.entity.trickster.death": "Trickster dies",
+        "subtitles.savageandravage.entity.trickster.celebrate": "Trickster cheers",
+        "subtitles.savageandravage.entity.trickster.laugh": "Trickster laughs",
+        "subtitles.savageandravage.entity.trickster.cast_spell": "Trickster casts spell",
+
+        "subtitles.savageandravage.entity.player.cast_spell": "Jogador lança um feitiço",
+        "subtitles.savageandravage.entity.creeper_spores.throw": "Esporos de creeper voando",
+        "subtitles.savageandravage.generic.prepare_attack": "Algo se prepara para atacar",
+        "subtitles.savageandravage.generic.puff_of_smoke": "Sopro de fumaça"
 }
