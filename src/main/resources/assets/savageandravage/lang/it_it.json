@@ -1,0 +1,92 @@
+{
+  "block.savageandravage.gloomy_tiles": "Piastrelle cupe",
+  "block.savageandravage.gloomy_tile_stairs": "Scalini di piastrelle cupe",
+  "block.savageandravage.gloomy_tile_slab": "Lastra di piastrelle cupe",
+  "block.savageandravage.gloomy_tile_wall": "Muretto di piastrelle cupe",
+  "block.savageandravage.chiseled_gloomy_tiles": "Piastrelle cupe cesellate",
+  "block.savageandravage.gloomy_tile_vertical_slab": "Lastra verticale di piastrelle cupe",
+  "block.savageandravage.runed_gloomy_tiles": "Piastrelle cupe runiche",
+  
+  "block.savageandravage.blast_proof_plates": "Piastre a prova di esplosione",
+  "block.savageandravage.blast_proof_slab": "Lastra a prova di esplosione",
+  "block.savageandravage.blast_proof_stairs": "Scalini a prova di esplosione",
+  "block.savageandravage.blast_proof_vertical_slab": "Lastra verticale a prova di eplosione",
+  "block.savageandravage.creeper_spore_sack": "Sacco di spore di creeper",
+  "block.savageandravage.spore_bomb": "Bomba di spore",
+  
+  "item.savageandravage.blast_proof_plating": "Placcatura a prova di esplosione",
+  "item.savageandravage.griefer_helmet": "Elmo del griffatore",
+  "item.savageandravage.griefer_chestplate": "Corazza del griffatore",
+  "item.savageandravage.griefer_leggings": "Gambiere del griffatore",
+  "item.savageandravage.griefer_boots": "Stivali del griffatore",
+  
+  "item.savageandravage.wand_of_freezing": "Bacchetta di congelamento",
+  "item.savageandravage.cleaver_of_beheading": "Mannaia di decapitazione",
+  "item.savageandravage.eldritch_conch": "Conchiglia spettrale",
+  "item.savageandravage.mask_of_dishonesty": "Maschera di disonestà",
+
+  "item.savageandravage.creeper_spores": "Spore di creeper",
+  "item.savageandravage.mischief_arrow": "Freccia marachella",
+  
+  "item.savageandravage.skeleton_villager_spawn_egg": "Uovo generatore di villico scheletro",
+  "item.savageandravage.griefer_spawn_egg": "Uovo generatore di griffatore",
+  "item.savageandravage.executioner_spawn_egg": "Uovo generatore di boia",
+  "item.savageandravage.iceologer_spawn_egg": "Uovo generatore di ghiacciologo",
+  "item.savageandravage.trickster_spawn_egg": "Uovo generatore di imbroglione",
+
+  "entity.savageandravage.skeleton_villager": "Villico scheletro",
+  "entity.savageandravage.griefer": "Griffatore",
+  "entity.savageandravage.creepie": "Creepie",
+  "entity.savageandravage.spore_cloud": "Nuvola di spore",
+  "entity.savageandravage.spore_bomb": "Bomba di spore",
+  "entity.savageandravage.rune_prison": "Prigione runica",
+  "entity.savageandravage.burning_banner": "Stendardo bruciante",
+  "entity.savageandravage.mischief_arrow": "Freccia marachella",
+  "entity.savageandravage.executioner": "Boia",
+  "entity.savageandravage.iceologer": "Ghiacciologo",
+  "entity.savageandravage.ice_chunk": "Pezzo di ghiaccio",
+  "entity.savageandravage.ice_cloud": "Nuvola di ghiaccio",
+  "entity.savageandravage.trickster": "Imbroglione",
+
+  "effect.savageandravage.confusion": "Confusione",
+  "effect.savageandravage.frostbite": "Congelamento",
+  "effect.savageandravage.weight": "Peso",
+
+  "attribute.name.generic.explosive_damage_reduction": "Riduzione di danni esplosivi",
+
+  "advancements.savageandravage.adventure.creeper_spores.title": "Striscia il creepie",
+  "advancements.savageandravage.adventure.creeper_spores.description": "Ottieni delle spore di creeper uccidendo un creeper con un'esplosione",
+  "advancements.savageandravage.adventure.griefer_armor.title": "Dinamite con un raggio laser",
+  "advancements.savageandravage.adventure.griefer_armor.description": "Raccogli un set completo di armatura del griffatore",
+  "advancements.savageandravage.adventure.relic_collector.title": "Collettore di reliquie",
+  "advancements.savageandravage.adventure.relic_collector.description": "Ottieni un totem dell'immortalità, mannaia di decapitazione, bacchetta di congelamento, maschera di disonestà e una conchiglia spettrale",
+  "advancements.savageandravage.adventure.mask_of_dishonesty.title": "Un piccolo imbroglio",
+  "advancements.savageandravage.adventure.mask_of_dishonesty.description": "Ottieni una maschera di disonestà uccidendo un imbroglione",
+
+  "advancements.savageandravage.adventure.voluntary_exile.description": "Dai fuoco a uno stendardo del malaugurio.\nForse è meglio stare lontano dai villaggi per il momento...",
+
+  "subtitles.savageandravage.entity.creepie.hurt": "Creepie ferito",
+  "subtitles.savageandravage.entity.creepie.death": "Creepie muore",
+  "subtitles.savageandravage.entity.creepie.fuse": "Creepie sibila",
+  "subtitles.savageandravage.entity.creepie.convert": "Creepie converte",
+  "subtitles.savageandravage.entity.creepie.grow": "Creepie cresce",
+  
+  "subtitles.savageandravage.entity.iceologer.ambient": "Ghiacciologo mormora",
+  "subtitles.savageandravage.entity.iceologer.hurt": "Ghiacciologo ferito",
+  "subtitles.savageandravage.entity.iceologer.death": "Ghiacciologo muore",
+  "subtitles.savageandravage.entity.iceologer.celebrate": "Ghiacciologo acclama",
+  "subtitles.savageandravage.entity.iceologer.cast_spell": "Ghiacciologo lancia un incantesimo",
+
+  "subtitles.savageandravage.entity.trickster.ambient": "Imbroglione mormora",
+  "subtitles.savageandravage.entity.trickster.step": "Imbroglione tintinna",
+  "subtitles.savageandravage.entity.trickster.hurt": "Imbroglione ferito",
+  "subtitles.savageandravage.entity.trickster.death": "Imbroglione muore",
+  "subtitles.savageandravage.entity.trickster.celebrate": "Imbroglione acclama",
+  "subtitles.savageandravage.entity.trickster.laugh": "Imbroglione ride",
+  "subtitles.savageandravage.entity.trickster.cast_spell": "Imbroglione lancia un incantesimo",
+
+  "subtitles.savageandravage.entity.player.cast_spell": "Giocatore lancia un incantesimo",
+  "subtitles.savageandravage.entity.creeper_spores.throw": "Spore di creeper volano",
+  "subtitles.savageandravage.generic.prepare_attack": "Qualcosa si prepara ad attaccare",
+  "subtitles.savageandravage.generic.puff_of_smoke": "Soffio di fumo"
+}
