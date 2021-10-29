@@ -15,7 +15,7 @@
                 "children": [
                   {
                     "type": "minecraft:item",
-                    "name": "savageandravage:eldritch_conch",
+                    "name": "savageandravage:conch_of_conjuring",
                     "conditions": [
                       {
                         "condition": "minecraft:random_chance_with_looting",
