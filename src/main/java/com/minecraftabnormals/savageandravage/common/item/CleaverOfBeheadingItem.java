@@ -1,68 +1,101 @@
 package com.minecraftabnormals.savageandravage.common.item;
 
-import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.minecraftabnormals.abnormals_core.core.util.item.filling.TargetedItemGroupFiller;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
-import com.minecraftabnormals.savageandravage.core.registry.SRItems;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.material.Material;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.NBTUtil;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.Mod;
 
-@EventBusSubscriber(modid = SavageAndRavage.MOD_ID)
-public class CleaverOfBeheadingItem extends SwordItem {
+public class CleaverOfBeheadingItem extends TieredItem {
 	private static final TargetedItemGroupFiller FILLER = new TargetedItemGroupFiller(() -> Items.TOTEM_OF_UNDYING);
 	private final float attackDamage;
-	private final float attackSpeed;
+	private final Multimap<Attribute, AttributeModifier> defaultModifiers;
 
 	public CleaverOfBeheadingItem(IItemTier tier, float attackDamage, float attackSpeed, Properties properties) {
-		super(tier, 6, attackSpeed, properties);
-		this.attackDamage = attackDamage;
-		this.attackSpeed = attackSpeed;
+		super(tier, properties);
+		this.attackDamage = attackDamage + tier.getAttackDamageBonus();
+		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", attackDamage, AttributeModifier.Operation.ADDITION));
+		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", attackSpeed, AttributeModifier.Operation.ADDITION));
+		this.defaultModifiers = builder.build();
 	}
 
 	@Override
 	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack) {
-		Multimap<Attribute, AttributeModifier> multimap = HashMultimap.create();
-
-		if (slot == EquipmentSlotType.MAINHAND) {
-			multimap.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", this.attackDamage, AttributeModifier.Operation.ADDITION));
-			multimap.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", this.attackSpeed, AttributeModifier.Operation.ADDITION));
-		}
-
-		return multimap;
+		return slot == EquipmentSlotType.MAINHAND ? this.defaultModifiers : super.getAttributeModifiers(slot, stack);
 	}
 
-	@SubscribeEvent
-	public static void onExecutionerCleaverKill(LivingDamageEvent event) {
-		if (event.getSource().getEntity() instanceof LivingEntity && event.getEntity() instanceof PlayerEntity) {
-			LivingEntity wielder = (LivingEntity) event.getSource().getEntity();
-			PlayerEntity targetPlayer = (PlayerEntity) event.getEntity();
-			World world = wielder.level;
+	public float getDamage() {
+		return this.attackDamage;
+	}
 
-			if (wielder.getMainHandItem().getItem() != SRItems.CLEAVER_OF_BEHEADING.get() || targetPlayer == null || targetPlayer.getHealth() - event.getAmount() > 0)
-				return;
+	@Override
+	public boolean canAttackBlock(BlockState state, World world, BlockPos pos, PlayerEntity player) {
+		return !player.isCreative();
+	}
 
-			CompoundNBT skullNbt = new CompoundNBT();
-			skullNbt.putString("SkullOwner", targetPlayer.getName().getString());
-
-			ItemStack stack = new ItemStack(Items.PLAYER_HEAD);
-			stack.setTag(skullNbt);
-
-			if (!world.isClientSide())
-				world.addFreshEntity(new ItemEntity(world, targetPlayer.getX(), targetPlayer.getY(), targetPlayer.getZ(), stack));
+	@Override
+	public float getDestroySpeed(ItemStack stack, BlockState state) {
+		if (state.is(Blocks.COBWEB)) {
+			return 15.0F;
+		} else {
+			Material material = state.getMaterial();
+			return material != Material.PLANT && material != Material.REPLACEABLE_PLANT && material != Material.CORAL && !state.is(BlockTags.LEAVES) && material != Material.VEGETABLE ? 1.0F : 1.5F;
 		}
+	}
+
+	@Override
+	public boolean hurtEnemy(ItemStack stack, LivingEntity enemy, LivingEntity user) {
+		stack.hurtAndBreak(1, user, (player) -> {
+			player.broadcastBreakEvent(EquipmentSlotType.MAINHAND);
+		});
+		return true;
+	}
+
+	@Override
+	public boolean mineBlock(ItemStack stack, World world, BlockState state, BlockPos pos, LivingEntity entity) {
+		if (state.getDestroySpeed(world, pos) != 0.0F) {
+			stack.hurtAndBreak(2, entity, (player) -> {
+				player.broadcastBreakEvent(EquipmentSlotType.MAINHAND);
+			});
+		}
+
+		return true;
+	}
+
+	@Override
+	public boolean isCorrectToolForDrops(BlockState state) {
+		return state.is(Blocks.COBWEB);
+	}
+
+	@Override
+	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+		return super.canApplyAtEnchantingTable(stack, enchantment);
+	}
+
+	@Override
+	public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
+		return super.isBookEnchantable(stack, book);
 	}
 
 	@Override

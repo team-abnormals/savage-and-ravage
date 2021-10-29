@@ -25,8 +25,8 @@ public class SRItems {
 	public static final RegistryObject<Item> GRIEFER_BOOTS = HELPER.createItem("griefer_boots", () -> new GrieferArmorItem(SRTiers.GRIEFER, EquipmentSlotType.FEET, new Item.Properties().tab(ItemGroup.TAB_COMBAT)));
 
 	public static final RegistryObject<Item> WAND_OF_FREEZING = HELPER.createItem("wand_of_freezing", () -> new WandOfFreezingItem(new Item.Properties().durability(250).rarity(Rarity.UNCOMMON).tab(ItemGroup.TAB_COMBAT)));
-	public static final RegistryObject<Item> CLEAVER_OF_BEHEADING = HELPER.createItem("cleaver_of_beheading", () -> new CleaverOfBeheadingItem(SRTiers.CLEAVER, 11.0F, -3.5F, new Item.Properties().rarity(Rarity.UNCOMMON).stacksTo(1).tab(ItemGroup.TAB_COMBAT)));
-	public static final RegistryObject<Item> ELDRITCH_CONCH = HELPER.createItem("eldritch_conch", () -> new EldritchConchItem(new Item.Properties().durability(375).rarity(Rarity.UNCOMMON).tab(ItemGroup.TAB_COMBAT)));
+	public static final RegistryObject<Item> CLEAVER_OF_BEHEADING = HELPER.createItem("cleaver_of_beheading", () -> new CleaverOfBeheadingItem(SRTiers.CLEAVER, 11.0F, -3.4F, new Item.Properties().rarity(Rarity.UNCOMMON).stacksTo(1).tab(ItemGroup.TAB_COMBAT)));
+	public static final RegistryObject<Item> CONCH_OF_CONJURING = HELPER.createItem("conch_of_conjuring", () -> new ConchOfConjuringItem(new Item.Properties().durability(375).rarity(Rarity.UNCOMMON).tab(ItemGroup.TAB_COMBAT)));
 	public static final RegistryObject<Item> MASK_OF_DISHONESTY = HELPER.createItem("mask_of_dishonesty", () -> new MaskOfDishonestyItem(SRTiers.MASK, EquipmentSlotType.HEAD, new Item.Properties().rarity(Rarity.UNCOMMON).tab(ItemGroup.TAB_COMBAT)));
 
 	public static final RegistryObject<AbnormalsSpawnEggItem> SKELETON_VILLAGER_SPAWN_EGG = HELPER.createSpawnEggItem("skeleton_villager", SREntities.SKELETON_VILLAGER::get, 0xAEAEB2, 0x8F8C99);

@@ -27,6 +27,7 @@ import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.ai.goal.RangedCrossbowAttackGoal;
+import net.minecraft.entity.item.ArmorStandEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.*;
@@ -40,26 +41,36 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.NBTUtil;
+import net.minecraft.particles.BlockParticleData;
+import net.minecraft.particles.ParticleTypes;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.Explosion;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
-import net.minecraftforge.event.world.NoteBlockEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.PacketDistributor;
@@ -69,8 +80,7 @@ import java.util.*;
 @Mod.EventBusSubscriber(modid = SavageAndRavage.MOD_ID)
 public class SREvents {
 	public static String POOF_KEY = "minecraft:poof";
-	public static String NOTE_KEY = "minecraft:note";
-
+	public static String NO_KNOCKBACK_KEY = SavageAndRavage.MOD_ID + "no_knockback";
 
 	@SubscribeEvent
 	public static void onEntityJoinWorld(EntityJoinWorldEvent event) {
@@ -163,7 +173,7 @@ public class SREvents {
 					if (creeper.isPowered()) {
 						spores.setCharged(true);
 					}
-					spores.setCloudSize(creeper.isPowered() ? (int) (creeper.getHealth() / 2) : (int) (creeper.getHealth() / 5));
+					spores.setCloudSize((int) (creeper.getHealth() / creeper.getMaxHealth()) * (creeper.isPowered() ? 10 : 4));
 					spores.copyPosition(creeper);
 					creeper.level.addFreshEntity(spores);
 				}
@@ -194,40 +204,78 @@ public class SREvents {
 	}
 
 	@SubscribeEvent
-	public static void onEntityDamage(LivingDamageEvent event) {
-		LivingEntity entity = event.getEntityLiving();
-
-		if (event.getSource().isExplosion()) {
-			double decrease = 0;
-
-			for (EquipmentSlotType slot : EquipmentSlotType.values()) {
-				ItemStack stack = entity.getItemBySlot(slot);
-				Collection<AttributeModifier> modifiers = stack.getAttributeModifiers(slot).get(SRAttributes.EXPLOSIVE_DAMAGE_REDUCTION.get());
-				if (modifiers.isEmpty())
-					continue;
-
-				decrease += modifiers.stream().mapToDouble(AttributeModifier::getAmount).sum();
-				stack.hurtAndBreak(22 - EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLAST_PROTECTION, stack) * 8, entity, onBroken -> onBroken.broadcastBreakEvent(slot));
-			}
-
-			if (decrease == 0)
-				return;
-
-			event.setAmount(event.getAmount() - (float) (event.getAmount() * decrease));
-		}
-
-		IDataManager data = (IDataManager) entity;
-		if (entity instanceof EvokerEntity && SRConfig.COMMON.evokersUseTotems.get()) {
-			if (entity.getHealth() - event.getAmount() <= 0 && event.getSource().getDirectEntity() instanceof ProjectileEntity) {
-				if (data.getValue(SRDataProcessors.TOTEM_SHIELD_TIME) <= 0 && data.getValue(SRDataProcessors.TOTEM_SHIELD_COOLDOWN) <= 0) {
-					event.setCanceled(true);
-					entity.setHealth(2.0F);
-					data.setValue(SRDataProcessors.TOTEM_SHIELD_TIME, 600);
-					if (!entity.level.isClientSide())
-						entity.level.broadcastEntityEvent(entity, (byte) 35);
+	public static void onAttackEntity(AttackEntityEvent event) {
+		PlayerEntity player = event.getPlayer();
+		Entity target = event.getTarget();
+		World world = player.level;
+		if (target instanceof LivingEntity) {
+			ItemStack mainHandStack = player.getMainHandItem();
+			if (mainHandStack.getItem() == SRItems.CLEAVER_OF_BEHEADING.get()) {
+				float attackDamage = (float) player.getAttributeValue(Attributes.ATTACK_DAMAGE);
+				float knockback = (float) player.getAttributeValue(Attributes.ATTACK_KNOCKBACK);
+				knockback += EnchantmentHelper.getKnockbackBonus(player);
+				float enchantDamageBonus = EnchantmentHelper.getDamageBonus(player.getMainHandItem(), ((LivingEntity) target).getMobType());
+				float attackStrength = player.getAttackStrengthScale(0.5F);
+				attackDamage = attackDamage * (0.2F + attackStrength * attackStrength * 0.8F);
+				enchantDamageBonus = enchantDamageBonus * attackStrength;
+				if ((attackDamage > 0.0F || enchantDamageBonus > 0.0F) && attackStrength > 0.9F) {
+					if (!player.isSprinting() && player.isOnGround() && (player.walkDist - player.walkDistO) < (double) player.getSpeed()) {
+						boolean shouldCrit = player.fallDistance > 0.0F && !player.isOnGround() && !player.onClimbable() && !player.isInWater() && !player.hasEffect(Effects.BLINDNESS) && !player.isPassenger();
+						if (ForgeHooks.getCriticalHit(player, target, shouldCrit, shouldCrit ? 1.5F : 1.0F) == null) {
+							target.getPersistentData().putBoolean(NO_KNOCKBACK_KEY, true);
+							AxisAlignedBB targetBox = target.getBoundingBox().inflate(0.0D, 0.25D, 0.0D);
+							Vector3d center = targetBox.getCenter();
+							double halfYLength = targetBox.getYsize();
+							AxisAlignedBB shockwaveBox = new AxisAlignedBB(center.add(1.5D, halfYLength, 1.5D), center.subtract(1.5D, halfYLength, 1.5D));
+							for (LivingEntity pushed : world.getEntitiesOfClass(LivingEntity.class, shockwaveBox)) {
+								if (pushed != player && pushed != target && !player.isAlliedTo(pushed) && (!(pushed instanceof ArmorStandEntity) || !((ArmorStandEntity) pushed).isMarker()) && player.distanceToSqr(pushed) < 9.0D) {
+									pushed.knockback(0.4F + (knockback * 0.5F), MathHelper.sin(player.yRot * ((float) Math.PI / 180F)), -MathHelper.cos(player.yRot * ((float) Math.PI / 180F)));
+									if (pushed.isAffectedByPotions() && !pushed.hasEffect(Effects.MOVEMENT_SLOWDOWN))
+										pushed.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 10, 2));
+								}
+							}
+							BlockPos.Mutable checkingPos = new BlockPos.Mutable();
+							Random random = world.getRandom();
+							if (!world.isClientSide) {
+								for (int i = 0; i < 100; i++) {
+									double x = shockwaveBox.minX + (random.nextDouble() * (shockwaveBox.maxX-shockwaveBox.minX));
+									double z = shockwaveBox.minZ + (random.nextDouble() * (shockwaveBox.maxZ-shockwaveBox.minZ));
+									int minY = MathHelper.floor(shockwaveBox.minY);
+									//TODO review max y problem
+									for (int y = minY; y < MathHelper.floor(shockwaveBox.maxY); y++) {
+										checkingPos.set(MathHelper.floor(x), MathHelper.floor(y), MathHelper.floor(z));
+										if (!isEmptySpace(world, checkingPos)) {
+											checkingPos.move(Direction.UP);
+											if (isEmptySpace(world, checkingPos)) {
+												checkingPos.move(Direction.DOWN);
+												BlockState state = world.getBlockState(checkingPos);
+												((ServerWorld) world).sendParticles(new BlockParticleData(ParticleTypes.BLOCK, state).setPos(checkingPos), x, y + state.getShape(world, checkingPos).max(Direction.Axis.Y), z, 0, 0.0D, 0.0D, 0.0D, 0.15D);
+												break;
+											}
+										}
+									}
+								}
+								double xAngle = -MathHelper.sin(player.yRot * ((float) Math.PI / 180F));
+								double zAngle = MathHelper.cos(player.yRot * ((float) Math.PI / 180F));
+								((ServerWorld) world).sendParticles(SRParticles.CLEAVER_SWEEP.get(), player.getX() + xAngle, player.getY(0.5D), player.getZ() + zAngle, 0, xAngle, 0.0D, zAngle, 0.0D);
+							}
+							world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.PLAYER_ATTACK_SWEEP, player.getSoundSource(), 1.0F, 1.0F);
+						}
+					}
 				}
 			}
 		}
+	}
+
+	@SuppressWarnings("deprecation") //1.17
+	public static boolean isEmptySpace(IBlockReader world, BlockPos pos) {
+		return world.getBlockState(pos).isAir(world, pos) || !world.getFluidState(pos).isEmpty();
+	}
+
+	@SubscribeEvent
+	public static void onLivingKnockback(LivingKnockBackEvent event) {
+		if (event.getEntity().getPersistentData().getBoolean(NO_KNOCKBACK_KEY))
+			event.setCanceled(true);
 	}
 
 	@SubscribeEvent
@@ -237,6 +285,78 @@ public class SREvents {
 			if (TrackedDataManager.INSTANCE.getValue(entity, SRDataProcessors.TOTEM_SHIELD_TIME) > 0) {
 				if (event.getSource().getDirectEntity() instanceof ProjectileEntity)
 					event.setCanceled(true);
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public static void onLivingDamage(LivingDamageEvent event) {
+		LivingEntity target = event.getEntityLiving();
+
+		if (event.getSource().isExplosion()) {
+			double decrease = 0;
+
+			for (EquipmentSlotType slot : EquipmentSlotType.values()) {
+				ItemStack stack = target.getItemBySlot(slot);
+				Collection<AttributeModifier> modifiers = stack.getAttributeModifiers(slot).get(SRAttributes.EXPLOSIVE_DAMAGE_REDUCTION.get());
+				if (modifiers.isEmpty())
+					continue;
+
+				decrease += modifiers.stream().mapToDouble(AttributeModifier::getAmount).sum();
+				stack.hurtAndBreak(22 - EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLAST_PROTECTION, stack) * 8, target, onBroken -> onBroken.broadcastBreakEvent(slot));
+			}
+
+			if (decrease != 0)
+				event.setAmount(event.getAmount() - (float) (event.getAmount() * decrease));
+		}
+	}
+
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public static void onLivingDamageDelayed(LivingDamageEvent event) {
+		LivingEntity target = event.getEntityLiving();
+		LivingEntity wielder = (LivingEntity) event.getSource().getEntity();
+		if (wielder != null && wielder.getMainHandItem().getItem() == SRItems.CLEAVER_OF_BEHEADING.get()) {
+			if (target instanceof PlayerEntity) {
+				PlayerEntity targetPlayer = (PlayerEntity) event.getEntity();
+				if (targetPlayer != null && targetPlayer.getHealth() - event.getAmount() <= 0) {
+					ItemStack stack = new ItemStack(Items.PLAYER_HEAD);
+					stack.addTagElement("SkullOwner", NBTUtil.writeGameProfile(new CompoundNBT(), targetPlayer.getGameProfile()));
+					target.spawnAtLocation(stack);
+				}
+			}
+			//TODO charged cleaver head drop stuff
+		}
+		if (target instanceof EvokerEntity && SRConfig.COMMON.evokersUseTotems.get()) {
+			IDataManager data = (IDataManager) target;
+			if (target.getHealth() - event.getAmount() <= 0 && event.getSource().getDirectEntity() instanceof ProjectileEntity) {
+				if (data.getValue(SRDataProcessors.TOTEM_SHIELD_TIME) <= 0 && data.getValue(SRDataProcessors.TOTEM_SHIELD_COOLDOWN) <= 0) {
+					event.setCanceled(true);
+					target.setHealth(2.0F);
+					data.setValue(SRDataProcessors.TOTEM_SHIELD_TIME, 600);
+					if (!target.level.isClientSide())
+						target.level.broadcastEntityEvent(target, (byte) 35);
+				}
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public static void onProjectileImpact(ProjectileImpactEvent event) {
+		RayTraceResult result = event.getRayTraceResult();
+		if (result instanceof BlockRayTraceResult) {
+			BlockRayTraceResult blockResult = (BlockRayTraceResult) result;
+			Entity entity = event.getEntity();
+			if (entity.level.getBlockState(blockResult.getBlockPos()).is(Blocks.TARGET)) {
+				if (!entity.level.isClientSide()) {
+					IDataManager data = (IDataManager) entity;
+					UUID id = data.getValue(SRDataProcessors.CROSSBOW_OWNER).orElse(null);
+					if (id != null) {
+						Entity crossbowOwner = ((ServerWorld) entity.level).getEntity(id);
+						if (crossbowOwner instanceof AbstractRaiderEntity)
+							TrackedDataManager.INSTANCE.setValue(crossbowOwner, SRDataProcessors.TARGET_HIT, true);
+						data.setValue(SRDataProcessors.CROSSBOW_OWNER, Optional.empty());
+					}
+				}
 			}
 		}
 	}
@@ -320,6 +440,9 @@ public class SREvents {
 		if (entity.getRemainingFireTicks() > 0 && entity.getEffect(SREffects.FROSTBITE.get()) != null)
 			entity.removeEffect(SREffects.FROSTBITE.get());
 		if (!world.isClientSide()) {
+			CompoundNBT persistentData = entity.getPersistentData();
+			if (persistentData.getBoolean(NO_KNOCKBACK_KEY))
+				persistentData.putBoolean(NO_KNOCKBACK_KEY, false);
 			if (entity instanceof AbstractRaiderEntity) {
 				int celebrationTime = data.getValue(SRDataProcessors.CELEBRATION_TIME);
 				if (celebrationTime > 0)
@@ -359,42 +482,6 @@ public class SREvents {
 			}
 			event.modifyVisibility(1 / armorCover); //potentially slightly inaccurate
 			event.modifyVisibility(0.1);
-		}
-	}
-
-	@SubscribeEvent
-	public static void onProjectileImpact(ProjectileImpactEvent event) {
-		RayTraceResult result = event.getRayTraceResult();
-		if (result instanceof BlockRayTraceResult) {
-			BlockRayTraceResult blockResult = (BlockRayTraceResult) result;
-			Entity entity = event.getEntity();
-			if (entity.level.getBlockState(blockResult.getBlockPos()).is(Blocks.TARGET)) {
-				if (!entity.level.isClientSide()) {
-					IDataManager data = (IDataManager) entity;
-					UUID id = data.getValue(SRDataProcessors.CROSSBOW_OWNER).orElse(null);
-					if (id != null) {
-						Entity crossbowOwner = ((ServerWorld) entity.level).getEntity(id);
-						if (crossbowOwner instanceof AbstractRaiderEntity)
-							TrackedDataManager.INSTANCE.setValue(crossbowOwner, SRDataProcessors.TARGET_HIT, true);
-						data.setValue(SRDataProcessors.CROSSBOW_OWNER, Optional.empty());
-					}
-				}
-			}
- 		}
-	}
-
-	@SubscribeEvent
-	public static void onNoteBlockPlay(NoteBlockEvent.Play event) {
-		BlockPos pos = event.getPos();
-		BlockState state = event.getWorld().getBlockState(pos.relative(Direction.DOWN));
-		SoundEvent sound = state.is(Blocks.TARGET) ? SRSounds.BLOCK_NOTE_BLOCK_HIT_MARKER.get() : state.is(SRTags.GLOOMY_TILES) ? SRSounds.BLOCK_NOTE_BLOCK_HARPSICHORD.get() : state.is(SRTags.BLAST_PROOF) ? SRSounds.BLOCK_NOTE_BLOCK_ORCHESTRAL_HIT.get() : null;
-		if (sound != null) {
-			World world = (World) event.getWorld();
-			double note = event.getVanillaNoteId();
-			event.getWorld().playSound(null, pos, sound, SoundCategory.RECORDS, 3.0F, (float) Math.pow(2.0D, (note - 12) / 12.0D));
-			if (!event.getWorld().isClientSide())
-				AbnormalsCore.CHANNEL.send(PacketDistributor.DIMENSION.with(world::dimension), new MessageS2CSpawnParticle(NOTE_KEY, pos.getX() + 0.5D, pos.getY() + 1.2D, pos.getZ() + 0.5D, note / 24.0D, 0.0D, 0.0D));
-			event.setCanceled(true);
 		}
 	}
 

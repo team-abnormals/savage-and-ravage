@@ -75,7 +75,7 @@ public class ConfusionBoltEntity extends ThrowableEntity {
 	public void tick() {
 		Vector3d deltaMovement = this.getDeltaMovement();
 		super.tick();
-		this.setDeltaMovement(deltaMovement); //Undo tampering by superclass
+		this.setDeltaMovement(deltaMovement); //Undoes tampering by superclass
 		spawnGaussianParticles(this.level, this.getBoundingBox(), SRParticles.CONFUSION_BOLT.getId().toString(), 5);
 		this.entityData.set(TICKS_TILL_REMOVE, this.entityData.get(TICKS_TILL_REMOVE) - 1);
 		if (this.entityData.get(TICKS_TILL_REMOVE) <= 0)

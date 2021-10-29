@@ -6,6 +6,7 @@ import com.minecraftabnormals.savageandravage.common.entity.MischiefArrowEntity;
 import com.minecraftabnormals.savageandravage.common.entity.SporeCloudEntity;
 import com.minecraftabnormals.savageandravage.common.entity.block.SporeBombEntity;
 import com.minecraftabnormals.savageandravage.common.item.CreeperSporesItem;
+import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 import com.minecraftabnormals.savageandravage.core.registry.SRBlocks;
 import com.minecraftabnormals.savageandravage.core.registry.SRItems;
 import net.minecraft.block.DispenserBlock;
@@ -70,12 +71,8 @@ public class SRCompat {
 				return stack;
 			}
 		});
-	}
-
-	//TODO move to static{} after AC update
-	public static void registerAlternativeDispenseBehaviors() {
-		ForgeRegistries.ITEMS.getEntries().stream().map(Map.Entry::getValue).filter(i -> i instanceof BannerItem).forEach(i -> DataUtil.registerAlternativeDispenseBehavior(i, (source, stack) -> !getEntitiesAtOffsetPos(source, LivingEntity.class, EntityPredicates.NO_SPECTATORS.and(new EntityPredicates.ArmoredMob(stack))).isEmpty(), ArmorItem.DISPENSE_ITEM_BEHAVIOR));
-		DataUtil.registerAlternativeDispenseBehavior(Items.FLINT_AND_STEEL, (source, stack) -> SREvents.isValidBurningBannerPos(source.getLevel(), offsetPos(source)), new DefaultDispenseItemBehavior() {
+		ForgeRegistries.ITEMS.getEntries().stream().map(Map.Entry::getValue).filter(i -> i instanceof BannerItem).forEach(i -> DataUtil.registerAlternativeDispenseBehavior(new DataUtil.AlternativeDispenseBehavior(SavageAndRavage.MOD_ID, i, (source, stack) -> !getEntitiesAtOffsetPos(source, LivingEntity.class, EntityPredicates.NO_SPECTATORS.and(new EntityPredicates.ArmoredMob(stack))).isEmpty(), ArmorItem.DISPENSE_ITEM_BEHAVIOR, (id1, id2) -> id2.equals("quark") ? 1 : 0)));
+		DataUtil.registerAlternativeDispenseBehavior(new DataUtil.AlternativeDispenseBehavior(SavageAndRavage.MOD_ID, Items.FLINT_AND_STEEL, (source, stack) -> SREvents.isValidBurningBannerPos(source.getLevel(), offsetPos(source)), new DefaultDispenseItemBehavior() {
 			@Override
 			protected ItemStack execute(IBlockSource source, ItemStack stack) {
 				World world = source.getLevel();
@@ -85,6 +82,6 @@ public class SRCompat {
 				}
 				return stack;
 			}
-		});
+		}));
 	}
 }

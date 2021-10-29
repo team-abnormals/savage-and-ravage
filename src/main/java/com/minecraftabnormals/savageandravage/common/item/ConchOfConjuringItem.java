@@ -18,10 +18,10 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.World;
 
-public class EldritchConchItem extends Item {
+public class ConchOfConjuringItem extends Item {
 	private static final TargetedItemGroupFiller FILLER = new TargetedItemGroupFiller(() -> Items.TOTEM_OF_UNDYING);
 
-	public EldritchConchItem(Properties properties) {
+	public ConchOfConjuringItem(Properties properties) {
 		super(properties);
 	}
 

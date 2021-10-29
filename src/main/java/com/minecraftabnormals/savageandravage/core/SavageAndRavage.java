@@ -7,6 +7,7 @@ import com.minecraftabnormals.savageandravage.core.other.SRCompat;
 import com.minecraftabnormals.savageandravage.core.other.SRDataProcessors;
 import com.minecraftabnormals.savageandravage.core.other.SRDataSerializers;
 import com.minecraftabnormals.savageandravage.core.other.SRFeatures;
+import com.minecraftabnormals.savageandravage.core.other.SRNoteBlocks;
 import com.minecraftabnormals.savageandravage.core.registry.*;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -45,7 +46,6 @@ public class SavageAndRavage {
 
 		bus.addListener(this::commonSetup);
 		bus.addListener(this::clientSetup);
-		bus.addListener(EventPriority.LOWEST, this::postLoadSetup);
 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 			bus.addListener(this::registerModels);
@@ -59,10 +59,11 @@ public class SavageAndRavage {
 	private void commonSetup(FMLCommonSetupEvent event) {
 		event.enqueueWork(() -> {
 			SREntities.registerEntitySpawns();
+			SREntities.registerWaveMembers();
 			SRFeatures.registerPools();
 			SRFeatures.registerBiomeModifications();
-			SREntities.registerWaveMembers();
 			SRCompat.registerCompat();
+			SRNoteBlocks.registerNoteBlocks();
 		});
 	}
 
@@ -72,10 +73,6 @@ public class SavageAndRavage {
 			SRItems.registerItemProperties();
 			SREntities.registerRenderLayers();
 		});
-	}
-
-	private void postLoadSetup(FMLLoadCompleteEvent event) {
-		event.enqueueWork(SRCompat::registerAlternativeDispenseBehaviors);
 	}
 
 	private void registerModels(ModelRegistryEvent event) {

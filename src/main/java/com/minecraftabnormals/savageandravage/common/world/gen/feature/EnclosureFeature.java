@@ -112,7 +112,7 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 	 * Like isAreaClear, but it only checks one position and two y levels - ground and the block above
 	 */
 	private boolean isSurfacePositionClear(ISeedReader reader, BlockPos pos) {
-		// This is a quick fix to stop decorations from intersecting outposts. It's not ideal as it restricts decoration positions decoration positions in certain directions where they shouldn't be restricted.
+		// This is a quick fix to stop decorations from intersecting outposts. It's not ideal as it restricts decoration positions in certain directions where they shouldn't be restricted.
 		// If enclosure placement could be deferred until the other jigsaw blocks are placed, this would be obsolete.
 		if (Math.abs(originalStartPos.getX() - pos.getX()) < 12 && Math.abs(originalStartPos.getZ() - pos.getZ()) < 12) {
 			if (!(reader.getBlockState(pos).isSolidRender(reader, pos))) {
@@ -169,7 +169,7 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 	}
 
 	/**
-	 * Generates the blocks at drop off positions, updating the edge positions with the failed drop offs
+	 * Generates the blocks at drop off positions, updating the edge positions with the failed drop-offs
 	 */
 	private void generateEdges(ArrayList<BlockPos> edgePositions, ISeedReader reader, Random rand) {
 		for (BlockPos edgePos : edgePositions) {
@@ -184,7 +184,7 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 	private ArrayList<BlockPos> findOutlines(ArrayList<BlockPos> edgePositions, ArrayList<BlockPos> holePositions, ISeedReader reader) {
 		ArrayList<BlockPos> outlinePositions = new ArrayList<>();
 		for (BlockPos edgePos : edgePositions) {
-			// The rotate y stuff is used to get diagonal neighbours, is there a better way?
+			// The rotating y direction stuff is used to get diagonal neighbours, is there a better way?
 			for (Direction dir : horizontalDirections) {
 				currentPos.set(edgePos.relative(dir));
 				if (!edgePositions.contains(currentPos) && !holePositions.contains(currentPos) && !(reader.getBlockState(currentPos).isSolidRender(reader, currentPos))) {
