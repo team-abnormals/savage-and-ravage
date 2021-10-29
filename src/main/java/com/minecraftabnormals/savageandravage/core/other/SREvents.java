@@ -159,24 +159,25 @@ public class SREvents {
 	public static void onExplosion(ExplosionEvent.Detonate event) {
 		World world = event.getWorld();
 		Explosion explosion = event.getExplosion();
-		if (explosion.getSourceMob() != null) {
-			if (explosion.getSourceMob().getType() == EntityType.CREEPER) {
-				if (!SRConfig.COMMON.creeperExplosionsDestroyBlocks.get())
-					event.getAffectedBlocks().clear();
-				if (SRConfig.COMMON.creeperExplosionsSpawnCreepies.get()) {
-					CreeperEntity creeper = (CreeperEntity) explosion.getSourceMob();
-					SporeCloudEntity spores = SREntities.SPORE_CLOUD.get().create(world);
-					if (spores == null)
-						return;
-					spores.setSpawnCloudInstantly(true);
-					spores.creepiesAttackPlayersOnly(true);
-					if (creeper.isPowered()) {
-						spores.setCharged(true);
-					}
-					spores.setCloudSize((int) (creeper.getHealth() / creeper.getMaxHealth()) * (creeper.isPowered() ? 10 : 4));
-					spores.copyPosition(creeper);
-					creeper.level.addFreshEntity(spores);
+		LivingEntity sourceEntity = explosion.getSourceMob();
+		boolean isCreeper = sourceEntity != null && sourceEntity.getType() == EntityType.CREEPER;
+		boolean isCreepie = sourceEntity != null && sourceEntity.getType() == SREntities.CREEPIE.get();
+		if (isCreeper) {
+			if (!SRConfig.COMMON.creeperExplosionsDestroyBlocks.get())
+				event.getAffectedBlocks().clear();
+			if (SRConfig.COMMON.creeperExplosionsSpawnCreepies.get()) {
+				CreeperEntity creeper = (CreeperEntity) explosion.getSourceMob();
+				SporeCloudEntity spores = SREntities.SPORE_CLOUD.get().create(world);
+				if (spores == null)
+					return;
+				spores.setSpawnCloudInstantly(true);
+				spores.creepiesAttackPlayersOnly(true);
+				if (creeper.isPowered()) {
+					spores.setCharged(true);
 				}
+				spores.setCloudSize((int) (creeper.getHealth() / creeper.getMaxHealth()) * (creeper.isPowered() ? 10 : 4));
+				spores.copyPosition(creeper);
+				creeper.level.addFreshEntity(spores);
 			}
 		}
 
@@ -192,15 +193,22 @@ public class SREvents {
 		}
 
 		List<Entity> safeItems = new ArrayList<>();
-		for (Entity entity : event.getAffectedEntities()) {
-			if (entity instanceof ItemEntity) {
-				ItemStack itemstack = ((ItemEntity) entity).getItem();
-				if (itemstack.getItem().is(SRTags.BLAST_PROOF_ITEMS)) {
-					safeItems.add(entity);
-				}
-			}
-		}
+		for (Entity entity : event.getAffectedEntities())
+			if (entitySafeFromExplosion(entity, isCreeper ? !SRConfig.COMMON.creeperExplosionsDestroyBlocks.get() : isCreepie && !SRConfig.COMMON.creepieExplosionsDestroyBlocks.get()))
+				safeItems.add(entity);
 		event.getAffectedEntities().removeAll(safeItems);
+	}
+
+	public static boolean entitySafeFromExplosion(Entity entity, boolean creeperTypeNoGriefing) {
+		boolean safe = false;
+		if (creeperTypeNoGriefing && entity.getType().is(SRTags.CREEPER_BLAST_PROOF_ENTITIES))
+			safe = true;
+		else if (entity instanceof ItemEntity) {
+			ItemStack stack = ((ItemEntity) entity).getItem();
+			if (creeperTypeNoGriefing || stack.getItem().is(SRTags.BLAST_PROOF_ITEMS))
+				safe = true;
+		}
+		return safe;
 	}
 
 	@SubscribeEvent
@@ -324,7 +332,6 @@ public class SREvents {
 					target.spawnAtLocation(stack);
 				}
 			}
-			//TODO charged cleaver head drop stuff
 		}
 		if (target instanceof EvokerEntity && SRConfig.COMMON.evokersUseTotems.get()) {
 			IDataManager data = (IDataManager) target;
