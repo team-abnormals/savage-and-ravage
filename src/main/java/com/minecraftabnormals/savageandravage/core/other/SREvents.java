@@ -1,9 +1,8 @@
 package com.minecraftabnormals.savageandravage.core.other;
 
-import com.minecraftabnormals.abnormals_core.common.network.particle.MessageS2CSpawnParticle;
 import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.IDataManager;
 import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.TrackedDataManager;
-import com.minecraftabnormals.abnormals_core.core.AbnormalsCore;
+import com.minecraftabnormals.abnormals_core.core.util.NetworkUtil;
 import com.minecraftabnormals.savageandravage.common.entity.*;
 import com.minecraftabnormals.savageandravage.common.entity.block.SporeBombEntity;
 import com.minecraftabnormals.savageandravage.common.entity.goals.CelebrateTargetBlockHitGoal;
@@ -73,7 +72,6 @@ import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.util.*;
 
@@ -249,7 +247,7 @@ public class SREvents {
 									double x = shockwaveBox.minX + (random.nextDouble() * (shockwaveBox.maxX-shockwaveBox.minX));
 									double z = shockwaveBox.minZ + (random.nextDouble() * (shockwaveBox.maxZ-shockwaveBox.minZ));
 									int minY = MathHelper.floor(shockwaveBox.minY);
-									//TODO review max y problem
+									//max y might be an issue for some mobs
 									for (int y = minY; y < MathHelper.floor(shockwaveBox.maxY); y++) {
 										checkingPos.set(MathHelper.floor(x), MathHelper.floor(y), MathHelper.floor(z));
 										if (!isEmptySpace(world, checkingPos)) {
@@ -504,7 +502,7 @@ public class SREvents {
 			double x = box.min(Direction.Axis.X) + (random.nextFloat() * box.getXsize());
 			double y = box.min(Direction.Axis.Y) + (random.nextFloat() * box.getYsize());
 			double z = box.min(Direction.Axis.Z) + (random.nextFloat() * box.getZsize());
-			AbnormalsCore.CHANNEL.send(PacketDistributor.DIMENSION.with(world::dimension), new MessageS2CSpawnParticle(POOF_KEY, x, y, z, 0.0D, 0.0D, 0.0D));
+			NetworkUtil.spawnParticle(POOF_KEY, world.dimension(), x, y, z, 0.0D, 0.0D, 0.0D);
 		}
 	}
 
