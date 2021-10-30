@@ -6,9 +6,12 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.entity.monster.MonsterEntity;
+import net.minecraft.entity.monster.RavagerEntity;
 import net.minecraft.entity.monster.VindicatorEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
@@ -34,12 +37,22 @@ public class ExecutionerEntity extends VindicatorEntity {
 		}
 	}
 
+	@Override
+	protected void registerGoals() {
+		super.registerGoals();
+		this.goalSelector.availableGoals.stream().map(g -> g.goal).filter(goal -> goal instanceof MeleeAttackGoal).findFirst().ifPresent(goal -> {
+				this.goalSelector.removeGoal(goal);
+				this.goalSelector.addGoal(4, new AttackGoal(this, 1.0D));
+		});
+
+	}
+
 	public static AttributeModifierMap.MutableAttribute registerAttributes() {
 		return MonsterEntity.createMonsterAttributes()
 				.add(Attributes.MOVEMENT_SPEED, 0.30F)
 				.add(Attributes.FOLLOW_RANGE, 14.0D)
 				.add(Attributes.MAX_HEALTH, 35.0D)
-				.add(Attributes.ATTACK_DAMAGE, 7.0D)
+				.add(Attributes.ATTACK_DAMAGE, 1.0D)
 				.add(Attributes.ARMOR, 3.0D);
 	}
 
@@ -68,5 +81,30 @@ public class ExecutionerEntity extends VindicatorEntity {
 
 		this.setItemSlot(EquipmentSlotType.MAINHAND, itemstack);
 		this.handDropChances[EquipmentSlotType.MAINHAND.getIndex()] = 0.5F;
+	}
+
+	static class AttackGoal extends MeleeAttackGoal {
+		public AttackGoal(VindicatorEntity p_i50577_2_, double speedModifier) {
+			super(p_i50577_2_, speedModifier, false);
+		}
+
+		protected double getAttackReachSqr(LivingEntity p_179512_1_) {
+			if (this.mob.getVehicle() instanceof RavagerEntity) {
+				float f = this.mob.getVehicle().getBbWidth() - 0.1F;
+				return f * 2.0F * f * 2.0F + p_179512_1_.getBbWidth();
+			} else {
+				return super.getAttackReachSqr(p_179512_1_);
+			}
+		}
+
+		@Override
+		protected void resetAttackCooldown() {
+			this.ticksUntilNextAttack = this.getAttackInterval();
+		}
+
+		@Override
+		protected int getAttackInterval() {
+			return 50;
+		}
 	}
 }
