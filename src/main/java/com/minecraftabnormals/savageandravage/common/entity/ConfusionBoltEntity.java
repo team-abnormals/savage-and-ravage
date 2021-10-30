@@ -1,7 +1,5 @@
 package com.minecraftabnormals.savageandravage.common.entity;
 
-import com.minecraftabnormals.abnormals_core.common.network.particle.MessageS2CSpawnParticle;
-import com.minecraftabnormals.abnormals_core.core.AbnormalsCore;
 import com.minecraftabnormals.abnormals_core.core.util.NetworkUtil;
 import com.minecraftabnormals.savageandravage.core.other.SREvents;
 import com.minecraftabnormals.savageandravage.core.registry.SRBlocks;
@@ -31,7 +29,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
-import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.util.List;
 import java.util.Random;
@@ -97,7 +94,7 @@ public class ConfusionBoltEntity extends ThrowableEntity {
 			double x = box.min(Direction.Axis.X) + ((0.5 + (random.nextGaussian() * 0.25)) * box.getXsize());
 			double y = box.min(Direction.Axis.Y) + ((0.5 + (random.nextGaussian() * 0.25)) * box.getYsize());
 			double z = box.min(Direction.Axis.Z) + ((0.5 + (random.nextGaussian() * 0.25)) * box.getZsize());
-			AbnormalsCore.CHANNEL.send(PacketDistributor.DIMENSION.with(world::dimension), new MessageS2CSpawnParticle(name, x, y, z, 0.0D, 0.0D, 0.0D));
+			NetworkUtil.spawnParticle(name, world.dimension(), x, y, z, 0.0D, 0.0D, 0.0D);
 		}
 	}
 
@@ -141,7 +138,7 @@ public class ConfusionBoltEntity extends ThrowableEntity {
 				pos.move(direction);
 				if (!this.level.getBlockState(pos).isSolidRender(this.level, pos))
 					for (int i = 0; i < 3; i++)
-						AbnormalsCore.CHANNEL.send(PacketDistributor.DIMENSION.with(this.level::dimension), new MessageS2CSpawnParticle(SRParticles.RUNE.getId().toString(), pos.getX() + random.nextDouble(), pos.getY() + 0.25, pos.getZ() + random.nextDouble(), 0.0D, 0.0D, 0.0D));
+						NetworkUtil.spawnParticle(SRParticles.RUNE.getId().toString(), this.level.dimension(), pos.getX() + random.nextDouble(), pos.getY() + 0.25, pos.getZ() + random.nextDouble(), 0.0D, 0.0D, 0.0D);
 				pos.move(direction.getOpposite());
 			}
 		}

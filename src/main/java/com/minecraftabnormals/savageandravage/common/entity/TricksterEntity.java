@@ -4,6 +4,7 @@ import com.minecraftabnormals.abnormals_core.common.network.particle.MessageS2CS
 import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.IDataManager;
 import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.TrackedDataManager;
 import com.minecraftabnormals.abnormals_core.core.AbnormalsCore;
+import com.minecraftabnormals.abnormals_core.core.util.NetworkUtil;
 import com.minecraftabnormals.savageandravage.common.block.RunedGloomyTilesBlock;
 import com.minecraftabnormals.savageandravage.core.other.SRDataProcessors;
 import com.minecraftabnormals.savageandravage.core.other.SRDataSerializers;
@@ -213,7 +214,7 @@ public class TricksterEntity extends SpellcastingIllagerEntity implements ITrack
 										searchPos.move(Direction.UP);
 										if (!this.level.getBlockState(searchPos).isSolidRender(this.level, searchPos)) {
 											for (int i = 0; i < 3; i++)
-												AbnormalsCore.CHANNEL.send(PacketDistributor.DIMENSION.with(this.level::dimension), new MessageS2CSpawnParticle(SRParticles.RUNE.getId().toString(), x + random.nextDouble(), y + 1.25, z + random.nextDouble(), 0.0D, 0.0D, 0.0D));
+												NetworkUtil.spawnParticle(SRParticles.RUNE.getId().toString(), this.level.dimension(), x + random.nextDouble(), y + 1.25, z + random.nextDouble(), 0.0D, 0.0D, 0.0D);
 										}
 									}
 								}
