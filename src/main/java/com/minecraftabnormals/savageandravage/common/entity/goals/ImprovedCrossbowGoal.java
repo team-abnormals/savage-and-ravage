@@ -75,7 +75,7 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
         if (this.hasCrossbowOnMainHand()) {
             if (this.hasAttackTarget())
                 return true;
-            else if (this.isNotCelebratingIfApplicable()) {
+            else if (this.noCelebrationAndNoRaid()) {
                 if (this.practisingTicks > 0)
                     return true;
                 else if (this.ticksTillSearch > 0) {
@@ -92,7 +92,7 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 
     @Override
     public boolean canContinueToUse() {
-        return (this.hasAttackTarget() || (this.practisingTicks > 0 && this.isValidTarget(this.mob.level, this.blockPos))) && this.isNotCelebratingIfApplicable();
+        return this.hasAttackTarget() || (this.practisingTicks > 0 && this.isValidTarget(this.mob.level, this.blockPos) && this.noCelebrationAndNoRaid());
     }
 
     @Override
@@ -194,13 +194,13 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
                 this.crossbowState = ImprovedCrossbowGoal.CrossbowState.READY_TO_ATTACK;
             }
         } else if (this.crossbowState == ImprovedCrossbowGoal.CrossbowState.READY_TO_ATTACK && canSeeEnemy) {
-                this.performRangedAttack(target != null ? target.position() : this.blockPosVector.add(0.5D, 0.0D, 0.5D));
+            this.performRangedAttack(target != null ? target.position() : this.blockPosVector.add(0.5D, 0.0D, 0.5D));
             CrossbowItem.setCharged(this.mob.getItemInHand(ProjectileHelper.getWeaponHoldingHand(this.mob, item -> item instanceof CrossbowItem)), false);
             this.crossbowState = ImprovedCrossbowGoal.CrossbowState.UNCHARGED;
         }
     }
 
-    private boolean isNotCelebratingIfApplicable() {
+    private boolean noCelebrationAndNoRaid() {
         if (this.mob instanceof AbstractRaiderEntity)
             return ((ServerWorld) this.mob.level).getRaidAt(this.mob.blockPosition()) == null && !(this.mob.getEntityData().get(((IRaiderAccessor) this.mob).getIsCelebrating()));
         return true;
@@ -300,9 +300,7 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
         boolean isFirework = projectileStack.getItem() == Items.FIREWORK_ROCKET;
         ProjectileEntity projectile = isFirework ? new FireworkRocketEntity(world, projectileStack, shooter, shooter.getX(), shooter.getEyeY() - (double) 0.15F, shooter.getZ(), true) : CrossbowItem.getArrow(world, shooter, weapon, projectileStack);
         this.shootCrossbowProjectile(shooter, targetPos, projectile, yaw, isFirework);
-        weapon.hurtAndBreak(isFirework ? 3 : 1, shooter, (p_220017_1_) -> {
-            p_220017_1_.broadcastBreakEvent(hand);
-        });
+        weapon.hurtAndBreak(isFirework ? 3 : 1, shooter, (s) -> s.broadcastBreakEvent(hand));
         world.addFreshEntity(projectile);
         world.playSound(null, shooter.getX(), shooter.getY(), shooter.getZ(), SoundEvents.CROSSBOW_SHOOT, SoundCategory.PLAYERS, 1.0F, soundPitch);
         return projectile;
