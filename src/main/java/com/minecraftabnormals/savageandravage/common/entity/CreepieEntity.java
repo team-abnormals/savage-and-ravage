@@ -149,8 +149,10 @@ public class CreepieEntity extends MonsterEntity implements IChargeableMob, IOwn
 		super.readAdditionalSaveData(compound);
 		if (compound.contains("Fuse", 99)) {
 			this.fuseTime = compound.getShort("Fuse");
+		}      
+		if (compound.contains("ExplosionRadius", 99)) {
+			this.explosionRadius = compound.getByte("ExplosionRadius");
 		}
-		this.explosionRadius = compound.getByte("ExplosionRadius");
 		if (compound.contains("Age", 99)) {
 			this.setGrowingAge(compound.getInt("Age"));
 		}
