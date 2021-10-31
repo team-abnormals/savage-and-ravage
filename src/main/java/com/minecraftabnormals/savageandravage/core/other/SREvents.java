@@ -320,8 +320,8 @@ public class SREvents {
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public static void onLivingDamageDelayed(LivingDamageEvent event) {
 		LivingEntity target = event.getEntityLiving();
-		LivingEntity wielder = (LivingEntity) event.getSource().getEntity();
-		if (wielder != null && wielder.getMainHandItem().getItem() == SRItems.CLEAVER_OF_BEHEADING.get()) {
+		Entity attacker = event.getSource().getEntity();
+		if (attacker instanceof LivingEntity && ((LivingEntity) attacker).getMainHandItem().getItem() == SRItems.CLEAVER_OF_BEHEADING.get()) {
 			if (target instanceof PlayerEntity) {
 				PlayerEntity targetPlayer = (PlayerEntity) event.getEntity();
 				if (targetPlayer != null && targetPlayer.getHealth() - event.getAmount() <= 0) {
