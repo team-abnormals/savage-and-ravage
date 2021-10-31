@@ -147,21 +147,18 @@ public class CreepieEntity extends MonsterEntity implements IChargeableMob, IOwn
 	@Override
 	public void readAdditionalSaveData(CompoundNBT compound) {
 		super.readAdditionalSaveData(compound);
-		if (compound.contains("Fuse", 99)) {
+		if (compound.contains("Fuse", 99))
 			this.fuseTime = compound.getShort("Fuse");
-		}
-		this.explosionRadius = compound.getByte("ExplosionRadius");
-		if (compound.contains("Age", 99)) {
+		if (compound.contains("ExplosionRadius", 99))
+			this.explosionRadius = compound.getByte("ExplosionRadius");
+		if (compound.contains("Age", 99))
 			this.setGrowingAge(compound.getInt("Age"));
-		}
 		if (compound.getBoolean("Ignited")) this.ignite();
 		this.entityData.set(POWERED, compound.getBoolean("Powered"));
-		if (compound.contains("ConversionTime", 99) && compound.getInt("ConversionTime") > -1) {
+		if (compound.contains("ConversionTime", 99) && compound.getInt("ConversionTime") > -1)
 			this.startConversion(compound.getInt("ConversionTime"));
-		}
-		if (compound.hasUUID("OwnerUUID")) {
+		if (compound.hasUUID("OwnerUUID"))
 			this.setOwnerId(compound.getUUID("OwnerUUID"));
-		}
 		this.attackPlayersOnly = compound.getBoolean("AttackPlayersOnly");
 	}
 
