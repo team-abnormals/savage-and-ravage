@@ -212,7 +212,7 @@ public class TricksterEntity extends SpellcastingIllagerEntity implements ITrack
 									if (this.level.getBlockState(searchPos).getBlock() == SRBlocks.GLOOMY_TILES.get()) {
 										this.level.setBlock(searchPos, SRBlocks.RUNED_GLOOMY_TILES.get().defaultBlockState(), 2);
 										searchPos.move(Direction.UP);
-										if (!this.level.getBlockState(searchPos).isSolidRender(this.level, searchPos)) {
+										if (!this.level.isClientSide && !this.level.getBlockState(searchPos).isSolidRender(this.level, searchPos)) {
 											for (int i = 0; i < 3; i++)
 												NetworkUtil.spawnParticle(SRParticles.RUNE.getId().toString(), this.level.dimension(), x + random.nextDouble(), y + 1.25, z + random.nextDouble(), 0.0D, 0.0D, 0.0D);
 										}

@@ -90,11 +90,13 @@ public class ConfusionBoltEntity extends ThrowableEntity {
 
 	public static void spawnGaussianParticles(World world, AxisAlignedBB box, String name, int loops) {
 		Random random = world.getRandom();
-		for (int i = 0; i < loops; i++) {
-			double x = box.min(Direction.Axis.X) + ((0.5 + (random.nextGaussian() * 0.25)) * box.getXsize());
-			double y = box.min(Direction.Axis.Y) + ((0.5 + (random.nextGaussian() * 0.25)) * box.getYsize());
-			double z = box.min(Direction.Axis.Z) + ((0.5 + (random.nextGaussian() * 0.25)) * box.getZsize());
-			NetworkUtil.spawnParticle(name, world.dimension(), x, y, z, 0.0D, 0.0D, 0.0D);
+		if (!world.isClientSide) {
+			for (int i = 0; i < loops; i++) {
+				double x = box.min(Direction.Axis.X) + ((0.5 + (random.nextGaussian() * 0.25)) * box.getXsize());
+				double y = box.min(Direction.Axis.Y) + ((0.5 + (random.nextGaussian() * 0.25)) * box.getYsize());
+				double z = box.min(Direction.Axis.Z) + ((0.5 + (random.nextGaussian() * 0.25)) * box.getZsize());
+				NetworkUtil.spawnParticle(name, world.dimension(), x, y, z, 0.0D, 0.0D, 0.0D);
+			}
 		}
 	}
 
@@ -131,15 +133,17 @@ public class ConfusionBoltEntity extends ThrowableEntity {
 	@Override
 	protected void onHitBlock(BlockRayTraceResult result) {
 		super.onHitBlock(result);
-		BlockPos.Mutable pos = result.getBlockPos().mutable();
-		if (this.level.getBlockState(pos).getBlock() == SRBlocks.GLOOMY_TILES.get()) {
-			this.level.setBlock(pos, SRBlocks.RUNED_GLOOMY_TILES.get().defaultBlockState(), 2);
-			for (Direction direction : Direction.values()) {
-				pos.move(direction);
-				if (!this.level.getBlockState(pos).isSolidRender(this.level, pos))
-					for (int i = 0; i < 3; i++)
-						NetworkUtil.spawnParticle(SRParticles.RUNE.getId().toString(), this.level.dimension(), pos.getX() + random.nextDouble(), pos.getY() + 0.25, pos.getZ() + random.nextDouble(), 0.0D, 0.0D, 0.0D);
-				pos.move(direction.getOpposite());
+		if (!this.level.isClientSide) {
+			BlockPos.Mutable pos = result.getBlockPos().mutable();
+			if (this.level.getBlockState(pos).getBlock() == SRBlocks.GLOOMY_TILES.get()) {
+				this.level.setBlock(pos, SRBlocks.RUNED_GLOOMY_TILES.get().defaultBlockState(), 2);
+				for (Direction direction : Direction.values()) {
+					pos.move(direction);
+					if (!this.level.getBlockState(pos).isSolidRender(this.level, pos))
+						for (int i = 0; i < 3; i++)
+							NetworkUtil.spawnParticle(SRParticles.RUNE.getId().toString(), this.level.dimension(), pos.getX() + random.nextDouble(), pos.getY() + 0.25, pos.getZ() + random.nextDouble(), 0.0D, 0.0D, 0.0D);
+					pos.move(direction.getOpposite());
+				}
 			}
 		}
 	}

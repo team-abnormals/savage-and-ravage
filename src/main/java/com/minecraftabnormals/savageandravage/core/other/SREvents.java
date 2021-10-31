@@ -52,7 +52,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
@@ -229,15 +228,13 @@ public class SREvents {
 						boolean shouldCrit = player.fallDistance > 0.0F && !player.isOnGround() && !player.onClimbable() && !player.isInWater() && !player.hasEffect(Effects.BLINDNESS) && !player.isPassenger();
 						if (ForgeHooks.getCriticalHit(player, target, shouldCrit, shouldCrit ? 1.5F : 1.0F) == null) {
 							target.getPersistentData().putBoolean(NO_KNOCKBACK_KEY, true);
-							AxisAlignedBB targetBox = target.getBoundingBox().inflate(0.0D, 0.25D, 0.0D);
-							Vector3d center = targetBox.getCenter();
-							double halfYLength = targetBox.getYsize();
-							AxisAlignedBB shockwaveBox = new AxisAlignedBB(center.add(1.5D, halfYLength, 1.5D), center.subtract(1.5D, halfYLength, 1.5D));
+							AxisAlignedBB targetBox = target.getBoundingBox().inflate(1.5D, 0.25D, 1.5D);
+							AxisAlignedBB shockwaveBox = new AxisAlignedBB(targetBox.minX, targetBox.minY, targetBox.minZ, targetBox.maxX, targetBox.minY + 3.25D, targetBox.maxZ);
 							for (LivingEntity pushed : world.getEntitiesOfClass(LivingEntity.class, shockwaveBox)) {
-								if (pushed != player && pushed != target && !player.isAlliedTo(pushed) && (!(pushed instanceof ArmorStandEntity) || !((ArmorStandEntity) pushed).isMarker()) && player.distanceToSqr(pushed) < 9.0D) {
+								if (pushed != player && pushed != target && !player.isAlliedTo(pushed) && (!(pushed instanceof ArmorStandEntity) || !((ArmorStandEntity) pushed).isMarker())) {
 									pushed.knockback(0.4F + (knockback * 0.5F), MathHelper.sin(player.yRot * ((float) Math.PI / 180F)), -MathHelper.cos(player.yRot * ((float) Math.PI / 180F)));
 									if (pushed.isAffectedByPotions() && !pushed.hasEffect(Effects.MOVEMENT_SLOWDOWN))
-										pushed.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 10, 2));
+										pushed.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 20, 2));
 								}
 							}
 							BlockPos.Mutable checkingPos = new BlockPos.Mutable();
@@ -247,7 +244,6 @@ public class SREvents {
 									double x = shockwaveBox.minX + (random.nextDouble() * (shockwaveBox.maxX-shockwaveBox.minX));
 									double z = shockwaveBox.minZ + (random.nextDouble() * (shockwaveBox.maxZ-shockwaveBox.minZ));
 									int minY = MathHelper.floor(shockwaveBox.minY);
-									//max y might be an issue for some mobs
 									for (int y = minY; y < MathHelper.floor(shockwaveBox.maxY); y++) {
 										checkingPos.set(MathHelper.floor(x), MathHelper.floor(y), MathHelper.floor(z));
 										if (!isEmptySpace(world, checkingPos)) {
@@ -497,12 +493,14 @@ public class SREvents {
 	}
 
 	public static void spawnMaskParticles(World world, AxisAlignedBB box, int loops) {
-		Random random = world.getRandom();
-		for (int i = 0; i < loops; i++) {
-			double x = box.min(Direction.Axis.X) + (random.nextFloat() * box.getXsize());
-			double y = box.min(Direction.Axis.Y) + (random.nextFloat() * box.getYsize());
-			double z = box.min(Direction.Axis.Z) + (random.nextFloat() * box.getZsize());
-			NetworkUtil.spawnParticle(POOF_KEY, world.dimension(), x, y, z, 0.0D, 0.0D, 0.0D);
+		if (!world.isClientSide) {
+			Random random = world.getRandom();
+			for (int i = 0; i < loops; i++) {
+				double x = box.min(Direction.Axis.X) + (random.nextFloat() * box.getXsize());
+				double y = box.min(Direction.Axis.Y) + (random.nextFloat() * box.getYsize());
+				double z = box.min(Direction.Axis.Z) + (random.nextFloat() * box.getZsize());
+				NetworkUtil.spawnParticle(POOF_KEY, world.dimension(), x, y, z, 0.0D, 0.0D, 0.0D);
+			}
 		}
 	}
 
