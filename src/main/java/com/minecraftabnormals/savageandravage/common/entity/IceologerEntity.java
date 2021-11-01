@@ -65,7 +65,7 @@ public class IceologerEntity extends SpellcastingIllagerEntity {
 	}
 
 	public static AttributeModifierMap.MutableAttribute registerAttributes() {
-		return LivingEntity.createLivingAttributes().add(Attributes.FOLLOW_RANGE, 16.0D).add(Attributes.ATTACK_KNOCKBACK);
+		return LivingEntity.createLivingAttributes().add(Attributes.FOLLOW_RANGE, 16.0D).add(Attributes.ATTACK_KNOCKBACK).add(Attributes.MOVEMENT_SPEED, 0.5D);
 	}
 
 	private void updateCape() {
