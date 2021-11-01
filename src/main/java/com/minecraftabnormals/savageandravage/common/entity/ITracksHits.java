@@ -10,10 +10,6 @@ import javax.annotation.Nullable;
  * its projectile hits something.
  */
 public interface ITracksHits {
-	/**
-	 * Returns this {@link ITracksHits} instance as a {@link LivingEntity}.
-	 */
-	LivingEntity getThisEntity();
 
 	/**
 	 * Defines what should happen when {@code hitter} hit or otherwise affected {@code hit}. This can either be called

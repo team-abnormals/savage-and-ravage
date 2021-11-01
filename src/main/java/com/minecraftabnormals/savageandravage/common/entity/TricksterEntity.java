@@ -1,9 +1,7 @@
 package com.minecraftabnormals.savageandravage.common.entity;
 
-import com.minecraftabnormals.abnormals_core.common.network.particle.MessageS2CSpawnParticle;
 import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.IDataManager;
 import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.TrackedDataManager;
-import com.minecraftabnormals.abnormals_core.core.AbnormalsCore;
 import com.minecraftabnormals.abnormals_core.core.util.NetworkUtil;
 import com.minecraftabnormals.savageandravage.common.block.RunedGloomyTilesBlock;
 import com.minecraftabnormals.savageandravage.core.other.SRDataProcessors;
@@ -41,7 +39,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.fml.network.PacketDistributor;
 
 import javax.annotation.Nullable;
 import java.util.HashSet;
@@ -150,7 +147,7 @@ public class TricksterEntity extends SpellcastingIllagerEntity implements ITrack
 					double coefficient = 0.65625D - (0.34375D * progress);
 					double adjustment = 0.34375D - (0.34375D * progress);
 					double x = pos.x + (random.nextInt(2) == 0 ? 1 : -1) * 0.65625D * random.nextDouble(); //Generating the x pos at a random position in the 'prison outline'
-					//Generating the corresponding z pos - if the x value is 'near the edges' (far from the middle) this can be anything, but if it is close to the middle is is constrained to edge values
+					//Generating the corresponding z pos - if the x value is 'near the edges' (far from the middle) this can be anything, but if it is close to the middle it is constrained to edge values
 					double z = pos.z + (random.nextInt(2) == 0 ? 1 : -1) * (Math.abs(pos.x - x) < 0.34375 ? ((coefficient * random.nextDouble()) + adjustment) : 0.65625D * random.nextDouble());
 					this.level.addParticle(SRParticles.RUNE.get(), x, pos.y + 0.8125D, z, 0.0, 0.0, 0.0);
 				}
@@ -178,7 +175,7 @@ public class TricksterEntity extends SpellcastingIllagerEntity implements ITrack
 			data.setValue(SRDataProcessors.TOTEM_SHIELD_COOLDOWN, 1800);
 			if (!this.level.isClientSide()) {
 				this.level.broadcastEntityEvent(this, (byte) 35);
-				for (int i = 0; i < 64; i++) { //why does this not work!!!
+				for (int i = 0; i < 64; i++) {
 					if (this.teleport())
 						return true;
 				}
@@ -282,11 +279,6 @@ public class TricksterEntity extends SpellcastingIllagerEntity implements ITrack
 				.add(Attributes.MOVEMENT_SPEED, 0.5D)
 				.add(Attributes.MAX_HEALTH, 24.0D)
 				.add(Attributes.FOLLOW_RANGE, 16.0D);
-	}
-
-	@Override
-	public LivingEntity getThisEntity() {
-		return this;
 	}
 
 	@Nullable

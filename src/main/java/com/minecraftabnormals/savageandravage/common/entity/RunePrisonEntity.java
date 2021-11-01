@@ -44,9 +44,9 @@ public class RunePrisonEntity extends Entity {
 		this.setTicksTillRemove(ticksTillRemove);
 	}
 
-	public RunePrisonEntity(World world, BlockPos position, int ticksTillRemove, boolean fromTrap, ITracksHits caster) {
+	public <T extends Entity & ITracksHits> RunePrisonEntity(World world, BlockPos position, int ticksTillRemove, boolean fromTrap, T caster) {
 		this(world, position, ticksTillRemove, fromTrap);
-		this.setCaster(caster.getThisEntity());
+		this.setCaster(caster);
 	}
 
 	@Override
