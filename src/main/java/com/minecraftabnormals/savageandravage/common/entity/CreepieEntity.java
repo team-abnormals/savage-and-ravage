@@ -78,12 +78,8 @@ public class CreepieEntity extends MonsterEntity implements IChargeableMob, IOwn
 		this.targetSelector.addGoal(2, new MobOwnerHurtByTargetGoal(this));
 		this.targetSelector.addGoal(2, new MobOwnerHurtTargetGoal(this));
 		this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
-		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, MobEntity.class, 5, false, false, (target) -> {
-			return this.getOwnerId() == null && !(target instanceof CreepieEntity) && !(target instanceof CreeperEntity) && !this.attackPlayersOnly;
-		}));
-		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 5, false, false, (target) -> {
-			return this.getOwnerId() == null;
-		}));
+		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, MobEntity.class, 5, false, false, (target) -> this.getOwnerId() == null && !(target instanceof CreepieEntity) && !(target instanceof CreeperEntity) && !this.attackPlayersOnly));
+		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 5, false, false, (target) -> this.getOwnerId() == null));
 	}
 
 	public static AttributeModifierMap.MutableAttribute registerAttributes() {
@@ -136,7 +132,7 @@ public class CreepieEntity extends MonsterEntity implements IChargeableMob, IOwn
 		compound.putInt("Age", this.getGrowingAge());
 		compound.putInt("ConversionTime", this.getConversionTime());
 		compound.putShort("Fuse", (short) this.fuseTime);
-		compound.putByte("ExplosionRadius", (byte) this.explosionRadius);
+		compound.putFloat("ExplosionRadius", this.explosionRadius);
 		compound.putBoolean("Ignited", this.hasIgnited());
 		if (this.entityData.get(POWERED)) {
 			compound.putBoolean("Powered", true);
@@ -150,7 +146,7 @@ public class CreepieEntity extends MonsterEntity implements IChargeableMob, IOwn
 		if (compound.contains("Fuse", 99))
 			this.fuseTime = compound.getShort("Fuse");
 		if (compound.contains("ExplosionRadius", 99))
-			this.explosionRadius = compound.getByte("ExplosionRadius");
+			this.explosionRadius = compound.getFloat("ExplosionRadius");
 		if (compound.contains("Age", 99))
 			this.setGrowingAge(compound.getInt("Age"));
 		if (compound.getBoolean("Ignited")) this.ignite();
