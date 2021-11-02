@@ -6,5 +6,8 @@
     "minecraft:armor_stand",
     "minecraft:falling_block",
     "minecraft:leash_knot"
+  ],
+  "optional": [
+    "mannequins:mannequin"
   ]
 }
