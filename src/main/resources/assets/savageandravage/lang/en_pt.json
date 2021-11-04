@@ -22,30 +22,19 @@
 	"item.savageandravage.creeper_spores": "Fishy Smellin' Seeds",
 	"block.savageandravage.creeper_spore_sack": "Bag o' Fishy Smellin Seeds",
 	"block.savageandravage.spore_bomb": "Powder Keg o' Plantin'",
-	"entity.savageandravage.spore_cloud": "Fishy Smellin' Cloud",
-	"entity.savageandravage.creepie": "Creepin' Sprout",
-	"entity.savageandravage.spore_bomb": "Powder Keg o' Plantin'",
-	"subtitles.savageandravage.entity.creepie.hurt": "Creepin' Sprout hurts",
-	"subtitles.savageandravage.entity.creepie.death": "Creepin' Sprout walked the plank",
-	"subtitles.savageandravage.entity.creepie.fuse": "Creepin' Sprout",
-	"subtitles.savageandravage.entity.creepie.convert": "Creepin' Sprout be doin' somethin'",
-	"subtitles.savageandravage.entity.creepie.grow": "Creepin' Sprout ain't a sprout no more",
-	"subtitles.savageandravage.generic.prepare_attack": "Tiles' o' Witchcraft doin' their magic",
+	"item.savageandravage.wand_of_freezing": "Magic Stick o' Ice",
+	"item.savageandravage.cleaver_of_beheading": "Jack Ketch's Cleaver",
+	"item.savageandravage.conch_of_conjuring": "Shell o' Ankle Bitin'",
+	"item.savageandravage.mask_of_dishonesty": "Mask o' Knavery",
 
 	"entity.savageandravage.skeleton_villager": "Landlubbin' Bag o' Bones",
 	"entity.savageandravage.griefer": "Plunderin' Gardener",
 	"item.savageandravage.skeleton_villager_spawn_egg": "Landlubbin' Bag o' Bones Cackle Fruit",
 	"item.savageandravage.griefer_spawn_egg": "Plunderin' Gardener Cackle Fruit",
 
-	"attribute.name.generic.explosive_damage_reduction": "Save yerr booty from the boom",
-
-	"advancements.savageandravage.adventure.voluntary_exile.description": "Use yerr ship's bane on tharr flag!.\nStay away from tha landlubbers, tharr be raiders.",
-
-	"item.savageandravage.wand_of_freezing": "Magic Stick o' Ice",
-	"item.savageandravage.cleaver_of_beheading": "Jack Ketch's Cleaver",
-	"item.savageandravage.conch_of_conjuring": "Shell o' Capturin'",
-	"item.savageandravage.mask_of_dishonesty": "Mask o' Knavery",
-
+	"entity.savageandravage.spore_cloud": "Fishy Smellin' Cloud",
+	"entity.savageandravage.creepie": "Creepin' Sprout",
+	"entity.savageandravage.spore_bomb": "Powder Keg o' Plantin'",
 	"entity.savageandravage.mischief_arrow": "Rigg'd Bolt",
 	"entity.savageandravage.executioner": "Queen Anne's Henchman",
 	"entity.savageandravage.iceologer": "Ice Wizard",
@@ -53,33 +42,41 @@
 	"entity.savageandravage.ice_cloud": "Cloud o' Ice",
 	"entity.savageandravage.trickster": "Jester",
 
-	"effect.savageandravage.confusion": "Squiffy",
-	"effect.savageandravage.frostbite": "Freezin' Over",
-	"effect.savageandravage.weight": "Ye an Anchor",
-
-	"advancements.savageandravage.adventure.creeper_spores.title": "Growin' Spores",
-	"advancements.savageandravage.adventure.creeper_spores.description": "Harvest some Fishy Smellin' Seeds from blowin' a Pirate Creeper sky high with a Cannonball",
-
-	"advancements.savageandravage.adventure.griefer_armor.title": "Plunderin' Time",
-	"advancements.savageandravage.adventure.griefer_armor.description": "Smith yeself a set o' Plunderer's Armor to let all th' scallywags know that a pirate be comin'",
-
-	"advancements.savageandravage.adventure.relic_collector.title": "Collector o' Relics",
-	"advancements.savageandravage.adventure.relic_collector.description": "Get ye dirty hands on a Jewel o' Life, Cleaver o' Jack Ketch, Magic Stick o' Ice, Mask o' Knavery and a Shell o' Capturin'",
-
-	"advancements.savageandravage.adventure.mask_of_dishonesty.title": "A Little Trickin'",
-	"advancements.savageandravage.adventure.mask_of_dishonesty.description": "Pluck th' Mask o' Knavery from of the face o' the Queen's Jester",
-
+	"subtitles.savageandravage.entity.creepie.hurt": "Creepin' Sprout hurts",
+	"subtitles.savageandravage.entity.creepie.death": "Creepin' Sprout walked the plank",
+	"subtitles.savageandravage.entity.creepie.fuse": "Creepin' Sprout",
+	"subtitles.savageandravage.entity.creepie.convert": "Creepin' Sprout be doin' somethin'",
+	"subtitles.savageandravage.entity.creepie.grow": "Creepin' Sprout ain't a sprout no more",
+	"subtitles.savageandravage.generic.prepare_attack": "Tiles' o' Witchcraft doin' their magic",
 	"subtitles.savageandravage.entity.iceologer.ambient": "Ice Wizard hummin'",
 	"subtitles.savageandravage.entity.iceologer.hurt": "Ice Wizard be hurtin'",
 	"subtitles.savageandravage.entity.iceologer.death": "Ice Wizard walks th' plank",
 	"subtitles.savageandravage.entity.iceologer.celebrate": "Ice Wizard laughs in good spirit",
 	"subtitles.savageandravage.entity.iceologer.cast_spell": "Ice Wizard be doin' witchery",
-
-	"subtitles.savageandravage.entity.trickster.ambient": "Jester talkin' to himself",
+	"subtitles.savageandravage.entity.trickster.ambient": "Jester crackles",
 	"subtitles.savageandravage.entity.trickster.step": "Jester beads clinkin'",
 	"subtitles.savageandravage.entity.trickster.hurt": "Jester be hurtin'",
 	"subtitles.savageandravage.entity.trickster.death": "Jester ain't jestin' no more",
-	"subtitles.savageandravage.entity.trickster.celebrate": "Jester be happy",
+	"subtitles.savageandravage.entity.trickster.celebrate": "Jester be in high spirits ",
 	"subtitles.savageandravage.entity.trickster.laugh": "Jester jests",
-	"subtitles.savageandravage.entity.trickster.cast_spell": "Jester be jinxin'"
+	"subtitles.savageandravage.entity.trickster.cast_spell": "Jester be jinxin'",
+	"attribute.name.generic.explosive_damage_reduction": "Save yerr booty from the boom",
+
+	"effect.savageandravage.confusion": "Squiffy",
+	"effect.savageandravage.frostbite": "Freezin' Over",
+	"effect.savageandravage.weight": "Ye an Anchor",
+
+	"advancements.savageandravage.adventure.voluntary_exile.description": "Use yerr ship's bane on tharr flag!.\nStay away from tha landlubbers, tharr be raiders.",
+
+	"advancements.savageandravage.adventure.creeper_spores.title": "Plantin' Cannons",
+	"advancements.savageandravage.adventure.creeper_spores.description": "Harvest some Fishy Smellin' Seeds from blowin' a Pirate Creeper sky high with a Cannonball",
+
+	"advancements.savageandravage.adventure.griefer_armor.title": "Plunderers be here",
+	"advancements.savageandravage.adventure.griefer_armor.description": "Smith yeself a set o' Plunderer's Armor to let all th' scallywags know that a pirate be comin'",
+
+	"advancements.savageandravage.adventure.relic_collector.title": "Collector o' ye Relics",
+	"advancements.savageandravage.adventure.relic_collector.description": "Get ye dirty hands on a Jewel o' Life, Cleaver o' Jack Ketch, Magic Stick o' Ice, Mask o' Knavery and a Shell o' Ankle Bitin'",
+
+	"advancements.savageandravage.adventure.mask_of_dishonesty.title": "Just runnin' a little rig",
+	"advancements.savageandravage.adventure.mask_of_dishonesty.description": "Pluck th' Mask o' Knavery from of the face o' the Queen's Jester"
 }
