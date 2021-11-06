@@ -1,10 +1,6 @@
 package com.minecraftabnormals.savageandravage.core.registry;
 
-import com.minecraftabnormals.savageandravage.client.particle.CleaverSweepParticle;
-import com.minecraftabnormals.savageandravage.client.particle.ConfusionBoltParticle;
-import com.minecraftabnormals.savageandravage.client.particle.CreeperSporeSprinklesParticle;
-import com.minecraftabnormals.savageandravage.client.particle.CreeperSporesParticle;
-import com.minecraftabnormals.savageandravage.client.particle.RuneParticle;
+import com.minecraftabnormals.savageandravage.client.particle.*;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.ParticleManager;
@@ -28,13 +24,14 @@ public class SRParticles {
 	public static final RegistryObject<BasicParticleType> RUNE = PARTICLES.register("rune", () -> new BasicParticleType(true));
 	public static final RegistryObject<BasicParticleType> CONFUSION_BOLT = PARTICLES.register("confusion_bolt", () -> new BasicParticleType(true));
 	public static final RegistryObject<BasicParticleType> SNOWFLAKE = PARTICLES.register("snowflake", () -> new BasicParticleType(true));
-	public static final RegistryObject<BasicParticleType> CLEAVER_SWEEP  = PARTICLES.register("cleaver_sweep", () -> new BasicParticleType(true));
+	public static final RegistryObject<BasicParticleType> CLEAVER_SWEEP = PARTICLES.register("cleaver_sweep", () -> new BasicParticleType(true));
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public static void registerParticleFactories(ParticleFactoryRegisterEvent event) {
 		ParticleManager manager = Minecraft.getInstance().particleEngine;
 		if (CREEPER_SPORES.isPresent()) manager.register(CREEPER_SPORES.get(), CreeperSporesParticle.Factory::new);
-		if (CREEPER_SPORE_SPRINKLES.isPresent()) manager.register(CREEPER_SPORE_SPRINKLES.get(), CreeperSporeSprinklesParticle.Factory::new);
+		if (CREEPER_SPORE_SPRINKLES.isPresent())
+			manager.register(CREEPER_SPORE_SPRINKLES.get(), CreeperSporeSprinklesParticle.Factory::new);
 		if (RUNE.isPresent()) manager.register(RUNE.get(), RuneParticle.Factory::new);
 		if (CONFUSION_BOLT.isPresent()) manager.register(CONFUSION_BOLT.get(), ConfusionBoltParticle.Factory::new);
 		if (SNOWFLAKE.isPresent()) manager.register(SNOWFLAKE.get(), SpellParticle.Factory::new);

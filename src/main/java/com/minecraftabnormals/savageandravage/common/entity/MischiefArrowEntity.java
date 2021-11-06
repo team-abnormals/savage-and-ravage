@@ -7,9 +7,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
-import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.IPacket;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
@@ -17,6 +17,7 @@ import net.minecraftforge.fml.network.FMLPlayMessages;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 public class MischiefArrowEntity extends AbstractArrowEntity {
+	public boolean finished = false;
 
 	public MischiefArrowEntity(EntityType<? extends MischiefArrowEntity> type, World worldIn) {
 		super(type, worldIn);
@@ -35,40 +36,61 @@ public class MischiefArrowEntity extends AbstractArrowEntity {
 	}
 
 	@Override
+	protected void onHitBlock(BlockRayTraceResult result) {
+		super.onHitBlock(result);
+		if (!finished) {
+			this.pickup = PickupStatus.DISALLOWED;
+
+			CreepieEntity creepie = SREntities.CREEPIE.get().create(level);
+			if (creepie != null) {
+				creepie.moveTo(this.getX(), this.getY(), this.getZ(), 0.0F, 0.0F);
+
+				Entity thrower = this.getOwner();
+				if (thrower instanceof LivingEntity) {
+					if (!thrower.isInvisible())
+						creepie.setOwnerId(thrower.getUUID());
+				}
+
+				this.level.addFreshEntity(creepie);
+			}
+			this.finished = true;
+		}
+	}
+
+	@Override
 	protected void onHit(RayTraceResult result) {
 		super.onHit(result);
+		if (!finished) {
+			this.pickup = PickupStatus.DISALLOWED;
 
-		CreepieEntity creepie = SREntities.CREEPIE.get().create(level);
-		if (creepie != null) {
-			creepie.moveTo(this.getX(), this.getY(), this.getZ(), 0.0F, 0.0F);
-			Entity thrower = this.getOwner();
-			if (thrower instanceof LivingEntity && !thrower.isInvisible())
-				creepie.setOwnerId(thrower.getUUID());
+			CreepieEntity creepie = SREntities.CREEPIE.get().create(level);
+			if (creepie != null) {
+				creepie.moveTo(this.getX(), this.getY(), this.getZ(), 0.0F, 0.0F);
 
-			if (result instanceof EntityRayTraceResult) {
-				Entity hit = ((EntityRayTraceResult) result).getEntity();
-				if (hit instanceof LivingEntity)
-					creepie.setTarget((LivingEntity) hit);
+				Entity thrower = this.getOwner();
+				if (thrower instanceof LivingEntity) {
+					if (!thrower.isInvisible())
+						creepie.setOwnerId(thrower.getUUID());
+				}
+
+				if (result instanceof EntityRayTraceResult) {
+					Entity hit = ((EntityRayTraceResult) result).getEntity();
+					if (hit instanceof LivingEntity)
+						creepie.setTarget((LivingEntity) hit);
+				}
+
+				this.level.addFreshEntity(creepie);
 			}
-			this.level.addFreshEntity(creepie);
-		}
 
-		if (this.isAlive()) {
-			ArrowEntity arrow = EntityType.ARROW.create(level);
-			if (arrow != null) {
-				arrow.copyPosition(this);
-				arrow.setDeltaMovement(this.getDeltaMovement());
-				arrow.pickup = PickupStatus.ALLOWED;
-				level.addFreshEntity(arrow);
-			}
-			this.remove();
+			this.finished = true;
 		}
 	}
 
 	@Override
 	public void tick() {
 		super.tick();
-		this.level.addParticle(SRParticles.CREEPER_SPORES.get(), this.getX(), this.getY(), this.getZ() - 0.0D, 0.0D, 0.0D, 0.0D);
+		if (!this.finished)
+			this.level.addParticle(SRParticles.CREEPER_SPORES.get(), this.getX(), this.getY(), this.getZ() - 0.0D, 0.0D, 0.0D, 0.0D);
 	}
 
 	@Override

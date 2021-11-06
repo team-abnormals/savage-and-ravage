@@ -20,16 +20,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(PillagerEntity.class)
 public abstract class PillagerEntityMixin extends AbstractIllagerEntity implements ICrossbowUser {
-    protected PillagerEntityMixin(EntityType<? extends AbstractIllagerEntity> type, World world) {
-        super(type, world);
-    }
+	protected PillagerEntityMixin(EntityType<? extends AbstractIllagerEntity> type, World world) {
+		super(type, world);
+	}
 
-    @Inject(method = "finalizeSpawn", at = @At(value = "HEAD"))
-    public void addFirework(IServerWorld world, DifficultyInstance difficulty, SpawnReason reason, ILivingEntityData data, CompoundNBT nbt, CallbackInfoReturnable<ILivingEntityData> info) {
-        if (this.level.random.nextInt(100) == 0) {
-            this.setItemSlot(EquipmentSlotType.OFFHAND, SREvents.createRocket(this.getRandom()));
-            this.startUsingItem(Hand.OFF_HAND);
-            this.setDropChance(EquipmentSlotType.OFFHAND, 2.0F);
-        }
-    }
+	@Inject(method = "finalizeSpawn", at = @At(value = "HEAD"))
+	public void addFirework(IServerWorld world, DifficultyInstance difficulty, SpawnReason reason, ILivingEntityData data, CompoundNBT nbt, CallbackInfoReturnable<ILivingEntityData> info) {
+		if (this.level.random.nextInt(100) == 0) {
+			this.setItemSlot(EquipmentSlotType.OFFHAND, SREvents.createRocket(this.getRandom()));
+			this.startUsingItem(Hand.OFF_HAND);
+			this.setDropChance(EquipmentSlotType.OFFHAND, 2.0F);
+		}
+	}
 }

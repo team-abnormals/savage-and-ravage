@@ -3,17 +3,12 @@ package com.minecraftabnormals.savageandravage.core;
 import com.minecraftabnormals.abnormals_core.core.util.DataUtil;
 import com.minecraftabnormals.abnormals_core.core.util.registry.RegistryHelper;
 import com.minecraftabnormals.savageandravage.client.render.IceChunkRenderer;
-import com.minecraftabnormals.savageandravage.core.other.SRCompat;
-import com.minecraftabnormals.savageandravage.core.other.SRDataProcessors;
-import com.minecraftabnormals.savageandravage.core.other.SRDataSerializers;
-import com.minecraftabnormals.savageandravage.core.other.SRFeatures;
-import com.minecraftabnormals.savageandravage.core.other.SRNoteBlocks;
+import com.minecraftabnormals.savageandravage.core.other.*;
 import com.minecraftabnormals.savageandravage.core.registry.*;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -21,7 +16,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 @Mod(SavageAndRavage.MOD_ID)

@@ -47,11 +47,7 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.*;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.*;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
@@ -59,12 +55,8 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
-import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
-import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
@@ -102,8 +94,7 @@ public class SREvents {
 					mob.goalSelector.addGoal(3, new ImprovedCrossbowGoal<>(pillager, 1.0D, 8.0F, 5.0D));
 				});
 				mob.goalSelector.addGoal(5, new CelebrateTargetBlockHitGoal(pillager));
-			}
-			else if (mob instanceof CatEntity || mob instanceof OcelotEntity)
+			} else if (mob instanceof CatEntity || mob instanceof OcelotEntity)
 				mob.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(mob, CreepieEntity.class, false));
 			else if (mob instanceof EvokerEntity && SRConfig.COMMON.evokersUseTotems.get())
 				mob.goalSelector.addGoal(1, new AvoidEntityGoal<IronGolemEntity>((EvokerEntity) mob, IronGolemEntity.class, 8.0F, 0.6D, 1.0D) {
@@ -197,15 +188,13 @@ public class SREvents {
 	}
 
 	public static boolean entitySafeFromExplosion(Entity entity, boolean creeperTypeNoGriefing) {
-		boolean safe = false;
 		if (creeperTypeNoGriefing && entity.getType().is(SRTags.CREEPER_BLAST_PROOF_ENTITIES))
-			safe = true;
+			return true;
 		else if (entity instanceof ItemEntity) {
 			ItemStack stack = ((ItemEntity) entity).getItem();
-			if (creeperTypeNoGriefing || stack.getItem().is(SRTags.BLAST_PROOF_ITEMS))
-				safe = true;
+			return creeperTypeNoGriefing || stack.getItem().is(SRTags.BLAST_PROOF_ITEMS);
 		}
-		return safe;
+		return false;
 	}
 
 	@SubscribeEvent
@@ -241,8 +230,8 @@ public class SREvents {
 							Random random = world.getRandom();
 							if (!world.isClientSide) {
 								for (int i = 0; i < 100; i++) {
-									double x = shockwaveBox.minX + (random.nextDouble() * (shockwaveBox.maxX-shockwaveBox.minX));
-									double z = shockwaveBox.minZ + (random.nextDouble() * (shockwaveBox.maxZ-shockwaveBox.minZ));
+									double x = shockwaveBox.minX + (random.nextDouble() * (shockwaveBox.maxX - shockwaveBox.minX));
+									double z = shockwaveBox.minZ + (random.nextDouble() * (shockwaveBox.maxZ - shockwaveBox.minZ));
 									int minY = MathHelper.floor(shockwaveBox.minY);
 									for (int y = minY; y < MathHelper.floor(shockwaveBox.maxY); y++) {
 										checkingPos.set(MathHelper.floor(x), MathHelper.floor(y), MathHelper.floor(z));
@@ -447,7 +436,7 @@ public class SREvents {
 			if (entity instanceof AbstractRaiderEntity) {
 				int celebrationTime = data.getValue(SRDataProcessors.CELEBRATION_TIME);
 				if (celebrationTime > 0)
-					data.setValue(SRDataProcessors.CELEBRATION_TIME, celebrationTime-1);
+					data.setValue(SRDataProcessors.CELEBRATION_TIME, celebrationTime - 1);
 			}
 			boolean canBeInvisible = maskCanMakeInvisible(entity);
 			boolean invisibleDueToMask = data.getValue(SRDataProcessors.INVISIBLE_DUE_TO_MASK);

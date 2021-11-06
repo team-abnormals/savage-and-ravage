@@ -41,8 +41,8 @@ public class ExecutionerEntity extends VindicatorEntity {
 	protected void registerGoals() {
 		super.registerGoals();
 		this.goalSelector.availableGoals.stream().map(g -> g.goal).filter(goal -> goal instanceof MeleeAttackGoal).findFirst().ifPresent(goal -> {
-				this.goalSelector.removeGoal(goal);
-				this.goalSelector.addGoal(4, new AttackGoal(this, 1.0D));
+			this.goalSelector.removeGoal(goal);
+			this.goalSelector.addGoal(4, new AttackGoal(this, 1.0D));
 		});
 
 	}

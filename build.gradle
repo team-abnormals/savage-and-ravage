@@ -77,8 +77,6 @@ dependencies {
     compileOnly fg.deobf("mezz.jei:jei-${project.minecraft}:${project.jei}:api")
     runtimeOnly fg.deobf("mezz.jei:jei-${project.minecraft}:${project.jei}")
 
-    implementation fg.deobf("curse.maven:spark-361579:3337641")
-
     annotationProcessor "org.spongepowered:mixin:0.8.2:processor"
 }
 

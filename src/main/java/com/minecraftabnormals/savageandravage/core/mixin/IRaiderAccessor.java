@@ -7,6 +7,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(AbstractRaiderEntity.class)
 public interface IRaiderAccessor {
-    @Accessor("IS_CELEBRATING")
-    DataParameter<Boolean> getIsCelebrating();
+	@Accessor("IS_CELEBRATING")
+	DataParameter<Boolean> getIsCelebrating();
 }

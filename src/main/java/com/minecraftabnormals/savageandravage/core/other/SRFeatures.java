@@ -44,8 +44,8 @@ public class SRFeatures {
 
 	private static ImmutableList<Pair<Function<JigsawPattern.PlacementBehaviour, ? extends JigsawPiece>, Integer>> noteBlocks() {
 		ImmutableList.Builder<Pair<Function<JigsawPattern.PlacementBehaviour, ? extends JigsawPiece>, Integer>> builder = ImmutableList.builder();
-		for (int i=0; i<=24; i++)
-			builder.add(Pair.of(JigsawPiece.legacy(SavageAndRavage.MOD_ID + ":pillager_outpost/note_blocks/note_block"+i), 1));
+		for (int i = 0; i <= 24; i++)
+			builder.add(Pair.of(JigsawPiece.legacy(SavageAndRavage.MOD_ID + ":pillager_outpost/note_blocks/note_block" + i), 1));
 		return builder.build();
 	}
 
