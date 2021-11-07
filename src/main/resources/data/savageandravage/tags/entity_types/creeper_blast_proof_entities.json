@@ -5,6 +5,7 @@
     "minecraft:item_frame",
     "minecraft:armor_stand",
     "minecraft:falling_block",
-    "minecraft:leash_knot"
+    "minecraft:leash_knot",
+    "minecraft:boat"
   ]
 }

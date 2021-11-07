@@ -95,6 +95,7 @@ public class TricksterEntity extends SpellcastingIllagerEntity implements ITrack
 
 	@Override
 	public void readAdditionalSaveData(CompoundNBT compound) {
+		super.readAdditionalSaveData(compound);
 		if (compound.contains("PrisonChargingTime", 3))
 			this.entityData.set(PRISON_CHARGING_TIME, compound.getInt("PrisonChargingTime"));
 		if (compound.contains("PrisonX", 6) && compound.contains("PrisonY", 6) && compound.contains("PrisonZ", 6))

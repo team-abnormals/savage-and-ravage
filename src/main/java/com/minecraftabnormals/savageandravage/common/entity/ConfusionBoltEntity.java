@@ -7,6 +7,7 @@ import net.minecraft.command.arguments.EntityAnchorArgument;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.projectile.ProjectileHelper;
 import net.minecraft.entity.projectile.ThrowableEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -143,7 +144,8 @@ public class ConfusionBoltEntity extends ThrowableEntity {
 	private void teleport(Entity entity, double x, double y, double z) {
 		Vector3d originalPos = entity.position();
 		NetworkUtil.teleportEntity(entity, x, y, z);
-		entity.lookAt(EntityAnchorArgument.Type.EYES, originalPos);
+		if (!(entity instanceof MobEntity && ((MobEntity) entity).isNoAi()))
+			entity.lookAt(EntityAnchorArgument.Type.EYES, originalPos);
 	}
 
 	@Override

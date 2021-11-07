@@ -153,9 +153,8 @@ public class GrieferEntity extends AbstractIllagerEntity implements IRangedAttac
 	@Override
 	protected void actuallyHurt(DamageSource damageSrc, float damageAmount) {
 		super.actuallyHurt(damageSrc, damageAmount);
-		if (this.isApeshit() && creeperSporeStacks <= 0 && damageSrc.getEntity() == this.getTarget() && this.getTarget() != null) {
-			creeperSporeStacks = (int) this.lastHurt / 2;
-		}
+		if (this.isApeshit() && creeperSporeStacks <= 0 && damageSrc.getEntity() == this.getTarget() && this.getTarget() != null)
+			creeperSporeStacks = MathHelper.ceil(this.lastHurt / 2);
 	}
 
 	@Override
