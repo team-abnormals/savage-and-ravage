@@ -188,7 +188,7 @@ public class SREvents {
 	}
 
 	public static boolean entitySafeFromExplosion(Entity entity, boolean creeperTypeNoGriefing) {
-		if (creeperTypeNoGriefing && entity.getType().is(SRTags.CREEPER_BLAST_PROOF_ENTITIES))
+		if (creeperTypeNoGriefing && entity.getType().is(SRTags.CREEPER_PROOF_TYPES))
 			return true;
 		else if (entity instanceof ItemEntity) {
 			ItemStack stack = ((ItemEntity) entity).getItem();
