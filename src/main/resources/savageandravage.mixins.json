@@ -13,6 +13,9 @@
     "SpellcastingIllagerEntityMixin",
     "ZoglinEntityMixin"
   ],
+  "client": [
+    "BreakingParticleMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   }
