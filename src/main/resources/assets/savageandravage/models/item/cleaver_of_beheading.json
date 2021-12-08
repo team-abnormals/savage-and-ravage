@@ -1,6 +1,9 @@
 {
   "parent": "minecraft:item/handheld",
   "loader": "forge:separate-perspective",
+  "textures": {
+    "layer0": "savageandravage:item/cleaver_of_beheading_gui"
+  },
   "base": {
     "parent": "savageandravage:item/cleaver_of_beheading_handheld"
   },
