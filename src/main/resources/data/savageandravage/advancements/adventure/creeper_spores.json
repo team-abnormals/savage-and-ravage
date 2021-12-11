@@ -15,9 +15,6 @@
     "announce_to_chat": true,
     "hidden": false
   },
-  "rewards": {
-    "experience": 100
-  },
   "criteria": {
     "creeper_spores": {
       "trigger": "minecraft:inventory_changed",
