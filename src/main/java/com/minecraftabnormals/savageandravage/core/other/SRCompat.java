@@ -1,6 +1,7 @@
 package com.minecraftabnormals.savageandravage.core.other;
 
-import com.minecraftabnormals.abnormals_core.core.util.DataUtil;
+import com.minecraftabnormals.savageandravage.core.registry.SRSounds;
+import com.teamabnormals.blueprint.core.util.DataUtil;
 import com.minecraftabnormals.savageandravage.common.entity.BurningBannerEntity;
 import com.minecraftabnormals.savageandravage.common.entity.MischiefArrowEntity;
 import com.minecraftabnormals.savageandravage.common.entity.SporeCloudEntity;
@@ -9,34 +10,36 @@ import com.minecraftabnormals.savageandravage.common.item.CreeperSporesItem;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
 import com.minecraftabnormals.savageandravage.core.registry.SRBlocks;
 import com.minecraftabnormals.savageandravage.core.registry.SRItems;
-import net.minecraft.block.DispenserBlock;
-import net.minecraft.dispenser.DefaultDispenseItemBehavior;
-import net.minecraft.dispenser.IBlockSource;
-import net.minecraft.dispenser.IPosition;
-import net.minecraft.dispenser.ProjectileDispenseBehavior;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.BannerItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.EntityPredicates;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
+import net.minecraft.core.BlockSource;
+import net.minecraft.core.Position;
+import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.BannerItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Map;
 
-import static com.minecraftabnormals.abnormals_core.core.util.BlockUtil.getEntitiesAtOffsetPos;
-import static com.minecraftabnormals.abnormals_core.core.util.BlockUtil.offsetPos;
+import static com.teamabnormals.blueprint.core.util.BlockUtil.getEntitiesAtOffsetPos;
+import static com.teamabnormals.blueprint.core.util.BlockUtil.offsetPos;
 
 public class SRCompat {
 
 	public static void registerCompat() {
 		registerFlammables();
 		registerDispenserBehaviors();
+		registerNoteBlocks();
 	}
 
 	public static void registerFlammables() {
@@ -45,15 +48,15 @@ public class SRCompat {
 	}
 
 	public static void registerDispenserBehaviors() {
-		DispenserBlock.registerBehavior(SRItems.MISCHIEF_ARROW.get(), new ProjectileDispenseBehavior() {
+		DispenserBlock.registerBehavior(SRItems.MISCHIEF_ARROW.get(), new AbstractProjectileDispenseBehavior() {
 			@Override
-			protected ProjectileEntity getProjectile(World world, IPosition position, ItemStack stack) {
+			protected Projectile getProjectile(Level world, Position position, ItemStack stack) {
 				return new MischiefArrowEntity(world, position.x(), position.y(), position.z());
 			}
 		});
-		DispenserBlock.registerBehavior(SRItems.CREEPER_SPORES.get(), new ProjectileDispenseBehavior() {
+		DispenserBlock.registerBehavior(SRItems.CREEPER_SPORES.get(), new AbstractProjectileDispenseBehavior() {
 			@Override
-			protected ProjectileEntity getProjectile(World world, IPosition position, ItemStack stack) {
+			protected Projectile getProjectile(Level world, Position position, ItemStack stack) {
 				SporeCloudEntity cloud = new SporeCloudEntity(world, position.x(), position.y(), position.z());
 				cloud.setCloudSize(CreeperSporesItem.getThrownSporeCloudSize(world.getRandom()));
 				return cloud;
@@ -61,21 +64,21 @@ public class SRCompat {
 		});
 
 		DispenserBlock.registerBehavior(SRBlocks.SPORE_BOMB.get(), new DefaultDispenseItemBehavior() {
-			protected ItemStack execute(IBlockSource source, ItemStack stack) {
-				World world = source.getLevel();
+			protected ItemStack execute(BlockSource source, ItemStack stack) {
+				Level world = source.getLevel();
 				BlockPos blockpos = offsetPos(source);
 				SporeBombEntity sporeBomb = new SporeBombEntity(world, (double) blockpos.getX() + 0.5D, blockpos.getY(), (double) blockpos.getZ() + 0.5D, null);
 				world.addFreshEntity(sporeBomb);
-				world.playSound(null, sporeBomb.getX(), sporeBomb.getY(), sporeBomb.getZ(), SoundEvents.TNT_PRIMED, SoundCategory.BLOCKS, 1.0F, 1.0F);
+				world.playSound(null, sporeBomb.getX(), sporeBomb.getY(), sporeBomb.getZ(), SoundEvents.TNT_PRIMED, SoundSource.BLOCKS, 1.0F, 1.0F);
 				stack.shrink(1);
 				return stack;
 			}
 		});
-		ForgeRegistries.ITEMS.getEntries().stream().map(Map.Entry::getValue).filter(i -> i instanceof BannerItem).forEach(i -> DataUtil.registerAlternativeDispenseBehavior(new DataUtil.AlternativeDispenseBehavior(SavageAndRavage.MOD_ID, i, (source, stack) -> !getEntitiesAtOffsetPos(source, LivingEntity.class, EntityPredicates.NO_SPECTATORS.and(new EntityPredicates.ArmoredMob(stack))).isEmpty(), ArmorItem.DISPENSE_ITEM_BEHAVIOR, (id1, id2) -> id2.equals("quark") ? 1 : 0)));
+		ForgeRegistries.ITEMS.getEntries().stream().map(Map.Entry::getValue).filter(i -> i instanceof BannerItem).forEach(i -> DataUtil.registerAlternativeDispenseBehavior(new DataUtil.AlternativeDispenseBehavior(SavageAndRavage.MOD_ID, i, (source, stack) -> !getEntitiesAtOffsetPos(source, LivingEntity.class, EntitySelector.NO_SPECTATORS.and(new EntitySelector.MobCanWearArmorEntitySelector(stack))).isEmpty(), ArmorItem.DISPENSE_ITEM_BEHAVIOR, (id1, id2) -> id2.equals("quark") ? 1 : 0)));
 		DataUtil.registerAlternativeDispenseBehavior(new DataUtil.AlternativeDispenseBehavior(SavageAndRavage.MOD_ID, Items.FLINT_AND_STEEL, (source, stack) -> SREvents.isValidBurningBannerPos(source.getLevel(), offsetPos(source)), new DefaultDispenseItemBehavior() {
 			@Override
-			protected ItemStack execute(IBlockSource source, ItemStack stack) {
-				World world = source.getLevel();
+			protected ItemStack execute(BlockSource source, ItemStack stack) {
+				Level world = source.getLevel();
 				world.addFreshEntity(new BurningBannerEntity(world, offsetPos(source), null));
 				if (stack.hurt(1, world.random, null)) {
 					stack.setCount(0);
@@ -83,5 +86,11 @@ public class SRCompat {
 				return stack;
 			}
 		}));
+	}
+
+	public static void registerNoteBlocks() {
+		DataUtil.registerNoteBlockInstrument(new DataUtil.CustomNoteBlockInstrument(SavageAndRavage.MOD_ID, source -> source.getBlockState().is(Blocks.TARGET), SRSounds.BLOCK_NOTE_BLOCK_HIT_MARKER.get()));
+		DataUtil.registerNoteBlockInstrument(new DataUtil.CustomNoteBlockInstrument(SavageAndRavage.MOD_ID, source -> source.getBlockState().is(SRTags.GLOOMY_TILES), SRSounds.BLOCK_NOTE_BLOCK_HARPSICHORD.get()));
+		DataUtil.registerNoteBlockInstrument(new DataUtil.CustomNoteBlockInstrument(SavageAndRavage.MOD_ID, source -> source.getBlockState().is(SRTags.BLAST_PROOF), SRSounds.BLOCK_NOTE_BLOCK_ORCHESTRAL_HIT.get()));
 	}
 }

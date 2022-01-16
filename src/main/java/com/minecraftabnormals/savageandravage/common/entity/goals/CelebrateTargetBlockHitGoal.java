@@ -1,16 +1,16 @@
 package com.minecraftabnormals.savageandravage.common.entity.goals;
 
-import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.TrackedDataManager;
+import com.teamabnormals.blueprint.common.world.storage.tracking.TrackedDataManager;
 import com.minecraftabnormals.savageandravage.core.other.SRDataProcessors;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.monster.AbstractRaiderEntity;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.raid.Raider;
 
 import java.util.EnumSet;
 
 public class CelebrateTargetBlockHitGoal extends Goal {
-	private final AbstractRaiderEntity mob;
+	private final Raider mob;
 
-	public CelebrateTargetBlockHitGoal(AbstractRaiderEntity mob) {
+	public CelebrateTargetBlockHitGoal(Raider mob) {
 		this.mob = mob;
 		this.setFlags(EnumSet.of(Goal.Flag.MOVE));
 	}

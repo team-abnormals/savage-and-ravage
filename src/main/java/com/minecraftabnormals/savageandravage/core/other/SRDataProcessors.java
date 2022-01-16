@@ -1,9 +1,9 @@
 package com.minecraftabnormals.savageandravage.core.other;
 
-import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.*;
+import com.teamabnormals.blueprint.common.world.storage.tracking.*;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -11,8 +11,8 @@ import java.util.UUID;
 public class SRDataProcessors {
 	public static final IDataProcessor<Optional<UUID>> OPTIONAL_UUID = new IDataProcessor<Optional<UUID>>() {
 		@Override
-		public CompoundNBT write(Optional<UUID> optionalUUID) {
-			CompoundNBT nbt = new CompoundNBT();
+		public CompoundTag write(Optional<UUID> optionalUUID) {
+			CompoundTag nbt = new CompoundTag();
 			if (optionalUUID.isPresent()) {
 				nbt.putUUID("uuid", optionalUUID.get());
 			} else nbt.putBoolean("null", true);
@@ -20,7 +20,7 @@ public class SRDataProcessors {
 		}
 
 		@Override
-		public Optional<UUID> read(CompoundNBT nbt) {
+		public Optional<UUID> read(CompoundTag nbt) {
 			return Optional.ofNullable(nbt.getBoolean("null") ? null : nbt.getUUID("uuid"));
 		}
 	};

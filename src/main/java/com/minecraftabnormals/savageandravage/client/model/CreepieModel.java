@@ -2,67 +2,67 @@ package com.minecraftabnormals.savageandravage.client.model;
 
 import com.google.common.collect.ImmutableList;
 import com.minecraftabnormals.savageandravage.common.entity.CreepieEntity;
-import net.minecraft.client.renderer.entity.model.SegmentedModel;
-import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.util.math.MathHelper;
+import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
+import net.minecraft.client.model.ListModel;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 
 /**
  * CreepieModel - TallestEgg
  * Created using Tabula 7.1.0
  */
-public class CreepieModel extends SegmentedModel<CreepieEntity> {
-	public ModelRenderer head;
-	public ModelRenderer sprout;
-	public ModelRenderer body;
-	public ModelRenderer leg1;
-	public ModelRenderer leg2;
-	public ModelRenderer leg3;
-	public ModelRenderer leg4;
+public class CreepieModel extends ListModel<CreepieEntity> {
+	public ModelPart head;
+	public ModelPart sprout;
+	public ModelPart body;
+	public ModelPart leg1;
+	public ModelPart leg2;
+	public ModelPart leg3;
+	public ModelPart leg4;
 
-	public CreepieModel() {
-		this(0.0F);
+	public CreepieModel(ModelPart root) {
+		this.head = root.getChild("head");
+		this.sprout = this.head.getChild("sprout");
+		this.body = root.getChild("body");
+		this.leg1 = root.getChild("leg1");
+		this.leg2 = root.getChild("leg2");
+		this.leg3 = root.getChild("leg3");
+		this.leg4 = root.getChild("leg4");
 	}
 
-	public CreepieModel(float scaleIncrease) {
-		this.texWidth = 64;
-		this.texHeight = 32;
-		this.head = new ModelRenderer(this, 0, 0);
-		this.head.setPos(0.0F, 6.0F, 0.0F);
-		this.head.addBox(-4.0F, -8.0F, -4.0F, 8, 8, 8, 2.0F + scaleIncrease);
-		this.sprout = new ModelRenderer(this, 48, 16);
-		this.sprout.setPos(0.0F, 6.0F, 0.0F);
-		this.head.addChild(this.sprout);
-		this.sprout.addBox(0.0F, -24.0F, -4.0F, 0.0F, 8.0F, 8.0F, scaleIncrease);
-		this.sprout.addBox(-4.0F, -24.0F, 0.0F, 8.0F, 8.0F, 0.0F, scaleIncrease);
-		this.body = new ModelRenderer(this, 16, 16);
-		this.body.setPos(0.0F, 6.0F, 0.0F);
-		this.body.addBox(-4.0F, 0.0F, -2.0F, 8, 12, 4, scaleIncrease);
-		this.leg1 = new ModelRenderer(this, 0, 16);
-		this.leg1.setPos(2.0F, 18.0F, 4.0F);
-		this.leg1.addBox(-2.0F, 0.0F, -2.0F, 4, 6, 4, scaleIncrease);
-		this.leg2 = new ModelRenderer(this, 0, 16);
-		this.leg2.setPos(-2.0F, 18.0F, 4.0F);
-		this.leg2.addBox(-2.0F, 0.0F, -2.0F, 4, 6, 4, scaleIncrease);
-		this.leg3 = new ModelRenderer(this, 0, 16);
-		this.leg3.setPos(2.0F, 18.0F, -4.0F);
-		this.leg3.addBox(-2.0F, 0.0F, -2.0F, 4, 6, 4, scaleIncrease);
-		this.leg4 = new ModelRenderer(this, 0, 16);
-		this.leg4.setPos(-2.0F, 18.0F, -4.0F);
-		this.leg4.addBox(-2.0F, 0.0F, -2.0F, 4, 6, 4, scaleIncrease);
+	public static LayerDefinition createBodyLayer(CubeDeformation deformation) {
+		MeshDefinition meshdefinition = new MeshDefinition();
+		PartDefinition root = meshdefinition.getRoot();
+		PartDefinition head = root.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, deformation.extend(2.0F)), PartPose.offsetAndRotation(0.0F, 6.0F, 0.0F, 0.0F, 0.0F, 0.0F));
+		PartDefinition sprout = head.addOrReplaceChild("sprout", CubeListBuilder.create().texOffs(48, 16).addBox(0.0F, -24.0F, -4.0F, 0.0F, 8.0F, 8.0F, deformation).texOffs(48, 16).addBox(-4.0F, -24.0F, 0.0F, 8.0F, 8.0F, 0.0F, false), PartPose.offsetAndRotation(0.0F, 6.0F, 0.0F, 0.0F, 0.0F, 0.0F));
+		PartDefinition body = root.addOrReplaceChild("body", CubeListBuilder.create().texOffs(16, 16).addBox(-4.0F, 0.0F, -2.0F, 8.0F, 12.0F, 4.0F, deformation), PartPose.offsetAndRotation(0.0F, 6.0F, 0.0F, 0.0F, 0.0F, 0.0F));
+		PartDefinition leg1 = root.addOrReplaceChild("leg1", CubeListBuilder.create().texOffs(0, 16).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 6.0F, 4.0F, deformation), PartPose.offsetAndRotation(2.0F, 18.0F, 4.0F, 0.0F, 0.0F, 0.0F));
+		PartDefinition leg2 = root.addOrReplaceChild("leg2", CubeListBuilder.create().texOffs(0, 16).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 6.0F, 4.0F, deformation), PartPose.offsetAndRotation(-2.0F, 18.0F, 4.0F, 0.0F, 0.0F, 0.0F));
+		PartDefinition leg3 = root.addOrReplaceChild("leg3", CubeListBuilder.create().texOffs(0, 16).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 6.0F, 4.0F, deformation), PartPose.offsetAndRotation(2.0F, 18.0F, -4.0F, 0.0F, 0.0F, 0.0F));
+		PartDefinition leg4 = root.addOrReplaceChild("leg4", CubeListBuilder.create().texOffs(0, 16).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 6.0F, 4.0F, deformation), PartPose.offsetAndRotation(-2.0F, 18.0F, -4.0F, 0.0F, 0.0F, 0.0F));
+		return LayerDefinition.create(meshdefinition, 64, 32);
 	}
 
 	@Override
 	public void setupAnim(CreepieEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.head.yRot = netHeadYaw * 0.017453292F;
 		this.head.xRot = headPitch * 0.017453292F;
-		this.leg1.xRot = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
-		this.leg2.xRot = MathHelper.cos(limbSwing * 0.6662F + 3.1415927F) * 1.4F * limbSwingAmount;
-		this.leg3.xRot = MathHelper.cos(limbSwing * 0.6662F + 3.1415927F) * 1.4F * limbSwingAmount;
-		this.leg4.xRot = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+		this.leg1.xRot = Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+		this.leg2.xRot = Mth.cos(limbSwing * 0.6662F + 3.1415927F) * 1.4F * limbSwingAmount;
+		this.leg3.xRot = Mth.cos(limbSwing * 0.6662F + 3.1415927F) * 1.4F * limbSwingAmount;
+		this.leg4.xRot = Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
 	}
 
 	@Override
-	public Iterable<ModelRenderer> parts() {
+	public Iterable<ModelPart> parts() {
 		return ImmutableList.of(this.leg4, this.head, this.body, this.leg1, this.leg3, this.leg2);
 	}
 }

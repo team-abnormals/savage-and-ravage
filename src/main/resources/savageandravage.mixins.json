@@ -1,17 +1,17 @@
 {
   "required": true,
   "package": "com.minecraftabnormals.savageandravage.core.mixin",
-  "compatibilityLevel": "JAVA_8",
+  "compatibilityLevel": "JAVA_17",
   "minVersion": "0.8",
   "refmap": "savageandravage.refmap.json",
   "mixins": [
-    "AbstractRaiderEntityMixin",
+    "RaiderMixin",
     "BannerItemMixin",
-    "IRaiderAccessor",
-    "IronGolemEntityMixin",
-    "PillagerEntityMixin",
-    "SpellcastingIllagerEntityMixin",
-    "ZoglinEntityMixin"
+    "RaiderAccessor",
+    "IronGolemMixin",
+    "PillagerMixin",
+    "SpellcasterIllagerMixin",
+    "ZoglinMixin"
   ],
   "injectors": {
     "defaultRequire": 1

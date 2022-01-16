@@ -2,28 +2,32 @@ package com.minecraftabnormals.savageandravage.common.entity;
 
 import com.minecraftabnormals.savageandravage.core.registry.SREntities;
 import com.minecraftabnormals.savageandravage.core.registry.SRParticles;
-import net.minecraft.block.material.PushReaction;
-import net.minecraft.entity.AreaEffectCloudEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.projectile.ThrowableEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.math.*;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.AreaEffectCloud;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.ThrowableProjectile;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.entity.IEntityAdditionalSpawnData;
+import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
 
-public class SporeCloudEntity extends ThrowableEntity implements IEntityAdditionalSpawnData {
-
-	private AreaEffectCloudEntity cloudEntity;
+public class SporeCloudEntity extends ThrowableProjectile implements IEntityAdditionalSpawnData {
+	private AreaEffectCloud cloudEntity;
 	private UUID cloudId;
 	private int cloudSize;
 	private boolean charged = false;
@@ -31,15 +35,15 @@ public class SporeCloudEntity extends ThrowableEntity implements IEntityAddition
 	private boolean creepiesAttackPlayersOnly;
 	private boolean hit;
 
-	public SporeCloudEntity(EntityType<? extends SporeCloudEntity> type, World world) {
+	public SporeCloudEntity(EntityType<? extends SporeCloudEntity> type, Level world) {
 		super(type, world);
 	}
 
-	public SporeCloudEntity(World world, LivingEntity thrower) {
+	public SporeCloudEntity(Level world, LivingEntity thrower) {
 		super(SREntities.SPORE_CLOUD.get(), thrower, world);
 	}
 
-	public SporeCloudEntity(World world, double x, double y, double z) {
+	public SporeCloudEntity(Level world, double x, double y, double z) {
 		super(SREntities.SPORE_CLOUD.get(), x, y, z, world);
 	}
 
@@ -48,7 +52,7 @@ public class SporeCloudEntity extends ThrowableEntity implements IEntityAddition
 			return;
 
 		this.setPos(x, y, z);
-		AreaEffectCloudEntity aoe = new AreaEffectCloudEntity(this.level, x, y, z);
+		AreaEffectCloud aoe = new AreaEffectCloud(this.level, x, y, z);
 		Entity thrower = this.getOwner();
 		if (thrower instanceof LivingEntity)
 			aoe.setOwner((LivingEntity) thrower);
@@ -62,22 +66,22 @@ public class SporeCloudEntity extends ThrowableEntity implements IEntityAddition
 		this.level.broadcastEntityEvent(this, (byte) 3);
 	}
 
-	public void setCloudEntity(@Nullable AreaEffectCloudEntity entity) {
+	public void setCloudEntity(@Nullable AreaEffectCloud entity) {
 		this.cloudEntity = entity;
 		this.cloudId = entity == null ? null : entity.getUUID();
 	}
 
 	@Nullable
-	private AreaEffectCloudEntity getCloudEntity() {
-		if (this.cloudId != null && this.level instanceof ServerWorld) {
-			Entity entity = ((ServerWorld) this.level).getEntity(this.cloudId);
-			return entity instanceof AreaEffectCloudEntity ? (AreaEffectCloudEntity) entity : null;
+	private AreaEffectCloud getCloudEntity() {
+		if (this.cloudId != null && this.level instanceof ServerLevel) {
+			Entity entity = ((ServerLevel) this.level).getEntity(this.cloudId);
+			return entity instanceof AreaEffectCloud ? (AreaEffectCloud) entity : null;
 		}
 		return null;
 	}
 
 	@Override
-	protected void addAdditionalSaveData(CompoundNBT nbt) {
+	protected void addAdditionalSaveData(CompoundTag nbt) {
 		super.addAdditionalSaveData(nbt);
 
 		if (this.cloudId != null)
@@ -90,7 +94,7 @@ public class SporeCloudEntity extends ThrowableEntity implements IEntityAddition
 	}
 
 	@Override
-	protected void readAdditionalSaveData(CompoundNBT nbt) {
+	protected void readAdditionalSaveData(CompoundTag nbt) {
 		super.readAdditionalSaveData(nbt);
 		this.cloudId = nbt.hasUUID("CloudEntity") ? nbt.getUUID("CloudEntity") : null;
 		this.charged = nbt.getBoolean("Charged");
@@ -104,18 +108,18 @@ public class SporeCloudEntity extends ThrowableEntity implements IEntityAddition
 	}
 
 	@Override
-	protected void onHit(RayTraceResult result) {
-		Vector3d hitVec = result.getLocation();
+	protected void onHit(HitResult result) {
+		Vec3 hitVec = result.getLocation();
 		if (!this.level.isClientSide()) {
 			this.spawnAreaEffectCloud(hitVec.x(), hitVec.y(), hitVec.z());
 		} else for (int i = 0; i < 16; i++) {
 			this.level.addParticle(SRParticles.CREEPER_SPORE_SPRINKLES.get(), this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
 		}
 		this.hit = true;
-		if (result instanceof BlockRayTraceResult)
-			this.onHitBlock((BlockRayTraceResult) result);
-		if (result instanceof EntityRayTraceResult)
-			this.onHitEntity((EntityRayTraceResult) result);
+		if (result instanceof BlockHitResult)
+			this.onHitBlock((BlockHitResult) result);
+		if (result instanceof EntityHitResult)
+			this.onHitEntity((EntityHitResult) result);
 	}
 
 	@Override
@@ -139,10 +143,10 @@ public class SporeCloudEntity extends ThrowableEntity implements IEntityAddition
 			if (!this.hit)
 				this.level.addParticle(SRParticles.CREEPER_SPORES.get(), this.getX(), this.getY(), this.getZ(), 0, 0, 0);
 		} else if (this.cloudId != null) {
-			AreaEffectCloudEntity aoe = this.getCloudEntity();
+			AreaEffectCloud aoe = this.getCloudEntity();
 			if (aoe == null) {
 				if (this.cloudEntity == null || !this.cloudEntity.isAlive())
-					this.remove();
+					this.discard();
 				return;
 			}
 
@@ -162,11 +166,11 @@ public class SporeCloudEntity extends ThrowableEntity implements IEntityAddition
 						double xPos = aoe.getRandomX(0.1D);
 						double zPos = aoe.getRandomZ(0.2D);
 						creepie.moveTo(xPos, aoe.getY(), zPos, 0.0F, 0.0F);
-						AxisAlignedBB box = creepie.getBoundingBox();
-						if (BlockPos.betweenClosedStream(MathHelper.floor(box.minX), MathHelper.floor(box.minY), MathHelper.floor(box.minZ), MathHelper.ceil(box.maxX), MathHelper.ceil(box.maxY), MathHelper.ceil(box.maxZ)).distinct().noneMatch(pos -> {
+						AABB box = creepie.getBoundingBox();
+						if (BlockPos.betweenClosedStream(Mth.floor(box.minX), Mth.floor(box.minY), Mth.floor(box.minZ), Mth.ceil(box.maxX), Mth.ceil(box.maxY), Mth.ceil(box.maxZ)).distinct().noneMatch(pos -> {
 							if (this.level.getBlockState(pos).isSuffocating(this.level, pos)) {
-								for (AxisAlignedBB blockBox : this.level.getBlockState(pos).getShape(this.level, pos).toAabbs()) {
-									blockBox = new AxisAlignedBB(blockBox.minX + pos.getX(), blockBox.minY + pos.getY(), blockBox.minZ + pos.getZ(), blockBox.maxX + pos.getX(), blockBox.maxY + pos.getY(), blockBox.maxZ + pos.getZ());
+								for (AABB blockBox : this.level.getBlockState(pos).getShape(this.level, pos).toAabbs()) {
+									blockBox = new AABB(blockBox.minX + pos.getX(), blockBox.minY + pos.getY(), blockBox.minZ + pos.getZ(), blockBox.maxX + pos.getX(), blockBox.maxY + pos.getY(), blockBox.maxZ + pos.getZ());
 									if (blockBox.intersects(creepie.getBoundingBox())) {
 										return true;
 									}
@@ -184,7 +188,7 @@ public class SporeCloudEntity extends ThrowableEntity implements IEntityAddition
 				}
 
 				if (!aoe.isAlive())
-					this.remove();
+					this.discard();
 			}
 		}
 	}
@@ -195,7 +199,7 @@ public class SporeCloudEntity extends ThrowableEntity implements IEntityAddition
 	}
 
 	@Override
-	public IPacket<?> getAddEntityPacket() {
+	public Packet<?> getAddEntityPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 
@@ -212,12 +216,12 @@ public class SporeCloudEntity extends ThrowableEntity implements IEntityAddition
 	}
 
 	@Override
-	public void writeSpawnData(PacketBuffer buf) {
+	public void writeSpawnData(FriendlyByteBuf buf) {
 		buf.writeBoolean(this.cloudId != null);
 	}
 
 	@Override
-	public void readSpawnData(PacketBuffer buf) {
+	public void readSpawnData(FriendlyByteBuf buf) {
 		this.hit = buf.readBoolean();
 	}
 

@@ -1,36 +1,36 @@
 package com.minecraftabnormals.savageandravage.common.item;
 
-import com.minecraftabnormals.abnormals_core.core.util.item.filling.TargetedItemGroupFiller;
 import com.minecraftabnormals.savageandravage.common.entity.MischiefArrowEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
-import net.minecraft.item.ArrowItem;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.NonNullList;
-import net.minecraft.world.World;
+import com.teamabnormals.blueprint.core.util.item.filling.TargetedItemCategoryFiller;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.ArrowItem;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 
 public class MischiefArrowItem extends ArrowItem {
-	private static final TargetedItemGroupFiller FILLER = new TargetedItemGroupFiller(() -> Items.SPECTRAL_ARROW);
+	private static final TargetedItemCategoryFiller FILLER = new TargetedItemCategoryFiller(() -> Items.SPECTRAL_ARROW);
 
 	public MischiefArrowItem(Properties builder) {
 		super(builder);
 	}
 
 	@Override
-	public AbstractArrowEntity createArrow(World world, ItemStack stack, LivingEntity shooter) {
+	public AbstractArrow createArrow(Level world, ItemStack stack, LivingEntity shooter) {
 		return new MischiefArrowEntity(world, shooter);
 	}
 
 	@Override
-	public boolean isInfinite(ItemStack stack, ItemStack bow, PlayerEntity player) {
+	public boolean isInfinite(ItemStack stack, ItemStack bow, Player player) {
 		return false;
 	}
 
 	@Override
-	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {
+	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
 		FILLER.fillItem(this, group, items);
 	}
 }

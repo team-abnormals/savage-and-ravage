@@ -2,38 +2,38 @@ package com.minecraftabnormals.savageandravage.common.entity;
 
 import com.google.common.collect.Maps;
 import com.minecraftabnormals.savageandravage.core.registry.SRItems;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.monster.RavagerEntity;
-import net.minecraft.entity.monster.VindicatorEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.World;
-import net.minecraft.world.raid.Raid;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.Ravager;
+import net.minecraft.world.entity.monster.Vindicator;
+import net.minecraft.world.entity.raid.Raid;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.HitResult;
 
 import java.util.Map;
 
-public class ExecutionerEntity extends VindicatorEntity {
+public class ExecutionerEntity extends Vindicator {
 	//TODO fix attack time
-	public ExecutionerEntity(EntityType<? extends VindicatorEntity> entity, World world) {
+	public ExecutionerEntity(EntityType<? extends Vindicator> entity, Level world) {
 		super(entity, world);
 	}
 
 	@Override
 	protected void populateDefaultEquipmentSlots(DifficultyInstance difficulty) {
 		if (this.getCurrentRaid() == null) {
-			this.setItemSlot(EquipmentSlotType.MAINHAND, new ItemStack(SRItems.CLEAVER_OF_BEHEADING.get()));
-			this.handDropChances[EquipmentSlotType.MAINHAND.getIndex()] = 0.5F;
+			this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(SRItems.CLEAVER_OF_BEHEADING.get()));
+			this.handDropChances[EquipmentSlot.MAINHAND.getIndex()] = 0.5F;
 		}
 	}
 
@@ -47,8 +47,8 @@ public class ExecutionerEntity extends VindicatorEntity {
 
 	}
 
-	public static AttributeModifierMap.MutableAttribute registerAttributes() {
-		return MonsterEntity.createMonsterAttributes()
+	public static AttributeSupplier.Builder registerAttributes() {
+		return Monster.createMonsterAttributes()
 				.add(Attributes.MOVEMENT_SPEED, 0.30F)
 				.add(Attributes.FOLLOW_RANGE, 14.0D)
 				.add(Attributes.MAX_HEALTH, 35.0D)
@@ -57,7 +57,7 @@ public class ExecutionerEntity extends VindicatorEntity {
 	}
 
 	@Override
-	public ItemStack getPickedResult(RayTraceResult target) {
+	public ItemStack getPickedResult(HitResult target) {
 		return new ItemStack(SRItems.EXECUTIONER_SPAWN_EGG.get());
 	}
 
@@ -79,17 +79,17 @@ public class ExecutionerEntity extends VindicatorEntity {
 			EnchantmentHelper.setEnchantments(map, itemstack);
 		}
 
-		this.setItemSlot(EquipmentSlotType.MAINHAND, itemstack);
-		this.handDropChances[EquipmentSlotType.MAINHAND.getIndex()] = 0.5F;
+		this.setItemSlot(EquipmentSlot.MAINHAND, itemstack);
+		this.handDropChances[EquipmentSlot.MAINHAND.getIndex()] = 0.5F;
 	}
 
 	static class AttackGoal extends MeleeAttackGoal {
-		public AttackGoal(VindicatorEntity p_i50577_2_, double speedModifier) {
+		public AttackGoal(Vindicator p_i50577_2_, double speedModifier) {
 			super(p_i50577_2_, speedModifier, false);
 		}
 
 		protected double getAttackReachSqr(LivingEntity p_179512_1_) {
-			if (this.mob.getVehicle() instanceof RavagerEntity) {
+			if (this.mob.getVehicle() instanceof Ravager) {
 				float f = this.mob.getVehicle().getBbWidth() - 0.1F;
 				return f * 2.0F * f * 2.0F + p_179512_1_.getBbWidth();
 			} else {

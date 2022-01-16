@@ -2,25 +2,35 @@ package com.minecraftabnormals.savageandravage.common.entity;
 
 import com.minecraftabnormals.savageandravage.core.registry.SRItems;
 import com.minecraftabnormals.savageandravage.core.registry.SRSounds;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.*;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
-import net.minecraft.entity.monster.AbstractRaiderEntity;
-import net.minecraft.entity.monster.SpellcastingIllagerEntity;
-import net.minecraft.entity.passive.IronGolemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.MobType;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.entity.monster.SpellcasterIllager;
+import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.raid.Raider;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.HitResult;
 
 import javax.annotation.Nullable;
 import java.util.Random;
@@ -29,7 +39,7 @@ import java.util.UUID;
 /**
  * @author Ocelot
  */
-public class IceologerEntity extends SpellcastingIllagerEntity {
+public class IceologerEntity extends SpellcasterIllager {
 
 	private UUID iceChunkEntityUUID;
 	private int iceChunkEntity;
@@ -43,28 +53,28 @@ public class IceologerEntity extends SpellcastingIllagerEntity {
 	public float prevCameraYaw;
 	public float cameraYaw;
 
-	public IceologerEntity(EntityType<IceologerEntity> type, World world) {
+	public IceologerEntity(EntityType<IceologerEntity> type, Level world) {
 		super(type, world);
 	}
 
 	@Override
 	protected void registerGoals() {
 		super.registerGoals();
-		this.goalSelector.addGoal(0, new SwimGoal(this));
-		this.goalSelector.addGoal(1, new CastingASpellGoal());
-		this.goalSelector.addGoal(2, new AvoidEntityGoal<>(this, PlayerEntity.class, 8.0F, 0.6D, 1.0D));
+		this.goalSelector.addGoal(0, new FloatGoal(this));
+		this.goalSelector.addGoal(1, new SpellcasterCastingSpellGoal());
+		this.goalSelector.addGoal(2, new AvoidEntityGoal<>(this, Player.class, 8.0F, 0.6D, 1.0D));
 		this.goalSelector.addGoal(5, new AttackIceChunkGoal());
 		this.goalSelector.addGoal(6, new AttackIceCloudGoal());
-		this.goalSelector.addGoal(8, new RandomWalkingGoal(this, 0.6D));
-		this.goalSelector.addGoal(9, new LookAtGoal(this, PlayerEntity.class, 3.0F, 1.0F));
-		this.goalSelector.addGoal(10, new LookAtGoal(this, MobEntity.class, 8.0F));
-		this.targetSelector.addGoal(1, (new HurtByTargetGoal(this, AbstractRaiderEntity.class)).setAlertOthers());
-		this.targetSelector.addGoal(2, (new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true)).setUnseenMemoryTicks(300));
-		this.targetSelector.addGoal(3, (new NearestAttackableTargetGoal<>(this, AbstractVillagerEntity.class, false)).setUnseenMemoryTicks(300));
-		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, IronGolemEntity.class, false));
+		this.goalSelector.addGoal(8, new RandomStrollGoal(this, 0.6D));
+		this.goalSelector.addGoal(9, new LookAtPlayerGoal(this, Player.class, 3.0F, 1.0F));
+		this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Mob.class, 8.0F));
+		this.targetSelector.addGoal(1, (new HurtByTargetGoal(this, Raider.class)).setAlertOthers());
+		this.targetSelector.addGoal(2, (new NearestAttackableTargetGoal<>(this, Player.class, true)).setUnseenMemoryTicks(300));
+		this.targetSelector.addGoal(3, (new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false)).setUnseenMemoryTicks(300));
+		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, IronGolem.class, false));
 	}
 
-	public static AttributeModifierMap.MutableAttribute registerAttributes() {
+	public static AttributeSupplier.Builder registerAttributes() {
 		return LivingEntity.createLivingAttributes().add(Attributes.FOLLOW_RANGE, 16.0D).add(Attributes.ATTACK_KNOCKBACK).add(Attributes.MOVEMENT_SPEED, 0.5D);
 	}
 
@@ -123,7 +133,7 @@ public class IceologerEntity extends SpellcastingIllagerEntity {
 		this.prevCameraYaw = this.cameraYaw;
 		float f;
 		if (this.onGround && !this.isDeadOrDying() && !this.isSwimming()) {
-			f = Math.min(0.1F, MathHelper.sqrt(getHorizontalDistanceSqr(this.getDeltaMovement())));
+			f = Math.min(0.1F, Mth.sqrt((float) this.getDeltaMovement().horizontalDistanceSqr()));
 		} else {
 			f = 0.0F;
 		}
@@ -160,14 +170,14 @@ public class IceologerEntity extends SpellcastingIllagerEntity {
 	}
 
 	@Override
-	public ItemStack getPickedResult(RayTraceResult target) {
+	public ItemStack getPickedResult(HitResult target) {
 		return new ItemStack(SRItems.ICEOLOGER_SPAWN_EGG.get());
 	}
 
 	@Nullable
 	public IceChunkEntity getIceChunk() {
-		if (this.iceChunkEntityUUID != null && this.level instanceof ServerWorld) {
-			Entity entity = ((ServerWorld) this.level).getEntity(this.iceChunkEntityUUID);
+		if (this.iceChunkEntityUUID != null && this.level instanceof ServerLevel) {
+			Entity entity = ((ServerLevel) this.level).getEntity(this.iceChunkEntityUUID);
 			return entity instanceof IceChunkEntity ? (IceChunkEntity) entity : null;
 		} else {
 			if (this.iceChunkEntity == 0)
@@ -186,8 +196,8 @@ public class IceologerEntity extends SpellcastingIllagerEntity {
 	}
 
 	@Override
-	public CreatureAttribute getMobType() {
-		return CreatureAttribute.ILLAGER;
+	public MobType getMobType() {
+		return MobType.ILLAGER;
 	}
 
 	@Override
@@ -195,11 +205,11 @@ public class IceologerEntity extends SpellcastingIllagerEntity {
 		return true;
 	}
 
-	public static boolean canIceologerSpawn(EntityType<? extends IceologerEntity> patrollerType, IWorld worldIn, SpawnReason reason, BlockPos pos, Random random) {
+	public static boolean canIceologerSpawn(EntityType<? extends IceologerEntity> patrollerType, LevelAccessor worldIn, MobSpawnType reason, BlockPos pos, Random random) {
 		return worldIn.getBlockState(pos).is(Blocks.SNOW) && checkAnyLightMonsterSpawnRules(patrollerType, worldIn, reason, pos, random);
 	}
 
-	class AttackIceChunkGoal extends UseSpellGoal {
+	class AttackIceChunkGoal extends SpellcasterUseSpellGoal {
 		private AttackIceChunkGoal() {
 		}
 
@@ -234,12 +244,12 @@ public class IceologerEntity extends SpellcastingIllagerEntity {
 		}
 
 		@Override
-		protected SpellType getSpell() {
-			return SpellType.FANGS;
+		protected IllagerSpell getSpell() {
+			return IllagerSpell.FANGS;
 		}
 	}
 
-	class AttackIceCloudGoal extends UseSpellGoal {
+	class AttackIceCloudGoal extends SpellcasterUseSpellGoal {
 		private AttackIceCloudGoal() {
 		}
 
@@ -269,8 +279,8 @@ public class IceologerEntity extends SpellcastingIllagerEntity {
 		}
 
 		@Override
-		protected SpellType getSpell() {
-			return SpellType.SUMMON_VEX;
+		protected IllagerSpell getSpell() {
+			return IllagerSpell.SUMMON_VEX;
 		}
 	}
 }

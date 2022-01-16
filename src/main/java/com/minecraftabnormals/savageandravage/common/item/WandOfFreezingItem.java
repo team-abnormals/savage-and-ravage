@@ -1,28 +1,32 @@
 package com.minecraftabnormals.savageandravage.common.item;
 
-import com.minecraftabnormals.abnormals_core.core.util.item.filling.TargetedItemGroupFiller;
 import com.minecraftabnormals.savageandravage.common.entity.IceChunkEntity;
 import com.minecraftabnormals.savageandravage.core.registry.SRSounds;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileHelper;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.*;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import com.teamabnormals.blueprint.core.util.item.filling.TargetedItemCategoryFiller;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 
 /**
  * @author Ocelot
  */
 public class WandOfFreezingItem extends Item {
-	private static final TargetedItemGroupFiller FILLER = new TargetedItemGroupFiller(() -> Items.TOTEM_OF_UNDYING);
+	private static final TargetedItemCategoryFiller FILLER = new TargetedItemCategoryFiller(() -> Items.TOTEM_OF_UNDYING);
 	private static final double RAYTRACE_DISTANCE = 16;
 
 	public WandOfFreezingItem(Properties properties) {
@@ -30,21 +34,21 @@ public class WandOfFreezingItem extends Item {
 	}
 
 	@Override
-	public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+	public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
 		ItemStack stack = player.getItemInHand(hand);
-		BlockRayTraceResult result = (BlockRayTraceResult) player.pick(RAYTRACE_DISTANCE, 1.0f, false);
-		Vector3d startVec = player.getEyePosition(1.0f);
-		Vector3d lookVec = player.getViewVector(1.0F);
-		Vector3d endVec = startVec.add(lookVec.x * RAYTRACE_DISTANCE, lookVec.y * RAYTRACE_DISTANCE, lookVec.z * RAYTRACE_DISTANCE);
-		if (result.getType() != RayTraceResult.Type.MISS)
+		BlockHitResult result = (BlockHitResult) player.pick(RAYTRACE_DISTANCE, 1.0f, false);
+		Vec3 startVec = player.getEyePosition(1.0f);
+		Vec3 lookVec = player.getViewVector(1.0F);
+		Vec3 endVec = startVec.add(lookVec.x * RAYTRACE_DISTANCE, lookVec.y * RAYTRACE_DISTANCE, lookVec.z * RAYTRACE_DISTANCE);
+		if (result.getType() != HitResult.Type.MISS)
 			endVec = result.getLocation();
 
-		AxisAlignedBB axisalignedbb = player.getBoundingBox().expandTowards(lookVec.scale(RAYTRACE_DISTANCE)).inflate(1.0D, 1.0D, 1.0D);
-		EntityRayTraceResult entityraytraceresult = ProjectileHelper.getEntityHitResult(world, player, startVec, endVec, axisalignedbb, entity -> entity instanceof LivingEntity && !entity.isSpectator() && entity.isPickable());
+		AABB axisalignedbb = player.getBoundingBox().expandTowards(lookVec.scale(RAYTRACE_DISTANCE)).inflate(1.0D, 1.0D, 1.0D);
+		EntityHitResult entityraytraceresult = ProjectileUtil.getEntityHitResult(world, player, startVec, endVec, axisalignedbb, entity -> entity instanceof LivingEntity && !entity.isSpectator() && entity.isPickable());
 
-		if (result.getType() != RayTraceResult.Type.MISS || entityraytraceresult != null) {
+		if (result.getType() != HitResult.Type.MISS || entityraytraceresult != null) {
 			stack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
-			world.playSound(player, player.blockPosition(), SRSounds.ENTITY_PLAYER_CAST_SPELL.get(), SoundCategory.PLAYERS, 1.0f, 1.0f);
+			world.playSound(player, player.blockPosition(), SRSounds.ENTITY_PLAYER_CAST_SPELL.get(), SoundSource.PLAYERS, 1.0f, 1.0f);
 
 			player.getCooldowns().addCooldown(this, 20);
 			if (!world.isClientSide()) {
@@ -53,19 +57,19 @@ public class WandOfFreezingItem extends Item {
 				} else {
 					BlockPos pos = result.getBlockPos();
 					IceChunkEntity iceChunk = new IceChunkEntity(world, player, null);
-					iceChunk.absMoveTo(pos.getX() + 0.5, pos.getY() + 1 + IceChunkEntity.HOVER_DISTANCE, pos.getZ() + 0.5, iceChunk.yRot, iceChunk.xRot);
+					iceChunk.absMoveTo(pos.getX() + 0.5, pos.getY() + 1 + IceChunkEntity.HOVER_DISTANCE, pos.getZ() + 0.5, iceChunk.getYRot(), iceChunk.getXRot());
 					world.addFreshEntity(iceChunk);
 				}
 			}
 
-			return ActionResult.success(stack);
+			return InteractionResultHolder.success(stack);
 		}
 
-		return ActionResult.pass(stack);
+		return InteractionResultHolder.pass(stack);
 	}
 
 	@Override
-	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {
+	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
 		FILLER.fillItem(this, group, items);
 	}
 }

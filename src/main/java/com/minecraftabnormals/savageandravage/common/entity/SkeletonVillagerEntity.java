@@ -3,40 +3,53 @@ package com.minecraftabnormals.savageandravage.common.entity;
 import com.google.common.collect.Maps;
 import com.minecraftabnormals.savageandravage.common.entity.goals.ImprovedCrossbowGoal;
 import com.minecraftabnormals.savageandravage.core.registry.SRItems;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.*;
-import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
-import net.minecraft.entity.monster.AbstractSkeletonEntity;
-import net.minecraft.entity.monster.SpiderEntity;
-import net.minecraft.entity.passive.IronGolemEntity;
-import net.minecraft.entity.passive.WolfEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.entity.projectile.ProjectileHelper;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.CrossbowItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.IServerWorld;
-import net.minecraft.world.World;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.MobType;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
+import net.minecraft.world.entity.ai.goal.FleeSunGoal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.RestrictSunGoal;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.entity.animal.Wolf;
+import net.minecraft.world.entity.monster.AbstractSkeleton;
+import net.minecraft.world.entity.monster.CrossbowAttackMob;
+import net.minecraft.world.entity.monster.Spider;
+import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.item.CrossbowItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.phys.HitResult;
 
 import javax.annotation.Nullable;
 import java.util.Map;
 
-public class SkeletonVillagerEntity extends AbstractSkeletonEntity implements ICrossbowUser {
-	private static final DataParameter<Boolean> DATA_CHARGING_STATE = EntityDataManager.defineId(SkeletonVillagerEntity.class, DataSerializers.BOOLEAN);
+public class SkeletonVillagerEntity extends AbstractSkeleton implements CrossbowAttackMob {
+	private static final EntityDataAccessor<Boolean> DATA_CHARGING_STATE = SynchedEntityData.defineId(SkeletonVillagerEntity.class, EntityDataSerializers.BOOLEAN);
 	private final ImprovedCrossbowGoal<SkeletonVillagerEntity> aiCrossBow = new ImprovedCrossbowGoal<>(this, 1.0D, 8.0F, 5.0D);
 	private final MeleeAttackGoal aiMelee = new MeleeAttackGoal(this, 1.2D, false) {
 		@Override
@@ -53,11 +66,11 @@ public class SkeletonVillagerEntity extends AbstractSkeletonEntity implements IC
 	};
 
 	@Override
-	public CreatureAttribute getMobType() {
-		return CreatureAttribute.UNDEAD;
+	public MobType getMobType() {
+		return MobType.UNDEAD;
 	}
 
-	public SkeletonVillagerEntity(EntityType<? extends SkeletonVillagerEntity> type, World worldIn) {
+	public SkeletonVillagerEntity(EntityType<? extends SkeletonVillagerEntity> type, Level worldIn) {
 		super(type, worldIn);
 		this.reassessWeaponGoal();
 	}
@@ -71,7 +84,7 @@ public class SkeletonVillagerEntity extends AbstractSkeletonEntity implements IC
 	public void reassessWeaponGoal() {
 		this.goalSelector.removeGoal(this.aiMelee);
 		this.goalSelector.removeGoal(this.aiCrossBow);
-		ItemStack itemstack = this.getItemInHand(ProjectileHelper.getWeaponHoldingHand(this, item -> item instanceof CrossbowItem));
+		ItemStack itemstack = this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, item -> item instanceof CrossbowItem));
 		if (itemstack.getItem() instanceof CrossbowItem) {
 			this.goalSelector.addGoal(3, this.aiCrossBow);
 		} else {
@@ -83,14 +96,14 @@ public class SkeletonVillagerEntity extends AbstractSkeletonEntity implements IC
 	protected void registerGoals() {
 		this.goalSelector.addGoal(2, new RestrictSunGoal(this));
 		this.goalSelector.addGoal(3, new FleeSunGoal(this, 1.0D));
-		this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, WolfEntity.class, 6.0F, 1.0D, 1.2D));
-		this.goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
-		this.goalSelector.addGoal(6, new LookAtGoal(this, PlayerEntity.class, 8.0F));
-		this.goalSelector.addGoal(6, new LookRandomlyGoal(this));
+		this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, Wolf.class, 6.0F, 1.0D, 1.2D));
+		this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+		this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
+		this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
 		this.targetSelector.addGoal(1, (new HurtByTargetGoal(this, SkeletonVillagerEntity.class)).setAlertOthers());
-		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
-		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, AbstractVillagerEntity.class, true));
-		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, IronGolemEntity.class, true));
+		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
+		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, true));
+		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, IronGolem.class, true));
 	}
 
 	@Override
@@ -119,17 +132,17 @@ public class SkeletonVillagerEntity extends AbstractSkeletonEntity implements IC
 	}
 
 	@Override
-	public ItemStack getPickedResult(RayTraceResult target) {
+	public ItemStack getPickedResult(HitResult target) {
 		return new ItemStack(SRItems.SKELETON_VILLAGER_SPAWN_EGG.get());
 	}
 
 	@Nullable
 	@Override
-	public ILivingEntityData finalizeSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+	public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
 		this.populateDefaultEquipmentSlots(difficultyIn);
 		this.populateDefaultEquipmentEnchantments(difficultyIn);
 		if (worldIn.getRandom().nextInt(100) == 0) {
-			SpiderEntity spider = EntityType.SPIDER.create(this.level);
+			Spider spider = EntityType.SPIDER.create(this.level);
 			if (spider != null) {
 				spider.copyPosition(this);
 				worldIn.addFreshEntity(spider);
@@ -147,7 +160,7 @@ public class SkeletonVillagerEntity extends AbstractSkeletonEntity implements IC
 			map.put(Enchantments.PIERCING, 1);
 			EnchantmentHelper.setEnchantments(map, itemstack);
 		}
-		this.setItemSlot(EquipmentSlotType.MAINHAND, itemstack);
+		this.setItemSlot(EquipmentSlot.MAINHAND, itemstack);
 	}
 
 	@Override
@@ -171,7 +184,7 @@ public class SkeletonVillagerEntity extends AbstractSkeletonEntity implements IC
 	}
 
 	@Override
-	public void shootCrossbowProjectile(LivingEntity p_230284_1_, ItemStack p_230284_2_, ProjectileEntity p_230284_3_, float p_230284_4_) {
+	public void shootCrossbowProjectile(LivingEntity p_230284_1_, ItemStack p_230284_2_, Projectile p_230284_3_, float p_230284_4_) {
 		this.shootCrossbowProjectile(this, p_230284_1_, p_230284_3_, p_230284_4_, 1.6F);
 	}
 }

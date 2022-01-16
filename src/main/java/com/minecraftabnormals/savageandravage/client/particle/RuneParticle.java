@@ -1,13 +1,13 @@
 package com.minecraftabnormals.savageandravage.client.particle;
 
 import net.minecraft.client.particle.*;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.particles.BasicParticleType;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.util.Mth;
 
-public class RuneParticle extends SpriteTexturedParticle {
+public class RuneParticle extends TextureSheetParticle {
 
-	public RuneParticle(ClientWorld world, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+	public RuneParticle(ClientLevel world, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
 		super(world, x, y, z, 0.0D, 0.0D, 0.0D);
 		this.xd *= 0.01;
 		this.yd *= 0.01;
@@ -26,13 +26,13 @@ public class RuneParticle extends SpriteTexturedParticle {
 	}
 
 	@Override
-	public IParticleRenderType getRenderType() {
-		return IParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+	public ParticleRenderType getRenderType() {
+		return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
 	}
 
 	@Override
 	public float getQuadSize(float partialTicks) {
-		return this.quadSize * MathHelper.clamp(((float) this.age + partialTicks) / (float) this.lifetime * 32.0F, 0.0F, 1.0F);
+		return this.quadSize * Mth.clamp(((float) this.age + partialTicks) / (float) this.lifetime * 32.0F, 0.0F, 1.0F);
 	}
 
 	@Override
@@ -50,14 +50,14 @@ public class RuneParticle extends SpriteTexturedParticle {
 		}
 	}
 
-	public static class Factory implements IParticleFactory<BasicParticleType> {
-		private final IAnimatedSprite spriteSet;
+	public static class Factory implements ParticleProvider<SimpleParticleType> {
+		private final SpriteSet spriteSet;
 
-		public Factory(IAnimatedSprite spriteSet) {
+		public Factory(SpriteSet spriteSet) {
 			this.spriteSet = spriteSet;
 		}
 
-		public Particle createParticle(BasicParticleType type, ClientWorld world, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+		public Particle createParticle(SimpleParticleType type, ClientLevel world, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
 			RuneParticle rune = new RuneParticle(world, x, y, z, xSpeed, ySpeed, zSpeed);
 			rune.pickSprite(this.spriteSet);
 			return rune;

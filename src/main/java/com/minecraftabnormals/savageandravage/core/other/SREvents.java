@@ -1,70 +1,112 @@
 package com.minecraftabnormals.savageandravage.core.other;
 
-import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.IDataManager;
-import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.TrackedDataManager;
-import com.minecraftabnormals.abnormals_core.core.util.NetworkUtil;
-import com.minecraftabnormals.savageandravage.common.entity.*;
+import com.minecraftabnormals.savageandravage.common.entity.BurningBannerEntity;
+import com.minecraftabnormals.savageandravage.common.entity.CreepieEntity;
+import com.minecraftabnormals.savageandravage.common.entity.ExecutionerEntity;
+import com.minecraftabnormals.savageandravage.common.entity.GrieferEntity;
+import com.minecraftabnormals.savageandravage.common.entity.IOwnableMob;
+import com.minecraftabnormals.savageandravage.common.entity.IceologerEntity;
+import com.minecraftabnormals.savageandravage.common.entity.SkeletonVillagerEntity;
+import com.minecraftabnormals.savageandravage.common.entity.SporeCloudEntity;
+import com.minecraftabnormals.savageandravage.common.entity.TricksterEntity;
 import com.minecraftabnormals.savageandravage.common.entity.block.SporeBombEntity;
 import com.minecraftabnormals.savageandravage.common.entity.goals.CelebrateTargetBlockHitGoal;
 import com.minecraftabnormals.savageandravage.common.entity.goals.ImprovedCrossbowGoal;
 import com.minecraftabnormals.savageandravage.common.item.IPottableItem;
 import com.minecraftabnormals.savageandravage.core.SRConfig;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
-import com.minecraftabnormals.savageandravage.core.registry.*;
-import net.minecraft.block.AbstractBannerBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
-import net.minecraft.entity.ai.goal.AvoidEntityGoal;
-import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
-import net.minecraft.entity.ai.goal.RangedCrossbowAttackGoal;
-import net.minecraft.entity.item.ArmorStandEntity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
-import net.minecraft.entity.monster.*;
-import net.minecraft.entity.passive.CatEntity;
-import net.minecraft.entity.passive.GolemEntity;
-import net.minecraft.entity.passive.IronGolemEntity;
-import net.minecraft.entity.passive.OcelotEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.*;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.particles.BlockParticleData;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
+import com.minecraftabnormals.savageandravage.core.registry.SRAttributes;
+import com.minecraftabnormals.savageandravage.core.registry.SRBlocks;
+import com.minecraftabnormals.savageandravage.core.registry.SREffects;
+import com.minecraftabnormals.savageandravage.core.registry.SREntities;
+import com.minecraftabnormals.savageandravage.core.registry.SRItems;
+import com.minecraftabnormals.savageandravage.core.registry.SRParticles;
+import com.teamabnormals.blueprint.common.world.storage.tracking.IDataManager;
+import com.teamabnormals.blueprint.common.world.storage.tracking.TrackedDataManager;
+import com.teamabnormals.blueprint.core.util.NetworkUtil;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.*;
-import net.minecraft.util.math.*;
-import net.minecraft.world.Explosion;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
+import net.minecraft.world.entity.ai.goal.RangedCrossbowAttackGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.animal.AbstractGolem;
+import net.minecraft.world.entity.animal.Cat;
+import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.entity.animal.Ocelot;
+import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.monster.Evoker;
+import net.minecraft.world.entity.monster.Pillager;
+import net.minecraft.world.entity.monster.Shulker;
+import net.minecraft.world.entity.monster.Vex;
+import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.raid.Raider;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.FireChargeItem;
+import net.minecraft.world.item.FireworkRocketItem;
+import net.minecraft.world.item.FlintAndSteelItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.AbstractBannerBlock;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
-import net.minecraftforge.event.entity.living.*;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
+import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
+import java.util.UUID;
 
 @Mod.EventBusSubscriber(modid = SavageAndRavage.MOD_ID)
 public class SREvents {
@@ -74,10 +116,8 @@ public class SREvents {
 	@SubscribeEvent
 	public static void onEntityJoinWorld(EntityJoinWorldEvent event) {
 		Entity entity = event.getEntity();
-		if (entity instanceof MobEntity) {
-			MobEntity mob = (MobEntity) entity;
-			if (mob instanceof AbstractVillagerEntity) {
-				AbstractVillagerEntity villager = (AbstractVillagerEntity) mob;
+		if (entity instanceof Mob mob) {
+			if (mob instanceof AbstractVillager villager) {
 				villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, SkeletonVillagerEntity.class, 8.0F, 0.6D, 0.6D));
 				villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, GrieferEntity.class, 8.0F, 0.8D, 0.8D));
 				villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, IceologerEntity.class, 8.0F, 0.8D, 0.8D));
@@ -87,41 +127,73 @@ public class SREvents {
 					CreepieEntity creepie = ((CreepieEntity) e);
 					return creepie.getOwnerId() == null || creepie.getOwner() instanceof GrieferEntity;
 				}));
-			} else if (mob instanceof PillagerEntity) {
-				PillagerEntity pillager = (PillagerEntity) mob;
+			} else if (mob instanceof Pillager pillager) {
 				mob.goalSelector.availableGoals.stream().map(it -> it.goal).filter(it -> it instanceof RangedCrossbowAttackGoal<?>).findFirst().ifPresent(goal -> {
 					mob.goalSelector.removeGoal(goal);
 					mob.goalSelector.addGoal(3, new ImprovedCrossbowGoal<>(pillager, 1.0D, 8.0F, 5.0D));
 				});
 				mob.goalSelector.addGoal(5, new CelebrateTargetBlockHitGoal(pillager));
-			} else if (mob instanceof CatEntity || mob instanceof OcelotEntity)
+			} else if (mob instanceof Cat || mob instanceof Ocelot)
 				mob.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(mob, CreepieEntity.class, false));
-			else if (mob instanceof EvokerEntity && SRConfig.COMMON.evokersUseTotems.get())
-				mob.goalSelector.addGoal(1, new AvoidEntityGoal<IronGolemEntity>((EvokerEntity) mob, IronGolemEntity.class, 8.0F, 0.6D, 1.0D) {
+			else if (mob instanceof Evoker && SRConfig.COMMON.evokersUseTotems.get())
+				mob.goalSelector.addGoal(1, new AvoidEntityGoal<>((Evoker) mob, IronGolem.class, 8.0F, 0.6D, 1.0D) {
 					@Override
 					public boolean canUse() {
 						return SRConfig.COMMON.evokersUseTotems.get() && TrackedDataManager.INSTANCE.getValue(this.mob, SRDataProcessors.TOTEM_SHIELD_TIME) > 0 && super.canUse();
 					}
 				});
-			else if (mob instanceof VexEntity && SRConfig.COMMON.reducedVexHealth.get()) {
-				ModifiableAttributeInstance maxHealth = mob.getAttribute(Attributes.MAX_HEALTH);
+			else if (mob instanceof Vex && SRConfig.COMMON.reducedVexHealth.get()) {
+				AttributeInstance maxHealth = mob.getAttribute(Attributes.MAX_HEALTH);
 				if (maxHealth != null)
 					maxHealth.setBaseValue(2.0);
 				if (mob.getHealth() > mob.getMaxHealth())
 					mob.setHealth(mob.getMaxHealth());
 			}
 			if (!SRConfig.COMMON.creeperExplosionsDestroyBlocks.get()) {
-				if (mob instanceof IronGolemEntity)
+				if (mob instanceof IronGolem)
 					mob.targetSelector.availableGoals.stream().map(it -> it.goal).filter(it -> it instanceof NearestAttackableTargetGoal<?>).findFirst().ifPresent(goal -> {
 						mob.targetSelector.removeGoal(goal);
-						mob.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(mob, MobEntity.class, 5, false, false, e -> e instanceof IMob));
+						mob.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(mob, Mob.class, 5, false, false, e -> e instanceof Enemy));
 					});
 				else if (mob.getType() == EntityType.CREEPER)
-					mob.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(mob, IronGolemEntity.class, true));
+					mob.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(mob, IronGolem.class, true));
 			}
 		}
 	}
 
+	private static final String POISON_TAG = SavageAndRavage.MOD_ID + "poison_potato_applied";
+
+	@SubscribeEvent
+	public static void onRightClickEntity(PlayerInteractEvent.EntityInteract event) {
+		Entity target = event.getTarget();
+		ItemStack stack = event.getItemStack();
+		if (target instanceof CreepieEntity && stack.getItem() == Items.POISONOUS_POTATO && SRConfig.COMMON.poisonPotatoCompat.get() && ModList.get().isLoaded("quark")) {
+			Player player = event.getPlayer();
+			CompoundTag persistentData = target.getPersistentData();
+			if (!persistentData.getBoolean(POISON_TAG)) {
+				if (target.level.random.nextDouble() < SRConfig.COMMON.poisonPotatoChance.get()) {
+					target.playSound(SoundEvents.GENERIC_EAT, 0.5f, 0.25f);
+					persistentData.putBoolean(POISON_TAG, true);
+					if (SRConfig.COMMON.poisonPotatoEffect.get()) {
+						((LivingEntity) target).addEffect(new MobEffectInstance(MobEffects.POISON, 200));
+					}
+				} else {
+					target.playSound(SoundEvents.GENERIC_EAT, 0.5f, 0.5f + target.level.random.nextFloat() / 2);
+				}
+				if (!player.isCreative()) stack.shrink(1);
+				event.setCancellationResult(InteractionResult.sidedSuccess(event.getWorld().isClientSide()));
+				event.setCanceled(true);
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public static void onUpdateEntity(LivingEvent.LivingUpdateEvent event) {
+		Entity entity = event.getEntity();
+		if (entity instanceof CreepieEntity creepie && SRConfig.COMMON.poisonPotatoCompat.get() && ModList.get().isLoaded("quark")) {
+			if (entity.getPersistentData().getBoolean(POISON_TAG)) creepie.setGrowingAge(-24000);
+		}
+	}
 
 	@SubscribeEvent
 	public static void onLivingJump(LivingEvent.LivingJumpEvent event) {
@@ -135,17 +207,17 @@ public class SREvents {
 		LivingEntity entity = event.getEntityLiving();
 		LivingEntity target = event.getTarget();
 		if (target != null) {
-			if (entity instanceof GolemEntity && !(entity instanceof ShulkerEntity) && target instanceof IOwnableMob)
-				if (((IOwnableMob) target).getOwner() instanceof PlayerEntity && ((MobEntity) target).getTarget() != entity)
-					((GolemEntity) entity).setTarget(null);
-			if (entity instanceof EvokerEntity && SRConfig.COMMON.evokersUseTotems.get() && TrackedDataManager.INSTANCE.getValue(entity, SRDataProcessors.TOTEM_SHIELD_TIME) > 0)
-				((EvokerEntity) entity).setTarget(null);
+			if (entity instanceof AbstractGolem && !(entity instanceof Shulker) && target instanceof IOwnableMob)
+				if (((IOwnableMob) target).getOwner() instanceof Player && ((Mob) target).getTarget() != entity)
+					((AbstractGolem) entity).setTarget(null);
+			if (entity instanceof Evoker && SRConfig.COMMON.evokersUseTotems.get() && TrackedDataManager.INSTANCE.getValue(entity, SRDataProcessors.TOTEM_SHIELD_TIME) > 0)
+				((Evoker) entity).setTarget(null);
 		}
 	}
 
 	@SubscribeEvent
 	public static void onExplosion(ExplosionEvent.Detonate event) {
-		World world = event.getWorld();
+		Level world = event.getWorld();
 		Explosion explosion = event.getExplosion();
 		LivingEntity sourceEntity = explosion.getSourceMob();
 		boolean isCreeper = sourceEntity != null && sourceEntity.getType() == EntityType.CREEPER;
@@ -154,7 +226,7 @@ public class SREvents {
 			if (!SRConfig.COMMON.creeperExplosionsDestroyBlocks.get())
 				event.getAffectedBlocks().clear();
 			if (SRConfig.COMMON.creeperExplosionsSpawnCreepies.get()) {
-				CreeperEntity creeper = (CreeperEntity) explosion.getSourceMob();
+				Creeper creeper = (Creeper) explosion.getSourceMob();
 				SporeCloudEntity spores = SREntities.SPORE_CLOUD.get().create(world);
 				if (spores == null)
 					return;
@@ -174,7 +246,7 @@ public class SREvents {
 				if (world.getBlockState(pos).getBlock() == SRBlocks.SPORE_BOMB.get()) {
 					world.removeBlock(pos, false);
 					SporeBombEntity sporebomb = new SporeBombEntity(world, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, explosion.getSourceMob());
-					sporebomb.setFuse((short) (world.getRandom().nextInt(sporebomb.getLife() / 4) + sporebomb.getLife() / 8));
+					sporebomb.setFuse((short) (world.getRandom().nextInt(sporebomb.getFuse() / 4) + sporebomb.getFuse() / 8));
 					world.addFreshEntity(sporebomb);
 				}
 			}
@@ -192,16 +264,16 @@ public class SREvents {
 			return true;
 		else if (entity instanceof ItemEntity) {
 			ItemStack stack = ((ItemEntity) entity).getItem();
-			return creeperTypeNoGriefing || stack.getItem().is(SRTags.BLAST_PROOF_ITEMS);
+			return creeperTypeNoGriefing || stack.is(SRTags.BLAST_PROOF_ITEMS);
 		}
 		return false;
 	}
 
 	@SubscribeEvent
 	public static void onAttackEntity(AttackEntityEvent event) {
-		PlayerEntity player = event.getPlayer();
+		Player player = event.getPlayer();
 		Entity target = event.getTarget();
-		World world = player.level;
+		Level world = player.level;
 		if (target instanceof LivingEntity) {
 			ItemStack mainHandStack = player.getMainHandItem();
 			if (mainHandStack.getItem() == SRItems.CLEAVER_OF_BEHEADING.get()) {
@@ -214,41 +286,41 @@ public class SREvents {
 				enchantDamageBonus = enchantDamageBonus * attackStrength;
 				if ((attackDamage > 0.0F || enchantDamageBonus > 0.0F) && attackStrength > 0.9F) {
 					if (!player.isSprinting() && player.isOnGround() && (player.walkDist - player.walkDistO) < (double) player.getSpeed()) {
-						boolean shouldCrit = player.fallDistance > 0.0F && !player.isOnGround() && !player.onClimbable() && !player.isInWater() && !player.hasEffect(Effects.BLINDNESS) && !player.isPassenger();
+						boolean shouldCrit = player.fallDistance > 0.0F && !player.isOnGround() && !player.onClimbable() && !player.isInWater() && !player.hasEffect(MobEffects.BLINDNESS) && !player.isPassenger();
 						if (ForgeHooks.getCriticalHit(player, target, shouldCrit, shouldCrit ? 1.5F : 1.0F) == null) {
 							target.getPersistentData().putBoolean(NO_KNOCKBACK_KEY, true);
-							AxisAlignedBB targetBox = target.getBoundingBox().inflate(1.5D, 0.25D, 1.5D);
-							AxisAlignedBB shockwaveBox = new AxisAlignedBB(targetBox.minX, targetBox.minY, targetBox.minZ, targetBox.maxX, targetBox.minY + 3.25D, targetBox.maxZ);
+							AABB targetBox = target.getBoundingBox().inflate(1.5D, 0.25D, 1.5D);
+							AABB shockwaveBox = new AABB(targetBox.minX, targetBox.minY, targetBox.minZ, targetBox.maxX, targetBox.minY + 3.25D, targetBox.maxZ);
 							for (LivingEntity pushed : world.getEntitiesOfClass(LivingEntity.class, shockwaveBox)) {
-								if (pushed != player && pushed != target && !player.isAlliedTo(pushed) && (!(pushed instanceof ArmorStandEntity) || !((ArmorStandEntity) pushed).isMarker())) {
-									pushed.knockback(0.4F + (knockback * 0.5F), MathHelper.sin(player.yRot * ((float) Math.PI / 180F)), -MathHelper.cos(player.yRot * ((float) Math.PI / 180F)));
-									if (pushed.isAffectedByPotions() && !pushed.hasEffect(Effects.MOVEMENT_SLOWDOWN))
-										pushed.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 20, 2));
+								if (pushed != player && pushed != target && !player.isAlliedTo(pushed) && (!(pushed instanceof ArmorStand) || !((ArmorStand) pushed).isMarker())) {
+									pushed.knockback(0.4F + (knockback * 0.5F), Mth.sin(player.getYRot() * ((float) Math.PI / 180F)), -Mth.cos(player.getYRot() * ((float) Math.PI / 180F)));
+									if (pushed.isAffectedByPotions() && !pushed.hasEffect(MobEffects.MOVEMENT_SLOWDOWN))
+										pushed.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 2));
 								}
 							}
-							BlockPos.Mutable checkingPos = new BlockPos.Mutable();
+							BlockPos.MutableBlockPos checkingPos = new BlockPos.MutableBlockPos();
 							Random random = world.getRandom();
 							if (!world.isClientSide) {
 								for (int i = 0; i < 100; i++) {
 									double x = shockwaveBox.minX + (random.nextDouble() * (shockwaveBox.maxX - shockwaveBox.minX));
 									double z = shockwaveBox.minZ + (random.nextDouble() * (shockwaveBox.maxZ - shockwaveBox.minZ));
-									int minY = MathHelper.floor(shockwaveBox.minY);
-									for (int y = minY; y < MathHelper.floor(shockwaveBox.maxY); y++) {
-										checkingPos.set(MathHelper.floor(x), MathHelper.floor(y), MathHelper.floor(z));
+									int minY = Mth.floor(shockwaveBox.minY);
+									for (int y = minY; y < Mth.floor(shockwaveBox.maxY); y++) {
+										checkingPos.set(Mth.floor(x), Mth.floor(y), Mth.floor(z));
 										if (!isEmptySpace(world, checkingPos)) {
 											checkingPos.move(Direction.UP);
 											if (isEmptySpace(world, checkingPos)) {
 												checkingPos.move(Direction.DOWN);
 												BlockState state = world.getBlockState(checkingPos);
-												((ServerWorld) world).sendParticles(new BlockParticleData(ParticleTypes.BLOCK, state).setPos(checkingPos), x, y + state.getShape(world, checkingPos).max(Direction.Axis.Y), z, 0, 0.0D, 0.0D, 0.0D, 0.15D);
+												((ServerLevel) world).sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, state).setPos(checkingPos), x, y + state.getShape(world, checkingPos).max(Direction.Axis.Y), z, 0, 0.0D, 0.0D, 0.0D, 0.15D);
 												break;
 											}
 										}
 									}
 								}
-								double xAngle = -MathHelper.sin(player.yRot * ((float) Math.PI / 180F));
-								double zAngle = MathHelper.cos(player.yRot * ((float) Math.PI / 180F));
-								((ServerWorld) world).sendParticles(SRParticles.CLEAVER_SWEEP.get(), player.getX() + xAngle, player.getY(0.5D), player.getZ() + zAngle, 0, xAngle, 0.0D, zAngle, 0.0D);
+								double xAngle = -Mth.sin(player.getYRot() * ((float) Math.PI / 180F));
+								double zAngle = Mth.cos(player.getYRot() * ((float) Math.PI / 180F));
+								((ServerLevel) world).sendParticles(SRParticles.CLEAVER_SWEEP.get(), player.getX() + xAngle, player.getY(0.5D), player.getZ() + zAngle, 0, xAngle, 0.0D, zAngle, 0.0D);
 							}
 							world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.PLAYER_ATTACK_SWEEP, player.getSoundSource(), 1.0F, 1.0F);
 						}
@@ -258,9 +330,8 @@ public class SREvents {
 		}
 	}
 
-	@SuppressWarnings("deprecation") //1.17
-	public static boolean isEmptySpace(IBlockReader world, BlockPos pos) {
-		return world.getBlockState(pos).isAir(world, pos) || !world.getFluidState(pos).isEmpty();
+	public static boolean isEmptySpace(BlockGetter world, BlockPos pos) {
+		return world.getBlockState(pos).isAir() || !world.getFluidState(pos).isEmpty();
 	}
 
 	@SubscribeEvent
@@ -272,9 +343,9 @@ public class SREvents {
 	@SubscribeEvent
 	public static void onLivingAttack(LivingAttackEvent event) {
 		Entity entity = event.getEntity();
-		if (entity instanceof EvokerEntity && SRConfig.COMMON.evokersUseTotems.get()) {
+		if (entity instanceof Evoker && SRConfig.COMMON.evokersUseTotems.get()) {
 			if (TrackedDataManager.INSTANCE.getValue(entity, SRDataProcessors.TOTEM_SHIELD_TIME) > 0) {
-				if (event.getSource().getDirectEntity() instanceof ProjectileEntity)
+				if (event.getSource().getDirectEntity() instanceof Projectile)
 					event.setCanceled(true);
 			}
 		}
@@ -283,11 +354,9 @@ public class SREvents {
 	@SubscribeEvent
 	public static void onLivingDamage(LivingDamageEvent event) {
 		LivingEntity target = event.getEntityLiving();
-
 		if (event.getSource().isExplosion()) {
 			double decrease = 0;
-
-			for (EquipmentSlotType slot : EquipmentSlotType.values()) {
+			for (EquipmentSlot slot : EquipmentSlot.values()) {
 				ItemStack stack = target.getItemBySlot(slot);
 				Collection<AttributeModifier> modifiers = stack.getAttributeModifiers(slot).get(SRAttributes.EXPLOSIVE_DAMAGE_REDUCTION.get());
 				if (modifiers.isEmpty())
@@ -307,18 +376,18 @@ public class SREvents {
 		LivingEntity target = event.getEntityLiving();
 		Entity attacker = event.getSource().getEntity();
 		if (attacker instanceof LivingEntity && ((LivingEntity) attacker).getMainHandItem().getItem() == SRItems.CLEAVER_OF_BEHEADING.get()) {
-			if (target instanceof PlayerEntity) {
-				PlayerEntity targetPlayer = (PlayerEntity) event.getEntity();
+			if (target instanceof Player) {
+				Player targetPlayer = (Player) event.getEntity();
 				if (targetPlayer != null && targetPlayer.getHealth() - event.getAmount() <= 0) {
 					ItemStack stack = new ItemStack(Items.PLAYER_HEAD);
-					stack.addTagElement("SkullOwner", NBTUtil.writeGameProfile(new CompoundNBT(), targetPlayer.getGameProfile()));
+					stack.addTagElement("SkullOwner", NbtUtils.writeGameProfile(new CompoundTag(), targetPlayer.getGameProfile()));
 					target.spawnAtLocation(stack);
 				}
 			}
 		}
-		if (target instanceof EvokerEntity && SRConfig.COMMON.evokersUseTotems.get()) {
+		if (target instanceof Evoker && SRConfig.COMMON.evokersUseTotems.get()) {
 			IDataManager data = (IDataManager) target;
-			if (target.getHealth() - event.getAmount() <= 0 && event.getSource().getDirectEntity() instanceof ProjectileEntity) {
+			if (target.getHealth() - event.getAmount() <= 0 && event.getSource().getDirectEntity() instanceof Projectile) {
 				if (data.getValue(SRDataProcessors.TOTEM_SHIELD_TIME) <= 0 && data.getValue(SRDataProcessors.TOTEM_SHIELD_COOLDOWN) <= 0) {
 					event.setCanceled(true);
 					target.setHealth(2.0F);
@@ -332,17 +401,16 @@ public class SREvents {
 
 	@SubscribeEvent
 	public static void onProjectileImpact(ProjectileImpactEvent event) {
-		RayTraceResult result = event.getRayTraceResult();
-		if (result instanceof BlockRayTraceResult) {
-			BlockRayTraceResult blockResult = (BlockRayTraceResult) result;
+		HitResult result = event.getRayTraceResult();
+		if (result instanceof BlockHitResult blockResult) {
 			Entity entity = event.getEntity();
 			if (entity.level.getBlockState(blockResult.getBlockPos()).is(Blocks.TARGET)) {
 				if (!entity.level.isClientSide()) {
 					IDataManager data = (IDataManager) entity;
 					UUID id = data.getValue(SRDataProcessors.CROSSBOW_OWNER).orElse(null);
 					if (id != null) {
-						Entity crossbowOwner = ((ServerWorld) entity.level).getEntity(id);
-						if (crossbowOwner instanceof AbstractRaiderEntity)
+						Entity crossbowOwner = ((ServerLevel) entity.level).getEntity(id);
+						if (crossbowOwner instanceof Raider)
 							TrackedDataManager.INSTANCE.setValue(crossbowOwner, SRDataProcessors.TARGET_HIT, true);
 						data.setValue(SRDataProcessors.CROSSBOW_OWNER, Optional.empty());
 					}
@@ -357,7 +425,7 @@ public class SREvents {
 		Entity target = event.getTarget();
 		if (target.getType() == EntityType.CREEPER || target.getType() == SREntities.CREEPIE.get()) {
 			if (stack.getItem() == Items.CREEPER_SPAWN_EGG) {
-				World world = event.getWorld();
+				Level world = event.getWorld();
 				CreepieEntity creepie = SREntities.CREEPIE.get().create(world);
 				if (creepie != null) {
 					creepie.copyPosition(target);
@@ -365,7 +433,7 @@ public class SREvents {
 					if (!event.getPlayer().isCreative()) stack.shrink(1);
 					creepie.attackPlayersOnly = true;
 					world.addFreshEntity(creepie);
-					event.setCancellationResult(ActionResultType.sidedSuccess(world.isClientSide()));
+					event.setCancellationResult(InteractionResult.sidedSuccess(world.isClientSide()));
 					event.setCanceled(true);
 				}
 			}
@@ -374,10 +442,10 @@ public class SREvents {
 
 	@SubscribeEvent
 	public static void onLeftClickBlock(PlayerInteractEvent.LeftClickBlock event) {
-		World world = event.getWorld();
+		Level world = event.getWorld();
 		BlockPos pos = event.getPos();
 		if (world.getBlockState(pos).getBlock() instanceof AbstractBannerBlock) {
-			List<BurningBannerEntity> burningBanners = world.getEntitiesOfClass(BurningBannerEntity.class, new AxisAlignedBB(pos));
+			List<BurningBannerEntity> burningBanners = world.getEntitiesOfClass(BurningBannerEntity.class, new AABB(pos));
 			for (BurningBannerEntity burningBanner : burningBanners) {
 				if (burningBanner.getBannerPosition() != null && burningBanner.getBannerPosition().equals(pos)) {
 					burningBanner.extinguishFire();
@@ -389,9 +457,9 @@ public class SREvents {
 	@SubscribeEvent
 	public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
 		ItemStack stack = event.getItemStack();
-		PlayerEntity player = event.getPlayer();
+		Player player = event.getPlayer();
 		BlockPos pos = event.getPos();
-		World world = event.getWorld();
+		Level world = event.getWorld();
 
 		if (stack.getItem() instanceof IPottableItem && world.getBlockState(pos).getBlock() == Blocks.FLOWER_POT) {
 			BlockState pottedState = ((IPottableItem) stack.getItem()).getPottedState(player.getDirection().getOpposite());
@@ -400,14 +468,14 @@ public class SREvents {
 			world.setBlockAndUpdate(pos, pottedState);
 			player.awardStat(Stats.POT_FLOWER);
 			if (!event.getPlayer().isCreative()) stack.shrink(1);
-			event.setCancellationResult(ActionResultType.SUCCESS);
+			event.setCancellationResult(InteractionResult.SUCCESS);
 			event.setCanceled(true);
 		} else if (isValidBurningBannerPos(world, pos)) {
 			boolean isFlintAndSteel = stack.getItem() instanceof FlintAndSteelItem;
 			if ((isFlintAndSteel || stack.getItem() instanceof FireChargeItem)) {
 				SoundEvent sound = isFlintAndSteel ? SoundEvents.FLINTANDSTEEL_USE : SoundEvents.FIRECHARGE_USE;
 				float pitch = isFlintAndSteel ? new Random().nextFloat() * 0.4F + 0.8F : (new Random().nextFloat() - new Random().nextFloat()) * 0.2F + 1.0F;
-				world.playSound(player, pos, sound, SoundCategory.BLOCKS, 1.0F, pitch);
+				world.playSound(player, pos, sound, SoundSource.BLOCKS, 1.0F, pitch);
 
 				if (isFlintAndSteel) {
 					stack.hurtAndBreak(1, player, (p_219998_1_) -> p_219998_1_.broadcastBreakEvent(event.getHand()));
@@ -416,7 +484,7 @@ public class SREvents {
 				}
 
 				world.addFreshEntity(new BurningBannerEntity(world, pos, player));
-				event.setCancellationResult(ActionResultType.SUCCESS);
+				event.setCancellationResult(InteractionResult.SUCCESS);
 				event.setCanceled(true);
 			}
 		}
@@ -425,15 +493,15 @@ public class SREvents {
 	@SubscribeEvent
 	public static void livingUpdate(LivingUpdateEvent event) {
 		LivingEntity entity = event.getEntityLiving();
-		World world = entity.level;
+		Level world = entity.level;
 		IDataManager data = (IDataManager) entity;
 		if (entity.getRemainingFireTicks() > 0 && entity.getEffect(SREffects.FROSTBITE.get()) != null)
 			entity.removeEffect(SREffects.FROSTBITE.get());
 		if (!world.isClientSide()) {
-			CompoundNBT persistentData = entity.getPersistentData();
+			CompoundTag persistentData = entity.getPersistentData();
 			if (persistentData.getBoolean(NO_KNOCKBACK_KEY))
 				persistentData.putBoolean(NO_KNOCKBACK_KEY, false);
-			if (entity instanceof AbstractRaiderEntity) {
+			if (entity instanceof Raider) {
 				int celebrationTime = data.getValue(SRDataProcessors.CELEBRATION_TIME);
 				if (celebrationTime > 0)
 					data.setValue(SRDataProcessors.CELEBRATION_TIME, celebrationTime - 1);
@@ -446,9 +514,9 @@ public class SREvents {
 				spawnMaskParticles(world, entity.getBoundingBox(), 3);
 			}
 			if (maskStateChanged || (canBeInvisible && !entity.isInvisible()))
-				entity.setInvisible(canBeInvisible || entity.hasEffect(Effects.INVISIBILITY));
+				entity.setInvisible(canBeInvisible || entity.hasEffect(MobEffects.INVISIBILITY));
 		}
-		if (entity instanceof EvokerEntity) {
+		if (entity instanceof Evoker) {
 			int shieldTime = data.getValue(SRDataProcessors.TOTEM_SHIELD_TIME);
 			if (shieldTime > 0)
 				data.setValue(SRDataProcessors.TOTEM_SHIELD_TIME, shieldTime - 1);
@@ -476,12 +544,12 @@ public class SREvents {
 	}
 
 	private static boolean maskCanMakeInvisible(LivingEntity entity) {
-		if (entity.getItemBySlot(EquipmentSlotType.HEAD).getItem() == SRItems.MASK_OF_DISHONESTY.get())
+		if (entity.getItemBySlot(EquipmentSlot.HEAD).getItem() == SRItems.MASK_OF_DISHONESTY.get())
 			return entity.isCrouching();
 		return false;
 	}
 
-	public static void spawnMaskParticles(World world, AxisAlignedBB box, int loops) {
+	public static void spawnMaskParticles(Level world, AABB box, int loops) {
 		if (!world.isClientSide) {
 			Random random = world.getRandom();
 			for (int i = 0; i < loops; i++) {
@@ -493,9 +561,9 @@ public class SREvents {
 		}
 	}
 
-	public static boolean isValidBurningBannerPos(World world, BlockPos pos) {
+	public static boolean isValidBurningBannerPos(Level world, BlockPos pos) {
 		if (world.getBlockState(pos).getBlock() instanceof AbstractBannerBlock) {
-			List<BurningBannerEntity> banners = world.getEntitiesOfClass(BurningBannerEntity.class, new AxisAlignedBB(pos));
+			List<BurningBannerEntity> banners = world.getEntitiesOfClass(BurningBannerEntity.class, new AABB(pos));
 			boolean noBurningBanners = true;
 			for (BurningBannerEntity banner : banners) {
 				if (banner.getBannerPosition() != null && banner.getBannerPosition().equals(pos))
@@ -508,9 +576,9 @@ public class SREvents {
 
 	public static ItemStack createRocket(Random random) {
 		ItemStack rocket = new ItemStack(Items.FIREWORK_ROCKET, random.nextInt(16) + 1);
-		CompoundNBT fireworks = rocket.getOrCreateTagElement("Fireworks");
-		ListNBT explosions = new ListNBT();
-		CompoundNBT explosion = new CompoundNBT();
+		CompoundTag fireworks = rocket.getOrCreateTagElement("Fireworks");
+		ListTag explosions = new ListTag();
+		CompoundTag explosion = new CompoundTag();
 		fireworks.put("Explosions", explosions);
 		explosions.add(explosion);
 		explosion.putIntArray("Colors", randomColors(random));

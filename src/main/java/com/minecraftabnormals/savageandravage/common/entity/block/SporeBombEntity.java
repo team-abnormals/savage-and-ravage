@@ -2,25 +2,25 @@ package com.minecraftabnormals.savageandravage.common.entity.block;
 
 import com.minecraftabnormals.savageandravage.common.entity.SporeCloudEntity;
 import com.minecraftabnormals.savageandravage.core.registry.SREntities;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.TNTEntity;
-import net.minecraft.network.IPacket;
-import net.minecraft.world.Explosion;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.PrimedTnt;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
-public class SporeBombEntity extends TNTEntity {
+public class SporeBombEntity extends PrimedTnt {
 	@Nullable
 	private LivingEntity tntPlacedBy;
 
-	public SporeBombEntity(EntityType<? extends SporeBombEntity> type, World world) {
+	public SporeBombEntity(EntityType<? extends SporeBombEntity> type, Level world) {
 		super(type, world);
 	}
 
-	public SporeBombEntity(World world, double x, double y, double z, @Nullable LivingEntity igniter) {
+	public SporeBombEntity(Level world, double x, double y, double z, @Nullable LivingEntity igniter) {
 		this(SREntities.SPORE_BOMB.get(), world);
 		this.setPos(x, y, z);
 		double d0 = world.getRandom().nextDouble() * (double) ((float) Math.PI * 2F);
@@ -40,8 +40,8 @@ public class SporeBombEntity extends TNTEntity {
 
 		sporeCloud.setCloudSize(4 + this.level.getRandom().nextInt(3));
 		sporeCloud.setSpawnCloudInstantly(true);
-		this.level.explode(this, this.getX(), this.getY(0.0625D), this.getZ(), 4.0F, Explosion.Mode.NONE);
-		sporeCloud.absMoveTo(this.getX(), this.getY(0.0625), this.getZ(), this.yRot, this.xRot);
+		this.level.explode(this, this.getX(), this.getY(0.0625D), this.getZ(), 4.0F, Explosion.BlockInteraction.NONE);
+		sporeCloud.absMoveTo(this.getX(), this.getY(0.0625), this.getZ(), this.getYRot(), this.getXRot());
 		this.level.addFreshEntity(sporeCloud);
 	}
 
@@ -52,7 +52,7 @@ public class SporeBombEntity extends TNTEntity {
 	}
 
 	@Override
-	public IPacket<?> getAddEntityPacket() {
+	public Packet<?> getAddEntityPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 }

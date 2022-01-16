@@ -1,6 +1,6 @@
 package com.minecraftabnormals.savageandravage.common.entity;
 
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.world.entity.LivingEntity;
 
 import javax.annotation.Nullable;
 import java.util.UUID;

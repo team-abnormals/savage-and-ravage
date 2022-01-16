@@ -1,6 +1,5 @@
 package com.minecraftabnormals.savageandravage.common.entity;
 
-import com.minecraftabnormals.abnormals_core.core.api.IAgeableEntity;
 import com.minecraftabnormals.savageandravage.common.entity.goals.CreepieSwellGoal;
 import com.minecraftabnormals.savageandravage.common.entity.goals.FollowMobOwnerGoal;
 import com.minecraftabnormals.savageandravage.common.entity.goals.MobOwnerHurtByTargetGoal;
@@ -8,31 +7,50 @@ import com.minecraftabnormals.savageandravage.common.entity.goals.MobOwnerHurtTa
 import com.minecraftabnormals.savageandravage.core.SRConfig;
 import com.minecraftabnormals.savageandravage.core.registry.SRParticles;
 import com.minecraftabnormals.savageandravage.core.registry.SRSounds;
-import net.minecraft.entity.*;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.monster.CreeperEntity;
-import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.passive.CatEntity;
-import net.minecraft.entity.passive.OcelotEntity;
-import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.scoreboard.Team;
-import net.minecraft.util.*;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.Explosion;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.AreaEffectCloud;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.PowerableMob;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.animal.Cat;
+import net.minecraft.world.entity.animal.Ocelot;
+import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.scores.Team;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.ForgeEventFactory;
@@ -42,13 +60,13 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
 
-@OnlyIn(value = Dist.CLIENT, _interface = IChargeableMob.class)
-public class CreepieEntity extends MonsterEntity implements IChargeableMob, IOwnableMob, IAgeableEntity {
-	private static final DataParameter<Integer> STATE = EntityDataManager.defineId(CreepieEntity.class, DataSerializers.INT);
-	private static final DataParameter<Boolean> POWERED = EntityDataManager.defineId(CreepieEntity.class, DataSerializers.BOOLEAN);
-	private static final DataParameter<Boolean> IGNITED = EntityDataManager.defineId(CreepieEntity.class, DataSerializers.BOOLEAN);
-	private static final DataParameter<Optional<UUID>> OWNER_UUID = EntityDataManager.defineId(CreepieEntity.class, DataSerializers.OPTIONAL_UUID);
-	private static final DataParameter<Integer> CONVERSION_TIME = EntityDataManager.defineId(CreepieEntity.class, DataSerializers.INT);
+@OnlyIn(value = Dist.CLIENT, _interface = PowerableMob.class)
+public class CreepieEntity extends Monster implements PowerableMob, IOwnableMob {
+	private static final EntityDataAccessor<Integer> STATE = SynchedEntityData.defineId(CreepieEntity.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<Boolean> POWERED = SynchedEntityData.defineId(CreepieEntity.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> IGNITED = SynchedEntityData.defineId(CreepieEntity.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(CreepieEntity.class, EntityDataSerializers.OPTIONAL_UUID);
+	private static final EntityDataAccessor<Integer> CONVERSION_TIME = SynchedEntityData.defineId(CreepieEntity.class, EntityDataSerializers.INT);
 	public boolean attackPlayersOnly;
 	public int lastActiveTime;
 	public int timeSinceIgnited;
@@ -58,7 +76,7 @@ public class CreepieEntity extends MonsterEntity implements IChargeableMob, IOwn
 	private float explosionRadius;
 	private boolean hasStartedConverting = false;
 
-	public CreepieEntity(EntityType<? extends CreepieEntity> type, World worldIn) {
+	public CreepieEntity(EntityType<? extends CreepieEntity> type, Level worldIn) {
 		super(type, worldIn);
 		this.explosionRadius = 1.2f;
 		this.xpReward = 0;
@@ -66,24 +84,24 @@ public class CreepieEntity extends MonsterEntity implements IChargeableMob, IOwn
 
 	@Override
 	protected void registerGoals() {
-		this.goalSelector.addGoal(1, new SwimGoal(this));
+		this.goalSelector.addGoal(1, new FloatGoal(this));
 		this.goalSelector.addGoal(2, new CreepieSwellGoal(this));
-		this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, OcelotEntity.class, 6.0F, 1.0D, 1.2D));
-		this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, CatEntity.class, 6.0F, 1.0D, 1.2D));
+		this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, Ocelot.class, 6.0F, 1.0D, 1.2D));
+		this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, Cat.class, 6.0F, 1.0D, 1.2D));
 		this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0D, false));
 		this.goalSelector.addGoal(3, new FollowMobOwnerGoal(this, 1.0D, 2.0F, 20.0F));
-		this.goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 0.8D));
-		this.goalSelector.addGoal(6, new LookAtGoal(this, PlayerEntity.class, 8.0F));
-		this.goalSelector.addGoal(6, new LookRandomlyGoal(this));
+		this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 0.8D));
+		this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
+		this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
 		this.targetSelector.addGoal(2, new MobOwnerHurtByTargetGoal(this));
 		this.targetSelector.addGoal(2, new MobOwnerHurtTargetGoal(this));
 		this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
-		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, MobEntity.class, 5, false, false, (target) -> this.getOwnerId() == null && !(target instanceof CreepieEntity) && !(target instanceof CreeperEntity) && !this.attackPlayersOnly));
-		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 5, false, false, (target) -> this.getOwnerId() == null));
+		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Mob.class, 5, false, false, (target) -> this.getOwnerId() == null && !(target instanceof CreepieEntity) && !(target instanceof Creeper) && !this.attackPlayersOnly));
+		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, 5, false, false, (target) -> this.getOwnerId() == null));
 	}
 
-	public static AttributeModifierMap.MutableAttribute registerAttributes() {
-		return MonsterEntity.createMobAttributes()
+	public static AttributeSupplier.Builder registerAttributes() {
+		return Monster.createMobAttributes()
 				.add(Attributes.MAX_HEALTH, 5.0)
 				.add(Attributes.MOVEMENT_SPEED, 0.35D);
 	}
@@ -99,12 +117,13 @@ public class CreepieEntity extends MonsterEntity implements IChargeableMob, IOwn
 	}
 
 	@Override
-	public boolean isPreventingPlayerRest(PlayerEntity playerIn) {
+	public boolean isPreventingPlayerRest(Player playerIn) {
 		return this.getOwner() == null;
 	}
 
-	public boolean causeFallDamage(float distance, float damageMultiplier) {
-		boolean flag = super.causeFallDamage(distance, damageMultiplier);
+	@Override
+	public boolean causeFallDamage(float distance, float damageMultiplier, DamageSource source) {
+		boolean flag = super.causeFallDamage(distance, damageMultiplier, source);
 		this.timeSinceIgnited = (int) ((float) this.timeSinceIgnited + distance * 1.5F);
 		if (this.timeSinceIgnited > this.fuseTime - 5) {
 			this.timeSinceIgnited = this.fuseTime - 5;
@@ -124,7 +143,7 @@ public class CreepieEntity extends MonsterEntity implements IChargeableMob, IOwn
 	}
 
 	@Override
-	public void addAdditionalSaveData(CompoundNBT compound) {
+	public void addAdditionalSaveData(CompoundTag compound) {
 		super.addAdditionalSaveData(compound);
 		if (this.getOwnerId() != null) {
 			compound.putUUID("OwnerUUID", this.getOwnerId());
@@ -141,7 +160,7 @@ public class CreepieEntity extends MonsterEntity implements IChargeableMob, IOwn
 	}
 
 	@Override
-	public void readAdditionalSaveData(CompoundNBT compound) {
+	public void readAdditionalSaveData(CompoundTag compound) {
 		super.readAdditionalSaveData(compound);
 		if (compound.contains("Fuse", 99))
 			this.fuseTime = compound.getShort("Fuse");
@@ -169,12 +188,12 @@ public class CreepieEntity extends MonsterEntity implements IChargeableMob, IOwn
 
 
 	@Override
-	public ItemStack getPickedResult(RayTraceResult target) {
+	public ItemStack getPickedResult(HitResult target) {
 		return new ItemStack(Items.CREEPER_SPAWN_EGG);
 	}
 
 	@Override
-	protected float getStandingEyeHeight(Pose poseIn, EntitySize sizeIn) {
+	protected float getStandingEyeHeight(Pose poseIn, EntityDimensions sizeIn) {
 		return sizeIn.height * 0.8F;
 	}
 
@@ -208,11 +227,11 @@ public class CreepieEntity extends MonsterEntity implements IChargeableMob, IOwn
 	 */
 	protected void explode() {
 		if (!this.level.isClientSide()) {
-			Explosion.Mode mode = SRConfig.COMMON.creepieExplosionsDestroyBlocks.get() && ForgeEventFactory.getMobGriefingEvent(this.level, this) ? Explosion.Mode.DESTROY : Explosion.Mode.NONE;
+			Explosion.BlockInteraction mode = SRConfig.COMMON.creepieExplosionsDestroyBlocks.get() && ForgeEventFactory.getMobGriefingEvent(this.level, this) ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE;
 			float chargedModifier = this.isPowered() ? 2.0F : 1.0F;
 			this.dead = true;
 			this.level.explode(this, this.getX(), this.getY(), this.getZ(), this.explosionRadius * chargedModifier, mode);
-			this.remove();
+			this.discard();
 			this.spawnLingeringCloud();
 		}
 	}
@@ -242,7 +261,7 @@ public class CreepieEntity extends MonsterEntity implements IChargeableMob, IOwn
 	}
 
 	@Override
-	protected float getVoicePitch() {
+	public float getVoicePitch() {
 		return (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.5F;
 	}
 
@@ -302,13 +321,13 @@ public class CreepieEntity extends MonsterEntity implements IChargeableMob, IOwn
 	}
 
 	@Override
-	public ActionResultType mobInteract(PlayerEntity player, Hand hand) {
+	public InteractionResult mobInteract(Player player, InteractionHand hand) {
 		ItemStack itemstack = player.getItemInHand(hand);
 		if (itemstack.getItem() == Items.BONE_MEAL) {
 			if (this.getGrowingAge() < 0) {
 				this.consumeItemFromStack(player, itemstack);
 				this.ageUp((int) ((-this.getGrowingAge() / 20) * 0.1F));
-				return ActionResultType.SUCCESS;
+				return InteractionResult.SUCCESS;
 			}
 		}
 		if (itemstack.getItem() == Items.FLINT_AND_STEEL) {
@@ -318,9 +337,9 @@ public class CreepieEntity extends MonsterEntity implements IChargeableMob, IOwn
 				itemstack.hurtAndBreak(1, player, (p_213625_1_) -> p_213625_1_.broadcastBreakEvent(hand));
 			}
 
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		} else {
-			return ActionResultType.FAIL;
+			return InteractionResult.FAIL;
 		}
 	}
 
@@ -329,7 +348,7 @@ public class CreepieEntity extends MonsterEntity implements IChargeableMob, IOwn
 	 */
 	@OnlyIn(Dist.CLIENT)
 	public float getCreeperFlashIntensity(float partialTicks) {
-		return MathHelper.lerp(partialTicks, (float) this.lastActiveTime, (float) this.timeSinceIgnited) / (float) (this.fuseTime - 2);
+		return Mth.lerp(partialTicks, (float) this.lastActiveTime, (float) this.timeSinceIgnited) / (float) (this.fuseTime - 2);
 	}
 
 	/**
@@ -355,17 +374,17 @@ public class CreepieEntity extends MonsterEntity implements IChargeableMob, IOwn
 	}
 
 	protected void spawnLingeringCloud() {
-		Collection<EffectInstance> collection = this.getActiveEffects();
+		Collection<MobEffectInstance> collection = this.getActiveEffects();
 		if (!collection.isEmpty()) {
-			AreaEffectCloudEntity areaeffectcloudentity = new AreaEffectCloudEntity(this.level, this.getX(), this.getY(), this.getZ());
+			AreaEffectCloud areaeffectcloudentity = new AreaEffectCloud(this.level, this.getX(), this.getY(), this.getZ());
 			areaeffectcloudentity.setRadius(1.0F);
 			areaeffectcloudentity.setRadiusOnUse(-0.5F);
 			areaeffectcloudentity.setWaitTime(10);
 			areaeffectcloudentity.setDuration(areaeffectcloudentity.getDuration() / 2);
 			areaeffectcloudentity.setRadiusPerTick(-areaeffectcloudentity.getRadius() / (float) areaeffectcloudentity.getDuration());
 
-			for (EffectInstance effectinstance : collection) {
-				areaeffectcloudentity.addEffect(new EffectInstance(effectinstance));
+			for (MobEffectInstance effectinstance : collection) {
+				areaeffectcloudentity.addEffect(new MobEffectInstance(effectinstance));
 			}
 
 			this.level.addFreshEntity(areaeffectcloudentity);
@@ -373,14 +392,14 @@ public class CreepieEntity extends MonsterEntity implements IChargeableMob, IOwn
 
 	}
 
-	private void consumeItemFromStack(PlayerEntity player, ItemStack stack) {
+	private void consumeItemFromStack(Player player, ItemStack stack) {
 		if (!player.isCreative()) {
 			stack.shrink(1);
 		}
 	}
 
 	@Override
-	public boolean canBeLeashed(PlayerEntity player) {
+	public boolean canBeLeashed(Player player) {
 		return (!this.isLeashed() && this.getOwnerId() != null);
 	}
 
@@ -402,7 +421,7 @@ public class CreepieEntity extends MonsterEntity implements IChargeableMob, IOwn
 			UUID uuid = this.getOwnerId();
 			if (uuid == null)
 				return null;
-			Entity entity = ((ServerWorld) this.level).getEntity(uuid);
+			Entity entity = ((ServerLevel) this.level).getEntity(uuid);
 			return entity instanceof LivingEntity ? (LivingEntity) entity : null;
 		}
 		return null;
@@ -418,10 +437,10 @@ public class CreepieEntity extends MonsterEntity implements IChargeableMob, IOwn
 		boolean shouldAttack = true;
 		if (target instanceof IOwnableMob) {
 			shouldAttack = ((IOwnableMob) target).getOwner() != owner;
-		} else if (target instanceof TameableEntity) {
-			shouldAttack = ((TameableEntity) target).getOwner() != owner;
-		} else if (target instanceof PlayerEntity && owner instanceof PlayerEntity) {
-			shouldAttack = ((PlayerEntity) owner).canHarmPlayer((PlayerEntity) target);
+		} else if (target instanceof TamableAnimal) {
+			shouldAttack = ((TamableAnimal) target).getOwner() != owner;
+		} else if (target instanceof Player && owner instanceof Player) {
+			shouldAttack = ((Player) owner).canHarmPlayer((Player) target);
 		}
 		return shouldAttack;
 	}
@@ -443,14 +462,14 @@ public class CreepieEntity extends MonsterEntity implements IChargeableMob, IOwn
 		this.entityData.set(CONVERSION_TIME, conversionTimeIn);
 	}
 
-	private LivingEntity finishConversion(World world) {
-		CreeperEntity creeperEntity = EntityType.CREEPER.create(this.level);
+	private LivingEntity finishConversion(Level world) {
+		Creeper creeperEntity = EntityType.CREEPER.create(this.level);
 		if (creeperEntity == null)
 			return null;
 
 		creeperEntity.copyPosition(this);
 		if (!this.level.isClientSide())
-			creeperEntity.finalizeSpawn((ServerWorld) world, this.level.getCurrentDifficultyAt(creeperEntity.blockPosition()), SpawnReason.CONVERSION, null, null);
+			creeperEntity.finalizeSpawn((ServerLevel) world, this.level.getCurrentDifficultyAt(creeperEntity.blockPosition()), MobSpawnType.CONVERSION, null, null);
 		creeperEntity.setNoAi(this.isNoAi());
 		if (this.hasCustomName()) {
 			creeperEntity.setCustomName(this.getCustomName());
@@ -458,7 +477,7 @@ public class CreepieEntity extends MonsterEntity implements IChargeableMob, IOwn
 		}
 
 		if (this.isPowered())
-			creeperEntity.getEntityData().set(CreeperEntity.DATA_IS_POWERED, true);
+			creeperEntity.getEntityData().set(Creeper.DATA_IS_POWERED, true);
 
 		if (this.isPersistenceRequired()) {
 			creeperEntity.setPersistenceRequired();
@@ -474,7 +493,7 @@ public class CreepieEntity extends MonsterEntity implements IChargeableMob, IOwn
 		creeperEntity.setInvulnerable(this.isInvulnerable());
 		creeperEntity.setHealth(creeperEntity.getMaxHealth());
 		this.dead = true;
-		this.remove();
+		this.discard();
 		this.level.addFreshEntity(creeperEntity);
 		this.playSound(SRSounds.ENTITY_CREEPIE_GROW.get(), 1.0F, 1.0F);
 		return creeperEntity;
@@ -498,29 +517,5 @@ public class CreepieEntity extends MonsterEntity implements IChargeableMob, IOwn
 			return owner.isAlliedTo(entityIn);
 
 		return super.isAlliedTo(entityIn);
-	}
-
-	@Override
-	public boolean hasGrowthProgress() {
-		return true;
-	}
-
-	@Override
-	public void resetGrowthProgress() {
-		this.setGrowingAge(-24000);
-	}
-
-	@Override
-	public boolean canAge(boolean isGrowing) {
-		return isGrowing;
-	}
-
-	@Override
-	public LivingEntity attemptAging(boolean isGrowing) {
-		if (isGrowing) {
-			this.growingAge = 0;
-			return this.finishConversion(this.level);
-		}
-		return this;
 	}
 }

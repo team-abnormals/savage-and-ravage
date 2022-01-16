@@ -7,71 +7,80 @@ import com.minecraftabnormals.savageandravage.core.registry.SRBlocks;
 import com.minecraftabnormals.savageandravage.core.registry.SREntities;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
-import net.minecraft.block.*;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.monster.CreeperEntity;
-import net.minecraft.tileentity.LockableLootTileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ISeedReader;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.NoFeatureConfig;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
+import net.minecraft.world.level.block.FenceBlock;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.PipeBlock;
+import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraftforge.fml.ModList;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-public class EnclosureFeature extends Feature<NoFeatureConfig> {
+public class EnclosureFeature extends Feature<NoneFeatureConfiguration> {
 	private static final Direction[] horizontalDirections = new Direction[]{Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
-	private final BlockPos.Mutable currentPos = new BlockPos.Mutable(); //Cached to avoid unnecessary BlockPos creation
+	private final BlockPos.MutableBlockPos currentPos = new BlockPos.MutableBlockPos(); //Cached to avoid unnecessary BlockPos creation
 	private BlockPos originalStartPos;
 
-	public EnclosureFeature(Codec<NoFeatureConfig> featureConfigCodec) {
+	public EnclosureFeature(Codec<NoneFeatureConfiguration> featureConfigCodec) {
 		super(featureConfigCodec);
 	}
 
 	@Override
-	public boolean place(ISeedReader reader, ChunkGenerator generator, Random rand, BlockPos centerPos, NoFeatureConfig config) {
-		int minY = centerPos.getY() - (4 + rand.nextInt(2)); // The lowest y to use when making the pit
-		originalStartPos = centerPos;
-		centerPos = findSuitablePosition(reader, centerPos, minY, rand);
-		if (centerPos != null) {
+	public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
+		WorldGenLevel level = context.level();
+		BlockPos origin = context.origin();
+		Random random = context.random();
+
+		int minY = origin.getY() - (4 + random.nextInt(2)); // The lowest y to use when making the pit
+		originalStartPos = origin;
+		origin = findSuitablePosition(level, origin, minY, random);
+		if (origin != null) {
 			// These position arrays use the surface as their Y level - the air block above the ground
 			ArrayList<BlockPos> holePositions = new ArrayList<>(); // Positions at the hole - i.e. which X and Z values are to be cut out
 			ArrayList<BlockPos> edgePositions = new ArrayList<>(); // Positions at the edge of the hole, where 'drop-offs' might be placed
 			ArrayList<BlockPos> outlinePositions; // Positions for fences to be placed on or the griefer to spawn
 			// Adding the 'starting positions' - the center and its neighbours
-			holePositions.add(centerPos);
+			holePositions.add(origin);
 			for (Direction dir : horizontalDirections) {
-				edgePositions.add(centerPos.relative(dir));
+				edgePositions.add(origin.relative(dir));
 			}
-			for (int i = 0; i <= 5 + rand.nextInt(5); i++) {
-				edgePositions = expandHole(edgePositions, holePositions, centerPos, reader, rand);
+			for (int i = 0; i <= 5 + random.nextInt(5); i++) {
+				edgePositions = expandHole(edgePositions, holePositions, origin, level, random);
 			}
 			if (holePositions.size() <= 1)
 				return false; // Stops those dumb 1 block holes in forests from existing in the first place
-			generateEdges(edgePositions, reader, rand);
-			outlinePositions = findOutlines(edgePositions, holePositions, reader);
-			generateHole(holePositions, minY, reader, rand);
-			ArrayList<BlockPos> clearOutlinePositions = generateFences(outlinePositions, reader, rand);
+			generateEdges(edgePositions, level, random);
+			outlinePositions = findOutlines(edgePositions, holePositions, level);
+			generateHole(holePositions, minY, level, random);
+			ArrayList<BlockPos> clearOutlinePositions = generateFences(outlinePositions, level, random);
 			for (BlockPos outlinePos : outlinePositions) {
-				fixFenceConnections(reader, outlinePos);
+				fixFenceConnections(level, outlinePos);
 			}
 			if (!clearOutlinePositions.isEmpty()) {
-				GrieferEntity griefer = SREntities.GRIEFER.get().create(reader.getLevel());
+				GrieferEntity griefer = SREntities.GRIEFER.get().create(level.getLevel());
 				if (griefer != null) {
-					BlockPos grieferPos = clearOutlinePositions.get(rand.nextInt(clearOutlinePositions.size())).mutable(); //put the griefer at a random location on the edge of the hole
+					BlockPos grieferPos = clearOutlinePositions.get(random.nextInt(clearOutlinePositions.size())).mutable(); //put the griefer at a random location on the edge of the hole
 					griefer.moveTo(grieferPos.getX(), grieferPos.getY(), grieferPos.getZ(), 0, 0);
 					griefer.setPersistenceRequired();
-					griefer.finalizeSpawn(reader, reader.getCurrentDifficultyAt(grieferPos), SpawnReason.CHUNK_GENERATION, null, null);
-					reader.addFreshEntity(griefer);
+					griefer.finalizeSpawn(level, level.getCurrentDifficultyAt(grieferPos), MobSpawnType.CHUNK_GENERATION, null, null);
+					level.addFreshEntity(griefer);
 				}
 			}
-			generateDecorations(getDecorationStarts(outlinePositions, edgePositions, holePositions, reader), reader, rand);
+			generateDecorations(getDecorationStarts(outlinePositions, edgePositions, holePositions, level), level, random);
 			return true;
 		}
 		return false;
@@ -81,8 +90,8 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 	 * For the area 3 blocks around the center position, checks if the area 5 blocks around it are suitable, returning
 	 * one of these valid positions, or null if none are valid.
 	 */
-	private BlockPos findSuitablePosition(ISeedReader reader, BlockPos centerPos, int minY, Random rand) {
-		BlockPos.Mutable pos = centerPos.mutable();
+	private BlockPos findSuitablePosition(WorldGenLevel reader, BlockPos centerPos, int minY, Random rand) {
+		BlockPos.MutableBlockPos pos = centerPos.mutable();
 		ArrayList<BlockPos> suitablePositions = new ArrayList<>();
 		for (int bigX = centerPos.getX() - 3; bigX < centerPos.getX() + 3; bigX++) {
 			for (int bigZ = centerPos.getZ() - 3; bigZ < centerPos.getZ() + 3; bigZ++) {
@@ -111,7 +120,7 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 	/**
 	 * Like isAreaClear, but it only checks one position and two y levels - ground and the block above
 	 */
-	private boolean isSurfacePositionClear(ISeedReader reader, BlockPos pos) {
+	private boolean isSurfacePositionClear(WorldGenLevel reader, BlockPos pos) {
 		// This is a quick fix to stop decorations from intersecting outposts. It's not ideal as it restricts decoration positions in certain directions where they shouldn't be restricted.
 		// If enclosure placement could be deferred until the other jigsaw blocks are placed, this would be obsolete.
 		if (Math.abs(originalStartPos.getX() - pos.getX()) < 12 && Math.abs(originalStartPos.getZ() - pos.getZ()) < 12) {
@@ -125,7 +134,7 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 	/**
 	 * Takes in an arraylist of the positions at the edge of a hole and makes it bigger. Also increases the size of the holePositions
 	 */
-	private ArrayList<BlockPos> expandHole(ArrayList<BlockPos> edgePositions, ArrayList<BlockPos> holePositions, BlockPos centerPos, ISeedReader reader, Random rand) {
+	private ArrayList<BlockPos> expandHole(ArrayList<BlockPos> edgePositions, ArrayList<BlockPos> holePositions, BlockPos centerPos, WorldGenLevel reader, Random rand) {
 		ArrayList<BlockPos> newEdgePositions = new ArrayList<>(edgePositions); // Caching edgePositions as elements need to be removed
 		for (BlockPos edgePos : edgePositions) {
 			// This makes it less likely to expand further as it gets larger, preventing ridiculous hole sizes
@@ -171,7 +180,7 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 	/**
 	 * Generates the blocks at drop off positions, updating the edge positions with the failed drop-offs
 	 */
-	private void generateEdges(ArrayList<BlockPos> edgePositions, ISeedReader reader, Random rand) {
+	private void generateEdges(ArrayList<BlockPos> edgePositions, WorldGenLevel reader, Random rand) {
 		for (BlockPos edgePos : edgePositions) {
 			if (rand.nextFloat() < 0.6f) { // Randomised to make the hole look a bit more natural
 				reader.setBlock(edgePos.relative(Direction.DOWN), Blocks.AIR.defaultBlockState(), 3);
@@ -181,7 +190,7 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 		}
 	}
 
-	private ArrayList<BlockPos> findOutlines(ArrayList<BlockPos> edgePositions, ArrayList<BlockPos> holePositions, ISeedReader reader) {
+	private ArrayList<BlockPos> findOutlines(ArrayList<BlockPos> edgePositions, ArrayList<BlockPos> holePositions, WorldGenLevel reader) {
 		ArrayList<BlockPos> outlinePositions = new ArrayList<>();
 		for (BlockPos edgePos : edgePositions) {
 			// The rotating y direction stuff is used to get diagonal neighbours, is there a better way?
@@ -202,7 +211,7 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 	/**
 	 * Takes in an arraylist of hole positions and generates the hole from them, including mobs inside
 	 */
-	private void generateHole(ArrayList<BlockPos> holePositions, int minY, ISeedReader reader, Random rand) {
+	private void generateHole(ArrayList<BlockPos> holePositions, int minY, WorldGenLevel reader, Random rand) {
 		for (BlockPos holePos : holePositions) {
 			currentPos.set(holePos);
 			for (int i = minY; i < holePos.getY() + 2; i++) { // holePos.getY() is the block 1 above the surface, so < is used
@@ -216,14 +225,14 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 				}
 			}
 			if (rand.nextFloat() < 0.3f) {
-				MobEntity entity = rand.nextFloat() < 0.5f ? EntityType.CREEPER.create(reader.getLevel()) : SREntities.CREEPIE.get().create(reader.getLevel());
+				Mob entity = rand.nextFloat() < 0.5f ? EntityType.CREEPER.create(reader.getLevel()) : SREntities.CREEPIE.get().create(reader.getLevel());
 				if (entity != null) {
 					entity.moveTo(currentPos.getX() + 0.5, minY + 1, currentPos.getZ() + 0.5, 0, 0);
 					entity.setPersistenceRequired();
 					if (entity instanceof CreepieEntity) {
 						((CreepieEntity) entity).attackPlayersOnly = true;
 					}
-					entity.finalizeSpawn(reader, reader.getCurrentDifficultyAt(currentPos), SpawnReason.CHUNK_GENERATION, null, null);
+					entity.finalizeSpawn(reader, reader.getCurrentDifficultyAt(currentPos), MobSpawnType.CHUNK_GENERATION, null, null);
 					reader.addFreshEntity(entity);
 				}
 			}
@@ -234,8 +243,8 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 	 * Takes in an arraylist of positions of the outline around the hole, and generates fences at them.
 	 * Returns the outlines excluding fence positions
 	 */
-	private ArrayList<BlockPos> generateFences(ArrayList<BlockPos> outlinePositions, ISeedReader reader, Random rand) {
-		BlockPos.Mutable secondFencePos = new BlockPos.Mutable();
+	private ArrayList<BlockPos> generateFences(ArrayList<BlockPos> outlinePositions, WorldGenLevel reader, Random rand) {
+		BlockPos.MutableBlockPos secondFencePos = new BlockPos.MutableBlockPos();
 		ArrayList<BlockPos> nonFenceOutlines = new ArrayList<>(outlinePositions);
 		if (!nonFenceOutlines.isEmpty()) {
 			for (BlockPos firstFencePos : outlinePositions) {
@@ -260,16 +269,16 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 	/**
 	 * Fixes fence connections between the block at pos and its neighbors
 	 */
-	private void fixFenceConnections(ISeedReader reader, BlockPos pos) {
+	private void fixFenceConnections(WorldGenLevel reader, BlockPos pos) {
 		BlockState originalState = reader.getBlockState(pos);
 		if (originalState.getBlock() instanceof FenceBlock) {
-			BlockPos.Mutable neighborPos = new BlockPos.Mutable();
+			BlockPos.MutableBlockPos neighborPos = new BlockPos.MutableBlockPos();
 			for (Direction dir : horizontalDirections) {
 				neighborPos.set(pos.relative(dir));
 				BlockState neighborState = reader.getBlockState(neighborPos);
 				if (neighborState.getBlock() instanceof FenceBlock) {
-					originalState = originalState.setValue(SixWayBlock.PROPERTY_BY_DIRECTION.get(dir), true);
-					neighborState = neighborState.setValue(SixWayBlock.PROPERTY_BY_DIRECTION.get(dir.getOpposite()), true);
+					originalState = originalState.setValue(PipeBlock.PROPERTY_BY_DIRECTION.get(dir), true);
+					neighborState = neighborState.setValue(PipeBlock.PROPERTY_BY_DIRECTION.get(dir.getOpposite()), true);
 					reader.setBlock(pos, originalState, 3);
 					reader.setBlock(neighborPos.immutable(), neighborState, 3);
 				}
@@ -280,7 +289,7 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 	/**
 	 * Finds valid positions to place decorations from
 	 */
-	private ArrayList<Pair<Direction, BlockPos>> getDecorationStarts(ArrayList<BlockPos> outlinePositions, ArrayList<BlockPos> edgePositions, ArrayList<BlockPos> holePositions, ISeedReader reader) {
+	private ArrayList<Pair<Direction, BlockPos>> getDecorationStarts(ArrayList<BlockPos> outlinePositions, ArrayList<BlockPos> edgePositions, ArrayList<BlockPos> holePositions, WorldGenLevel reader) {
 		ArrayList<Pair<Direction, BlockPos>> decorationStarts = new ArrayList<>();
 		for (BlockPos outlinePos : outlinePositions) {
 			for (Direction dir : horizontalDirections) {
@@ -295,7 +304,7 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 								BlockPos start = currentPos.immutable();
 								boolean isClear = true;
 								currentPos.set(start.relative(dir.getCounterClockWise(), 2));
-								BlockPos.Mutable mainForwardPos = currentPos.mutable();
+								BlockPos.MutableBlockPos mainForwardPos = currentPos.mutable();
 								for (int i = 0; i < 5 && isClear; i++) {
 									for (int j = 0; j < 5 && isClear; j++) {
 										if (!isSurfacePositionClear(reader, currentPos)) {
@@ -304,7 +313,7 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 											isClear = false;
 											shouldTryAgain = true;
 										} else {
-											BlockPos.Mutable checkingPos = new BlockPos.Mutable();
+											BlockPos.MutableBlockPos checkingPos = new BlockPos.MutableBlockPos();
 											for (Direction subDir : horizontalDirections) {
 												checkingPos.set(currentPos.relative(subDir));
 												if (reader.getBlockState(checkingPos).isSolidRender(reader, checkingPos)) {
@@ -338,7 +347,7 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 	/**
 	 * Chooses positions from a potential decoration positions list and generates decorations
 	 */
-	private void generateDecorations(ArrayList<Pair<Direction, BlockPos>> potentialStarts, ISeedReader reader, Random rand) {
+	private void generateDecorations(ArrayList<Pair<Direction, BlockPos>> potentialStarts, WorldGenLevel reader, Random rand) {
 		int decorationIndex = 0;
 		BlockPos[] decorationCenters = new BlockPos[3];
 		while (decorationIndex < 3 && !potentialStarts.isEmpty()) {
@@ -348,7 +357,7 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 			BlockPos[][] decorationPositions = new BlockPos[5][5]; // First bracket for along, second for ahead
 			// Caching decoration locations to make it easier to set blockstates
 			currentPos.set(currentPos.relative(dir.getCounterClockWise(), 2));
-			BlockPos.Mutable mainForwardPos = currentPos.mutable();
+			BlockPos.MutableBlockPos mainForwardPos = currentPos.mutable();
 			for (int i = 0; i < 5; i++) {
 				for (int j = 0; j < 5; j++) {
 					if (j == 2 && i == 2) {
@@ -381,8 +390,8 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 									reader.setBlock(currentPos, Blocks.CRAFTING_TABLE.defaultBlockState(), 3);
 									currentPos.set(currentPos.relative(Direction.UP));
 									if (i == 1 && j == 2) {
-										reader.setBlock(currentPos, Blocks.CHEST.defaultBlockState().setValue(HorizontalBlock.FACING, dir), 3);
-										LockableLootTileEntity.setLootTable(reader, rand, currentPos, new ResourceLocation(SavageAndRavage.MOD_ID, "chests/enclosure"));
+										reader.setBlock(currentPos, Blocks.CHEST.defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, dir), 3);
+										RandomizableContainerBlockEntity.setLootTable(reader, rand, currentPos, new ResourceLocation(SavageAndRavage.MOD_ID, "chests/enclosure"));
 									} else {
 										reader.setBlock(currentPos, Blocks.CRAFTING_TABLE.defaultBlockState(), 3);
 									}
@@ -392,18 +401,18 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 						case 1:
 							for (int i = 0; i < 3; i++) {
 								if (i == 0) {
-									BlockState stairsState = SRBlocks.BLAST_PROOF_STAIRS.get().defaultBlockState().setValue(HorizontalBlock.FACING, dir);
+									BlockState stairsState = SRBlocks.BLAST_PROOF_STAIRS.get().defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, dir);
 									reader.setBlock(decorationPositions[1][i], stairsState, 3);
 									reader.setBlock(decorationPositions[2][i], stairsState, 3);
 									reader.setBlock(decorationPositions[3][i], stairsState, 3);
 								} else if (i == 1) {
-									reader.setBlock(decorationPositions[1][i], SRBlocks.BLAST_PROOF_STAIRS.get().defaultBlockState().setValue(HorizontalBlock.FACING, dir.getClockWise()), 3);
+									reader.setBlock(decorationPositions[1][i], SRBlocks.BLAST_PROOF_STAIRS.get().defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, dir.getClockWise()), 3);
 									reader.setBlock(decorationPositions[2][i], SRBlocks.BLAST_PROOF_PLATES.get().defaultBlockState(), 3);
-									reader.setBlock(decorationPositions[2][i].relative(Direction.UP), Blocks.CHEST.defaultBlockState().setValue(HorizontalBlock.FACING, dir), 3);
-									LockableLootTileEntity.setLootTable(reader, rand, decorationPositions[2][i].relative(Direction.UP), new ResourceLocation(SavageAndRavage.MOD_ID, "chests/enclosure"));
-									reader.setBlock(decorationPositions[3][i], SRBlocks.BLAST_PROOF_STAIRS.get().defaultBlockState().setValue(HorizontalBlock.FACING, dir.getCounterClockWise()), 3);
+									reader.setBlock(decorationPositions[2][i].relative(Direction.UP), Blocks.CHEST.defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, dir), 3);
+									RandomizableContainerBlockEntity.setLootTable(reader, rand, decorationPositions[2][i].relative(Direction.UP), new ResourceLocation(SavageAndRavage.MOD_ID, "chests/enclosure"));
+									reader.setBlock(decorationPositions[3][i], SRBlocks.BLAST_PROOF_STAIRS.get().defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, dir.getCounterClockWise()), 3);
 								} else {
-									BlockState stairsState = SRBlocks.BLAST_PROOF_STAIRS.get().defaultBlockState().setValue(HorizontalBlock.FACING, dir.getOpposite());
+									BlockState stairsState = SRBlocks.BLAST_PROOF_STAIRS.get().defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, dir.getOpposite());
 									reader.setBlock(decorationPositions[1][i], stairsState, 3);
 									reader.setBlock(decorationPositions[2][i], stairsState, 3);
 									reader.setBlock(decorationPositions[3][i], stairsState, 3);
@@ -412,8 +421,8 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 							break;
 						case 2:
 							reader.setBlock(decorationPositions[2][0], SRBlocks.CREEPER_SPORE_SACK.get().defaultBlockState(), 3);
-							reader.setBlock(decorationPositions[3][0], Blocks.CHEST.defaultBlockState().setValue(HorizontalBlock.FACING, dir), 3);
-							LockableLootTileEntity.setLootTable(reader, rand, decorationPositions[3][0], new ResourceLocation(SavageAndRavage.MOD_ID, "chests/enclosure"));
+							reader.setBlock(decorationPositions[3][0], Blocks.CHEST.defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, dir), 3);
+							RandomizableContainerBlockEntity.setLootTable(reader, rand, decorationPositions[3][0], new ResourceLocation(SavageAndRavage.MOD_ID, "chests/enclosure"));
 					}
 				} else {
 					switch (rand.nextInt(3)) {
@@ -429,7 +438,7 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 										}
 									}
 								} else if (i == 5) {
-									reader.setBlock(decorationPositions[2][4].relative(dir), Blocks.DARK_OAK_BUTTON.defaultBlockState().setValue(HorizontalFaceBlock.FACING, dir), 3);
+									reader.setBlock(decorationPositions[2][4].relative(dir), Blocks.DARK_OAK_BUTTON.defaultBlockState().setValue(FaceAttachedHorizontalDirectionalBlock.FACING, dir), 3);
 								} else {
 									reader.setBlock(decorationPositions[0][i], Blocks.DARK_OAK_FENCE.defaultBlockState(), 3);
 									reader.setBlock(decorationPositions[0][i].relative(Direction.UP), Blocks.DARK_OAK_FENCE.defaultBlockState(), 3);
@@ -449,12 +458,12 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 									reader.setBlock(decorationPositions[1][i].relative(Direction.UP), Blocks.DARK_OAK_FENCE.defaultBlockState(), 3);
 									reader.setBlock(decorationPositions[4][i], Blocks.DARK_OAK_FENCE.defaultBlockState(), 3);
 									reader.setBlock(decorationPositions[4][i].relative(Direction.UP), Blocks.DARK_OAK_FENCE.defaultBlockState(), 3);
-									CreeperEntity creeper = EntityType.CREEPER.create(reader.getLevel());
+									Creeper creeper = EntityType.CREEPER.create(reader.getLevel());
 									if (creeper != null) {
 										currentPos.set(decorationPositions[2 + rand.nextInt(2)][i]);
 										creeper.moveTo(currentPos.getX(), currentPos.getY(), currentPos.getZ(), 0, 0);
 										creeper.setPersistenceRequired();
-										creeper.finalizeSpawn(reader, reader.getCurrentDifficultyAt(currentPos), SpawnReason.CHUNK_GENERATION, null, null);
+										creeper.finalizeSpawn(reader, reader.getCurrentDifficultyAt(currentPos), MobSpawnType.CHUNK_GENERATION, null, null);
 										reader.addFreshEntity(creeper);
 									}
 								} else {
@@ -473,12 +482,12 @@ public class EnclosureFeature extends Feature<NoFeatureConfig> {
 									reader.setBlock(decorationPositions[1][i].relative(Direction.UP), Blocks.DARK_OAK_FENCE.defaultBlockState(), 3);
 									reader.setBlock(decorationPositions[3][i], Blocks.DARK_OAK_FENCE.defaultBlockState(), 3);
 									reader.setBlock(decorationPositions[3][i].relative(Direction.UP), Blocks.DARK_OAK_FENCE.defaultBlockState(), 3);
-									CreeperEntity creeper = EntityType.CREEPER.create(reader.getLevel());
+									Creeper creeper = EntityType.CREEPER.create(reader.getLevel());
 									if (creeper != null) {
 										currentPos.set(decorationPositions[2][i]);
 										creeper.moveTo(currentPos.getX(), currentPos.getY(), currentPos.getZ(), 0, 0);
 										creeper.setPersistenceRequired();
-										creeper.finalizeSpawn(reader, reader.getCurrentDifficultyAt(currentPos), SpawnReason.CHUNK_GENERATION, null, null);
+										creeper.finalizeSpawn(reader, reader.getCurrentDifficultyAt(currentPos), MobSpawnType.CHUNK_GENERATION, null, null);
 										reader.addFreshEntity(creeper);
 									}
 								} else {

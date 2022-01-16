@@ -1,41 +1,45 @@
 package com.minecraftabnormals.savageandravage.common.entity.goals;
 
-import com.minecraftabnormals.abnormals_core.common.world.storage.tracking.TrackedDataManager;
-import com.minecraftabnormals.savageandravage.core.mixin.IRaiderAccessor;
+import com.minecraftabnormals.savageandravage.core.mixin.RaiderAccessor;
 import com.minecraftabnormals.savageandravage.core.other.SRDataProcessors;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.ICrossbowUser;
-import net.minecraft.entity.IRangedAttackMob;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
-import net.minecraft.entity.monster.AbstractRaiderEntity;
-import net.minecraft.entity.projectile.FireworkRocketEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.entity.projectile.ProjectileHelper;
-import net.minecraft.item.CrossbowItem;
-import net.minecraft.item.FireworkRocketItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.pathfinding.NodeProcessor;
-import net.minecraft.pathfinding.PathNavigator;
-import net.minecraft.pathfinding.PathNodeType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.*;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import com.mojang.math.Vector3f;
+import com.teamabnormals.blueprint.common.world.storage.tracking.TrackedDataManager;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.monster.CrossbowAttackMob;
+import net.minecraft.world.entity.monster.RangedAttackMob;
+import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.world.entity.projectile.FireworkRocketEntity;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.entity.raid.Raider;
+import net.minecraft.world.item.CrossbowItem;
+import net.minecraft.world.item.FireworkRocketItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.NodeEvaluator;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 
-public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & ICrossbowUser> extends Goal {
+public class ImprovedCrossbowGoal<T extends PathfinderMob & RangedAttackMob & CrossbowAttackMob> extends Goal {
 	private final T mob;
 	private ImprovedCrossbowGoal.CrossbowState crossbowState = ImprovedCrossbowGoal.CrossbowState.UNCHARGED;
 	private final double speedChanger;
@@ -46,8 +50,8 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 	private int ticksTillSearch;
 	private int practisingTicks;
 	private BlockPos blockPos;
-	private Vector3d blockPosVector;
-	private Vector3d blockPosVectorCentred;
+	private Vec3 blockPosVector;
+	private Vec3 blockPosVectorCentred;
 
 	public ImprovedCrossbowGoal(T mob, double speedChanger, float radius, double blocksUntilBackup) {
 		this.mob = mob;
@@ -96,7 +100,7 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 		super.start();
 		this.practisingTicks = 200 + this.mob.getRandom().nextInt(160);
 		if (this.blockPos != null) {
-			this.blockPosVector = new Vector3d(this.blockPos.getX(), this.blockPos.getY(), this.blockPos.getZ());
+			this.blockPosVector = new Vec3(this.blockPos.getX(), this.blockPos.getY(), this.blockPos.getZ());
 			this.blockPosVectorCentred = this.blockPosVector.add(0.5D, 0.5D, 0.5D);
 		}
 	}
@@ -130,7 +134,7 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 		if (target == null && practisingTicks <= 0)
 			return;
 
-		boolean canSeeEnemy = target != null ? this.mob.getSensing().canSee(target) : this.canSeeTargetBlock();
+		boolean canSeeEnemy = target != null ? this.mob.getSensing().hasLineOfSight(target) : this.canSeeTargetBlock();
 		if (canSeeEnemy)
 			++this.seeTime;
 		else {
@@ -144,9 +148,9 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 		this.mob.setAggressive(true);
 
 		double distanceSq = target != null ? this.mob.distanceToSqr(target) : this.mob.distanceToSqr(this.blockPos.getX(), this.blockPos.getY(), this.blockPos.getZ());
-		double distance = MathHelper.sqrt(distanceSq);
+		double distance = Mth.sqrt((float) distanceSq);
 		int distanceCoefficient = target == null ? 2 : 1;
-		if (distance <= (blocksUntilBackupSq * distanceCoefficient) && (!(target instanceof AbstractVillagerEntity) || this.hasFirework())) {
+		if (distance <= (blocksUntilBackupSq * distanceCoefficient) && (!(target instanceof AbstractVillager) || this.hasFirework())) {
 			if (this.isWalkable())
 				this.mob.getMoveControl().strafe(mob.isUsingItem() ? -0.5F : -3.0F, 0);
 		}
@@ -167,7 +171,7 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 
 		if (this.crossbowState == ImprovedCrossbowGoal.CrossbowState.UNCHARGED && !CrossbowItem.isCharged(activeStack)) {
 			if (canSeeEnemy) {
-				this.mob.startUsingItem(ProjectileHelper.getWeaponHoldingHand(this.mob, item -> item instanceof CrossbowItem));
+				this.mob.startUsingItem(ProjectileUtil.getWeaponHoldingHand(this.mob, item -> item instanceof CrossbowItem));
 				this.crossbowState = ImprovedCrossbowGoal.CrossbowState.CHARGING;
 				this.mob.setChargingCrossbow(true);
 			}
@@ -182,7 +186,7 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 				this.crossbowState = ImprovedCrossbowGoal.CrossbowState.CHARGED;
 				this.wait = 20 + this.mob.getRandom().nextInt(20);
 				if (mob.getOffhandItem().getItem() instanceof FireworkRocketItem) {
-					mob.startUsingItem(Hand.OFF_HAND);
+					mob.startUsingItem(InteractionHand.OFF_HAND);
 				}
 				this.mob.setChargingCrossbow(false);
 			}
@@ -193,28 +197,28 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 			}
 		} else if (this.crossbowState == ImprovedCrossbowGoal.CrossbowState.READY_TO_ATTACK && canSeeEnemy) {
 			this.performRangedAttack(target != null ? target.position() : this.blockPosVector.add(0.5D, 0.0D, 0.5D));
-			CrossbowItem.setCharged(this.mob.getItemInHand(ProjectileHelper.getWeaponHoldingHand(this.mob, item -> item instanceof CrossbowItem)), false);
+			CrossbowItem.setCharged(this.mob.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this.mob, item -> item instanceof CrossbowItem)), false);
 			this.crossbowState = ImprovedCrossbowGoal.CrossbowState.UNCHARGED;
 		}
 	}
 
 	private boolean noCelebrationAndNoRaid() {
-		if (this.mob instanceof AbstractRaiderEntity)
-			return ((ServerWorld) this.mob.level).getRaidAt(this.mob.blockPosition()) == null && !(this.mob.getEntityData().get(((IRaiderAccessor) this.mob).getIsCelebrating()));
+		if (this.mob instanceof Raider)
+			return ((ServerLevel) this.mob.level).getRaidAt(this.mob.blockPosition()) == null && !(this.mob.getEntityData().get(((RaiderAccessor) this.mob).getIsCelebrating()));
 		return true;
 	}
 
 	private boolean isWalkable() {
-		PathNavigator pathnavigator = this.mob.getNavigation();
-		NodeProcessor nodeprocessor = pathnavigator.getNodeEvaluator();
-		return nodeprocessor.getBlockPathType(this.mob.level, MathHelper.floor(this.mob.getX() + 1.0D), MathHelper.floor(this.mob.getY()), MathHelper.floor(this.mob.getZ() + 1.0D)) == PathNodeType.WALKABLE;
+		PathNavigation pathnavigator = this.mob.getNavigation();
+		NodeEvaluator nodeprocessor = pathnavigator.getNodeEvaluator();
+		return nodeprocessor.getBlockPathType(this.mob.level, Mth.floor(this.mob.getX() + 1.0D), Mth.floor(this.mob.getY()), Mth.floor(this.mob.getZ() + 1.0D)) == BlockPathTypes.WALKABLE;
 	}
 
 	protected boolean findNearestBlock() {
 		int hDiameter = 16;
 		int vDiameter = 8;
 		BlockPos pos = this.mob.blockPosition();
-		BlockPos.Mutable searchPos = new BlockPos.Mutable();
+		BlockPos.MutableBlockPos searchPos = new BlockPos.MutableBlockPos();
 
 		for (int y = 0; y <= vDiameter; y = y > 0 ? -y : 1 - y) {
 			for (int hDist = 0; hDist < hDiameter; hDist++) {
@@ -234,19 +238,19 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 		return false;
 	}
 
-	protected int ticksTillSearch(CreatureEntity creature) {
+	protected int ticksTillSearch(PathfinderMob creature) {
 		return 1000 + creature.getRandom().nextInt(1200);
 	}
 
-	protected boolean isValidTarget(IWorldReader world, BlockPos pos) {
+	protected boolean isValidTarget(LevelReader world, BlockPos pos) {
 		return pos != null && world.getBlockState(pos).is(Blocks.TARGET);
 	}
 
 	private boolean canSeeTargetBlock() {
 		this.mob.level.getProfiler().push("canSee");
-		Vector3d mobPos = new Vector3d(this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
-		BlockRayTraceResult result = this.mob.level.clip(new RayTraceContext(mobPos, this.blockPosVectorCentred, RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, this.mob));
-		boolean canSee = result.getBlockPos().equals(this.blockPos) || result.getType() == RayTraceResult.Type.MISS;
+		Vec3 mobPos = new Vec3(this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
+		BlockHitResult result = this.mob.level.clip(new ClipContext(mobPos, this.blockPosVectorCentred, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this.mob));
+		boolean canSee = result.getBlockPos().equals(this.blockPos) || result.getType() == HitResult.Type.MISS;
 		this.mob.level.getProfiler().pop();
 		return canSee;
 	}
@@ -258,22 +262,22 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 	private boolean hasFirework() {
 		if (this.mob.getOffhandItem().getItem() == Items.FIREWORK_ROCKET) return true;
 		else
-			for (ItemStack projectileStack : CrossbowItem.getChargedProjectiles(this.mob.getItemInHand(ProjectileHelper.getWeaponHoldingHand(this.mob, item -> item instanceof CrossbowItem)))) {
+			for (ItemStack projectileStack : CrossbowItem.getChargedProjectiles(this.mob.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this.mob, item -> item instanceof CrossbowItem)))) {
 				if (projectileStack.getItem() == Items.FIREWORK_ROCKET) return true;
 			}
 		return false;
 	}
 
-	private void performRangedAttack(Vector3d targetPos) {
-		Hand hand = ProjectileHelper.getWeaponHoldingHand(this.mob, item -> item instanceof CrossbowItem);
+	private void performRangedAttack(Vec3 targetPos) {
+		InteractionHand hand = ProjectileUtil.getWeaponHoldingHand(this.mob, item -> item instanceof CrossbowItem);
 		ItemStack weapon = this.mob.getItemInHand(hand);
-		if (this.mob.isHolding(item -> item instanceof CrossbowItem)) {
+		if (this.mob.isHolding(stack -> stack.getItem() instanceof CrossbowItem)) {
 			performShooting(this.mob.level, this.mob, targetPos, hand, weapon);
 		}
 		this.mob.onCrossbowAttackPerformed();
 	}
 
-	private void performShooting(World world, T shooter, Vector3d targetPos, Hand hand, ItemStack weapon) {
+	private void performShooting(Level world, T shooter, Vec3 targetPos, InteractionHand hand, ItemStack weapon) {
 		List<ItemStack> projectiles = CrossbowItem.getChargedProjectiles(weapon);
 		float[] soundPitches = CrossbowItem.getShotPitches(world.getRandom());
 
@@ -285,7 +289,7 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 					if (this.hasAttackTarget() && !(projectileStack.getItem() == Items.FIREWORK_ROCKET))
 						CrossbowItem.shootProjectile(world, shooter, hand, weapon, projectileStack, soundPitches[i], false, 1.6F, (float) (14 - shooter.level.getDifficulty().getId() * 4), yaw);
 					else {
-						ProjectileEntity shot = shootProjectile(world, shooter, targetPos, hand, weapon, projectileStack, soundPitches[i], yaw);
+						Projectile shot = shootProjectile(world, shooter, targetPos, hand, weapon, projectileStack, soundPitches[i], yaw);
 						if (i == 0)
 							TrackedDataManager.INSTANCE.setValue(shot, SRDataProcessors.CROSSBOW_OWNER, Optional.of(this.mob.getUUID()));
 					}
@@ -295,22 +299,22 @@ public class ImprovedCrossbowGoal<T extends CreatureEntity & IRangedAttackMob & 
 		CrossbowItem.onCrossbowShot(world, shooter, weapon);
 	}
 
-	private ProjectileEntity shootProjectile(World world, T shooter, Vector3d targetPos, Hand hand, ItemStack weapon, ItemStack projectileStack, float soundPitch, float yaw) {
+	private Projectile shootProjectile(Level world, T shooter, Vec3 targetPos, InteractionHand hand, ItemStack weapon, ItemStack projectileStack, float soundPitch, float yaw) {
 		boolean isFirework = projectileStack.getItem() == Items.FIREWORK_ROCKET;
-		ProjectileEntity projectile = isFirework ? new FireworkRocketEntity(world, projectileStack, shooter, shooter.getX(), shooter.getEyeY() - (double) 0.15F, shooter.getZ(), true) : CrossbowItem.getArrow(world, shooter, weapon, projectileStack);
+		Projectile projectile = isFirework ? new FireworkRocketEntity(world, projectileStack, shooter, shooter.getX(), shooter.getEyeY() - (double) 0.15F, shooter.getZ(), true) : CrossbowItem.getArrow(world, shooter, weapon, projectileStack);
 		this.shootCrossbowProjectile(shooter, targetPos, projectile, yaw, isFirework);
 		weapon.hurtAndBreak(isFirework ? 3 : 1, shooter, (s) -> s.broadcastBreakEvent(hand));
 		world.addFreshEntity(projectile);
-		world.playSound(null, shooter.getX(), shooter.getY(), shooter.getZ(), SoundEvents.CROSSBOW_SHOOT, SoundCategory.PLAYERS, 1.0F, soundPitch);
+		world.playSound(null, shooter.getX(), shooter.getY(), shooter.getZ(), SoundEvents.CROSSBOW_SHOOT, SoundSource.PLAYERS, 1.0F, soundPitch);
 		return projectile;
 	}
 
-	private void shootCrossbowProjectile(T shooter, Vector3d targetPos, ProjectileEntity projectile, float yaw, boolean isFirework) {
+	private void shootCrossbowProjectile(T shooter, Vec3 targetPos, Projectile projectile, float yaw, boolean isFirework) {
 		double x = targetPos.x() - shooter.getX();
 		double z = targetPos.z() - shooter.getZ();
-		double distance = MathHelper.sqrt(x * x + z * z);
+		double distance = Mth.sqrt((float) (x * x + z * z));
 		double y = isFirework ? (targetPos.y() + 1.0D) - projectile.getY() : getYIntoBox(targetPos.y()) - projectile.getY() + distance * (double) 0.2F;
-		Vector3f vector3f = shooter.getProjectileShotVector(shooter, new Vector3d(x, y, z), yaw);
+		Vector3f vector3f = shooter.getProjectileShotVector(shooter, new Vec3(x, y, z), yaw);
 		projectile.shoot(vector3f.x(), vector3f.y(), vector3f.z(), 1.6F, (float) (14 - shooter.level.getDifficulty().getId() * 4));
 		shooter.playSound(SoundEvents.CROSSBOW_SHOOT, 1.0F, 1.0F / (shooter.getRandom().nextFloat() * 0.4F + 0.8F));
 	}

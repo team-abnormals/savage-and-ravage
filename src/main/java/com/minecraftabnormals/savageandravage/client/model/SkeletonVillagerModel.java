@@ -3,75 +3,59 @@ package com.minecraftabnormals.savageandravage.client.model;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.minecraftabnormals.savageandravage.common.entity.SkeletonVillagerEntity;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.client.renderer.model.ModelHelper;
-import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ShootableItem;
-import net.minecraft.item.UseAction;
-import net.minecraft.util.HandSide;
-import net.minecraft.util.math.MathHelper;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.model.AnimationUtils;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ProjectileWeaponItem;
+import net.minecraft.world.item.UseAnim;
 
-/*
-  ModelSkeletonVillager - Vinny
- */
-public class SkeletonVillagerModel extends BipedModel<SkeletonVillagerEntity> {
-	public ModelRenderer MiddleClosedArm;
-	public ModelRenderer Nose;
-	public ModelRenderer RightClosedArm;
-	public ModelRenderer LeftClosedArm;
+public class SkeletonVillagerModel extends HumanoidModel<SkeletonVillagerEntity> {
+	public ModelPart middleClosedArm;
+	public ModelPart nose;
+	public ModelPart rightClosedArm;
+	public ModelPart leftClosedArm;
 
-	public SkeletonVillagerModel(float f) {
-		super(f);
-		this.texWidth = 64;
-		this.texHeight = 64;
-		this.rightLeg = new ModelRenderer(this, 0, 18);
-		this.rightLeg.setPos(-2.0F, 12.0F, 0.0F);
-		this.rightLeg.addBox(-1.5F, 0.0F, -1.5F, 3, 12, 3, 0.0F);
-		this.body = new ModelRenderer(this, 12, 18);
-		this.body.setPos(0.0F, 0.0F, 0.0F);
-		this.body.addBox(-4.0F, 0.0F, -3.0F, 8, 12, 6, 0.0F);
-		this.LeftClosedArm = new ModelRenderer(this, 32, 0);
-		this.LeftClosedArm.mirror = true;
-		this.LeftClosedArm.setPos(0.0F, 0.0F, 0.0F);
-		this.LeftClosedArm.addBox(4.0F, -2.0F, -1.0F, 3, 8, 3, 0.0F);
-		this.head = new ModelRenderer(this, 0, 0);
-		this.head.setPos(0.0F, 0.0F, 0.0F);
-		this.head.addBox(-4.0F, -10.0F, -4.0F, 8, 10, 8, 0.0F);
-		this.leftLeg = new ModelRenderer(this, 0, 18);
-		this.leftLeg.mirror = true;
-		this.leftLeg.setPos(2.0F, 12.0F, 0.0F);
-		this.leftLeg.addBox(-1.5F, 0.0F, -1.5F, 3, 12, 3, 0.0F);
-		this.RightClosedArm = new ModelRenderer(this, 32, 0);
-		this.RightClosedArm.setPos(0.0F, 0.0F, 0.0F);
-		this.RightClosedArm.addBox(-7.0F, -2.0F, -1.0F, 3, 8, 3, 0.0F);
-		this.Nose = new ModelRenderer(this, 24, 0);
-		this.Nose.setPos(0.0F, -3.0F, -4.0F);
-		this.Nose.addBox(-1.0F, 0.0F, -2.0F, 2, 4, 2, 0.0F);
-		this.rightArm = new ModelRenderer(this, 40, 19);
-		this.rightArm.setPos(-5.5F, 2.0F, 0.0F);
-		this.rightArm.addBox(-1.5F, -2.0F, -1.5F, 3, 12, 3, 0.0F);
-		this.leftArm = new ModelRenderer(this, 40, 19);
-		this.leftArm.mirror = true;
-		this.leftArm.setPos(5.5F, 2.0F, 0.0F);
-		this.leftArm.addBox(-1.5F, -2.0F, -1.5F, 3, 12, 3, 0.0F);
-		this.MiddleClosedArm = new ModelRenderer(this, 32, 11);
-		this.MiddleClosedArm.setPos(0.0F, 3.0F, -1.0F);
-		this.MiddleClosedArm.addBox(-4.0F, 3.0F, -1.0F, 8, 3, 3, 0.0F);
-		this.setRotateAngle(MiddleClosedArm, -0.7853981633974483F, 0.0F, 0.0F);
-		this.MiddleClosedArm.addChild(this.LeftClosedArm);
-		this.MiddleClosedArm.addChild(this.RightClosedArm);
-		this.head.addChild(this.Nose);
+	public SkeletonVillagerModel(ModelPart root) {
+		super(root);
 		this.hat.visible = false;
+		this.middleClosedArm = root.getChild("middle_closed_arm");
+		this.leftClosedArm = this.middleClosedArm.getChild("left_closed_arm");
+		this.rightClosedArm = this.middleClosedArm.getChild("right_closed_arm");
+		this.nose = this.head.getChild("nose");
+	}
+
+	public static LayerDefinition createBodyLayer() {
+		MeshDefinition meshdefinition = HumanoidModel.createMesh(CubeDeformation.NONE, 0.0F);
+		PartDefinition root = meshdefinition.getRoot();
+		PartDefinition middleClosedArm = root.addOrReplaceChild("middle_closed_arm", CubeListBuilder.create().texOffs(32, 11).addBox(-4.0F, 3.0F, -1.0F, 8.0F, 3.0F, 3.0F, false), PartPose.offsetAndRotation(0.0F, 3.0F, -1.0F, -0.7853982F, 0.0F, 0.0F));
+		PartDefinition leftClosedArm = middleClosedArm.addOrReplaceChild("left_closed_arm", CubeListBuilder.create().texOffs(32, 0).addBox(4.0F, -2.0F, -1.0F, 3.0F, 8.0F, 3.0F, true), PartPose.ZERO);
+		PartDefinition rightClosedArm = middleClosedArm.addOrReplaceChild("right_closed_arm", CubeListBuilder.create().texOffs(32, 0).addBox(-7.0F, -2.0F, -1.0F, 3.0F, 8.0F, 3.0F, false), PartPose.ZERO);
+		PartDefinition body = root.addOrReplaceChild("body", CubeListBuilder.create().texOffs(12, 18).addBox(-4.0F, 0.0F, -3.0F, 8.0F, 12.0F, 6.0F, false), PartPose.ZERO);
+		PartDefinition head = root.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -10.0F, -4.0F, 8.0F, 10.0F, 8.0F, false), PartPose.ZERO);
+		PartDefinition nose = head.addOrReplaceChild("nose", CubeListBuilder.create().texOffs(24, 0).addBox(-1.0F, 0.0F, -2.0F, 2.0F, 4.0F, 2.0F, false), PartPose.offsetAndRotation(0.0F, -3.0F, -4.0F, 0.0F, 0.0F, 0.0F));
+		PartDefinition leftArm = root.addOrReplaceChild("left_arm", CubeListBuilder.create().texOffs(40, 19).addBox(-1.5F, -2.0F, -1.5F, 3.0F, 12.0F, 3.0F, true), PartPose.offsetAndRotation(5.5F, 2.0F, 0.0F, 0.0F, 0.0F, 0.0F));
+		PartDefinition rightArm = root.addOrReplaceChild("right_arm", CubeListBuilder.create().texOffs(40, 19).addBox(-1.5F, -2.0F, -1.5F, 3.0F, 12.0F, 3.0F, false), PartPose.offsetAndRotation(-5.5F, 2.0F, 0.0F, 0.0F, 0.0F, 0.0F));
+		PartDefinition leftLeg = root.addOrReplaceChild("left_leg", CubeListBuilder.create().texOffs(0, 18).addBox(-1.5F, 0.0F, -1.5F, 3.0F, 12.0F, 3.0F, true), PartPose.offsetAndRotation(2.0F, 12.0F, 0.0F, 0.0F, 0.0F, 0.0F));
+		PartDefinition rightLeg = root.addOrReplaceChild("right_leg", CubeListBuilder.create().texOffs(0, 18).addBox(-1.5F, 0.0F, -1.5F, 3.0F, 12.0F, 3.0F, false), PartPose.offsetAndRotation(-2.0F, 12.0F, 0.0F, 0.0F, 0.0F, 0.0F));
+		return LayerDefinition.create(meshdefinition, 64, 64);
 	}
 
 	@Override
-	protected Iterable<ModelRenderer> bodyParts() {
-		return Iterables.concat(super.bodyParts(), ImmutableList.of(this.MiddleClosedArm));
+	protected Iterable<ModelPart> bodyParts() {
+		return Iterables.concat(super.bodyParts(), ImmutableList.of(this.middleClosedArm));
 	}
 
-	public void setRotateAngle(ModelRenderer modelRenderer, float x, float y, float z) {
+	public void setRotateAngle(ModelPart modelRenderer, float x, float y, float z) {
 		modelRenderer.xRot = x;
 		modelRenderer.yRot = y;
 		modelRenderer.zRot = z;
@@ -81,15 +65,15 @@ public class SkeletonVillagerModel extends BipedModel<SkeletonVillagerEntity> {
 	public void setupAnim(SkeletonVillagerEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		super.setupAnim(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 		boolean flag = entityIn.isAggressive();
-		this.RightClosedArm.visible = !flag;
-		this.LeftClosedArm.visible = !flag;
-		this.MiddleClosedArm.visible = !flag;
+		this.rightClosedArm.visible = !flag;
+		this.leftClosedArm.visible = !flag;
+		this.middleClosedArm.visible = !flag;
 		this.leftArm.visible = flag;
 		this.rightArm.visible = flag;
 		ItemStack itemstack = entityIn.getMainHandItem();
-		if (entityIn.isAggressive() && (itemstack.isEmpty() || !(itemstack.getItem() instanceof ShootableItem))) {
-			float f = MathHelper.sin(this.attackTime * (float) Math.PI);
-			float f1 = MathHelper.sin((1.0F - (1.0F - this.attackTime) * (1.0F - this.attackTime)) * (float) Math.PI);
+		if (entityIn.isAggressive() && (itemstack.isEmpty() || !(itemstack.getItem() instanceof ProjectileWeaponItem))) {
+			float f = Mth.sin(this.attackTime * (float) Math.PI);
+			float f1 = Mth.sin((1.0F - (1.0F - this.attackTime) * (1.0F - this.attackTime)) * (float) Math.PI);
 			this.rightArm.zRot = 0.0F;
 			this.leftArm.zRot = 0.0F;
 			this.rightArm.yRot = -(0.1F - f * 0.6F);
@@ -98,56 +82,56 @@ public class SkeletonVillagerModel extends BipedModel<SkeletonVillagerEntity> {
 			this.leftArm.xRot = (-(float) Math.PI / 2F);
 			this.rightArm.xRot -= f * 1.2F - f1 * 0.4F;
 			this.leftArm.xRot -= f * 1.2F - f1 * 0.4F;
-			ModelHelper.bobArms(this.rightArm, this.leftArm, ageInTicks);
+			AnimationUtils.bobArms(this.rightArm, this.leftArm, ageInTicks);
 		}
 	}
 
 	@Override
 	public void prepareMobModel(SkeletonVillagerEntity entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
 		ItemStack itemstack = entityIn.getMainHandItem();
-		UseAction useaction = itemstack.getUseAnimation();
-		this.rightArmPose = BipedModel.ArmPose.EMPTY;
-		this.leftArmPose = BipedModel.ArmPose.EMPTY;
-		if (entityIn.getMainArm() == HandSide.RIGHT) {
+		UseAnim useaction = itemstack.getUseAnimation();
+		this.rightArmPose = HumanoidModel.ArmPose.EMPTY;
+		this.leftArmPose = HumanoidModel.ArmPose.EMPTY;
+		if (entityIn.getMainArm() == HumanoidArm.RIGHT) {
 			switch (useaction) {
 				case BLOCK:
-					this.rightArmPose = BipedModel.ArmPose.BLOCK;
+					this.rightArmPose = HumanoidModel.ArmPose.BLOCK;
 					break;
 				case CROSSBOW:
-					this.rightArmPose = BipedModel.ArmPose.CROSSBOW_HOLD;
+					this.rightArmPose = HumanoidModel.ArmPose.CROSSBOW_HOLD;
 					if (entityIn.isCharging()) {
-						this.rightArmPose = BipedModel.ArmPose.CROSSBOW_CHARGE;
+						this.rightArmPose = HumanoidModel.ArmPose.CROSSBOW_CHARGE;
 					}
 					break;
 				case BOW:
-					this.rightArmPose = BipedModel.ArmPose.BOW_AND_ARROW;
+					this.rightArmPose = HumanoidModel.ArmPose.BOW_AND_ARROW;
 					break;
 				default:
-					this.rightArmPose = BipedModel.ArmPose.EMPTY;
+					this.rightArmPose = HumanoidModel.ArmPose.EMPTY;
 					if (!itemstack.isEmpty()) {
-						this.rightArmPose = BipedModel.ArmPose.ITEM;
+						this.rightArmPose = HumanoidModel.ArmPose.ITEM;
 					}
 					break;
 			}
 		}
-		if (entityIn.getMainArm() == HandSide.LEFT) {
+		if (entityIn.getMainArm() == HumanoidArm.LEFT) {
 			switch (useaction) {
 				case BLOCK:
-					this.leftArmPose = BipedModel.ArmPose.BLOCK;
+					this.leftArmPose = HumanoidModel.ArmPose.BLOCK;
 					break;
 				case CROSSBOW:
-					this.leftArmPose = BipedModel.ArmPose.CROSSBOW_HOLD;
+					this.leftArmPose = HumanoidModel.ArmPose.CROSSBOW_HOLD;
 					if (entityIn.isCharging()) {
-						this.leftArmPose = BipedModel.ArmPose.CROSSBOW_CHARGE;
+						this.leftArmPose = HumanoidModel.ArmPose.CROSSBOW_CHARGE;
 					}
 					break;
 				case BOW:
-					this.leftArmPose = BipedModel.ArmPose.BOW_AND_ARROW;
+					this.leftArmPose = HumanoidModel.ArmPose.BOW_AND_ARROW;
 					break;
 				default:
-					this.leftArmPose = BipedModel.ArmPose.EMPTY;
+					this.leftArmPose = HumanoidModel.ArmPose.EMPTY;
 					if (!itemstack.isEmpty()) {
-						this.leftArmPose = BipedModel.ArmPose.ITEM;
+						this.leftArmPose = HumanoidModel.ArmPose.ITEM;
 					}
 					break;
 			}
@@ -156,9 +140,9 @@ public class SkeletonVillagerModel extends BipedModel<SkeletonVillagerEntity> {
 	}
 
 	@Override
-	public void translateToHand(HandSide sideIn, MatrixStack matrixStackIn) {
-		float f = sideIn == HandSide.RIGHT ? 1.0F : -1.0F;
-		ModelRenderer modelrenderer = this.getArm(sideIn);
+	public void translateToHand(HumanoidArm sideIn, PoseStack matrixStackIn) {
+		float f = sideIn == HumanoidArm.RIGHT ? 1.0F : -1.0F;
+		ModelPart modelrenderer = this.getArm(sideIn);
 		modelrenderer.x += f;
 		modelrenderer.translateAndRotate(matrixStackIn);
 		modelrenderer.x -= f;

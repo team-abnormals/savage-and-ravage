@@ -1,29 +1,29 @@
 package com.minecraftabnormals.savageandravage.common.item;
 
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.util.IStringSerializable;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.util.StringRepresentable;
 
-public enum BlastProofArmorType implements IStringSerializable {
-	HEAD("head", EquipmentSlotType.HEAD, 25),
-	CHEST("chest", EquipmentSlotType.CHEST, 30),
-	LEGS("legs", EquipmentSlotType.LEGS, 25),
-	FEET("feet", EquipmentSlotType.FEET, 20);
+public enum BlastProofArmorType implements StringRepresentable {
+	HEAD("head", EquipmentSlot.HEAD, 25),
+	CHEST("chest", EquipmentSlot.CHEST, 30),
+	LEGS("legs", EquipmentSlot.LEGS, 25),
+	FEET("feet", EquipmentSlot.FEET, 20);
 
 	private final String name;
-	private final EquipmentSlotType slot;
+	private final EquipmentSlot slot;
 	private final int reduction;
 
-	BlastProofArmorType(String name, EquipmentSlotType slot, int reduction) {
+	BlastProofArmorType(String name, EquipmentSlot slot, int reduction) {
 		this.name = name;
 		this.slot = slot;
 		this.reduction = reduction;
 	}
 
-	public EquipmentSlotType getSlot() {
+	public EquipmentSlot getSlot() {
 		return this.slot;
 	}
 
-	public static BlastProofArmorType slotToType(EquipmentSlotType slot) {
+	public static BlastProofArmorType slotToType(EquipmentSlot slot) {
 		for (BlastProofArmorType type : values())
 			if (type.slot == slot)
 				return type;

@@ -1,9 +1,9 @@
 package com.minecraftabnormals.savageandravage.core.registry;
 
-import com.minecraftabnormals.abnormals_core.core.util.registry.SoundSubRegistryHelper;
+import com.teamabnormals.blueprint.core.util.registry.SoundSubRegistryHelper;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
-import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = SavageAndRavage.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)

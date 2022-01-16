@@ -1,13 +1,51 @@
 package com.minecraftabnormals.savageandravage.core;
 
-import com.minecraftabnormals.abnormals_core.core.util.DataUtil;
-import com.minecraftabnormals.abnormals_core.core.util.registry.RegistryHelper;
+import com.minecraftabnormals.savageandravage.client.model.CreepieModel;
+import com.minecraftabnormals.savageandravage.client.model.ExecutionerModel;
+import com.minecraftabnormals.savageandravage.client.model.GrieferArmorModel;
+import com.minecraftabnormals.savageandravage.client.model.GrieferModel;
+import com.minecraftabnormals.savageandravage.client.model.IceologerModel;
+import com.minecraftabnormals.savageandravage.client.model.MaskOfDishonestyModel;
+import com.minecraftabnormals.savageandravage.client.model.RunePrisonModel;
+import com.minecraftabnormals.savageandravage.client.model.SkeletonVillagerModel;
+import com.minecraftabnormals.savageandravage.client.model.TricksterModel;
+import com.minecraftabnormals.savageandravage.client.model.VillagerArmorModel;
+import com.minecraftabnormals.savageandravage.client.render.BurningBannerRenderer;
+import com.minecraftabnormals.savageandravage.client.render.CreepieRenderer;
+import com.minecraftabnormals.savageandravage.client.render.ExecutionerRenderer;
+import com.minecraftabnormals.savageandravage.client.render.GrieferRenderer;
 import com.minecraftabnormals.savageandravage.client.render.IceChunkRenderer;
-import com.minecraftabnormals.savageandravage.core.other.*;
-import com.minecraftabnormals.savageandravage.core.registry.*;
+import com.minecraftabnormals.savageandravage.client.render.IceologerRenderer;
+import com.minecraftabnormals.savageandravage.client.render.MischiefArrowRenderer;
+import com.minecraftabnormals.savageandravage.client.render.NoModelRenderer;
+import com.minecraftabnormals.savageandravage.client.render.RunePrisonRenderer;
+import com.minecraftabnormals.savageandravage.client.render.SkeletonVillagerRenderer;
+import com.minecraftabnormals.savageandravage.client.render.SporeBombRenderer;
+import com.minecraftabnormals.savageandravage.client.render.TricksterRenderer;
+import com.minecraftabnormals.savageandravage.client.render.layer.TotemShieldLayer;
+import com.minecraftabnormals.savageandravage.core.other.SRCompat;
+import com.minecraftabnormals.savageandravage.core.other.SRDataProcessors;
+import com.minecraftabnormals.savageandravage.core.other.SRDataSerializers;
+import com.minecraftabnormals.savageandravage.core.other.SRFeatures;
+import com.minecraftabnormals.savageandravage.core.other.SRModelLayers;
+import com.minecraftabnormals.savageandravage.core.registry.SRAttributes;
+import com.minecraftabnormals.savageandravage.core.registry.SREffects;
+import com.minecraftabnormals.savageandravage.core.registry.SREntities;
+import com.minecraftabnormals.savageandravage.core.registry.SRItems;
+import com.minecraftabnormals.savageandravage.core.registry.SRParticles;
+import com.teamabnormals.blueprint.core.util.DataUtil;
+import com.teamabnormals.blueprint.core.util.registry.RegistryHelper;
+import net.minecraft.client.model.IllagerModel;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EvokerRenderer;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.monster.Evoker;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.ForgeModelBakery;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
@@ -42,7 +80,10 @@ public class SavageAndRavage {
 		bus.addListener(this::clientSetup);
 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+			bus.addListener(this::registerLayers);
+			bus.addListener(this::registerLayerDefinitions);
 			bus.addListener(this::registerModels);
+			bus.addListener(this::registerRenderers);
 		});
 
 		context.registerConfig(ModConfig.Type.COMMON, SRConfig.COMMON_SPEC);
@@ -55,21 +96,59 @@ public class SavageAndRavage {
 			SREntities.registerEntitySpawns();
 			SREntities.registerWaveMembers();
 			SRFeatures.registerPools();
-			SRFeatures.registerBiomeModifications();
 			SRCompat.registerCompat();
-			SRNoteBlocks.registerNoteBlocks();
 		});
 	}
 
 	private void clientSetup(FMLClientSetupEvent event) {
-		SREntities.registerRenderers();
-		event.enqueueWork(() -> {
-			SRItems.registerItemProperties();
-			SREntities.registerRenderLayers();
-		});
+		event.enqueueWork(SRItems::registerItemProperties);
 	}
 
+	@OnlyIn(Dist.CLIENT)
+	private void registerLayers(EntityRenderersEvent.AddLayers event) {
+		EntityRenderer<?> renderer = event.getRenderer(EntityType.EVOKER);
+		if (renderer instanceof EvokerRenderer evokerRenderer) {
+			evokerRenderer.addLayer(new TotemShieldLayer<Evoker, IllagerModel<Evoker>>(evokerRenderer, event.getEntityModels()));
+		}
+	}
+
+	@OnlyIn(Dist.CLIENT)
 	private void registerModels(ModelRegistryEvent event) {
-		ModelLoader.addSpecialModel(IceChunkRenderer.MODEL_LOCATION);
+		ForgeModelBakery.addSpecialModel(IceChunkRenderer.MODEL_LOCATION);
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	private void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
+		event.registerLayerDefinition(SRModelLayers.CREEPIE, () -> CreepieModel.createBodyLayer(CubeDeformation.NONE));
+		event.registerLayerDefinition(SRModelLayers.CREEPIE_ARMOR, () -> CreepieModel.createBodyLayer(new CubeDeformation(2.0F)));
+		event.registerLayerDefinition(SRModelLayers.EXECUTIONER, ExecutionerModel::createBodyLayer);
+		event.registerLayerDefinition(SRModelLayers.GRIEFER, GrieferModel::createBodyLayer);
+		event.registerLayerDefinition(SRModelLayers.GRIEFER_ARMOR, GrieferArmorModel::createArmorLayer);
+		event.registerLayerDefinition(SRModelLayers.ICEOLOGER, IceologerModel::createBodyLayer);
+		event.registerLayerDefinition(SRModelLayers.ILLAGER_ARMOR, () -> TotemShieldLayer.createBodyLayer(new CubeDeformation(2.0F)));
+		event.registerLayerDefinition(SRModelLayers.MASK_OF_DISHONESTY, MaskOfDishonestyModel::createArmorLayer);
+		event.registerLayerDefinition(SRModelLayers.RUNE_PRISON, RunePrisonModel::createBodyLayer);
+		event.registerLayerDefinition(SRModelLayers.SKELETON_VILLAGER, SkeletonVillagerModel::createBodyLayer);
+		event.registerLayerDefinition(SRModelLayers.TRICKSTER, TricksterModel::createBodyLayer);
+		event.registerLayerDefinition(SRModelLayers.VILLAGER_INNER_ARMOR, VillagerArmorModel::createInnerArmorLayer);
+		event.registerLayerDefinition(SRModelLayers.VILLAGER_OUTER_ARMOR, VillagerArmorModel::createOuterArmorLayer);
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	private void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
+		event.registerEntityRenderer(SREntities.SKELETON_VILLAGER.get(), SkeletonVillagerRenderer::new);
+		event.registerEntityRenderer(SREntities.CREEPIE.get(), CreepieRenderer::new);
+		event.registerEntityRenderer(SREntities.GRIEFER.get(), GrieferRenderer::new);
+		event.registerEntityRenderer(SREntities.ICEOLOGER.get(), IceologerRenderer::new);
+		event.registerEntityRenderer(SREntities.EXECUTIONER.get(), ExecutionerRenderer::new);
+		event.registerEntityRenderer(SREntities.TRICKSTER.get(), TricksterRenderer::new);
+		event.registerEntityRenderer(SREntities.BURNING_BANNER.get(), BurningBannerRenderer::new);
+		event.registerEntityRenderer(SREntities.SPORE_CLOUD.get(), NoModelRenderer::new);
+		event.registerEntityRenderer(SREntities.SPORE_BOMB.get(), SporeBombRenderer::new);
+		event.registerEntityRenderer(SREntities.MISCHIEF_ARROW.get(), MischiefArrowRenderer::new);
+		event.registerEntityRenderer(SREntities.ICE_CHUNK.get(), IceChunkRenderer::new);
+		event.registerEntityRenderer(SREntities.ICE_CLOUD.get(), NoModelRenderer::new);
+		event.registerEntityRenderer(SREntities.RUNE_PRISON.get(), RunePrisonRenderer::new);
+		event.registerEntityRenderer(SREntities.CONFUSION_BOLT.get(), NoModelRenderer::new);
 	}
 }

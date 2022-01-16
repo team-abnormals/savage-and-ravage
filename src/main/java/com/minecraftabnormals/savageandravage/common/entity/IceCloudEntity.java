@@ -3,27 +3,27 @@ package com.minecraftabnormals.savageandravage.common.entity;
 import com.minecraftabnormals.savageandravage.core.registry.SREffects;
 import com.minecraftabnormals.savageandravage.core.registry.SREntities;
 import com.minecraftabnormals.savageandravage.core.registry.SRParticles;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.projectile.DamagingProjectileEntity;
-import net.minecraft.network.IPacket;
-import net.minecraft.particles.IParticleData;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.network.NetworkHooks;
 
 /**
  * @author Ocelot
  */
-public class IceCloudEntity extends DamagingProjectileEntity {
+public class IceCloudEntity extends AbstractHurtingProjectile {
 
-	public IceCloudEntity(EntityType<IceCloudEntity> entityType, World world) {
+	public IceCloudEntity(EntityType<IceCloudEntity> entityType, Level world) {
 		super(entityType, world);
 	}
 
-	public IceCloudEntity(double x, double y, double z, double targetX, double targetY, double targetZ, World world) {
+	public IceCloudEntity(double x, double y, double z, double targetX, double targetY, double targetZ, Level world) {
 		super(SREntities.ICE_CLOUD.get(), x, y, z, targetX - x, targetY - y, targetZ - z, world);
 	}
 
@@ -33,16 +33,16 @@ public class IceCloudEntity extends DamagingProjectileEntity {
 
 		for (Entity entity : this.level.getEntities(this.getOwner(), this.getBoundingBox().expandTowards(2, 2, 2), this::canHitEntity)) {
 			if (entity instanceof LivingEntity && !(entity instanceof IceologerEntity)) {
-				((LivingEntity) entity).addEffect(new EffectInstance(SREffects.FROSTBITE.get(), 80, 0, false, false, true));
+				((LivingEntity) entity).addEffect(new MobEffectInstance(SREffects.FROSTBITE.get(), 80, 0, false, false, true));
 			}
 		}
 
 		if (!this.level.isClientSide()) {
-			((ServerWorld) this.level).sendParticles(this.getTrailParticle(), this.getX(), this.getY(), this.getZ(), 30, 1.5, 1.5, 1.5, 1);
+			((ServerLevel) this.level).sendParticles(this.getTrailParticle(), this.getX(), this.getY(), this.getZ(), 30, 1.5, 1.5, 1.5, 1);
 		}
 
 		if (this.tickCount > 100)
-			this.remove();
+			this.discard();
 	}
 
 	@Override
@@ -51,12 +51,12 @@ public class IceCloudEntity extends DamagingProjectileEntity {
 	}
 
 	@Override
-	protected IParticleData getTrailParticle() {
+	protected ParticleOptions getTrailParticle() {
 		return SRParticles.SNOWFLAKE.get();
 	}
 
 	@Override
-	public IPacket<?> getAddEntityPacket() {
+	public Packet<?> getAddEntityPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 }

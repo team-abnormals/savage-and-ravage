@@ -2,32 +2,36 @@ package com.minecraftabnormals.savageandravage.common.item;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import com.minecraftabnormals.abnormals_core.core.util.item.filling.TargetedItemGroupFiller;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.material.Material;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.EnchantmentType;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.*;
+import com.teamabnormals.blueprint.core.util.item.filling.TargetedItemCategoryFiller;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.TieredItem;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentCategory;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
 
 public class CleaverOfBeheadingItem extends TieredItem {
-	private static final TargetedItemGroupFiller FILLER = new TargetedItemGroupFiller(() -> Items.TOTEM_OF_UNDYING);
+	private static final TargetedItemCategoryFiller FILLER = new TargetedItemCategoryFiller(() -> Items.TOTEM_OF_UNDYING);
 	private final float attackDamage;
 	private final Multimap<Attribute, AttributeModifier> defaultModifiers;
 
-	public CleaverOfBeheadingItem(IItemTier tier, float attackDamage, float attackSpeed, Properties properties) {
+	public CleaverOfBeheadingItem(Tier tier, float attackDamage, float attackSpeed, Properties properties) {
 		super(tier, properties);
 		this.attackDamage = attackDamage + tier.getAttackDamageBonus();
 		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
@@ -37,8 +41,8 @@ public class CleaverOfBeheadingItem extends TieredItem {
 	}
 
 	@Override
-	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack) {
-		return slot == EquipmentSlotType.MAINHAND ? this.defaultModifiers : super.getAttributeModifiers(slot, stack);
+	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
+		return slot == EquipmentSlot.MAINHAND ? this.defaultModifiers : super.getAttributeModifiers(slot, stack);
 	}
 
 	public float getDamage() {
@@ -46,7 +50,7 @@ public class CleaverOfBeheadingItem extends TieredItem {
 	}
 
 	@Override
-	public boolean canAttackBlock(BlockState state, World world, BlockPos pos, PlayerEntity player) {
+	public boolean canAttackBlock(BlockState state, Level world, BlockPos pos, Player player) {
 		return !player.isCreative();
 	}
 
@@ -56,23 +60,23 @@ public class CleaverOfBeheadingItem extends TieredItem {
 			return 15.0F;
 		} else {
 			Material material = state.getMaterial();
-			return material != Material.PLANT && material != Material.REPLACEABLE_PLANT && material != Material.CORAL && !state.is(BlockTags.LEAVES) && material != Material.VEGETABLE ? 1.0F : 1.5F;
+			return material != Material.PLANT && material != Material.REPLACEABLE_PLANT && !state.is(BlockTags.LEAVES) && material != Material.VEGETABLE ? 1.0F : 1.5F;
 		}
 	}
 
 	@Override
 	public boolean hurtEnemy(ItemStack stack, LivingEntity enemy, LivingEntity user) {
 		stack.hurtAndBreak(1, user, (player) -> {
-			player.broadcastBreakEvent(EquipmentSlotType.MAINHAND);
+			player.broadcastBreakEvent(EquipmentSlot.MAINHAND);
 		});
 		return true;
 	}
 
 	@Override
-	public boolean mineBlock(ItemStack stack, World world, BlockState state, BlockPos pos, LivingEntity entity) {
+	public boolean mineBlock(ItemStack stack, Level world, BlockState state, BlockPos pos, LivingEntity entity) {
 		if (state.getDestroySpeed(world, pos) != 0.0F) {
 			stack.hurtAndBreak(2, entity, (player) -> {
-				player.broadcastBreakEvent(EquipmentSlotType.MAINHAND);
+				player.broadcastBreakEvent(EquipmentSlot.MAINHAND);
 			});
 		}
 
@@ -86,7 +90,7 @@ public class CleaverOfBeheadingItem extends TieredItem {
 
 	@Override
 	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-		return super.canApplyAtEnchantingTable(stack, enchantment) || (enchantment.category == EnchantmentType.WEAPON && enchantment != Enchantments.SWEEPING_EDGE);
+		return super.canApplyAtEnchantingTable(stack, enchantment) || (enchantment.category == EnchantmentCategory.WEAPON && enchantment != Enchantments.SWEEPING_EDGE);
 	}
 
 	@Override
@@ -95,7 +99,7 @@ public class CleaverOfBeheadingItem extends TieredItem {
 	}
 
 	@Override
-	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {
+	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
 		FILLER.fillItem(this, group, items);
 	}
 }

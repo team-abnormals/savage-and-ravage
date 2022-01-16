@@ -1,8 +1,8 @@
 package com.minecraftabnormals.savageandravage.common.entity.goals;
 
 import com.minecraftabnormals.savageandravage.common.entity.CreepieEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.Goal;
 
 import java.util.EnumSet;
 
@@ -38,7 +38,7 @@ public class CreepieSwellGoal extends Goal {
 			this.swellingCreepie.setCreeperState(-1);
 		} else if (this.swellingCreepie.distanceToSqr(this.creepieAttackTarget) > 6.25D) {
 			this.swellingCreepie.setCreeperState(-1);
-		} else if (!this.swellingCreepie.getSensing().canSee(this.creepieAttackTarget)) {
+		} else if (!this.swellingCreepie.getSensing().hasLineOfSight(this.creepieAttackTarget)) {
 			this.swellingCreepie.setCreeperState(-1);
 
 		} else {

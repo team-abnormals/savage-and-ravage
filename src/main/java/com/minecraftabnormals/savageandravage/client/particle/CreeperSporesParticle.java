@@ -1,14 +1,14 @@
 package com.minecraftabnormals.savageandravage.client.particle;
 
 import net.minecraft.client.particle.*;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.particles.BasicParticleType;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.util.Mth;
 
-public class CreeperSporesParticle extends SpriteTexturedParticle {
-	private final IAnimatedSprite sprites;
+public class CreeperSporesParticle extends TextureSheetParticle {
+	private final SpriteSet sprites;
 
-	public CreeperSporesParticle(ClientWorld world, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, IAnimatedSprite sprites) {
+	public CreeperSporesParticle(ClientLevel world, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, SpriteSet sprites) {
 		super(world, x, y, z, 0.0D, 0.0D, 0.0D);
 		this.sprites = sprites;
 		this.xd *= 0.1;
@@ -29,13 +29,13 @@ public class CreeperSporesParticle extends SpriteTexturedParticle {
 	}
 
 	@Override
-	public IParticleRenderType getRenderType() {
-		return IParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+	public ParticleRenderType getRenderType() {
+		return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
 	}
 
 	@Override
 	public float getQuadSize(float partialTicks) {
-		return this.quadSize * MathHelper.clamp(((float) this.age + partialTicks) / (float) this.lifetime * 32.0F, 0.0F, 1.0F);
+		return this.quadSize * Mth.clamp(((float) this.age + partialTicks) / (float) this.lifetime * 32.0F, 0.0F, 1.0F);
 	}
 
 	@Override
@@ -60,14 +60,14 @@ public class CreeperSporesParticle extends SpriteTexturedParticle {
 		}
 	}
 
-	public static class Factory implements IParticleFactory<BasicParticleType> {
-		private final IAnimatedSprite spriteSet;
+	public static class Factory implements ParticleProvider<SimpleParticleType> {
+		private final SpriteSet spriteSet;
 
-		public Factory(IAnimatedSprite spriteSet) {
+		public Factory(SpriteSet spriteSet) {
 			this.spriteSet = spriteSet;
 		}
 
-		public Particle createParticle(BasicParticleType type, ClientWorld world, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+		public Particle createParticle(SimpleParticleType type, ClientLevel world, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
 			return new CreeperSporesParticle(world, x, y, z, xSpeed, ySpeed, zSpeed, this.spriteSet);
 		}
 	}

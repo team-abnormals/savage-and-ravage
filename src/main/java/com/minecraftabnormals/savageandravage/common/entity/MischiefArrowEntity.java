@@ -3,43 +3,43 @@ package com.minecraftabnormals.savageandravage.common.entity;
 import com.minecraftabnormals.savageandravage.core.registry.SREntities;
 import com.minecraftabnormals.savageandravage.core.registry.SRItems;
 import com.minecraftabnormals.savageandravage.core.registry.SRParticles;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.IPacket;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.network.FMLPlayMessages;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.network.PlayMessages;
 
-public class MischiefArrowEntity extends AbstractArrowEntity {
+public class MischiefArrowEntity extends AbstractArrow {
 	public boolean finished = false;
 
-	public MischiefArrowEntity(EntityType<? extends MischiefArrowEntity> type, World worldIn) {
+	public MischiefArrowEntity(EntityType<? extends MischiefArrowEntity> type, Level worldIn) {
 		super(type, worldIn);
 	}
 
-	public MischiefArrowEntity(World worldIn, double x, double y, double z) {
+	public MischiefArrowEntity(Level worldIn, double x, double y, double z) {
 		super(SREntities.MISCHIEF_ARROW.get(), x, y, z, worldIn);
 	}
 
-	public MischiefArrowEntity(FMLPlayMessages.SpawnEntity spawnEntity, World world) {
+	public MischiefArrowEntity(PlayMessages.SpawnEntity spawnEntity, Level world) {
 		this(SREntities.MISCHIEF_ARROW.get(), world);
 	}
 
-	public MischiefArrowEntity(World worldIn, LivingEntity shooter) {
+	public MischiefArrowEntity(Level worldIn, LivingEntity shooter) {
 		super(SREntities.MISCHIEF_ARROW.get(), shooter, worldIn);
 	}
 
 	@Override
-	protected void onHitBlock(BlockRayTraceResult result) {
+	protected void onHitBlock(BlockHitResult result) {
 		super.onHitBlock(result);
 		if (!finished) {
-			this.pickup = PickupStatus.DISALLOWED;
+			this.pickup = Pickup.DISALLOWED;
 
 			CreepieEntity creepie = SREntities.CREEPIE.get().create(level);
 			if (creepie != null) {
@@ -58,10 +58,10 @@ public class MischiefArrowEntity extends AbstractArrowEntity {
 	}
 
 	@Override
-	protected void onHit(RayTraceResult result) {
+	protected void onHit(HitResult result) {
 		super.onHit(result);
 		if (!finished) {
-			this.pickup = PickupStatus.DISALLOWED;
+			this.pickup = Pickup.DISALLOWED;
 
 			CreepieEntity creepie = SREntities.CREEPIE.get().create(level);
 			if (creepie != null) {
@@ -73,8 +73,8 @@ public class MischiefArrowEntity extends AbstractArrowEntity {
 						creepie.setOwnerId(thrower.getUUID());
 				}
 
-				if (result instanceof EntityRayTraceResult) {
-					Entity hit = ((EntityRayTraceResult) result).getEntity();
+				if (result instanceof EntityHitResult) {
+					Entity hit = ((EntityHitResult) result).getEntity();
 					if (hit instanceof LivingEntity)
 						creepie.setTarget((LivingEntity) hit);
 				}
@@ -99,7 +99,7 @@ public class MischiefArrowEntity extends AbstractArrowEntity {
 	}
 
 	@Override
-	public IPacket<?> getAddEntityPacket() {
+	public Packet<?> getAddEntityPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 }

@@ -1,15 +1,15 @@
 package com.minecraftabnormals.savageandravage.client.particle;
 
 import net.minecraft.client.particle.*;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.particles.BasicParticleType;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 
-public class CreeperSporeSprinklesParticle extends SpriteTexturedParticle {
+public class CreeperSporeSprinklesParticle extends TextureSheetParticle {
 
-	protected CreeperSporeSprinklesParticle(ClientWorld world, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, IAnimatedSprite sprite) {
+	protected CreeperSporeSprinklesParticle(ClientLevel world, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, SpriteSet sprite) {
 		super(world, x, y, z, xSpeed, ySpeed, zSpeed);
 		this.setSpriteFromAge(sprite);
 		this.gravity = 1.0F;
@@ -19,19 +19,19 @@ public class CreeperSporeSprinklesParticle extends SpriteTexturedParticle {
 		this.zd *= 2.5F;
 	}
 
-	public IParticleRenderType getRenderType() {
-		return IParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+	public ParticleRenderType getRenderType() {
+		return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public static class Factory implements IParticleFactory<BasicParticleType> {
-		private final IAnimatedSprite sprite;
+	public static class Factory implements ParticleProvider<SimpleParticleType> {
+		private final SpriteSet sprite;
 
-		public Factory(IAnimatedSprite sprite) {
+		public Factory(SpriteSet sprite) {
 			this.sprite = sprite;
 		}
 
-		public Particle createParticle(BasicParticleType type, ClientWorld world, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+		public Particle createParticle(SimpleParticleType type, ClientLevel world, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
 			return new CreeperSporeSprinklesParticle(world, x, y, z, xSpeed, ySpeed, zSpeed, sprite);
 		}
 	}

@@ -3,26 +3,29 @@ package com.minecraftabnormals.savageandravage.client.render.layer;
 import com.minecraftabnormals.savageandravage.client.model.CreepieModel;
 import com.minecraftabnormals.savageandravage.common.entity.CreepieEntity;
 import com.minecraftabnormals.savageandravage.core.SRConfig;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.entity.IEntityRenderer;
-import net.minecraft.client.renderer.entity.layers.EnergyLayer;
-import net.minecraft.client.renderer.entity.model.EntityModel;
-import net.minecraft.util.ResourceLocation;
+import com.minecraftabnormals.savageandravage.core.other.SRModelLayers;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.EntityModelSet;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.layers.EnergySwirlLayer;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class CreepieChargeLayer extends EnergyLayer<CreepieEntity, CreepieModel> {
+public class CreepieChargeLayer extends EnergySwirlLayer<CreepieEntity, CreepieModel> {
 	private static final ResourceLocation LIGHTNING_TEXTURE = new ResourceLocation("textures/entity/creeper/creeper_armor.png");
-	private final CreepieModel creepieModel = new CreepieModel(2.0F);
+	private final CreepieModel creepieModel;
 
-	public CreepieChargeLayer(IEntityRenderer<CreepieEntity, CreepieModel> entityRenderer) {
+	public CreepieChargeLayer(RenderLayerParent<CreepieEntity, CreepieModel> entityRenderer, EntityModelSet modelSet) {
 		super(entityRenderer);
+		this.creepieModel = new CreepieModel(modelSet.bakeLayer(SRModelLayers.CREEPIE_ARMOR));
 	}
 
 	@Override
-	public void render(MatrixStack stack, IRenderTypeBuffer buffer, int packedLight, CreepieEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void render(PoseStack stack, MultiBufferSource buffer, int packedLight, CreepieEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
 		super.render(stack, buffer, packedLight, entity, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch);
 		this.creepieModel.sprout.visible = SRConfig.CLIENT.creepieSprout.get();
 	}

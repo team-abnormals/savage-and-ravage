@@ -3,11 +3,12 @@ package com.minecraftabnormals.savageandravage.client.render;
 import com.minecraftabnormals.savageandravage.client.model.IceologerModel;
 import com.minecraftabnormals.savageandravage.common.entity.IceologerEntity;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
+import com.minecraftabnormals.savageandravage.core.other.SRModelLayers;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.client.renderer.entity.layers.HeadLayer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * @author Ocelot
@@ -15,9 +16,9 @@ import net.minecraft.util.ResourceLocation;
 public class IceologerRenderer extends MobRenderer<IceologerEntity, IceologerModel> {
 	private static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation(SavageAndRavage.MOD_ID, "textures/entity/iceologer.png");
 
-	public IceologerRenderer(EntityRendererManager renderManagerIn) {
-		super(renderManagerIn, new IceologerModel(), 0.5F);
-		this.addLayer(new HeadLayer<>(this));
+	public IceologerRenderer(EntityRendererProvider.Context context) {
+		super(context, new IceologerModel(context.bakeLayer(SRModelLayers.ICEOLOGER)), 0.5F);
+		this.addLayer(new CustomHeadLayer<>(this, context.getModelSet()));
 	}
 
 	@Override
@@ -26,7 +27,7 @@ public class IceologerRenderer extends MobRenderer<IceologerEntity, IceologerMod
 	}
 
 	@Override
-	protected void scale(IceologerEntity entity, MatrixStack matrixStackIn, float partialTickTime) {
+	protected void scale(IceologerEntity entity, PoseStack matrixStackIn, float partialTickTime) {
 		matrixStackIn.scale(0.9375F, 0.9375F, 0.9375F);
 	}
 }

@@ -2,23 +2,24 @@ package com.minecraftabnormals.savageandravage.client.render;
 
 import com.minecraftabnormals.savageandravage.client.model.ExecutionerModel;
 import com.minecraftabnormals.savageandravage.core.SavageAndRavage;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
+import com.minecraftabnormals.savageandravage.core.other.SRModelLayers;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.client.renderer.entity.layers.HeldItemLayer;
-import net.minecraft.entity.monster.VindicatorEntity;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.monster.Vindicator;
 
-public class ExecutionerRenderer extends MobRenderer<VindicatorEntity, ExecutionerModel> {
+public class ExecutionerRenderer extends MobRenderer<Vindicator, ExecutionerModel> {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(SavageAndRavage.MOD_ID, "textures/entity/executioner.png");
 
-	public ExecutionerRenderer(EntityRendererManager renderManagerIn) {
-		super(renderManagerIn, new ExecutionerModel(0), 0.5f);
-		this.addLayer(new HeldItemLayer<VindicatorEntity, ExecutionerModel>(this) {
+	public ExecutionerRenderer(EntityRendererProvider.Context context) {
+		super(context, new ExecutionerModel(context.bakeLayer(SRModelLayers.EXECUTIONER)), 0.5f);
+		this.addLayer(new ItemInHandLayer<>(this) {
 			@Override
-			public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, VindicatorEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+			public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, Vindicator entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
 				if (entity.isAggressive()) {
 					super.render(matrixStackIn, bufferIn, packedLightIn, entity, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch);
 				}
@@ -27,12 +28,12 @@ public class ExecutionerRenderer extends MobRenderer<VindicatorEntity, Execution
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(VindicatorEntity entity) {
+	public ResourceLocation getTextureLocation(Vindicator entity) {
 		return TEXTURE;
 	}
 
 	@Override
-	protected void scale(VindicatorEntity entity, MatrixStack matrixStackIn, float partialTickTime) {
+	protected void scale(Vindicator entity, PoseStack matrixStackIn, float partialTickTime) {
 		matrixStackIn.scale(0.9375F, 0.9375F, 0.9375F);
 	}
 }

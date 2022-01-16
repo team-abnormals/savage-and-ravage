@@ -1,11 +1,11 @@
 package com.minecraftabnormals.savageandravage.common.entity.goals;
 
 import com.minecraftabnormals.savageandravage.common.entity.IOwnableMob;
-import net.minecraft.entity.EntityPredicate;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.ai.goal.TargetGoal;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 
 import java.util.EnumSet;
 
@@ -15,7 +15,7 @@ public class MobOwnerHurtByTargetGoal extends TargetGoal {
 	private LivingEntity attacker;
 	private int timestamp;
 
-	public MobOwnerHurtByTargetGoal(MobEntity defendingEntityIn) {
+	public MobOwnerHurtByTargetGoal(Mob defendingEntityIn) {
 		super(defendingEntityIn, false);
 		this.defendingEntity = (IOwnableMob) defendingEntityIn;
 		this.setFlags(EnumSet.of(Goal.Flag.TARGET));
@@ -30,7 +30,7 @@ public class MobOwnerHurtByTargetGoal extends TargetGoal {
 			} else {
 				this.attacker = livingentity.getLastHurtByMob();
 				int i = livingentity.getLastHurtByMobTimestamp();
-				return i != this.timestamp && this.canAttack(this.attacker, EntityPredicate.DEFAULT) && this.defendingEntity.shouldAttackEntity(this.attacker, livingentity);
+				return i != this.timestamp && this.canAttack(this.attacker, TargetingConditions.DEFAULT) && this.defendingEntity.shouldAttackEntity(this.attacker, livingentity);
 			}
 		} else {
 			return false;

@@ -1,54 +1,55 @@
 package com.minecraftabnormals.savageandravage.common.block;
 
-import com.minecraftabnormals.abnormals_core.core.util.item.filling.TargetedItemGroupFiller;
 import com.minecraftabnormals.savageandravage.common.entity.block.SporeBombEntity;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.TNTBlock;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Explosion;
-import net.minecraft.world.World;
+import com.teamabnormals.blueprint.core.util.item.filling.TargetedItemCategoryFiller;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.TntBlock;
+import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nullable;
 
-public class SporeBombBlock extends TNTBlock {
-	private static final TargetedItemGroupFiller FILLER = new TargetedItemGroupFiller(() -> Items.TNT);
+public class SporeBombBlock extends TntBlock {
+	private static final TargetedItemCategoryFiller FILLER = new TargetedItemCategoryFiller(() -> Items.TNT);
 
 	public SporeBombBlock(Block.Properties properties) {
 		super(properties);
 	}
 
 	@Override
-	public void catchFire(BlockState state, World world, BlockPos pos, @Nullable net.minecraft.util.Direction face, @Nullable LivingEntity igniter) {
+	public void onCaughtFire(BlockState state, Level world, BlockPos pos, @Nullable Direction face, @Nullable LivingEntity igniter) {
 		SporeBombEntity sporebomb = new SporeBombEntity(world, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, igniter);
 		world.addFreshEntity(sporebomb);
-		world.playSound(null, sporebomb.getX(), sporebomb.getY(), sporebomb.getZ(), SoundEvents.CREEPER_PRIMED, SoundCategory.BLOCKS, 1.0F, 0.5F);
+		world.playSound(null, sporebomb.getX(), sporebomb.getY(), sporebomb.getZ(), SoundEvents.CREEPER_PRIMED, SoundSource.BLOCKS, 1.0F, 0.5F);
 	}
 
 	@Override
-	public void wasExploded(World world, BlockPos pos, Explosion explosionIn) {
+	public void wasExploded(Level world, BlockPos pos, Explosion explosionIn) {
 		SporeBombEntity sporebomb = new SporeBombEntity(world, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, explosionIn.getSourceMob());
-		sporebomb.setFuse((short) (world.getRandom().nextInt(sporebomb.getLife() / 4) + sporebomb.getLife() / 8));
+		sporebomb.setFuse((short) (world.getRandom().nextInt(sporebomb.getFuse() / 4) + sporebomb.getFuse() / 8));
 		world.addFreshEntity(sporebomb);
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
+	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
 		if (world.hasNeighborSignal(pos)) {
-			this.catchFire(state, world, pos, null, null);
+			this.onCaughtFire(state, world, pos, null, null);
 			world.removeBlock(pos, false);
 		}
 	}
 
 	@Override
-	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {
+	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
 		FILLER.fillItem(this.asItem(), group, items);
 	}
 }
