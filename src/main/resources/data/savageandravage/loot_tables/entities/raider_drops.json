@@ -29,7 +29,7 @@
       "rolls": 1,
       "conditions": [
         {
-          "condition": "abnormals_core:random_difficulty_chance",
+          "condition": "blueprint:random_difficulty_chance",
           "default_chance": 0.283333333333,
           "peaceful": 0,
           "hard": 0.348717948718

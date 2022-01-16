@@ -21,7 +21,9 @@
       "conditions": {
         "items": [
           {
-            "item": "savageandravage:creeper_spores"
+            "items": [
+              "savageandravage:creeper_spores"
+            ]
           }
         ]
       }

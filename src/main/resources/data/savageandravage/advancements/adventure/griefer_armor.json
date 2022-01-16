@@ -25,16 +25,24 @@
       "conditions": {
         "items": [
           {
-            "item": "savageandravage:griefer_helmet"
+            "items": [
+              "savageandravage:griefer_helmet"
+            ]
           },
           {
-            "item": "savageandravage:griefer_chestplate"
+            "items": [
+              "savageandravage:griefer_chestplate"
+            ]
           },
           {
-            "item": "savageandravage:griefer_leggings"
+            "items": [
+              "savageandravage:griefer_leggings"
+            ]
           },
           {
-            "item": "savageandravage:griefer_boots"
+            "items": [
+              "savageandravage:griefer_boots"
+            ]
           }
         ]
       }

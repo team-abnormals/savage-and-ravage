@@ -21,7 +21,9 @@
       "conditions": {
         "items": [
           {
-            "item": "savageandravage:mask_of_dishonesty"
+            "items": [
+              "savageandravage:mask_of_dishonesty"
+            ]
           }
         ]
       }

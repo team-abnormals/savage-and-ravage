@@ -35,7 +35,7 @@
     },
   "conditions": [
     {
-      "type": "abnormals_core:quark_flag",
+      "type": "blueprint:quark_flag",
       "flag": "gunpowder_sack"
     }
   ]

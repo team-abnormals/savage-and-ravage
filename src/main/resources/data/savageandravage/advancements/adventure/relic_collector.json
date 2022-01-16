@@ -25,19 +25,29 @@
       "conditions": {
         "items": [
           {
-            "item": "minecraft:totem_of_undying"
+            "items": [
+              "minecraft:totem_of_undying"
+            ]
           },
           {
-            "item": "savageandravage:cleaver_of_beheading"
+            "items": [
+              "savageandravage:cleaver_of_beheading"
+            ]
           },
           {
-            "item": "savageandravage:wand_of_freezing"
+            "items": [
+              "savageandravage:wand_of_freezing"
+            ]
           },
           {
-            "item": "savageandravage:mask_of_dishonesty"
+            "items": [
+              "savageandravage:mask_of_dishonesty"
+            ]
           },
           {
-            "item": "savageandravage:conch_of_conjuring"
+            "items": [
+              "savageandravage:conch_of_conjuring"
+            ]
           }
         ]
       }

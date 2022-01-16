@@ -11,7 +11,7 @@
             "rolls": 1,
             "conditions": [
               {
-                "condition": "abnormals_core:raid_check"
+                "condition": "blueprint:raid_check"
               }
             ],
             "entries": [
