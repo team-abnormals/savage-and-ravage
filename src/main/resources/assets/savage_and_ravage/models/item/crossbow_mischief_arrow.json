@@ -1,0 +1,6 @@
+{
+    "parent": "item/crossbow",
+    "textures": {
+        "layer0": "savage_and_ravage:item/crossbow_mischief_arrow"
+    }
+}

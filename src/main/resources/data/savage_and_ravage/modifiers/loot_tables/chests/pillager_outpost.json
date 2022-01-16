@@ -1,0 +1,43 @@
+{
+  "target": "chests/pillager_outpost",
+  "modifiers": [
+    {
+      "type": "pools",
+      "config": {
+        "replace": false,
+        "pools": [
+          {
+            "name": "savage_and_ravage:outpost_emerald_loot",
+            "rolls": {
+              "min": 1.0,
+              "max": 2.0,
+              "type": "minecraft:uniform"
+            },
+            "conditions": [
+              {
+                "condition": "minecraft:random_chance",
+                "chance": 0.305
+              }
+            ],
+            "entries": [
+              {
+                "type": "minecraft:item",
+                "functions": [
+                  {
+                    "function": "minecraft:set_count",
+                    "count": {
+                      "min": 1.0,
+                      "max": 4.0,
+                      "type": "minecraft:uniform"
+                    }
+                  }
+                ],
+                "name": "minecraft:emerald"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

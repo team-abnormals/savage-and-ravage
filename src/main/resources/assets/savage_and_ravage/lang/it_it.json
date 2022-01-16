@@ -1,0 +1,92 @@
+{
+  "block.savage_and_ravage.gloomy_tiles": "Piastrelle cupe",
+  "block.savage_and_ravage.gloomy_tile_stairs": "Scalini di piastrelle cupe",
+  "block.savage_and_ravage.gloomy_tile_slab": "Lastra di piastrelle cupe",
+  "block.savage_and_ravage.gloomy_tile_wall": "Muretto di piastrelle cupe",
+  "block.savage_and_ravage.chiseled_gloomy_tiles": "Piastrelle cupe cesellate",
+  "block.savage_and_ravage.gloomy_tile_vertical_slab": "Lastra verticale di piastrelle cupe",
+  "block.savage_and_ravage.runed_gloomy_tiles": "Piastrelle cupe runiche",
+  
+  "block.savage_and_ravage.blast_proof_plates": "Piastre a prova di esplosione",
+  "block.savage_and_ravage.blast_proof_slab": "Lastra a prova di esplosione",
+  "block.savage_and_ravage.blast_proof_stairs": "Scalini a prova di esplosione",
+  "block.savage_and_ravage.blast_proof_vertical_slab": "Lastra verticale a prova di eplosione",
+  "block.savage_and_ravage.creeper_spore_sack": "Sacco di spore di creeper",
+  "block.savage_and_ravage.spore_bomb": "Bomba di spore",
+  
+  "item.savage_and_ravage.blast_proof_plating": "Placcatura a prova di esplosione",
+  "item.savage_and_ravage.griefer_helmet": "Elmo del griffatore",
+  "item.savage_and_ravage.griefer_chestplate": "Corazza del griffatore",
+  "item.savage_and_ravage.griefer_leggings": "Gambiere del griffatore",
+  "item.savage_and_ravage.griefer_boots": "Stivali del griffatore",
+  
+  "item.savage_and_ravage.wand_of_freezing": "Bacchetta di congelamento",
+  "item.savage_and_ravage.cleaver_of_beheading": "Mannaia di decapitazione",
+  "item.savage_and_ravage.conch_of_conjuring": "Conchiglia spettrale",
+  "item.savage_and_ravage.mask_of_dishonesty": "Maschera di disonestà",
+
+  "item.savage_and_ravage.creeper_spores": "Spore di creeper",
+  "item.savage_and_ravage.mischief_arrow": "Freccia marachella",
+  
+  "item.savage_and_ravage.skeleton_villager_spawn_egg": "Uovo generatore di villico scheletro",
+  "item.savage_and_ravage.griefer_spawn_egg": "Uovo generatore di griffatore",
+  "item.savage_and_ravage.executioner_spawn_egg": "Uovo generatore di boia",
+  "item.savage_and_ravage.iceologer_spawn_egg": "Uovo generatore di ghiacciologo",
+  "item.savage_and_ravage.trickster_spawn_egg": "Uovo generatore di imbroglione",
+
+  "entity.savage_and_ravage.skeleton_villager": "Villico scheletro",
+  "entity.savage_and_ravage.griefer": "Griffatore",
+  "entity.savage_and_ravage.creepie": "Creepie",
+  "entity.savage_and_ravage.spore_cloud": "Nuvola di spore",
+  "entity.savage_and_ravage.spore_bomb": "Bomba di spore",
+  "entity.savage_and_ravage.rune_prison": "Prigione runica",
+  "entity.savage_and_ravage.burning_banner": "Stendardo bruciante",
+  "entity.savage_and_ravage.mischief_arrow": "Freccia marachella",
+  "entity.savage_and_ravage.executioner": "Boia",
+  "entity.savage_and_ravage.iceologer": "Ghiacciologo",
+  "entity.savage_and_ravage.ice_chunk": "Pezzo di ghiaccio",
+  "entity.savage_and_ravage.ice_cloud": "Nuvola di ghiaccio",
+  "entity.savage_and_ravage.trickster": "Imbroglione",
+
+  "effect.savage_and_ravage.confusion": "Confusione",
+  "effect.savage_and_ravage.frostbite": "Congelamento",
+  "effect.savage_and_ravage.weight": "Peso",
+
+  "attribute.name.generic.explosive_damage_reduction": "Riduzione di danni esplosivi",
+
+  "advancements.savage_and_ravage.adventure.creeper_spores.title": "Striscia il creepie",
+  "advancements.savage_and_ravage.adventure.creeper_spores.description": "Ottieni delle spore di creeper uccidendo un creeper con un'esplosione",
+  "advancements.savage_and_ravage.adventure.griefer_armor.title": "Dinamite con un raggio laser",
+  "advancements.savage_and_ravage.adventure.griefer_armor.description": "Raccogli un set completo di armatura del griffatore",
+  "advancements.savage_and_ravage.adventure.relic_collector.title": "Collettore di reliquie",
+  "advancements.savage_and_ravage.adventure.relic_collector.description": "Ottieni un totem dell'immortalità, mannaia di decapitazione, bacchetta di congelamento, maschera di disonestà e una conchiglia spettrale",
+  "advancements.savage_and_ravage.adventure.mask_of_dishonesty.title": "Un piccolo imbroglio",
+  "advancements.savage_and_ravage.adventure.mask_of_dishonesty.description": "Ottieni una maschera di disonestà uccidendo un imbroglione",
+
+  "advancements.savage_and_ravage.adventure.voluntary_exile.description": "Dai fuoco a uno stendardo del malaugurio.\nForse è meglio stare lontano dai villaggi per il momento...",
+
+  "subtitles.savage_and_ravage.entity.creepie.hurt": "Creepie ferito",
+  "subtitles.savage_and_ravage.entity.creepie.death": "Creepie muore",
+  "subtitles.savage_and_ravage.entity.creepie.fuse": "Creepie sibila",
+  "subtitles.savage_and_ravage.entity.creepie.convert": "Creepie converte",
+  "subtitles.savage_and_ravage.entity.creepie.grow": "Creepie cresce",
+  
+  "subtitles.savage_and_ravage.entity.iceologer.ambient": "Ghiacciologo mormora",
+  "subtitles.savage_and_ravage.entity.iceologer.hurt": "Ghiacciologo ferito",
+  "subtitles.savage_and_ravage.entity.iceologer.death": "Ghiacciologo muore",
+  "subtitles.savage_and_ravage.entity.iceologer.celebrate": "Ghiacciologo acclama",
+  "subtitles.savage_and_ravage.entity.iceologer.cast_spell": "Ghiacciologo lancia un incantesimo",
+
+  "subtitles.savage_and_ravage.entity.trickster.ambient": "Imbroglione mormora",
+  "subtitles.savage_and_ravage.entity.trickster.step": "Imbroglione tintinna",
+  "subtitles.savage_and_ravage.entity.trickster.hurt": "Imbroglione ferito",
+  "subtitles.savage_and_ravage.entity.trickster.death": "Imbroglione muore",
+  "subtitles.savage_and_ravage.entity.trickster.celebrate": "Imbroglione acclama",
+  "subtitles.savage_and_ravage.entity.trickster.laugh": "Imbroglione ride",
+  "subtitles.savage_and_ravage.entity.trickster.cast_spell": "Imbroglione lancia un incantesimo",
+
+  "subtitles.savage_and_ravage.entity.player.cast_spell": "Giocatore lancia un incantesimo",
+  "subtitles.savage_and_ravage.entity.creeper_spores.throw": "Spore di creeper volano",
+  "subtitles.savage_and_ravage.generic.prepare_attack": "Qualcosa si prepara ad attaccare",
+  "subtitles.savage_and_ravage.generic.puff_of_smoke": "Soffio di fumo"
+}

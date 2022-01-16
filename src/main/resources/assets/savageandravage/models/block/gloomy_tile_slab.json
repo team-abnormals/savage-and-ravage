@@ -1,8 +1,0 @@
-{
-    "parent": "block/slab",
-    "textures": {
-        "bottom": "savageandravage:block/gloomy_tiles",
-        "top": "savageandravage:block/gloomy_tiles",
-        "side": "savageandravage:block/gloomy_tiles"
-    }
-}

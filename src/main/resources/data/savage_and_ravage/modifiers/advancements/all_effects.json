@@ -1,0 +1,16 @@
+{
+  "advancement": "minecraft:nether/all_effects",
+  "modifiers": [
+    {
+      "type": "effects_changed",
+      "config": {
+        "criteria": "all_effects",
+        "removes": false,
+        "effects": {
+          "savage_and_ravage:frostbite": {},
+          "savage_and_ravage:weight": {}
+        }
+      }
+    }
+  ]
+}

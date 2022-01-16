@@ -1,0 +1,7 @@
+{
+    "variants": {
+        "type=bottom": { "model": "savage_and_ravage:block/gloomy_tile_slab" },
+        "type=top": { "model": "savage_and_ravage:block/gloomy_tile_slab_top" },
+        "type=double": { "model": "savage_and_ravage:block/gloomy_tiles" }
+    }
+}

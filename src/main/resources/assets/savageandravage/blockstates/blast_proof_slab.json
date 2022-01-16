@@ -1,7 +1,0 @@
-{
-    "variants": {
-        "type=bottom": { "model": "savageandravage:block/blast_proof_slab" },
-        "type=top": { "model": "savageandravage:block/blast_proof_slab_top" },
-        "type=double": { "model": "savageandravage:block/blast_proof_plates" }
-    }
-}

@@ -1,0 +1,6 @@
+{
+	"parent": "minecraft:item/handheld",
+	"textures": {
+		"layer0": "savage_and_ravage:item/wand_of_freezing"
+	}
+}

@@ -1,0 +1,6 @@
+{
+    "parent": "block/template_wall_post",
+    "textures": {
+        "wall": "savage_and_ravage:block/gloomy_tiles"
+    }
+}

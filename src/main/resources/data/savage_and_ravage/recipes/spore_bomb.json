@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "X#X",
+    "#X#",
+    "X#X"
+  ],
+  "key": {
+    "#": [
+      {
+        "item": "minecraft:sand"
+      },
+      {
+        "item": "minecraft:red_sand"
+      }
+    ],
+    "X": {
+      "item": "savage_and_ravage:creeper_spores"
+    }
+  },
+  "result": {
+    "item": "savage_and_ravage:spore_bomb"
+  }
+}

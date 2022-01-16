@@ -1,0 +1,41 @@
+{
+  "block.savage_and_ravage.gloomy_tiles": "Carrelage lugubre",
+  "block.savage_and_ravage.gloomy_tile_stairs": "Escalier en carrelage lugubre",
+  "block.savage_and_ravage.gloomy_tile_slab": "Dalle en carrelage lugubre",
+  "block.savage_and_ravage.gloomy_tile_wall": "Muret en carrelage lugubre",
+  "block.savage_and_ravage.chiseled_gloomy_tiles": "Carrelage lugubre sculpté",
+  "block.savage_and_ravage.gloomy_tile_vertical_slab": "Dalle verticale en carrelage lugubre",
+  "block.savage_and_ravage.runed_gloomy_tiles": "Carrelage lugubre orné",
+  "entity.savage_and_ravage.rune_prison": "Rune Prison",
+  "entity.savage_and_ravage.burning_banner": "Bannière en feu",
+
+  "item.savage_and_ravage.blast_proof_plating": "Blindage anti-explosif",
+  "block.savage_and_ravage.blast_proof_plates": "Plaques d'anti-explosion",
+  "block.savage_and_ravage.blast_proof_slab": "Dalle d'anti-explosion",
+  "block.savage_and_ravage.blast_proof_stairs": "Escalier d'anti-explosion",
+  "block.savage_and_ravage.blast_proof_vertical_slab": "Dalle verticale d'anti-explosion",
+  "item.savage_and_ravage.griefer_helmet": "Casque de Griefer",
+  "item.savage_and_ravage.griefer_chestplate": "Plastron de Griefer",
+  "item.savage_and_ravage.griefer_leggings": "Jambières de Griefer",
+  "item.savage_and_ravage.griefer_boots": "Bottes de Griefer",
+
+  "item.savage_and_ravage.creeper_spores": "Spores de Creeper",
+  "block.savage_and_ravage.creeper_spore_sack": "Sac de spores de Creeper",
+  "block.savage_and_ravage.spore_bomb": "Bombe de spores",
+  "entity.savage_and_ravage.spore_cloud": "Nuage de spores de Creeper",
+  "entity.savage_and_ravage.creepie": "Creepie",
+  "entity.savage_and_ravage.spore_bomb": "Bombe de spores",
+  "subtitles.savage_and_ravage.entity.creepie.hurt": "Creepie blessé",
+  "subtitles.savage_and_ravage.entity.creepie.death": "Creepie meurt",
+  "subtitles.savage_and_ravage.entity.creepie.fuse": "Sifflement de Creepie",
+  "subtitles.savage_and_ravage.entity.creepie.convert": "Creepie commence à convertir",
+  "subtitles.savage_and_ravage.entity.creepie.grow": "Creepie évolue en Creeper",
+  "subtitles.savage_and_ravage.generic.prepare_attack": "Carrelage lugubre orné activé",
+  
+  "entity.savage_and_ravage.skeleton_villager": "Villageois squelette",
+  "item.savage_and_ravage.skeleton_villager_spawn_egg": "Oeuf d'apparition de villageois squelette",
+
+  "attribute.name.generic.explosive_damage_reduction": "Réduction de dégâts explosifs",
+
+  "advancements.savage_and_ravage.adventure.voluntary_exile.description": "Mettez le feu à une bannière menaçante.\nIl faudrait peut-être éviter les villages pour l'instant..."
+}

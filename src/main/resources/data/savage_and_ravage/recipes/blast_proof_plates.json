@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "##",
+        "##"
+    ],
+    "key": {
+        "#": {
+            "item": "savage_and_ravage:blast_proof_plating"
+        }
+    },
+    "result": {
+        "item": "savage_and_ravage:blast_proof_plates",
+        "count": 12
+    }
+}

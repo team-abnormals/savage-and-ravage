@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "conditions": [
+                {
+                  "condition": "minecraft:block_state_property",
+                  "block": "savage_and_ravage:gloomy_tile_slab",
+                  "properties": {
+                    "type": "double"
+                  }
+                }
+              ],
+              "count": 2
+            },
+            {
+              "function": "minecraft:explosion_decay"
+            }
+          ],
+          "name": "savage_and_ravage:gloomy_tile_slab"
+        }
+      ]
+    }
+  ]
+}

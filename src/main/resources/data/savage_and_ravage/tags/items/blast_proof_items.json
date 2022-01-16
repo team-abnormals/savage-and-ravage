@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "savage_and_ravage:griefer_helmet",
+    "savage_and_ravage:griefer_chestplate",
+    "savage_and_ravage:griefer_leggings",
+    "savage_and_ravage:griefer_boots",
+    "savage_and_ravage:creeper_spores",
+    "savage_and_ravage:blast_proof_plating",
+    "savage_and_ravage:blast_proof_plates",
+    "savage_and_ravage:blast_proof_stairs",
+    "savage_and_ravage:blast_proof_slab",
+    "savage_and_ravage:blast_proof_vertical_slab"
+  ]
+}

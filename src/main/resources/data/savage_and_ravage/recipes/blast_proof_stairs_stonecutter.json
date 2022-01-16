@@ -1,0 +1,8 @@
+{
+    "type": "minecraft:stonecutting",
+    "ingredient": {
+        "item": "savage_and_ravage:blast_proof_plates"
+    },
+    "result": "savage_and_ravage:blast_proof_stairs",
+    "count": 1
+}

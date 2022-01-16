@@ -1,0 +1,162 @@
+{
+  "entity.creepie.hurt": {
+    "sounds": [
+      "savage_and_ravage:mob/creepie/hurt1",
+      "savage_and_ravage:mob/creepie/hurt2",
+      "savage_and_ravage:mob/creepie/hurt3",
+      "savage_and_ravage:mob/creepie/hurt4"
+    ],
+    "subtitle": "subtitles.savage_and_ravage.entity.creepie.hurt"
+  },
+  "entity.creepie.death": {
+    "sounds": [
+      "savage_and_ravage:mob/creepie/death"
+    ],
+    "subtitle": "subtitles.savage_and_ravage.entity.creepie.death"
+  },
+  "entity.creepie.primed": {
+    "sounds": [
+      "savage_and_ravage:mob/creepie/fuse"
+    ],
+    "subtitle": "subtitles.savage_and_ravage.entity.creepie.fuse"
+  },
+  "entity.creepie.convert": {
+    "sounds": [
+      "mob/zombie/remedy"
+    ],
+    "subtitle": "subtitles.savage_and_ravage.entity.creepie.convert"
+  },
+  "entity.creepie.grow": {
+    "sounds": [
+      "mob/zombie/infect"
+    ],
+    "subtitle": "subtitles.savage_and_ravage.entity.creepie.grow"
+  },
+  "entity.iceologer.ambient": {
+    "sounds": [
+      "savage_and_ravage:mob/iceologer/idle1",
+      "savage_and_ravage:mob/iceologer/idle2",
+      "savage_and_ravage:mob/iceologer/idle3"
+    ],
+    "subtitle": "subtitles.savage_and_ravage.entity.iceologer.ambient"
+  },
+  "entity.iceologer.hurt": {
+    "sounds": [
+      "savage_and_ravage:mob/iceologer/hurt1",
+      "savage_and_ravage:mob/iceologer/hurt2"
+    ],
+    "subtitle": "subtitles.savage_and_ravage.entity.iceologer.hurt"
+  },
+  "entity.iceologer.death": {
+    "sounds": [
+      "savage_and_ravage:mob/iceologer/death"
+    ],
+    "subtitle": "subtitles.savage_and_ravage.entity.iceologer.death"
+  },
+  "entity.iceologer.celebrate": {
+    "sounds": [
+      "mob/evocation_illager/celebrate"
+    ],
+    "subtitle": "subtitles.savage_and_ravage.entity.iceologer.celebrate"
+  },
+  "entity.iceologer.cast_spell": {
+    "sounds": [
+      "mob/evocation_illager/cast1",
+      "mob/evocation_illager/cast2"
+    ],
+    "subtitle": "subtitles.savage_and_ravage.entity.iceologer.cast_spell"
+  },
+  "entity.trickster.ambient": {
+    "sounds": [
+      "savage_and_ravage:mob/trickster/idle1",
+      "savage_and_ravage:mob/trickster/idle2",
+      "savage_and_ravage:mob/trickster/idle3"
+    ],
+    "subtitle": "subtitles.savage_and_ravage.entity.trickster.ambient"
+  },
+  "entity.trickster.step": {
+    "sounds": [
+      "savage_and_ravage:mob/trickster/step1",
+      "savage_and_ravage:mob/trickster/step2",
+      "savage_and_ravage:mob/trickster/step3"
+    ],
+    "subtitle": "subtitles.savage_and_ravage.entity.trickster.step"
+  },
+  "entity.trickster.hurt": {
+    "sounds": [
+      "savage_and_ravage:mob/trickster/hurt1",
+      "savage_and_ravage:mob/trickster/hurt2"
+    ],
+    "subtitle": "subtitles.savage_and_ravage.entity.trickster.hurt"
+  },
+  "entity.trickster.death": {
+    "sounds": [
+      "savage_and_ravage:mob/trickster/death"
+    ],
+    "subtitle": "subtitles.savage_and_ravage.entity.trickster.death"
+  },
+  "entity.trickster.celebrate": {
+    "sounds": [
+      "savage_and_ravage:mob/trickster/celebrate1",
+      "savage_and_ravage:mob/trickster/celebrate2"
+    ],
+    "subtitle": "subtitles.savage_and_ravage.entity.trickster.celebrate"
+  },
+  "entity.trickster.laugh": {
+    "sounds": [
+      "savage_and_ravage:mob/trickster/laugh"
+    ],
+    "subtitle": "subtitles.savage_and_ravage.entity.trickster.laugh"
+  },
+  "entity.trickster.cast_spell": {
+    "sounds": [
+      "mob/evocation_illager/cast1",
+      "mob/evocation_illager/cast2"
+    ],
+    "subtitle": "subtitles.savage_and_ravage.entity.trickster.cast_spell"
+  },
+  "entity.player.cast_spell": {
+    "sounds": [
+      "mob/evocation_illager/cast1",
+      "mob/evocation_illager/cast2"
+    ],
+    "subtitle": "subtitles.savage_and_ravage.entity.player.cast_spell"
+  },
+  "entity.creeper_spores.throw": {
+    "sounds": [
+      "random/bow"
+    ],
+    "subtitle": "subtitles.savage_and_ravage.entity.creeper_spores.throw"
+  },
+  "generic.prepare_attack": {
+    "sounds": [
+      "mob/evocation_illager/prepare_attack1",
+      "mob/evocation_illager/prepare_attack2"
+    ],
+    "subtitle": "subtitles.savage_and_ravage.generic.prepare_attack"
+  },
+  "generic.puff_of_smoke": {
+    "sounds": [
+      "fireworks/blast1"
+    ],
+    "subtitle": "subtitles.savage_and_ravage.generic.puff_of_smoke"
+  },
+  "block.note_block.hit_marker": {
+    "sounds": [
+      "savage_and_ravage:note/hit_marker"
+    ],
+    "subtitle": "subtitles.block.note_block.note"
+  },
+  "block.note_block.harpsichord": {
+    "sounds": [
+      "savage_and_ravage:note/harpsichord"
+    ],
+    "subtitle": "subtitles.block.note_block.note"
+  },
+  "block.note_block.orchestral_hit": {
+    "sounds": [
+      "savage_and_ravage:note/orchestral_hit"
+    ],
+    "subtitle": "subtitles.block.note_block.note"
+  }
+}

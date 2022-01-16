@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XXX",
+    "X X",
+    "X X"
+  ],
+  "key": {
+    "X": {
+      "item": "savage_and_ravage:blast_proof_plating"
+    }
+  },
+  "result": {
+    "item": "savage_and_ravage:griefer_leggings"
+  }
+}

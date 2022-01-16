@@ -1,0 +1,70 @@
+{
+	"block.savage_and_ravage.gloomy_tiles": "Synkkätiili",
+	"block.savage_and_ravage.gloomy_tile_stairs": "Synkkätiiliportaat",
+	"block.savage_and_ravage.gloomy_tile_slab": "Synkkätiililaatta",
+	"block.savage_and_ravage.gloomy_tile_wall": "Synkkätiilimuuri",
+	"block.savage_and_ravage.chiseled_gloomy_tiles": "Kaiverrettu synkkätiili",
+	"block.savage_and_ravage.gloomy_tile_vertical_slab": "Pystysuora synkkätiililaatta",
+	"block.savage_and_ravage.runed_gloomy_tiles": "Riimutettu synkkätiili",
+
+	"block.savage_and_ravage.blast_proof_plates": "Räjähdyksenkestävät levyt",
+	"block.savage_and_ravage.blast_proof_slab": "Räjähdyksenkestävä laatta",
+	"block.savage_and_ravage.blast_proof_stairs": "Räjähdyksenkestävät portaat",
+	"block.savage_and_ravage.blast_proof_vertical_slab": "Pystysuora räjähdyksenkestävä laatta",
+	"block.savage_and_ravage.creeper_spore_sack": "Säkki creeper-itiöitä",
+	"block.savage_and_ravage.spore_bomb": "Itiöpommi",
+	
+	"item.savage_and_ravage.blast_proof_plating": "Räjähdyksenkestävä pinnoite",
+	"item.savage_and_ravage.griefer_helmet": "Rettelöitsijän kypärä",
+	"item.savage_and_ravage.griefer_chestplate": "Rettelöitsijän panssari",
+	"item.savage_and_ravage.griefer_leggings": "Rettelöitsijän housut",
+	"item.savage_and_ravage.griefer_boots": "Rettelöitsijän saappaat",
+	
+	"item.savage_and_ravage.wand_of_freezing": "Jäädyttäjän sauva",
+	"item.savage_and_ravage.cleaver_of_beheading": "Pyövelin veitsi",
+	
+	"item.savage_and_ravage.creeper_spores": "Creeper-itiöt",
+	"item.savage_and_ravage.mischief_arrow": "Kiusanuoli",
+	
+	"item.savage_and_ravage.skeleton_villager_spawn_egg": "Luo luurankokyläläinen",
+	"item.savage_and_ravage.griefer_spawn_egg": "Luo rettelöitsijä",
+	"item.savage_and_ravage.executioner_spawn_egg": "Luo pyöveli",
+	"item.savage_and_ravage.iceologer_spawn_egg": "Luo jäädyttäjä",
+		
+	"entity.savage_and_ravage.skeleton_villager": "Luurankokyläläinen",
+	"entity.savage_and_ravage.griefer": "Rettelöitsijä",
+	"entity.savage_and_ravage.creepie": "Creepie",
+	"entity.savage_and_ravage.spore_cloud": "Itiöpilvi",
+	"entity.savage_and_ravage.spore_bomb": "Itiöpommi",
+	"entity.savage_and_ravage.rune_prison": "Riimuansa",
+	"entity.savage_and_ravage.burning_banner": "Palava viiri",
+	"entity.savage_and_ravage.mischief_arrow": "Kiusanuoli",
+	"entity.savage_and_ravage.executioner": "Pyöveli",
+	"entity.savage_and_ravage.iceologer": "Jäädyttäjä",
+	"entity.savage_and_ravage.ice_chunk": "Jäälohkare",
+	"entity.savage_and_ravage.ice_cloud": "Jääpilvi",
+	
+	"effect.savage_and_ravage.frostbite": "Paleltuminen",
+	
+	"attribute.name.generic.explosive_damage_reduction": "Räjähdyksenkestävyys",
+
+	"advancements.savage_and_ravage.adventure.griefer_armor.title": "Dynamite with a Laser Beam",
+	"advancements.savage_and_ravage.adventure.griefer_armor.description": "Hanki kokonainen rettelöitsijän haarniska",
+	"advancements.savage_and_ravage.adventure.relic_collector.title": "Jäännöstenkerääjä",
+	"advancements.savage_and_ravage.adventure.relic_collector.description": "Hanki kuolemattomuuden toteemi, pyövelin veitsi ja jäädyttäjän sauva",
+	"advancements.savage_and_ravage.adventure.voluntary_exile.description": "Sytytä pahaenteinen viiri tuleen.\nKylien välttelemistä kannattaa harkita toistaiseksi...",
+	
+	"subtitles.savage_and_ravage.entity.creepie.hurt": "Creepie vahingoittuu",
+	"subtitles.savage_and_ravage.entity.creepie.death": "Creepie kuolee",
+	"subtitles.savage_and_ravage.entity.creepie.fuse": "Creepie sihisee",
+	"subtitles.savage_and_ravage.entity.creepie.convert": "Creepie alkaa muuntautua",
+	"subtitles.savage_and_ravage.entity.creepie.grow": "Creepie kasvaa Creeper",
+	"subtitles.savage_and_ravage.entity.iceologer.ambient": "Jäädyttäjä mumisee",
+	"subtitles.savage_and_ravage.entity.iceologer.hurt": "Jäädyttäjä vahingoittuu",
+	"subtitles.savage_and_ravage.entity.iceologer.death": "Jäädyttäjä kuolee",
+	"subtitles.savage_and_ravage.entity.iceologer.celebrate": "Jäädyttäjä hurraa",
+	"subtitles.savage_and_ravage.entity.iceologer.cast_spell": "Jäädyttäjä loihtii",
+	"subtitles.savage_and_ravage.entity.player.cast_spell": "Pelaaja loihtii",
+    "subtitles.savage_and_ravage.entity.creeper_spores.throw": "Creeper-itiöt lentävät",
+	"subtitles.savage_and_ravage.generic.prepare_attack": "Riimutettu synkkätiili aktivoituu"
+}

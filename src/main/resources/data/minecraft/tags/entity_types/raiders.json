@@ -1,9 +1,9 @@
 {
   "replace": false,
   "values": [
-    "savageandravage:griefer",
-    "savageandravage:executioner",
-    "savageandravage:iceologer",
-    "savageandravage:trickster"
+    "savage_and_ravage:griefer",
+    "savage_and_ravage:executioner",
+    "savage_and_ravage:iceologer",
+    "savage_and_ravage:trickster"
   ]
 }

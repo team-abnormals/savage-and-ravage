@@ -1,0 +1,55 @@
+{
+  "target": "entities/pillager",
+  "modifiers": [
+    {
+      "type": "pools",
+      "config": {
+        "replace": false,
+        "pools": [
+          {
+            "name": "savage_and_ravage:pillager_arrows",
+            "rolls": 1,
+            "entries": [
+              {
+                "type": "minecraft:item",
+                "functions": [
+                  {
+                    "function": "minecraft:set_count",
+                    "count": {
+                      "min": 0.0,
+                      "max": 2.0,
+                      "type": "minecraft:uniform"
+                    }
+                  },
+                  {
+                    "function": "minecraft:looting_enchant",
+                    "count": {
+                      "min": 0.0,
+                      "max": 1.0
+                    }
+                  }
+                ],
+                "name": "minecraft:arrow"
+              }
+            ]
+          },
+          {
+            "name": "savage_and_ravage:pillager_raid_drops",
+            "rolls": 1,
+            "conditions": [
+              {
+                "condition": "blueprint:raid_check"
+              }
+            ],
+            "entries": [
+              {
+                "type": "loot_table",
+                "name": "savage_and_ravage:entities/raider_drops"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

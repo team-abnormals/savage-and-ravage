@@ -1,0 +1,15 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "###"
+    ],
+    "key": {
+        "#": {
+            "item": "savage_and_ravage:blast_proof_plates"
+        }
+    },
+    "result": {
+        "item": "savage_and_ravage:blast_proof_slab",
+        "count": 6
+    }
+}

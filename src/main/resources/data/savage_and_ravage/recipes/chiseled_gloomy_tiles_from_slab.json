@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "#",
+        "#"
+    ],
+    "key": {
+        "#": {
+            "item": "savage_and_ravage:gloomy_tile_slab"
+        }
+    },
+    "result": {
+        "item": "savage_and_ravage:chiseled_gloomy_tiles",
+        "count": 1
+    }
+}

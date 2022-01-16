@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "savage_and_ravage:block/potted_creeper_spores"
+    },
+    "facing=east": {
+      "model": "savage_and_ravage:block/potted_creeper_spores",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "savage_and_ravage:block/potted_creeper_spores",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "savage_and_ravage:block/potted_creeper_spores",
+      "y": 270
+    }
+  }
+}

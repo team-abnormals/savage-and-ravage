@@ -4,11 +4,11 @@ issueTrackerURL = "https://github.com/team-abnormals/savage-and-ravage/issues"
 license = "https://github.com/team-abnormals/savage-and-ravage/blob/main/LICENSE.txt"
 
 [[mods]]
-    modId = "savageandravage"
+    modId = "savage_and_ravage"
     version = "${file.jarVersion}"
     logoFile = "logo.png"
-    itemIcon = "savageandravage:griefer_helmet"
-    configBackground = "savageandravage:textures/block/gloomy_tiles.png"
+    itemIcon = "savage_and_ravage:griefer_helmet"
+    configBackground = "savage_and_ravage:textures/block/gloomy_tiles.png"
     authors = "Team Abnormals"
     credits = "Farcr, bageldotjpg, abigailfails, TallestRed, MCVinnyQ"
     displayURL = "https://www.teamabnormals.com/mods/savage-and-ravage"
@@ -17,21 +17,21 @@ license = "https://github.com/team-abnormals/savage-and-ravage/blob/main/LICENSE
     A mod that improves and expands on illagers through new structures, enemies and challenges.
     '''
 
-[[dependencies.savageandravage]]
+[[dependencies.savage_and_ravage]]
     modId = "minecraft"
     mandatory = true
     versionRange = "[1.18.1,1.19)"
     ordering = "NONE"
     side = "BOTH"
 
-[[dependencies.savageandravage]]
+[[dependencies.savage_and_ravage]]
     modId = "forge"
     mandatory = true
     versionRange = "[39.0.0,)"
     ordering = "NONE"
     side = "BOTH"
 
-[[dependencies.savageandravage]]
+[[dependencies.savage_and_ravage]]
     modId = "blueprint"
     mandatory = true
     versionRange = "[5.0.0,)"

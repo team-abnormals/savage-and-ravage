@@ -1,7 +1,7 @@
 {
   "replace": false,
   "values": [
-    "savageandravage:gloomy_tile_slab",
-    "savageandravage:blast_proof_slab"
+    "savage_and_ravage:gloomy_tile_slab",
+    "savage_and_ravage:blast_proof_slab"
   ]
 }

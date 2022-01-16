@@ -1,0 +1,6 @@
+{
+    "parent": "block/cube_all",
+    "textures": {
+        "all": "savage_and_ravage:block/chiseled_gloomy_tiles_off"
+    }
+}

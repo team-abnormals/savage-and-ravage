@@ -1,0 +1,17 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "#  ",
+        "## ",
+        "###"
+    ],
+    "key": {
+        "#": {
+            "item": "savage_and_ravage:gloomy_tiles"
+        }
+    },
+    "result": {
+        "item": "savage_and_ravage:gloomy_tile_stairs",
+        "count": 4
+    }
+}

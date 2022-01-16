@@ -1,0 +1,18 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "savage_and_ravage:creeper_spore_sack"
+        }
+    ],
+    "result": {
+        "item": "savage_and_ravage:creeper_spores",
+        "count": 9
+    },
+  "conditions": [
+    {
+      "type": "blueprint:quark_flag",
+      "flag": "gunpowder_sack"
+    }
+  ]
+}

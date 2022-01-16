@@ -1,0 +1,45 @@
+{
+	"block.savage_and_ravage.gloomy_tiles": "Malheleca kahelaro",
+	"block.savage_and_ravage.gloomy_tile_stairs": "Malheleca kahelaro ŝtuparo",
+	"block.savage_and_ravage.gloomy_tile_slab": "Malheleca kahela ŝtupo",
+	"block.savage_and_ravage.gloomy_tile_wall": "Malheleca kahela muro",
+	"block.savage_and_ravage.chiseled_gloomy_tiles": "Ĉizita malheleca kahelaro",
+	"block.savage_and_ravage.gloomy_tile_vertical_slab": "Malheleca kahela vertikala ŝtupo",
+	"block.savage_and_ravage.runed_gloomy_tiles": "Runa malheleca kahelaro",
+	"entity.savage_and_ravage.rune_prison": "Runa kaptilo",
+	"entity.savage_and_ravage.burning_banner": "Brulanta standardo",
+
+	"item.savage_and_ravage.blast_proof_plating": "Neeksplodeblaj platoj",
+	"block.savage_and_ravage.blast_proof_plates": "Neeksplodebla kahelaro",
+	"block.savage_and_ravage.blast_proof_slab": "Neeksplodebla ŝtupo",
+	"block.savage_and_ravage.blast_proof_stairs": "Neeksplodebla ŝtuparo",
+	"block.savage_and_ravage.blast_proof_vertical_slab": "Neeksplodebla vertikala ŝtupo",
+	"item.savage_and_ravage.griefer_helmet": "Ĉagrenista kasko",
+	"item.savage_and_ravage.griefer_chestplate": "Ĉagrenista kiraso",
+	"item.savage_and_ravage.griefer_leggings": "Ĉagrenista pantalono",
+	"item.savage_and_ravage.griefer_boots": "Ĉagrenistaj botoj",
+	
+	"item.savage_and_ravage.creeper_spores": "Kriperaj sporoj",
+	"block.savage_and_ravage.creeper_spore_sack": "Kripera spora sako",
+	"block.savage_and_ravage.spore_bomb": "Spora bombo",
+	"entity.savage_and_ravage.spore_cloud": "Spora nebulo",
+	"entity.savage_and_ravage.creepie": "Kriperido",
+	"entity.savage_and_ravage.spore_bomb": "Spora bombo",
+    "subtitles.savage_and_ravage.entity.creepie.hurt": "Kriperido vundiĝis",
+    "subtitles.savage_and_ravage.entity.creepie.death": "Kriperido mortis",
+	"subtitles.savage_and_ravage.entity.creepie.fuse": "Kriperido siblas",
+	"subtitles.savage_and_ravage.entity.creepie.convert": "Kriperido komencas konverti",
+	"subtitles.savage_and_ravage.entity.creepie.grow": "Kriperido kreskiĝas al Kripero",
+	"subtitles.savage_and_ravage.generic.prepare_attack": "Runa malheleca kahelaro activiĝas",
+
+	"entity.savage_and_ravage.skeleton_villager": "Skeleta Vilaĝano",
+	"entity.savage_and_ravage.griefer": "Ĉagrenisto",
+    "item.savage_and_ravage.skeleton_villager_spawn_egg": "Aperigovo de Skeleta Vilaĝano",
+	"item.savage_and_ravage.griefer_spawn_egg": "Aperigovo de Ĉagrenisto",
+
+	"attribute.name.generic.explosive_damage_reduction": "Malpliigo de Eksploda Damaĝo",
+	"advancements.savage_and_ravage.adventure.griefer_armor.title": "Dinamito kun Lasera Radio",
+	"advancements.savage_and_ravage.adventure.griefer_armor.description": "Ekhavu tutan Ĉagrenistan kirasaron",
+	
+	"advancements.savage_and_ravage.adventure.voluntary_exile.description": "Bruligu Malbonaŭguran Standardon.\nEble konsideru resti for de vilaĝoj por nun..."
+}

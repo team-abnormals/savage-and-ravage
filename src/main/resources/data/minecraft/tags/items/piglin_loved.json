@@ -1,14 +1,14 @@
 {
   "replace": false,
   "values": [
-    "savageandravage:blast_proof_plating",
-    "savageandravage:blast_proof_plates",
-    "savageandravage:blast_proof_stairs",
-    "savageandravage:blast_proof_slab",
-    "savageandravage:blast_proof_vertical_slab",
-    "savageandravage:griefer_helmet",
-    "savageandravage:griefer_chestplate",
-    "savageandravage:griefer_leggings",
-    "savageandravage:griefer_boots"
+    "savage_and_ravage:blast_proof_plating",
+    "savage_and_ravage:blast_proof_plates",
+    "savage_and_ravage:blast_proof_stairs",
+    "savage_and_ravage:blast_proof_slab",
+    "savage_and_ravage:blast_proof_vertical_slab",
+    "savage_and_ravage:griefer_helmet",
+    "savage_and_ravage:griefer_chestplate",
+    "savage_and_ravage:griefer_leggings",
+    "savage_and_ravage:griefer_boots"
   ]
 }

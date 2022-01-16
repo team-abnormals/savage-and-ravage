@@ -1,0 +1,6 @@
+{
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "savage_and_ravage:item/poultry_farming_hat"
+    }
+}

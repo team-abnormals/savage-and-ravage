@@ -1,0 +1,10 @@
+{
+    "variants": {
+        "powered=false": {
+            "model": "savage_and_ravage:block/chiseled_gloomy_tiles_off"
+        },
+        "powered=true": {
+            "model": "savage_and_ravage:block/chiseled_gloomy_tiles_on"
+        }
+    }
+}

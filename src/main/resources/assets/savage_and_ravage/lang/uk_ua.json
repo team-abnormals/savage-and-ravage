@@ -1,0 +1,92 @@
+{
+  "block.savage_and_ravage.gloomy_tiles": "Похмура плитка",
+  "block.savage_and_ravage.gloomy_tile_stairs": "Сходи з похмурої плитки",
+  "block.savage_and_ravage.gloomy_tile_slab": "Похмура плита",
+  "block.savage_and_ravage.gloomy_tile_wall": "Стінка з похмурої плитки",
+  "block.savage_and_ravage.chiseled_gloomy_tiles": "Точена похмура плитка",
+  "block.savage_and_ravage.gloomy_tile_vertical_slab": "Похмура вертикальна плита",
+  "block.savage_and_ravage.runed_gloomy_tiles": "Рунічна похмура плитка",
+  
+  "block.savage_and_ravage.blast_proof_plates": "Противибухова плитка",
+  "block.savage_and_ravage.blast_proof_slab": "Противибухова плита",
+  "block.savage_and_ravage.blast_proof_stairs": "Противибухові сходи",
+  "block.savage_and_ravage.blast_proof_vertical_slab": "Противибухова вертикальна плита",
+  "block.savage_and_ravage.creeper_spore_sack": "Мішечок спор кріпера",
+  "block.savage_and_ravage.spore_bomb": "Спорова вибухівка",
+  
+  "item.savage_and_ravage.blast_proof_plating": "Противибухові пластини",
+  "item.savage_and_ravage.griefer_helmet": "Гріферський шолом",
+  "item.savage_and_ravage.griefer_chestplate": "Гріферський нагрудник",
+  "item.savage_and_ravage.griefer_leggings": "Гріферський наголінники",
+  "item.savage_and_ravage.griefer_boots": "Гріферський чоботи",
+  
+  "item.savage_and_ravage.wand_of_freezing": "Жезл морозу",
+  "item.savage_and_ravage.cleaver_of_beheading": "Тесак обезголовлення",
+  "item.savage_and_ravage.conch_of_conjuring": "Conch of Conjuring",
+  "item.savage_and_ravage.mask_of_dishonesty": "Маска брехні",
+
+  "item.savage_and_ravage.creeper_spores": "Спори кріпера",
+  "item.savage_and_ravage.mischief_arrow": "Стріла пустощів",
+  
+  "item.savage_and_ravage.skeleton_villager_spawn_egg": "Яйце виклику скелета-селянина",
+  "item.savage_and_ravage.griefer_spawn_egg": "Яйце виклику гріфера",
+  "item.savage_and_ravage.executioner_spawn_egg": "Яйце виклиту ката",
+  "item.savage_and_ravage.iceologer_spawn_egg": "Яйце виклику льодолога",
+  "item.savage_and_ravage.trickster_spawn_egg": "Яйце виклику обманщика",
+
+  "entity.savage_and_ravage.skeleton_villager": "Скелет-селянин",
+  "entity.savage_and_ravage.griefer": "Гріфер",
+  "entity.savage_and_ravage.creepie": "Кріперок",
+  "entity.savage_and_ravage.spore_cloud": "Спорова хмара",
+  "entity.savage_and_ravage.spore_bomb": "Спорова вибухівка",
+  "entity.savage_and_ravage.rune_prison": "Рунічна в'язниця",
+  "entity.savage_and_ravage.burning_banner": "Палаючий стяг",
+  "entity.savage_and_ravage.mischief_arrow": "Стріла пустощів",
+  "entity.savage_and_ravage.executioner": "Кат",
+  "entity.savage_and_ravage.iceologer": "Льодолог",
+  "entity.savage_and_ravage.ice_chunk": "Кусок льоду",
+  "entity.savage_and_ravage.ice_cloud": "Хмара льоду",
+  "entity.savage_and_ravage.trickster": "Обманшик",
+
+  "effect.savage_and_ravage.confusion": "Спантеличеність",
+  "effect.savage_and_ravage.frostbite": "Обмороження",
+  "effect.savage_and_ravage.weight": "Вантаж",
+
+  "attribute.name.generic.explosive_damage_reduction": "Зменшення пошкоджень від вибухів",
+
+  "advancements.savage_and_ravage.adventure.creeper_spores.title": "Милий кріперок",
+  "advancements.savage_and_ravage.adventure.creeper_spores.description": "Отримайте спори кріпера після вбивства його вибухом",
+  "advancements.savage_and_ravage.adventure.griefer_armor.title": "Динаміт з лазерними променями",
+  "advancements.savage_and_ravage.adventure.griefer_armor.description": "Зберіть повний комплект гріферської броні",
+  "advancements.savage_and_ravage.adventure.relic_collector.title": "Колекціонер реліквій",
+  "advancements.savage_and_ravage.adventure.relic_collector.description": "Отримайте тотем безсмерня, тесак обезголовлення, жезл морозу, маску брехні і 'Conch of Conjuring'",
+  "advancements.savage_and_ravage.adventure.mask_of_dishonesty.title": "Блазень",
+  "advancements.savage_and_ravage.adventure.mask_of_dishonesty.description": "Отримайте маску брехні, вбивши обманщика",
+
+  "advancements.savage_and_ravage.adventure.voluntary_exile.description": "Підпаліть зловісний стяг.\nМожливо, тримайтесь поки що подалі від селищ...",
+
+  "subtitles.savage_and_ravage.entity.creepie.hurt": "Кріперка поранено",
+  "subtitles.savage_and_ravage.entity.creepie.death": "Кріперок загинув",
+  "subtitles.savage_and_ravage.entity.creepie.fuse": "Кріперок шипить",
+  "subtitles.savage_and_ravage.entity.creepie.convert": "Кріперок перетворюється",
+  "subtitles.savage_and_ravage.entity.creepie.grow": "Кріперок виріс",
+  
+  "subtitles.savage_and_ravage.entity.iceologer.ambient": "Льодолог бурмоче",
+  "subtitles.savage_and_ravage.entity.iceologer.hurt": "Льодолога поранено",
+  "subtitles.savage_and_ravage.entity.iceologer.death": "Льодолог загинув",
+  "subtitles.savage_and_ravage.entity.iceologer.celebrate": "Льодолог тріумфує",
+  "subtitles.savage_and_ravage.entity.iceologer.cast_spell": "Льодолог чарує",
+
+  "subtitles.savage_and_ravage.entity.trickster.ambient": "Обманшик бурмоче",
+  "subtitles.savage_and_ravage.entity.trickster.step": "Обманшик крадеться",
+  "subtitles.savage_and_ravage.entity.trickster.hurt": "Обманшика поранено",
+  "subtitles.savage_and_ravage.entity.trickster.death": "Обманшик загинув",
+  "subtitles.savage_and_ravage.entity.trickster.celebrate": "Обманшик тріумфує",
+  "subtitles.savage_and_ravage.entity.trickster.laugh": "Обманшик регоче",
+  "subtitles.savage_and_ravage.entity.trickster.cast_spell": "Обманшик чарує",
+
+  "subtitles.savage_and_ravage.entity.player.cast_spell": "Гравець чарує",
+  "subtitles.savage_and_ravage.entity.creeper_spores.throw": "Спори кріпера літають",
+  "subtitles.savage_and_ravage.generic.prepare_attack": "Хтось готується до атаки",
+  "subtitles.savage_and_ravage.generic.puff_of_smoke": "Витяжка диму"
+}
