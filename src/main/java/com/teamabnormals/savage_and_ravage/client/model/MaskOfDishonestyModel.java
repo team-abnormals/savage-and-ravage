@@ -22,7 +22,7 @@ public class MaskOfDishonestyModel<T extends LivingEntity> extends HumanoidModel
 		MeshDefinition meshdefinition = HumanoidModel.createMesh(CubeDeformation.NONE, 0.0F);
 		PartDefinition root = meshdefinition.getRoot();
 		PartDefinition head = root.addOrReplaceChild("head", CubeListBuilder.create(), PartPose.ZERO);
-		PartDefinition nose = head.addOrReplaceChild("nose", CubeListBuilder.create().texOffs(0, 26).addBox(-0.0F, -2.5F, -9.25F, 2.0F, 2.0F, 4.0F, false), PartPose.ZERO);
+		PartDefinition nose = head.addOrReplaceChild("nose", CubeListBuilder.create().texOffs(0, 26).addBox(-1.0F, -2.5F, -8.0F, 2.0F, 2.0F, 4.0F, false), PartPose.ZERO);
 		return LayerDefinition.create(meshdefinition, 32, 32);
 	}
 }
