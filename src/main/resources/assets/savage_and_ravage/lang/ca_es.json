@@ -1,0 +1,90 @@
+{
+  "block.savage_and_ravage.gloomy_tiles": "Llambordes ombrívoles",
+  "block.savage_and_ravage.gloomy_tile_stairs": "Escales de Llambordes ombrívoles",
+  "block.savage_and_ravage.gloomy_tile_slab": "Llosa de Llambordes ombrívoles",
+  "block.savage_and_ravage.gloomy_tile_wall": "Mur de Llambordes ombrívoles",
+  "block.savage_and_ravage.chiseled_gloomy_tiles": "Llambordes ombrívoles cisellades",
+  "block.savage_and_ravage.gloomy_tile_vertical_slab": "Llosa vertical de Llambordes ombrívoles",
+  "block.savage_and_ravage.runed_gloomy_tiles": "Llambordes ombrívoles rúniques",
+  
+  "block.savage_and_ravage.blast_proof_plates": "Bloc a prova d'explosions",
+  "block.savage_and_ravage.blast_proof_slab": "Llosa a prova d'explosions ",
+  "block.savage_and_ravage.blast_proof_stairs": "Escales a prova d'explosions",
+  "block.savage_and_ravage.blast_proof_vertical_slab": "Llosa vertical a prova d'explosions",
+  "block.savage_and_ravage.creeper_spore_sack": "Sac d'espores de creeper",
+  "block.savage_and_ravage.spore_bomb": "Bomba d'espores",
+  
+  "item.savage_and_ravage.blast_proof_plating": "Placa a prova d'explosions",
+  "item.savage_and_ravage.griefer_helmet": "Casc de gamberro",
+  "item.savage_and_ravage.griefer_chestplate": "Cuirassa de gamberro",
+  "item.savage_and_ravage.griefer_leggings": "Pantalons de gamberro",
+  "item.savage_and_ravage.griefer_boots": "Botes de gamberro",
+  
+  "item.savage_and_ravage.wand_of_freezing": "Vareta de congelació",
+  "item.savage_and_ravage.cleaver_of_beheading": "Matxet de decapitació",
+  "item.savage_and_ravage.conch_of_conjuring": "Conquilla de conjuració",
+  "item.savage_and_ravage.mask_of_dishonesty": "Màscara de deshonestedad",
+
+  "item.savage_and_ravage.creeper_spores": "Espores de creeper",
+  "item.savage_and_ravage.mischief_arrow": "Fletxa entremaliada",
+  
+  "item.savage_and_ravage.skeleton_villager_spawn_egg": "Generador de vilatans esquelet",
+  "item.savage_and_ravage.griefer_spawn_egg": "Generador de gamberro",
+  "item.savage_and_ravage.executioner_spawn_egg": "Generador de botxí",
+  "item.savage_and_ravage.iceologer_spawn_egg": "Generador de Geliantre",
+  "item.savage_and_ravage.trickster_spawn_egg": "Generador d'estafador",
+
+  "entity.savage_and_ravage.skeleton_villager": "Vilatá esquelet",
+  "entity.savage_and_ravage.griefer": "Gamberro",
+  "entity.savage_and_ravage.creepie": "Creepie",
+  "entity.savage_and_ravage.spore_cloud": "Núvol d'espores",
+  "entity.savage_and_ravage.spore_bomb": "Bomba d'espores",
+  "entity.savage_and_ravage.rune_prison": "Presó única",
+  "entity.savage_and_ravage.burning_banner": "Estandart flamejant",
+  "entity.savage_and_ravage.mischief_arrow": "Fletxa entremaliada",
+  "entity.savage_and_ravage.executioner": "Botxí",
+  "entity.savage_and_ravage.iceologer": "Geliantre",
+  "entity.savage_and_ravage.ice_chunk": "Troç de gel",
+  "entity.savage_and_ravage.ice_cloud": "Núvol de gel",
+  "entity.savage_and_ravage.trickster": "Estafador",
+
+  "effect.savage_and_ravage.weight": "Pes",
+
+  "attribute.name.generic.explosive_damage_reduction": "Reducció de mal d'explosió",
+
+  "advancements.savage_and_ravage.adventure.creeper_spores.title": "Atacant d'espores",
+  "advancements.savage_and_ravage.adventure.creeper_spores.description": "Aconsegueix espores de creeper matant a un Creeper amb una explosió",
+  "advancements.savage_and_ravage.adventure.griefer_armor.title": "Dinamita amb raigs làser",
+  "advancements.savage_and_ravage.adventure.griefer_armor.description": "Aconsegueix tot el conjunt d'armadura gamberra",
+  "advancements.savage_and_ravage.adventure.relic_collector.title": "Col·leccionista de reliquies",
+  "advancements.savage_and_ravage.adventure.relic_collector.description": "Aconsegueix totes les reliquies màgiques de Vilatans: Matxet de decapitació, Vareta de congelació,Màscadra de deshonestedad y Conquilla de conjuració",
+  "advancements.savage_and_ravage.adventure.mask_of_dishonesty.title": "Res per aquí, res per allí",
+  "advancements.savage_and_ravage.adventure.mask_of_dishonesty.description": "Aconsegueix una màscara de deshonestedad matant un estafador.",
+
+  "advancements.savage_and_ravage.adventure.voluntary_exile.description": "Cala foc en un estandard repugnant.\nPlantejat estar una temporada lluny dels pobles...",
+
+  "subtitles.savage_and_ravage.entity.creepie.hurt": "Creepie ferit",
+  "subtitles.savage_and_ravage.entity.creepie.death": "Creepie mor",
+  "subtitles.savage_and_ravage.entity.creepie.fuse": "Xiuxiueig de Creepie",
+  "subtitles.savage_and_ravage.entity.creepie.convert": "Creepie es transforma",
+  "subtitles.savage_and_ravage.entity.creepie.grow": "Creepie madura",
+  
+  "subtitles.savage_and_ravage.entity.iceologer.ambient": "Geliantre murmura",
+  "subtitles.savage_and_ravage.entity.iceologer.hurt": "Geliantre ferit",
+  "subtitles.savage_and_ravage.entity.iceologer.death": "Geliantre mor",
+  "subtitles.savage_and_ravage.entity.iceologer.celebrate": "Geliantre celebra",
+  "subtitles.savage_and_ravage.entity.iceologer.cast_spell": "Geliantre llença un encanteri",
+
+  "subtitles.savage_and_ravage.entity.trickster.ambient": "Estafador murmura",
+  "subtitles.savage_and_ravage.entity.trickster.step": "Estafador tintinea",
+  "subtitles.savage_and_ravage.entity.trickster.hurt": "Estafador ferit",
+  "subtitles.savage_and_ravage.entity.trickster.death": "Estafador mor",
+  "subtitles.savage_and_ravage.entity.trickster.celebrate": "Estafador celebra",
+  "subtitles.savage_and_ravage.entity.trickster.laugh": "Estafador riu",
+  "subtitles.savage_and_ravage.entity.trickster.cast_spell": "Estafador llença un encanteri",
+
+  "subtitles.savage_and_ravage.entity.player.cast_spell": "Es llença un encanteri",
+  "subtitles.savage_and_ravage.entity.creeper_spores.throw": "Espores de creeper volant",
+  "subtitles.savage_and_ravage.generic.prepare_attack": "Algo prepara un atac",
+  "subtitles.savage_and_ravage.generic.puff_of_smoke": "Bola de fum"
+}
