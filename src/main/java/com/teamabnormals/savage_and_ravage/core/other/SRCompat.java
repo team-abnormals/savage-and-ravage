@@ -1,10 +1,10 @@
 package com.teamabnormals.savage_and_ravage.core.other;
 
 import com.teamabnormals.blueprint.core.util.DataUtil;
-import com.teamabnormals.savage_and_ravage.common.entity.BurningBannerEntity;
-import com.teamabnormals.savage_and_ravage.common.entity.MischiefArrowEntity;
-import com.teamabnormals.savage_and_ravage.common.entity.SporeCloudEntity;
-import com.teamabnormals.savage_and_ravage.common.entity.block.SporeBombEntity;
+import com.teamabnormals.savage_and_ravage.common.entity.decoration.BurningBanner;
+import com.teamabnormals.savage_and_ravage.common.entity.projectile.MischiefArrow;
+import com.teamabnormals.savage_and_ravage.common.entity.projectile.SporeCloud;
+import com.teamabnormals.savage_and_ravage.common.entity.item.SporeBomb;
 import com.teamabnormals.savage_and_ravage.common.item.CreeperSporesItem;
 import com.teamabnormals.savage_and_ravage.core.SavageAndRavage;
 import com.teamabnormals.savage_and_ravage.core.other.tags.SRBlockTags;
@@ -52,13 +52,13 @@ public class SRCompat {
 		DispenserBlock.registerBehavior(SRItems.MISCHIEF_ARROW.get(), new AbstractProjectileDispenseBehavior() {
 			@Override
 			protected Projectile getProjectile(Level world, Position position, ItemStack stack) {
-				return new MischiefArrowEntity(world, position.x(), position.y(), position.z());
+				return new MischiefArrow(world, position.x(), position.y(), position.z());
 			}
 		});
 		DispenserBlock.registerBehavior(SRItems.CREEPER_SPORES.get(), new AbstractProjectileDispenseBehavior() {
 			@Override
 			protected Projectile getProjectile(Level world, Position position, ItemStack stack) {
-				SporeCloudEntity cloud = new SporeCloudEntity(world, position.x(), position.y(), position.z());
+				SporeCloud cloud = new SporeCloud(world, position.x(), position.y(), position.z());
 				cloud.setCloudSize(CreeperSporesItem.getThrownSporeCloudSize(world.getRandom()));
 				return cloud;
 			}
@@ -68,7 +68,7 @@ public class SRCompat {
 			protected ItemStack execute(BlockSource source, ItemStack stack) {
 				Level world = source.getLevel();
 				BlockPos blockpos = offsetPos(source);
-				SporeBombEntity sporeBomb = new SporeBombEntity(world, (double) blockpos.getX() + 0.5D, blockpos.getY(), (double) blockpos.getZ() + 0.5D, null);
+				SporeBomb sporeBomb = new SporeBomb(world, (double) blockpos.getX() + 0.5D, blockpos.getY(), (double) blockpos.getZ() + 0.5D, null);
 				world.addFreshEntity(sporeBomb);
 				world.playSound(null, sporeBomb.getX(), sporeBomb.getY(), sporeBomb.getZ(), SoundEvents.TNT_PRIMED, SoundSource.BLOCKS, 1.0F, 1.0F);
 				stack.shrink(1);
@@ -80,7 +80,7 @@ public class SRCompat {
 			@Override
 			protected ItemStack execute(BlockSource source, ItemStack stack) {
 				Level world = source.getLevel();
-				world.addFreshEntity(new BurningBannerEntity(world, offsetPos(source), null));
+				world.addFreshEntity(new BurningBanner(world, offsetPos(source), null));
 				if (stack.hurt(1, world.random, null)) {
 					stack.setCount(0);
 				}

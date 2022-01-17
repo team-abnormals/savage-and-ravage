@@ -1,6 +1,6 @@
 package com.teamabnormals.savage_and_ravage.client.model;
 
-import com.teamabnormals.savage_and_ravage.common.entity.TricksterEntity;
+import com.teamabnormals.savage_and_ravage.common.entity.monster.Trickster;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -12,7 +12,7 @@ import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.monster.AbstractIllager;
 
-public class TricksterModel extends HumanoidModel<TricksterEntity> {
+public class TricksterModel extends HumanoidModel<Trickster> {
 	public ModelPart nose;
 	public ModelPart leftDecor;
 	public ModelPart rightDecor;
@@ -47,7 +47,7 @@ public class TricksterModel extends HumanoidModel<TricksterEntity> {
 	}
 
 	@Override
-	public void setupAnim(TricksterEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(Trickster entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		super.setupAnim(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 		AbstractIllager.IllagerArmPose pose = entityIn.getArmPose();
 		//TODO fix rotation points considering different arm length

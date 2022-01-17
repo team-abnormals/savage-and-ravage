@@ -3,8 +3,8 @@ package com.teamabnormals.savage_and_ravage.core;
 import com.teamabnormals.blueprint.core.util.DataUtil;
 import com.teamabnormals.blueprint.core.util.registry.RegistryHelper;
 import com.teamabnormals.savage_and_ravage.client.model.*;
-import com.teamabnormals.savage_and_ravage.client.render.*;
-import com.teamabnormals.savage_and_ravage.client.render.layer.TotemShieldLayer;
+import com.teamabnormals.savage_and_ravage.client.renderer.*;
+import com.teamabnormals.savage_and_ravage.client.renderer.layers.TotemShieldLayer;
 import com.teamabnormals.savage_and_ravage.core.data.server.tags.SRBlockTagsProvider;
 import com.teamabnormals.savage_and_ravage.core.data.server.tags.SREntityTypeTagsProvider;
 import com.teamabnormals.savage_and_ravage.core.data.server.tags.SRItemTagsProvider;
@@ -14,8 +14,8 @@ import com.teamabnormals.savage_and_ravage.core.other.SRDataSerializers;
 import com.teamabnormals.savage_and_ravage.core.other.SRFeatures;
 import com.teamabnormals.savage_and_ravage.core.other.SRModelLayers;
 import com.teamabnormals.savage_and_ravage.core.registry.SRAttributes;
-import com.teamabnormals.savage_and_ravage.core.registry.SREffects;
-import com.teamabnormals.savage_and_ravage.core.registry.SREntities;
+import com.teamabnormals.savage_and_ravage.core.registry.SRMobEffects;
+import com.teamabnormals.savage_and_ravage.core.registry.SREntityTypes;
 import com.teamabnormals.savage_and_ravage.core.registry.SRItems;
 import com.teamabnormals.savage_and_ravage.core.registry.SRParticles;
 import net.minecraft.client.model.IllagerModel;
@@ -54,9 +54,9 @@ public class SavageAndRavage {
 		SRDataProcessors.registerTrackedData();
 
 		REGISTRY_HELPER.register(bus);
-		SREntities.ENTITIES.register(bus);
+		SREntityTypes.ENTITIES.register(bus);
 		SRParticles.PARTICLES.register(bus);
-		SREffects.EFFECTS.register(bus);
+		SRMobEffects.EFFECTS.register(bus);
 		SRFeatures.FEATURES.register(bus);
 		SRAttributes.ATTRIBUTES.register(bus);
 		SRDataSerializers.SERIALIZERS.register(bus);
@@ -80,8 +80,8 @@ public class SavageAndRavage {
 
 	private void commonSetup(FMLCommonSetupEvent event) {
 		event.enqueueWork(() -> {
-			SREntities.registerEntitySpawns();
-			SREntities.registerWaveMembers();
+			SREntityTypes.registerEntitySpawns();
+			SREntityTypes.registerWaveMembers();
 			SRFeatures.registerPools();
 			SRCompat.registerCompat();
 		});
@@ -135,19 +135,19 @@ public class SavageAndRavage {
 
 	@OnlyIn(Dist.CLIENT)
 	private void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
-		event.registerEntityRenderer(SREntities.SKELETON_VILLAGER.get(), SkeletonVillagerRenderer::new);
-		event.registerEntityRenderer(SREntities.CREEPIE.get(), CreepieRenderer::new);
-		event.registerEntityRenderer(SREntities.GRIEFER.get(), GrieferRenderer::new);
-		event.registerEntityRenderer(SREntities.ICEOLOGER.get(), IceologerRenderer::new);
-		event.registerEntityRenderer(SREntities.EXECUTIONER.get(), ExecutionerRenderer::new);
-		event.registerEntityRenderer(SREntities.TRICKSTER.get(), TricksterRenderer::new);
-		event.registerEntityRenderer(SREntities.BURNING_BANNER.get(), BurningBannerRenderer::new);
-		event.registerEntityRenderer(SREntities.SPORE_CLOUD.get(), NoModelRenderer::new);
-		event.registerEntityRenderer(SREntities.SPORE_BOMB.get(), SporeBombRenderer::new);
-		event.registerEntityRenderer(SREntities.MISCHIEF_ARROW.get(), MischiefArrowRenderer::new);
-		event.registerEntityRenderer(SREntities.ICE_CHUNK.get(), IceChunkRenderer::new);
-		event.registerEntityRenderer(SREntities.ICE_CLOUD.get(), NoModelRenderer::new);
-		event.registerEntityRenderer(SREntities.RUNE_PRISON.get(), RunePrisonRenderer::new);
-		event.registerEntityRenderer(SREntities.CONFUSION_BOLT.get(), NoModelRenderer::new);
+		event.registerEntityRenderer(SREntityTypes.SKELETON_VILLAGER.get(), SkeletonVillagerRenderer::new);
+		event.registerEntityRenderer(SREntityTypes.CREEPIE.get(), CreepieRenderer::new);
+		event.registerEntityRenderer(SREntityTypes.GRIEFER.get(), GrieferRenderer::new);
+		event.registerEntityRenderer(SREntityTypes.ICEOLOGER.get(), IceologerRenderer::new);
+		event.registerEntityRenderer(SREntityTypes.EXECUTIONER.get(), ExecutionerRenderer::new);
+		event.registerEntityRenderer(SREntityTypes.TRICKSTER.get(), TricksterRenderer::new);
+		event.registerEntityRenderer(SREntityTypes.BURNING_BANNER.get(), BurningBannerRenderer::new);
+		event.registerEntityRenderer(SREntityTypes.SPORE_CLOUD.get(), NoModelRenderer::new);
+		event.registerEntityRenderer(SREntityTypes.SPORE_BOMB.get(), SporeBombRenderer::new);
+		event.registerEntityRenderer(SREntityTypes.MISCHIEF_ARROW.get(), MischiefArrowRenderer::new);
+		event.registerEntityRenderer(SREntityTypes.ICE_CHUNK.get(), IceChunkRenderer::new);
+		event.registerEntityRenderer(SREntityTypes.ICE_CLOUD.get(), NoModelRenderer::new);
+		event.registerEntityRenderer(SREntityTypes.RUNE_PRISON.get(), RunePrisonRenderer::new);
+		event.registerEntityRenderer(SREntityTypes.CONFUSION_BOLT.get(), NoModelRenderer::new);
 	}
 }

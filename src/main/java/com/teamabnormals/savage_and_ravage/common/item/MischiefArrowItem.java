@@ -1,6 +1,6 @@
 package com.teamabnormals.savage_and_ravage.common.item;
 
-import com.teamabnormals.savage_and_ravage.common.entity.MischiefArrowEntity;
+import com.teamabnormals.savage_and_ravage.common.entity.projectile.MischiefArrow;
 import com.teamabnormals.blueprint.core.util.item.filling.TargetedItemCategoryFiller;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.LivingEntity;
@@ -21,7 +21,7 @@ public class MischiefArrowItem extends ArrowItem {
 
 	@Override
 	public AbstractArrow createArrow(Level world, ItemStack stack, LivingEntity shooter) {
-		return new MischiefArrowEntity(world, shooter);
+		return new MischiefArrow(world, shooter);
 	}
 
 	@Override

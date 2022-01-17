@@ -1,6 +1,6 @@
 package com.teamabnormals.savage_and_ravage.client.model;
 
-import com.teamabnormals.savage_and_ravage.common.entity.SkeletonVillagerEntity;
+import com.teamabnormals.savage_and_ravage.common.entity.monster.SkeletonVillager;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.HumanoidModel;
@@ -236,7 +236,7 @@ public class GrieferArmorModel<T extends LivingEntity> extends HumanoidModel<T> 
 	@SuppressWarnings("unchecked")
 	public static <A extends HumanoidModel<?>> A getModel(EquipmentSlot slot, LivingEntity entity) {
 		boolean illager = entity instanceof AbstractIllager ||
-				entity instanceof SkeletonVillagerEntity ||
+				entity instanceof SkeletonVillager ||
 				entity instanceof ZombieVillager ||
 				entity instanceof AbstractVillager ||
 				entity.getType() == ForgeRegistries.ENTITIES.getValue(GUARD_VILLAGER_NAME);

@@ -1,6 +1,6 @@
 package com.teamabnormals.savage_and_ravage.common.block;
 
-import com.teamabnormals.savage_and_ravage.common.entity.block.SporeBombEntity;
+import com.teamabnormals.savage_and_ravage.common.entity.item.SporeBomb;
 import com.teamabnormals.blueprint.core.util.item.filling.TargetedItemCategoryFiller;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -28,14 +28,14 @@ public class SporeBombBlock extends TntBlock {
 
 	@Override
 	public void onCaughtFire(BlockState state, Level world, BlockPos pos, @Nullable Direction face, @Nullable LivingEntity igniter) {
-		SporeBombEntity sporebomb = new SporeBombEntity(world, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, igniter);
+		SporeBomb sporebomb = new SporeBomb(world, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, igniter);
 		world.addFreshEntity(sporebomb);
 		world.playSound(null, sporebomb.getX(), sporebomb.getY(), sporebomb.getZ(), SoundEvents.CREEPER_PRIMED, SoundSource.BLOCKS, 1.0F, 0.5F);
 	}
 
 	@Override
 	public void wasExploded(Level world, BlockPos pos, Explosion explosionIn) {
-		SporeBombEntity sporebomb = new SporeBombEntity(world, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, explosionIn.getSourceMob());
+		SporeBomb sporebomb = new SporeBomb(world, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, explosionIn.getSourceMob());
 		sporebomb.setFuse((short) (world.getRandom().nextInt(sporebomb.getFuse() / 4) + sporebomb.getFuse() / 8));
 		world.addFreshEntity(sporebomb);
 	}

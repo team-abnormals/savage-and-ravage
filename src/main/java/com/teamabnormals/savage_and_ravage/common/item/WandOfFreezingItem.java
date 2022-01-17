@@ -1,6 +1,6 @@
 package com.teamabnormals.savage_and_ravage.common.item;
 
-import com.teamabnormals.savage_and_ravage.common.entity.IceChunkEntity;
+import com.teamabnormals.savage_and_ravage.common.entity.projectile.IceChunk;
 import com.teamabnormals.savage_and_ravage.core.registry.SRSounds;
 import com.teamabnormals.blueprint.core.util.item.filling.TargetedItemCategoryFiller;
 import net.minecraft.core.BlockPos;
@@ -53,11 +53,11 @@ public class WandOfFreezingItem extends Item {
 			player.getCooldowns().addCooldown(this, 20);
 			if (!world.isClientSide()) {
 				if (entityraytraceresult != null) {
-					world.addFreshEntity(new IceChunkEntity(world, player, entityraytraceresult.getEntity()));
+					world.addFreshEntity(new IceChunk(world, player, entityraytraceresult.getEntity()));
 				} else {
 					BlockPos pos = result.getBlockPos();
-					IceChunkEntity iceChunk = new IceChunkEntity(world, player, null);
-					iceChunk.absMoveTo(pos.getX() + 0.5, pos.getY() + 1 + IceChunkEntity.HOVER_DISTANCE, pos.getZ() + 0.5, iceChunk.getYRot(), iceChunk.getXRot());
+					IceChunk iceChunk = new IceChunk(world, player, null);
+					iceChunk.absMoveTo(pos.getX() + 0.5, pos.getY() + 1 + IceChunk.HOVER_DISTANCE, pos.getZ() + 0.5, iceChunk.getYRot(), iceChunk.getXRot());
 					world.addFreshEntity(iceChunk);
 				}
 			}

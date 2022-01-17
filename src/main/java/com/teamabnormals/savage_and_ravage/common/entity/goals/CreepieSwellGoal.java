@@ -1,6 +1,6 @@
 package com.teamabnormals.savage_and_ravage.common.entity.goals;
 
-import com.teamabnormals.savage_and_ravage.common.entity.CreepieEntity;
+import com.teamabnormals.savage_and_ravage.common.entity.monster.Creepie;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 
@@ -8,10 +8,10 @@ import java.util.EnumSet;
 
 public class CreepieSwellGoal extends Goal {
 
-	private final CreepieEntity swellingCreepie;
+	private final Creepie swellingCreepie;
 	private LivingEntity creepieAttackTarget;
 
-	public CreepieSwellGoal(CreepieEntity entityIn) {
+	public CreepieSwellGoal(Creepie entityIn) {
 		this.swellingCreepie = entityIn;
 		this.setFlags(EnumSet.of(Goal.Flag.MOVE));
 	}

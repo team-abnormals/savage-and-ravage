@@ -1,6 +1,6 @@
 package com.teamabnormals.savage_and_ravage.common.entity.goals;
 
-import com.teamabnormals.savage_and_ravage.common.entity.IOwnableMob;
+import com.teamabnormals.savage_and_ravage.common.entity.OwnableMob;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -11,13 +11,13 @@ import java.util.EnumSet;
 
 public class MobOwnerHurtByTargetGoal extends TargetGoal {
 
-	private final IOwnableMob defendingEntity;
+	private final OwnableMob defendingEntity;
 	private LivingEntity attacker;
 	private int timestamp;
 
 	public MobOwnerHurtByTargetGoal(Mob defendingEntityIn) {
 		super(defendingEntityIn, false);
-		this.defendingEntity = (IOwnableMob) defendingEntityIn;
+		this.defendingEntity = (OwnableMob) defendingEntityIn;
 		this.setFlags(EnumSet.of(Goal.Flag.TARGET));
 	}
 

@@ -2,7 +2,7 @@ package com.teamabnormals.savage_and_ravage.core.data.server.tags;
 
 import com.teamabnormals.savage_and_ravage.core.SavageAndRavage;
 import com.teamabnormals.savage_and_ravage.core.other.tags.SREntityTypeTags;
-import com.teamabnormals.savage_and_ravage.core.registry.SREntities;
+import com.teamabnormals.savage_and_ravage.core.registry.SREntityTypes;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.EntityTypeTagsProvider;
 import net.minecraft.tags.EntityTypeTags;
@@ -17,10 +17,10 @@ public class SREntityTypeTagsProvider extends EntityTypeTagsProvider {
 
 	@Override
 	protected void addTags() {
-		this.tag(EntityTypeTags.ARROWS).add(SREntities.MISCHIEF_ARROW.get());
-		this.tag(EntityTypeTags.IMPACT_PROJECTILES).add(SREntities.SPORE_CLOUD.get(), SREntities.CONFUSION_BOLT.get());
-		this.tag(EntityTypeTags.RAIDERS).add(SREntities.GRIEFER.get(), SREntities.EXECUTIONER.get(), SREntities.ICEOLOGER.get(), SREntities.TRICKSTER.get());
-		this.tag(EntityTypeTags.SKELETONS).add(SREntities.SKELETON_VILLAGER.get());
+		this.tag(EntityTypeTags.ARROWS).add(SREntityTypes.MISCHIEF_ARROW.get());
+		this.tag(EntityTypeTags.IMPACT_PROJECTILES).add(SREntityTypes.SPORE_CLOUD.get(), SREntityTypes.CONFUSION_BOLT.get());
+		this.tag(EntityTypeTags.RAIDERS).add(SREntityTypes.GRIEFER.get(), SREntityTypes.EXECUTIONER.get(), SREntityTypes.ICEOLOGER.get(), SREntityTypes.TRICKSTER.get());
+		this.tag(EntityTypeTags.SKELETONS).add(SREntityTypes.SKELETON_VILLAGER.get());
 
 		this.tag(SREntityTypeTags.CREEPER_IMMUNE).add(EntityType.PAINTING, EntityType.ITEM_FRAME, EntityType.GLOW_ITEM_FRAME, EntityType.FALLING_BLOCK, EntityType.LEASH_KNOT, EntityType.ARMOR_STAND);
 	}

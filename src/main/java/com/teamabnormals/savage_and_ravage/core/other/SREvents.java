@@ -1,15 +1,15 @@
 package com.teamabnormals.savage_and_ravage.core.other;
 
-import com.teamabnormals.savage_and_ravage.common.entity.BurningBannerEntity;
-import com.teamabnormals.savage_and_ravage.common.entity.CreepieEntity;
-import com.teamabnormals.savage_and_ravage.common.entity.ExecutionerEntity;
-import com.teamabnormals.savage_and_ravage.common.entity.GrieferEntity;
-import com.teamabnormals.savage_and_ravage.common.entity.IOwnableMob;
-import com.teamabnormals.savage_and_ravage.common.entity.IceologerEntity;
-import com.teamabnormals.savage_and_ravage.common.entity.SkeletonVillagerEntity;
-import com.teamabnormals.savage_and_ravage.common.entity.SporeCloudEntity;
-import com.teamabnormals.savage_and_ravage.common.entity.TricksterEntity;
-import com.teamabnormals.savage_and_ravage.common.entity.block.SporeBombEntity;
+import com.teamabnormals.savage_and_ravage.common.entity.decoration.BurningBanner;
+import com.teamabnormals.savage_and_ravage.common.entity.monster.Creepie;
+import com.teamabnormals.savage_and_ravage.common.entity.monster.Executioner;
+import com.teamabnormals.savage_and_ravage.common.entity.monster.Griefer;
+import com.teamabnormals.savage_and_ravage.common.entity.OwnableMob;
+import com.teamabnormals.savage_and_ravage.common.entity.monster.Iceologer;
+import com.teamabnormals.savage_and_ravage.common.entity.monster.SkeletonVillager;
+import com.teamabnormals.savage_and_ravage.common.entity.projectile.SporeCloud;
+import com.teamabnormals.savage_and_ravage.common.entity.monster.Trickster;
+import com.teamabnormals.savage_and_ravage.common.entity.item.SporeBomb;
 import com.teamabnormals.savage_and_ravage.common.entity.goals.CelebrateTargetBlockHitGoal;
 import com.teamabnormals.savage_and_ravage.common.entity.goals.ImprovedCrossbowGoal;
 import com.teamabnormals.savage_and_ravage.common.item.IPottableItem;
@@ -19,8 +19,8 @@ import com.teamabnormals.savage_and_ravage.core.other.tags.SREntityTypeTags;
 import com.teamabnormals.savage_and_ravage.core.other.tags.SRItemTags;
 import com.teamabnormals.savage_and_ravage.core.registry.SRAttributes;
 import com.teamabnormals.savage_and_ravage.core.registry.SRBlocks;
-import com.teamabnormals.savage_and_ravage.core.registry.SREffects;
-import com.teamabnormals.savage_and_ravage.core.registry.SREntities;
+import com.teamabnormals.savage_and_ravage.core.registry.SRMobEffects;
+import com.teamabnormals.savage_and_ravage.core.registry.SREntityTypes;
 import com.teamabnormals.savage_and_ravage.core.registry.SRItems;
 import com.teamabnormals.savage_and_ravage.core.registry.SRParticles;
 import com.teamabnormals.blueprint.common.world.storage.tracking.IDataManager;
@@ -120,14 +120,14 @@ public class SREvents {
 		Entity entity = event.getEntity();
 		if (entity instanceof Mob mob) {
 			if (mob instanceof AbstractVillager villager) {
-				villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, SkeletonVillagerEntity.class, 8.0F, 0.6D, 0.6D));
-				villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, GrieferEntity.class, 8.0F, 0.8D, 0.8D));
-				villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, IceologerEntity.class, 8.0F, 0.8D, 0.8D));
-				villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, ExecutionerEntity.class, 8.0F, 0.8D, 0.8D));
-				villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, TricksterEntity.class, 8.0F, 0.8D, 0.8D));
-				villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, CreepieEntity.class, 8.0F, 0.8D, 0.8D, e -> {
-					CreepieEntity creepie = ((CreepieEntity) e);
-					return creepie.getOwnerId() == null || creepie.getOwner() instanceof GrieferEntity;
+				villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, SkeletonVillager.class, 8.0F, 0.6D, 0.6D));
+				villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, Griefer.class, 8.0F, 0.8D, 0.8D));
+				villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, Iceologer.class, 8.0F, 0.8D, 0.8D));
+				villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, Executioner.class, 8.0F, 0.8D, 0.8D));
+				villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, Trickster.class, 8.0F, 0.8D, 0.8D));
+				villager.goalSelector.addGoal(1, new AvoidEntityGoal<>(villager, Creepie.class, 8.0F, 0.8D, 0.8D, e -> {
+					Creepie creepie = ((Creepie) e);
+					return creepie.getOwnerId() == null || creepie.getOwner() instanceof Griefer;
 				}));
 			} else if (mob instanceof Pillager pillager) {
 				mob.goalSelector.availableGoals.stream().map(it -> it.goal).filter(it -> it instanceof RangedCrossbowAttackGoal<?>).findFirst().ifPresent(goal -> {
@@ -136,7 +136,7 @@ public class SREvents {
 				});
 				mob.goalSelector.addGoal(5, new CelebrateTargetBlockHitGoal(pillager));
 			} else if (mob instanceof Cat || mob instanceof Ocelot)
-				mob.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(mob, CreepieEntity.class, false));
+				mob.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(mob, Creepie.class, false));
 			else if (mob instanceof Evoker && SRConfig.COMMON.evokersUseTotems.get())
 				mob.goalSelector.addGoal(1, new AvoidEntityGoal<>((Evoker) mob, IronGolem.class, 8.0F, 0.6D, 1.0D) {
 					@Override
@@ -169,7 +169,7 @@ public class SREvents {
 	public static void onRightClickEntity(PlayerInteractEvent.EntityInteract event) {
 		Entity target = event.getTarget();
 		ItemStack stack = event.getItemStack();
-		if (target instanceof CreepieEntity && stack.getItem() == Items.POISONOUS_POTATO && SRConfig.COMMON.poisonPotatoCompat.get() && ModList.get().isLoaded("quark")) {
+		if (target instanceof Creepie && stack.getItem() == Items.POISONOUS_POTATO && SRConfig.COMMON.poisonPotatoCompat.get() && ModList.get().isLoaded("quark")) {
 			Player player = event.getPlayer();
 			CompoundTag persistentData = target.getPersistentData();
 			if (!persistentData.getBoolean(POISON_TAG)) {
@@ -192,7 +192,7 @@ public class SREvents {
 	@SubscribeEvent
 	public static void onUpdateEntity(LivingEvent.LivingUpdateEvent event) {
 		Entity entity = event.getEntity();
-		if (entity instanceof CreepieEntity creepie && SRConfig.COMMON.poisonPotatoCompat.get() && ModList.get().isLoaded("quark")) {
+		if (entity instanceof Creepie creepie && SRConfig.COMMON.poisonPotatoCompat.get() && ModList.get().isLoaded("quark")) {
 			if (entity.getPersistentData().getBoolean(POISON_TAG)) creepie.setGrowingAge(-24000);
 		}
 	}
@@ -200,7 +200,7 @@ public class SREvents {
 	@SubscribeEvent
 	public static void onLivingJump(LivingEvent.LivingJumpEvent event) {
 		LivingEntity entity = event.getEntityLiving();
-		if (entity.getEffect(SREffects.WEIGHT.get()) != null)
+		if (entity.getEffect(SRMobEffects.WEIGHT.get()) != null)
 			entity.setDeltaMovement(entity.getDeltaMovement().x(), 0.0D, entity.getDeltaMovement().z());
 	}
 
@@ -209,8 +209,8 @@ public class SREvents {
 		LivingEntity entity = event.getEntityLiving();
 		LivingEntity target = event.getTarget();
 		if (target != null) {
-			if (entity instanceof AbstractGolem && !(entity instanceof Shulker) && target instanceof IOwnableMob)
-				if (((IOwnableMob) target).getOwner() instanceof Player && ((Mob) target).getTarget() != entity)
+			if (entity instanceof AbstractGolem && !(entity instanceof Shulker) && target instanceof OwnableMob)
+				if (((OwnableMob) target).getOwner() instanceof Player && ((Mob) target).getTarget() != entity)
 					((AbstractGolem) entity).setTarget(null);
 			if (entity instanceof Evoker && SRConfig.COMMON.evokersUseTotems.get() && TrackedDataManager.INSTANCE.getValue(entity, SRDataProcessors.TOTEM_SHIELD_TIME) > 0)
 				((Evoker) entity).setTarget(null);
@@ -223,13 +223,13 @@ public class SREvents {
 		Explosion explosion = event.getExplosion();
 		LivingEntity sourceEntity = explosion.getSourceMob();
 		boolean isCreeper = sourceEntity != null && sourceEntity.getType() == EntityType.CREEPER;
-		boolean isCreepie = sourceEntity != null && sourceEntity.getType() == SREntities.CREEPIE.get();
+		boolean isCreepie = sourceEntity != null && sourceEntity.getType() == SREntityTypes.CREEPIE.get();
 		if (isCreeper) {
 			if (!SRConfig.COMMON.creeperExplosionsDestroyBlocks.get())
 				event.getAffectedBlocks().clear();
 			if (SRConfig.COMMON.creeperExplosionsSpawnCreepies.get()) {
 				Creeper creeper = (Creeper) explosion.getSourceMob();
-				SporeCloudEntity spores = SREntities.SPORE_CLOUD.get().create(world);
+				SporeCloud spores = SREntityTypes.SPORE_CLOUD.get().create(world);
 				if (spores == null)
 					return;
 				spores.setSpawnCloudInstantly(true);
@@ -243,11 +243,11 @@ public class SREvents {
 			}
 		}
 
-		if (explosion.getExploder() != null && explosion.getExploder().getType() == SREntities.SPORE_BOMB.get()) {
+		if (explosion.getExploder() != null && explosion.getExploder().getType() == SREntityTypes.SPORE_BOMB.get()) {
 			for (BlockPos pos : event.getAffectedBlocks()) {
 				if (world.getBlockState(pos).getBlock() == SRBlocks.SPORE_BOMB.get()) {
 					world.removeBlock(pos, false);
-					SporeBombEntity sporebomb = new SporeBombEntity(world, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, explosion.getSourceMob());
+					SporeBomb sporebomb = new SporeBomb(world, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, explosion.getSourceMob());
 					sporebomb.setFuse((short) (world.getRandom().nextInt(sporebomb.getFuse() / 4) + sporebomb.getFuse() / 8));
 					world.addFreshEntity(sporebomb);
 				}
@@ -425,10 +425,10 @@ public class SREvents {
 	public static void onInteractWithEntity(PlayerInteractEvent.EntityInteract event) {
 		ItemStack stack = event.getItemStack();
 		Entity target = event.getTarget();
-		if (target.getType() == EntityType.CREEPER || target.getType() == SREntities.CREEPIE.get()) {
+		if (target.getType() == EntityType.CREEPER || target.getType() == SREntityTypes.CREEPIE.get()) {
 			if (stack.getItem() == Items.CREEPER_SPAWN_EGG) {
 				Level world = event.getWorld();
-				CreepieEntity creepie = SREntities.CREEPIE.get().create(world);
+				Creepie creepie = SREntityTypes.CREEPIE.get().create(world);
 				if (creepie != null) {
 					creepie.copyPosition(target);
 					if (stack.hasCustomHoverName()) creepie.setCustomName(stack.getHoverName());
@@ -447,8 +447,8 @@ public class SREvents {
 		Level world = event.getWorld();
 		BlockPos pos = event.getPos();
 		if (world.getBlockState(pos).getBlock() instanceof AbstractBannerBlock) {
-			List<BurningBannerEntity> burningBanners = world.getEntitiesOfClass(BurningBannerEntity.class, new AABB(pos));
-			for (BurningBannerEntity burningBanner : burningBanners) {
+			List<BurningBanner> burningBanners = world.getEntitiesOfClass(BurningBanner.class, new AABB(pos));
+			for (BurningBanner burningBanner : burningBanners) {
 				if (burningBanner.getBannerPosition() != null && burningBanner.getBannerPosition().equals(pos)) {
 					burningBanner.extinguishFire();
 				}
@@ -485,7 +485,7 @@ public class SREvents {
 					stack.shrink(1);
 				}
 
-				world.addFreshEntity(new BurningBannerEntity(world, pos, player));
+				world.addFreshEntity(new BurningBanner(world, pos, player));
 				event.setCancellationResult(InteractionResult.SUCCESS);
 				event.setCanceled(true);
 			}
@@ -497,8 +497,8 @@ public class SREvents {
 		LivingEntity entity = event.getEntityLiving();
 		Level world = entity.level;
 		IDataManager data = (IDataManager) entity;
-		if (entity.getRemainingFireTicks() > 0 && entity.getEffect(SREffects.FROSTBITE.get()) != null)
-			entity.removeEffect(SREffects.FROSTBITE.get());
+		if (entity.getRemainingFireTicks() > 0 && entity.getEffect(SRMobEffects.FROSTBITE.get()) != null)
+			entity.removeEffect(SRMobEffects.FROSTBITE.get());
 		if (!world.isClientSide()) {
 			CompoundTag persistentData = entity.getPersistentData();
 			if (persistentData.getBoolean(NO_KNOCKBACK_KEY))
@@ -565,9 +565,9 @@ public class SREvents {
 
 	public static boolean isValidBurningBannerPos(Level world, BlockPos pos) {
 		if (world.getBlockState(pos).getBlock() instanceof AbstractBannerBlock) {
-			List<BurningBannerEntity> banners = world.getEntitiesOfClass(BurningBannerEntity.class, new AABB(pos));
+			List<BurningBanner> banners = world.getEntitiesOfClass(BurningBanner.class, new AABB(pos));
 			boolean noBurningBanners = true;
-			for (BurningBannerEntity banner : banners) {
+			for (BurningBanner banner : banners) {
 				if (banner.getBannerPosition() != null && banner.getBannerPosition().equals(pos))
 					noBurningBanners = false;
 			}

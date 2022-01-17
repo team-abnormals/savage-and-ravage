@@ -1,7 +1,7 @@
 package com.teamabnormals.savage_and_ravage.core.other;
 
 import com.google.common.collect.ImmutableList;
-import com.teamabnormals.savage_and_ravage.common.world.gen.feature.EnclosureFeature;
+import com.teamabnormals.savage_and_ravage.common.levelgen.feature.EnclosureFeature;
 import com.teamabnormals.savage_and_ravage.core.SavageAndRavage;
 import com.mojang.datafixers.util.Pair;
 import com.teamabnormals.blueprint.core.util.DataUtil;

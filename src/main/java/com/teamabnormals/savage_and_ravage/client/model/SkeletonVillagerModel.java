@@ -2,7 +2,7 @@ package com.teamabnormals.savage_and_ravage.client.model;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
-import com.teamabnormals.savage_and_ravage.common.entity.SkeletonVillagerEntity;
+import com.teamabnormals.savage_and_ravage.common.entity.monster.SkeletonVillager;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.AnimationUtils;
 import net.minecraft.client.model.HumanoidModel;
@@ -19,7 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.item.UseAnim;
 
-public class SkeletonVillagerModel extends HumanoidModel<SkeletonVillagerEntity> {
+public class SkeletonVillagerModel extends HumanoidModel<SkeletonVillager> {
 	public ModelPart middleClosedArm;
 	public ModelPart nose;
 	public ModelPart rightClosedArm;
@@ -62,7 +62,7 @@ public class SkeletonVillagerModel extends HumanoidModel<SkeletonVillagerEntity>
 	}
 
 	@Override
-	public void setupAnim(SkeletonVillagerEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(SkeletonVillager entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		super.setupAnim(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 		boolean flag = entityIn.isAggressive();
 		this.rightClosedArm.visible = !flag;
@@ -87,7 +87,7 @@ public class SkeletonVillagerModel extends HumanoidModel<SkeletonVillagerEntity>
 	}
 
 	@Override
-	public void prepareMobModel(SkeletonVillagerEntity entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
+	public void prepareMobModel(SkeletonVillager entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
 		ItemStack itemstack = entityIn.getMainHandItem();
 		UseAnim useaction = itemstack.getUseAnimation();
 		this.rightArmPose = HumanoidModel.ArmPose.EMPTY;

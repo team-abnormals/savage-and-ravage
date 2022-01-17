@@ -1,7 +1,7 @@
 package com.teamabnormals.savage_and_ravage.client.model;
 
 import com.google.common.collect.ImmutableList;
-import com.teamabnormals.savage_and_ravage.common.entity.RunePrisonEntity;
+import com.teamabnormals.savage_and_ravage.common.entity.projectile.RunePrison;
 import com.teamabnormals.savage_and_ravage.core.SavageAndRavage;
 import net.minecraft.client.model.ListModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -13,7 +13,7 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.resources.ResourceLocation;
 
-public class RunePrisonModel extends ListModel<RunePrisonEntity> {
+public class RunePrisonModel extends ListModel<RunePrison> {
 	public static final ModelLayerLocation RUNE_PRISON = new ModelLayerLocation(new ResourceLocation(SavageAndRavage.MOD_ID, "rune_prison"), "main");
 
 	public ModelPart plane;
@@ -30,7 +30,7 @@ public class RunePrisonModel extends ListModel<RunePrisonEntity> {
 	}
 
 	@Override
-	public void setupAnim(RunePrisonEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(RunePrison entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 	}
 
 	@Override

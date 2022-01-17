@@ -1,7 +1,7 @@
 package com.teamabnormals.savage_and_ravage.client.model;
 
 import com.google.common.collect.ImmutableList;
-import com.teamabnormals.savage_and_ravage.common.entity.CreepieEntity;
+import com.teamabnormals.savage_and_ravage.common.entity.monster.Creepie;
 import net.minecraft.client.model.ListModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -16,7 +16,7 @@ import net.minecraft.util.Mth;
  * CreepieModel - TallestEgg
  * Created using Tabula 7.1.0
  */
-public class CreepieModel extends ListModel<CreepieEntity> {
+public class CreepieModel extends ListModel<Creepie> {
 	public ModelPart head;
 	public ModelPart sprout;
 	public ModelPart body;
@@ -49,7 +49,7 @@ public class CreepieModel extends ListModel<CreepieEntity> {
 	}
 
 	@Override
-	public void setupAnim(CreepieEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(Creepie entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.head.yRot = netHeadYaw * 0.017453292F;
 		this.head.xRot = headPitch * 0.017453292F;
 		this.leg1.xRot = Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;

@@ -2,7 +2,7 @@ package com.teamabnormals.savage_and_ravage.client.model;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
-import com.teamabnormals.savage_and_ravage.common.entity.IceologerEntity;
+import com.teamabnormals.savage_and_ravage.common.entity.monster.Iceologer;
 import net.minecraft.client.model.AnimationUtils;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
@@ -15,7 +15,7 @@ import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.monster.AbstractIllager;
 
-public class IceologerModel extends HumanoidModel<IceologerEntity> {
+public class IceologerModel extends HumanoidModel<Iceologer> {
 	private final ModelPart arms;
 	private final ModelPart cape;
 
@@ -41,7 +41,7 @@ public class IceologerModel extends HumanoidModel<IceologerEntity> {
 	}
 
 	@Override
-	public void prepareMobModel(IceologerEntity entity, float limbSwing, float limbSwingAmount, float partialTicks) {
+	public void prepareMobModel(Iceologer entity, float limbSwing, float limbSwingAmount, float partialTicks) {
 		double d0 = entity.prevChasingPosX + (entity.chasingPosX - entity.prevChasingPosX) * partialTicks - (entity.xo + (entity.getX() - entity.xo) * partialTicks);
 		double d1 = entity.prevChasingPosY + (entity.chasingPosY - entity.prevChasingPosY) * partialTicks - (entity.yo + (entity.getY() - entity.yo) * partialTicks);
 		double d2 = entity.prevChasingPosZ + (entity.chasingPosZ - entity.prevChasingPosZ) * partialTicks - (entity.zo + (entity.getZ() - entity.zo) * partialTicks);
@@ -67,7 +67,7 @@ public class IceologerModel extends HumanoidModel<IceologerEntity> {
 	}
 
 	@Override
-	public void setupAnim(IceologerEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(Iceologer entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 		this.arms.y = 3.0F;
 		this.arms.z = -1.0F;

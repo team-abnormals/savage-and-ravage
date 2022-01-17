@@ -2,7 +2,7 @@ package com.teamabnormals.savage_and_ravage.client.model;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
-import com.teamabnormals.savage_and_ravage.common.entity.GrieferEntity;
+import com.teamabnormals.savage_and_ravage.common.entity.monster.Griefer;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -19,7 +19,7 @@ import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
 
-public class GrieferModel extends HumanoidModel<GrieferEntity> {
+public class GrieferModel extends HumanoidModel<Griefer> {
 	public ModelPart bipedBodyLayerTwo;
 	public ModelPart nose;
 	public ModelPart tnt;
@@ -58,7 +58,7 @@ public class GrieferModel extends HumanoidModel<GrieferEntity> {
 	}
 
 	@Override
-	public void setupAnim(GrieferEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(Griefer entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		super.setupAnim(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 		boolean flag = entityIn.getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof ArmorItem;
 		this.bipedBodyLayerTwo.copyFrom(this.body);
@@ -79,7 +79,7 @@ public class GrieferModel extends HumanoidModel<GrieferEntity> {
 	}
 
 	@Override
-	public void prepareMobModel(GrieferEntity entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
+	public void prepareMobModel(Griefer entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
 		ItemStack itemstack = entityIn.getMainHandItem();
 		UseAnim useaction = itemstack.getUseAnimation();
 		this.rightArmPose = HumanoidModel.ArmPose.EMPTY;

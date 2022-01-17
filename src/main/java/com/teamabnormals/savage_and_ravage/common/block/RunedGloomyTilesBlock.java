@@ -1,7 +1,7 @@
 package com.teamabnormals.savage_and_ravage.common.block;
 
-import com.teamabnormals.savage_and_ravage.common.entity.IOwnableMob;
-import com.teamabnormals.savage_and_ravage.common.entity.RunePrisonEntity;
+import com.teamabnormals.savage_and_ravage.common.entity.OwnableMob;
+import com.teamabnormals.savage_and_ravage.common.entity.projectile.RunePrison;
 import com.teamabnormals.savage_and_ravage.core.registry.SRItems;
 import com.teamabnormals.savage_and_ravage.core.registry.SRSounds;
 import net.minecraft.core.BlockPos;
@@ -33,19 +33,18 @@ public class RunedGloomyTilesBlock extends ChiseledGloomyTilesBlock {
 				evokerFangs.moveTo(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 0.0F, 0.0F);
 				world.addFreshEntity(evokerFangs);
 			}
-			RunePrisonEntity runePrison = new RunePrisonEntity(world, pos, 25, true);
+			RunePrison runePrison = new RunePrison(world, pos, 25, true);
 			runePrison.moveTo(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 0.0F, 0.0F);
 			world.addFreshEntity(runePrison);
 		}
 	}
 
 	public static boolean shouldTrigger(Entity entity, boolean fooledByMask) {
-		if (EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(entity) && entity instanceof LivingEntity) {
-			LivingEntity livingEntity = (LivingEntity) entity;
+		if (EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(entity) && entity instanceof LivingEntity livingEntity) {
 			if (!fooledByMask || livingEntity.getItemBySlot(EquipmentSlot.HEAD).getItem() != SRItems.MASK_OF_DISHONESTY.get()) {
 				if (!EntityTypeTags.RAIDERS.contains(livingEntity.getType())) {
-					if (livingEntity instanceof IOwnableMob) {
-						LivingEntity owner = ((IOwnableMob) livingEntity).getOwner();
+					if (livingEntity instanceof OwnableMob) {
+						LivingEntity owner = ((OwnableMob) livingEntity).getOwner();
 						return owner == null || !EntityTypeTags.RAIDERS.contains(owner.getType());
 					} else return livingEntity.isAffectedByPotions();
 				}

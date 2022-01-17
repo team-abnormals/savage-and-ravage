@@ -1,6 +1,6 @@
 package com.teamabnormals.savage_and_ravage.common.entity.goals;
 
-import com.teamabnormals.savage_and_ravage.common.entity.IOwnableMob;
+import com.teamabnormals.savage_and_ravage.common.entity.OwnableMob;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -34,7 +34,7 @@ public class FollowMobOwnerGoal extends Goal {
 	}
 
 	public boolean canUse() {
-		LivingEntity livingentity = ((IOwnableMob) this.ownedMob).getOwner();
+		LivingEntity livingentity = ((OwnableMob) this.ownedMob).getOwner();
 		if (livingentity == null) {
 			return false;
 		} else if (livingentity.isSpectator()) {

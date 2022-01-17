@@ -1,7 +1,7 @@
 package com.teamabnormals.savage_and_ravage.common.item;
 
 import com.teamabnormals.savage_and_ravage.common.block.PottedCreeperSporesBlock;
-import com.teamabnormals.savage_and_ravage.common.entity.SporeCloudEntity;
+import com.teamabnormals.savage_and_ravage.common.entity.projectile.SporeCloud;
 import com.teamabnormals.savage_and_ravage.core.registry.SRBlocks;
 import com.teamabnormals.savage_and_ravage.core.registry.SRSounds;
 import com.teamabnormals.blueprint.core.util.item.filling.TargetedItemCategoryFiller;
@@ -37,7 +37,7 @@ public class CreeperSporesItem extends Item implements IPottableItem {
 		ItemStack stack = player.getItemInHand(hand);
 		world.playSound(player, player.getX(), player.getY(), player.getZ(), SRSounds.ENTITY_CREEPER_SPORES_THROW.get(), SoundSource.PLAYERS, 0.5F, 0.4F / (world.random.nextFloat() * 0.4F + 0.8F));
 		if (!world.isClientSide()) {
-			SporeCloudEntity spores = new SporeCloudEntity(world, player);
+			SporeCloud spores = new SporeCloud(world, player);
 			spores.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 0.99F, 1.0F);
 			spores.setCloudSize(getThrownSporeCloudSize(spores.level.getRandom()));
 			world.addFreshEntity(spores);
