@@ -1,6 +1,5 @@
 package com.teamabnormals.savage_and_ravage.core.other;
 
-import com.teamabnormals.savage_and_ravage.core.registry.SRSounds;
 import com.teamabnormals.blueprint.core.util.DataUtil;
 import com.teamabnormals.savage_and_ravage.common.entity.BurningBannerEntity;
 import com.teamabnormals.savage_and_ravage.common.entity.MischiefArrowEntity;
@@ -8,25 +7,27 @@ import com.teamabnormals.savage_and_ravage.common.entity.SporeCloudEntity;
 import com.teamabnormals.savage_and_ravage.common.entity.block.SporeBombEntity;
 import com.teamabnormals.savage_and_ravage.common.item.CreeperSporesItem;
 import com.teamabnormals.savage_and_ravage.core.SavageAndRavage;
+import com.teamabnormals.savage_and_ravage.core.other.tags.SRBlockTags;
 import com.teamabnormals.savage_and_ravage.core.registry.SRBlocks;
 import com.teamabnormals.savage_and_ravage.core.registry.SRItems;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.DispenserBlock;
-import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
+import com.teamabnormals.savage_and_ravage.core.registry.SRSounds;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.Position;
 import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
+import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.BannerItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.entity.EntitySelector;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Map;
@@ -90,7 +91,7 @@ public class SRCompat {
 
 	public static void registerNoteBlocks() {
 		DataUtil.registerNoteBlockInstrument(new DataUtil.CustomNoteBlockInstrument(SavageAndRavage.MOD_ID, source -> source.getBlockState().is(Blocks.TARGET), SRSounds.BLOCK_NOTE_BLOCK_HIT_MARKER.get()));
-		DataUtil.registerNoteBlockInstrument(new DataUtil.CustomNoteBlockInstrument(SavageAndRavage.MOD_ID, source -> source.getBlockState().is(SRTags.GLOOMY_TILES), SRSounds.BLOCK_NOTE_BLOCK_HARPSICHORD.get()));
-		DataUtil.registerNoteBlockInstrument(new DataUtil.CustomNoteBlockInstrument(SavageAndRavage.MOD_ID, source -> source.getBlockState().is(SRTags.BLAST_PROOF), SRSounds.BLOCK_NOTE_BLOCK_ORCHESTRAL_HIT.get()));
+		DataUtil.registerNoteBlockInstrument(new DataUtil.CustomNoteBlockInstrument(SavageAndRavage.MOD_ID, source -> source.getBlockState().is(SRBlockTags.HARPSICHORD_NOTE_BLOCKS), SRSounds.BLOCK_NOTE_BLOCK_HARPSICHORD.get()));
+		DataUtil.registerNoteBlockInstrument(new DataUtil.CustomNoteBlockInstrument(SavageAndRavage.MOD_ID, source -> source.getBlockState().is(SRBlockTags.ORCHESTRAL_NOTE_BLOCKS), SRSounds.BLOCK_NOTE_BLOCK_ORCHESTRAL_HIT.get()));
 	}
 }

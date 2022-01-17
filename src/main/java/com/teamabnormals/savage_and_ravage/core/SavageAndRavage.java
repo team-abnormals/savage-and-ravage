@@ -1,28 +1,13 @@
 package com.teamabnormals.savage_and_ravage.core;
 
-import com.teamabnormals.savage_and_ravage.client.model.CreepieModel;
-import com.teamabnormals.savage_and_ravage.client.model.ExecutionerModel;
-import com.teamabnormals.savage_and_ravage.client.model.GrieferArmorModel;
-import com.teamabnormals.savage_and_ravage.client.model.GrieferModel;
-import com.teamabnormals.savage_and_ravage.client.model.IceologerModel;
-import com.teamabnormals.savage_and_ravage.client.model.MaskOfDishonestyModel;
-import com.teamabnormals.savage_and_ravage.client.model.RunePrisonModel;
-import com.teamabnormals.savage_and_ravage.client.model.SkeletonVillagerModel;
-import com.teamabnormals.savage_and_ravage.client.model.TricksterModel;
-import com.teamabnormals.savage_and_ravage.client.model.VillagerArmorModel;
-import com.teamabnormals.savage_and_ravage.client.render.BurningBannerRenderer;
-import com.teamabnormals.savage_and_ravage.client.render.CreepieRenderer;
-import com.teamabnormals.savage_and_ravage.client.render.ExecutionerRenderer;
-import com.teamabnormals.savage_and_ravage.client.render.GrieferRenderer;
-import com.teamabnormals.savage_and_ravage.client.render.IceChunkRenderer;
-import com.teamabnormals.savage_and_ravage.client.render.IceologerRenderer;
-import com.teamabnormals.savage_and_ravage.client.render.MischiefArrowRenderer;
-import com.teamabnormals.savage_and_ravage.client.render.NoModelRenderer;
-import com.teamabnormals.savage_and_ravage.client.render.RunePrisonRenderer;
-import com.teamabnormals.savage_and_ravage.client.render.SkeletonVillagerRenderer;
-import com.teamabnormals.savage_and_ravage.client.render.SporeBombRenderer;
-import com.teamabnormals.savage_and_ravage.client.render.TricksterRenderer;
+import com.teamabnormals.blueprint.core.util.DataUtil;
+import com.teamabnormals.blueprint.core.util.registry.RegistryHelper;
+import com.teamabnormals.savage_and_ravage.client.model.*;
+import com.teamabnormals.savage_and_ravage.client.render.*;
 import com.teamabnormals.savage_and_ravage.client.render.layer.TotemShieldLayer;
+import com.teamabnormals.savage_and_ravage.core.data.server.tags.SRBlockTagsProvider;
+import com.teamabnormals.savage_and_ravage.core.data.server.tags.SREntityTypeTagsProvider;
+import com.teamabnormals.savage_and_ravage.core.data.server.tags.SRItemTagsProvider;
 import com.teamabnormals.savage_and_ravage.core.other.SRCompat;
 import com.teamabnormals.savage_and_ravage.core.other.SRDataProcessors;
 import com.teamabnormals.savage_and_ravage.core.other.SRDataSerializers;
@@ -33,12 +18,11 @@ import com.teamabnormals.savage_and_ravage.core.registry.SREffects;
 import com.teamabnormals.savage_and_ravage.core.registry.SREntities;
 import com.teamabnormals.savage_and_ravage.core.registry.SRItems;
 import com.teamabnormals.savage_and_ravage.core.registry.SRParticles;
-import com.teamabnormals.blueprint.core.util.DataUtil;
-import com.teamabnormals.blueprint.core.util.registry.RegistryHelper;
 import net.minecraft.client.model.IllagerModel;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EvokerRenderer;
+import net.minecraft.data.DataGenerator;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Evoker;
 import net.minecraftforge.api.distmarker.Dist;
@@ -47,6 +31,7 @@ import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ForgeModelBakery;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -55,6 +40,7 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 
 @Mod(SavageAndRavage.MOD_ID)
 public class SavageAndRavage {
@@ -78,6 +64,7 @@ public class SavageAndRavage {
 
 		bus.addListener(this::commonSetup);
 		bus.addListener(this::clientSetup);
+		bus.addListener(this::dataSetup);
 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 			bus.addListener(this::registerLayers);
@@ -102,6 +89,18 @@ public class SavageAndRavage {
 
 	private void clientSetup(FMLClientSetupEvent event) {
 		event.enqueueWork(SRItems::registerItemProperties);
+	}
+
+	private void dataSetup(GatherDataEvent event) {
+		DataGenerator generator = event.getGenerator();
+		ExistingFileHelper fileHelper = event.getExistingFileHelper();
+
+		if (event.includeServer()) {
+			SRBlockTagsProvider blockTagsProvider = new SRBlockTagsProvider(generator, fileHelper);
+			generator.addProvider(blockTagsProvider);
+			generator.addProvider(new SRItemTagsProvider(generator, blockTagsProvider, fileHelper));
+			generator.addProvider(new SREntityTypeTagsProvider(generator, fileHelper));
+		}
 	}
 
 	@OnlyIn(Dist.CLIENT)

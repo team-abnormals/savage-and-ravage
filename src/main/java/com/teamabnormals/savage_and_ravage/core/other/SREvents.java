@@ -15,6 +15,8 @@ import com.teamabnormals.savage_and_ravage.common.entity.goals.ImprovedCrossbowG
 import com.teamabnormals.savage_and_ravage.common.item.IPottableItem;
 import com.teamabnormals.savage_and_ravage.core.SRConfig;
 import com.teamabnormals.savage_and_ravage.core.SavageAndRavage;
+import com.teamabnormals.savage_and_ravage.core.other.tags.SREntityTypeTags;
+import com.teamabnormals.savage_and_ravage.core.other.tags.SRItemTags;
 import com.teamabnormals.savage_and_ravage.core.registry.SRAttributes;
 import com.teamabnormals.savage_and_ravage.core.registry.SRBlocks;
 import com.teamabnormals.savage_and_ravage.core.registry.SREffects;
@@ -260,11 +262,11 @@ public class SREvents {
 	}
 
 	public static boolean entitySafeFromExplosion(Entity entity, boolean creeperTypeNoGriefing) {
-		if (creeperTypeNoGriefing && entity.getType().is(SRTags.CREEPER_PROOF_TYPES))
+		if (creeperTypeNoGriefing && entity.getType().is(SREntityTypeTags.CREEPER_IMMUNE))
 			return true;
 		else if (entity instanceof ItemEntity) {
 			ItemStack stack = ((ItemEntity) entity).getItem();
-			return creeperTypeNoGriefing || stack.is(SRTags.BLAST_PROOF_ITEMS);
+			return creeperTypeNoGriefing || stack.is(SRItemTags.EXPLOSION_IMMUNE);
 		}
 		return false;
 	}

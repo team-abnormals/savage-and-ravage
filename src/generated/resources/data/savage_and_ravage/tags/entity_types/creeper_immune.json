@@ -3,8 +3,9 @@
   "values": [
     "minecraft:painting",
     "minecraft:item_frame",
-    "minecraft:armor_stand",
+    "minecraft:glow_item_frame",
     "minecraft:falling_block",
-    "minecraft:leash_knot"
+    "minecraft:leash_knot",
+    "minecraft:armor_stand"
   ]
 }

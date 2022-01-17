@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "savage_and_ravage:blast_proof_plates",
+    "savage_and_ravage:blast_proof_stairs",
+    "savage_and_ravage:blast_proof_slab",
+    "savage_and_ravage:blast_proof_vertical_slab"
+  ]
+}
