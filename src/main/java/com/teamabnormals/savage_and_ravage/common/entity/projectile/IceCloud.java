@@ -33,8 +33,8 @@ public class IceCloud extends AbstractHurtingProjectile {
 		super.tick();
 
 		for (Entity entity : this.level.getEntities(this.getOwner(), this.getBoundingBox().expandTowards(2, 2, 2), this::canHitEntity)) {
-			if (entity instanceof LivingEntity && !(entity instanceof Iceologer)) {
-				((LivingEntity) entity).addEffect(new MobEffectInstance(SRMobEffects.FROSTBITE.get(), 80, 0, false, false, true));
+			if (entity instanceof LivingEntity && entity.canFreeze()) {
+				entity.setTicksFrozen(300);
 			}
 		}
 

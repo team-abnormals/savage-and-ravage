@@ -497,8 +497,6 @@ public class SREvents {
 		LivingEntity entity = event.getEntityLiving();
 		Level world = entity.level;
 		IDataManager data = (IDataManager) entity;
-		if (entity.getRemainingFireTicks() > 0 && entity.getEffect(SRMobEffects.FROSTBITE.get()) != null)
-			entity.removeEffect(SRMobEffects.FROSTBITE.get());
 		if (!world.isClientSide()) {
 			CompoundTag persistentData = entity.getPersistentData();
 			if (persistentData.getBoolean(NO_KNOCKBACK_KEY))

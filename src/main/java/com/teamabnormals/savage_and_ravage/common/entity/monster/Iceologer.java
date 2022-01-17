@@ -42,7 +42,6 @@ import java.util.UUID;
  * @author Ocelot
  */
 public class Iceologer extends SpellcasterIllager {
-
 	private UUID iceChunkEntityUUID;
 	private int iceChunkEntity;
 

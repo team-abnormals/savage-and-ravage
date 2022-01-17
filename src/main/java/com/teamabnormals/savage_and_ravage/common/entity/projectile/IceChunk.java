@@ -1,7 +1,6 @@
 package com.teamabnormals.savage_and_ravage.common.entity.projectile;
 
 import com.teamabnormals.savage_and_ravage.core.registry.SREntityTypes;
-import com.teamabnormals.savage_and_ravage.core.registry.SRMobEffects;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -9,7 +8,6 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -66,8 +64,8 @@ public class IceChunk extends Entity implements IEntityAdditionalSpawnData {
 	private void onImpactEntity(EntityHitResult result) {
 		Entity entity = result.getEntity();
 		entity.hurt(DamageSource.indirectMagic(this, this.getCaster()), 8.0f);
-		if (entity instanceof LivingEntity) {
-			((LivingEntity) entity).addEffect(new MobEffectInstance(SRMobEffects.FROSTBITE.get(), 160, 0, false, false, true));
+		if (entity instanceof LivingEntity && entity.canFreeze()) {
+			entity.setTicksFrozen(600);
 		}
 	}
 
