@@ -1,7 +1,7 @@
 package com.teamabnormals.savage_and_ravage.common.item;
 
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.entity.EquipmentSlot;
 
 public enum BlastProofArmorType implements StringRepresentable {
 	HEAD("head", EquipmentSlot.HEAD, 25),

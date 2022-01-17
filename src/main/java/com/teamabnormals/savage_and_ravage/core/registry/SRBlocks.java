@@ -1,12 +1,12 @@
 package com.teamabnormals.savage_and_ravage.core.registry;
 
+import com.teamabnormals.blueprint.common.block.VerticalSlabBlock;
+import com.teamabnormals.blueprint.core.util.registry.BlockSubRegistryHelper;
 import com.teamabnormals.savage_and_ravage.common.block.ChiseledGloomyTilesBlock;
 import com.teamabnormals.savage_and_ravage.common.block.PottedCreeperSporesBlock;
 import com.teamabnormals.savage_and_ravage.common.block.RunedGloomyTilesBlock;
 import com.teamabnormals.savage_and_ravage.common.block.SporeBombBlock;
 import com.teamabnormals.savage_and_ravage.core.SavageAndRavage;
-import com.teamabnormals.blueprint.common.block.VerticalSlabBlock;
-import com.teamabnormals.blueprint.core.util.registry.BlockSubRegistryHelper;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;

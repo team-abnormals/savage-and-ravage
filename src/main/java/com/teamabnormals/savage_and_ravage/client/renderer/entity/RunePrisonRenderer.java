@@ -1,12 +1,12 @@
-package com.teamabnormals.savage_and_ravage.client.renderer;
+package com.teamabnormals.savage_and_ravage.client.renderer.entity;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.teamabnormals.blueprint.client.BlueprintRenderTypes;
 import com.teamabnormals.savage_and_ravage.client.model.RunePrisonModel;
 import com.teamabnormals.savage_and_ravage.common.entity.projectile.RunePrison;
 import com.teamabnormals.savage_and_ravage.core.SavageAndRavage;
 import com.teamabnormals.savage_and_ravage.core.other.SRModelLayers;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.teamabnormals.blueprint.client.BlueprintRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;

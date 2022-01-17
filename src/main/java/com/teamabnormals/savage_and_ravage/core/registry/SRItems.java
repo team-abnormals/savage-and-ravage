@@ -1,16 +1,10 @@
 package com.teamabnormals.savage_and_ravage.core.registry;
 
-import com.teamabnormals.savage_and_ravage.common.item.CleaverOfBeheadingItem;
-import com.teamabnormals.savage_and_ravage.common.item.ConchOfConjuringItem;
-import com.teamabnormals.savage_and_ravage.common.item.CreeperSporesItem;
-import com.teamabnormals.savage_and_ravage.common.item.GrieferArmorItem;
-import com.teamabnormals.savage_and_ravage.common.item.MaskOfDishonestyItem;
-import com.teamabnormals.savage_and_ravage.common.item.MischiefArrowItem;
-import com.teamabnormals.savage_and_ravage.common.item.WandOfFreezingItem;
-import com.teamabnormals.savage_and_ravage.core.SavageAndRavage;
-import com.teamabnormals.savage_and_ravage.core.other.SRTiers;
 import com.teamabnormals.blueprint.common.item.BlueprintSpawnEggItem;
 import com.teamabnormals.blueprint.core.util.registry.ItemSubRegistryHelper;
+import com.teamabnormals.savage_and_ravage.common.item.*;
+import com.teamabnormals.savage_and_ravage.core.SavageAndRavage;
+import com.teamabnormals.savage_and_ravage.core.other.SRTiers;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;

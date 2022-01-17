@@ -1,4 +1,4 @@
-package com.teamabnormals.savage_and_ravage.client.renderer;
+package com.teamabnormals.savage_and_ravage.client.renderer.entity;
 
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;

@@ -1,17 +1,17 @@
-package com.teamabnormals.savage_and_ravage.client.renderer;
+package com.teamabnormals.savage_and_ravage.client.renderer.entity;
 
-import com.teamabnormals.savage_and_ravage.common.entity.projectile.IceChunk;
-import com.teamabnormals.savage_and_ravage.core.SavageAndRavage;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.teamabnormals.savage_and_ravage.common.entity.projectile.IceChunk;
+import com.teamabnormals.savage_and_ravage.core.SavageAndRavage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.model.data.EmptyModelData;

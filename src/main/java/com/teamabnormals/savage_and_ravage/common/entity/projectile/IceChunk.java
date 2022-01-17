@@ -1,7 +1,7 @@
 package com.teamabnormals.savage_and_ravage.common.entity.projectile;
 
-import com.teamabnormals.savage_and_ravage.core.registry.SRMobEffects;
 import com.teamabnormals.savage_and_ravage.core.registry.SREntityTypes;
+import com.teamabnormals.savage_and_ravage.core.registry.SRMobEffects;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;

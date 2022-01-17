@@ -2,8 +2,8 @@ package com.teamabnormals.savage_and_ravage.client.model;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
-import com.teamabnormals.savage_and_ravage.common.entity.monster.SkeletonVillager;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.teamabnormals.savage_and_ravage.common.entity.monster.SkeletonVillager;
 import net.minecraft.client.model.AnimationUtils;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;

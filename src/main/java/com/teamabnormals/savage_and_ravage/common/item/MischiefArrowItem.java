@@ -1,7 +1,7 @@
 package com.teamabnormals.savage_and_ravage.common.item;
 
-import com.teamabnormals.savage_and_ravage.common.entity.projectile.MischiefArrow;
 import com.teamabnormals.blueprint.core.util.item.filling.TargetedItemCategoryFiller;
+import com.teamabnormals.savage_and_ravage.common.entity.projectile.MischiefArrow;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;

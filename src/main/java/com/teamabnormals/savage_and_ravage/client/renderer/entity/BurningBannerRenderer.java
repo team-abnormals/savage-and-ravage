@@ -1,9 +1,9 @@
-package com.teamabnormals.savage_and_ravage.client.renderer;
+package com.teamabnormals.savage_and_ravage.client.renderer.entity;
 
-import com.teamabnormals.savage_and_ravage.common.entity.decoration.BurningBanner;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix4f;
+import com.teamabnormals.savage_and_ravage.common.entity.decoration.BurningBanner;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;

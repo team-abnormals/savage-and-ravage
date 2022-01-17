@@ -1,4 +1,4 @@
-package com.teamabnormals.savage_and_ravage.client.renderer;
+package com.teamabnormals.savage_and_ravage.client.renderer.entity;
 
 import com.teamabnormals.savage_and_ravage.common.entity.projectile.MischiefArrow;
 import com.teamabnormals.savage_and_ravage.core.SavageAndRavage;

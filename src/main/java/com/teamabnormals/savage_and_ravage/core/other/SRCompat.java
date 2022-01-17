@@ -2,9 +2,9 @@ package com.teamabnormals.savage_and_ravage.core.other;
 
 import com.teamabnormals.blueprint.core.util.DataUtil;
 import com.teamabnormals.savage_and_ravage.common.entity.decoration.BurningBanner;
+import com.teamabnormals.savage_and_ravage.common.entity.item.SporeBomb;
 import com.teamabnormals.savage_and_ravage.common.entity.projectile.MischiefArrow;
 import com.teamabnormals.savage_and_ravage.common.entity.projectile.SporeCloud;
-import com.teamabnormals.savage_and_ravage.common.entity.item.SporeBomb;
 import com.teamabnormals.savage_and_ravage.common.item.CreeperSporesItem;
 import com.teamabnormals.savage_and_ravage.core.SavageAndRavage;
 import com.teamabnormals.savage_and_ravage.core.other.tags.SRBlockTags;

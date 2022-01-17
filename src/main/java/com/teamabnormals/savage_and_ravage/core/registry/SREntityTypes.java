@@ -1,21 +1,21 @@
 package com.teamabnormals.savage_and_ravage.core.registry;
 
+import com.teamabnormals.blueprint.core.util.registry.EntitySubRegistryHelper;
 import com.teamabnormals.savage_and_ravage.common.entity.decoration.BurningBanner;
-import com.teamabnormals.savage_and_ravage.common.entity.projectile.ConfusionBolt;
+import com.teamabnormals.savage_and_ravage.common.entity.item.SporeBomb;
 import com.teamabnormals.savage_and_ravage.common.entity.monster.Creepie;
 import com.teamabnormals.savage_and_ravage.common.entity.monster.Executioner;
 import com.teamabnormals.savage_and_ravage.common.entity.monster.Griefer;
+import com.teamabnormals.savage_and_ravage.common.entity.monster.Iceologer;
+import com.teamabnormals.savage_and_ravage.common.entity.monster.SkeletonVillager;
+import com.teamabnormals.savage_and_ravage.common.entity.monster.Trickster;
+import com.teamabnormals.savage_and_ravage.common.entity.projectile.ConfusionBolt;
 import com.teamabnormals.savage_and_ravage.common.entity.projectile.IceChunk;
 import com.teamabnormals.savage_and_ravage.common.entity.projectile.IceCloud;
-import com.teamabnormals.savage_and_ravage.common.entity.monster.Iceologer;
 import com.teamabnormals.savage_and_ravage.common.entity.projectile.MischiefArrow;
 import com.teamabnormals.savage_and_ravage.common.entity.projectile.RunePrison;
-import com.teamabnormals.savage_and_ravage.common.entity.monster.SkeletonVillager;
 import com.teamabnormals.savage_and_ravage.common.entity.projectile.SporeCloud;
-import com.teamabnormals.savage_and_ravage.common.entity.monster.Trickster;
-import com.teamabnormals.savage_and_ravage.common.entity.item.SporeBomb;
 import com.teamabnormals.savage_and_ravage.core.SavageAndRavage;
-import com.teamabnormals.blueprint.core.util.registry.EntitySubRegistryHelper;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.SpawnPlacements;

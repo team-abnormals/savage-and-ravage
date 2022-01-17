@@ -1,10 +1,10 @@
 package com.teamabnormals.savage_and_ravage.common.item;
 
+import com.teamabnormals.blueprint.core.util.item.filling.TargetedItemCategoryFiller;
 import com.teamabnormals.savage_and_ravage.common.block.PottedCreeperSporesBlock;
 import com.teamabnormals.savage_and_ravage.common.entity.projectile.SporeCloud;
 import com.teamabnormals.savage_and_ravage.core.registry.SRBlocks;
 import com.teamabnormals.savage_and_ravage.core.registry.SRSounds;
-import com.teamabnormals.blueprint.core.util.item.filling.TargetedItemCategoryFiller;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.sounds.SoundSource;
@@ -21,7 +21,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Random;
 
-public class CreeperSporesItem extends Item implements IPottableItem {
+public class CreeperSporesItem extends Item implements PottableItem {
 	private static final TargetedItemCategoryFiller FILLER = new TargetedItemCategoryFiller(() -> Items.EGG);
 
 	public CreeperSporesItem(Item.Properties properties) {

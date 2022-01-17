@@ -1,7 +1,7 @@
 package com.teamabnormals.savage_and_ravage.core.registry;
 
-import com.teamabnormals.savage_and_ravage.core.SavageAndRavage;
 import com.teamabnormals.blueprint.common.advancement.EmptyTrigger;
+import com.teamabnormals.savage_and_ravage.core.SavageAndRavage;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.common.Mod;

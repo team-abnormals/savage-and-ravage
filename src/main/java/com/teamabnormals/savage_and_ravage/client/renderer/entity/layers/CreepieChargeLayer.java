@@ -1,10 +1,10 @@
-package com.teamabnormals.savage_and_ravage.client.renderer.layers;
+package com.teamabnormals.savage_and_ravage.client.renderer.entity.layers;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.teamabnormals.savage_and_ravage.client.model.CreepieModel;
 import com.teamabnormals.savage_and_ravage.common.entity.monster.Creepie;
 import com.teamabnormals.savage_and_ravage.core.SRConfig;
 import com.teamabnormals.savage_and_ravage.core.other.SRModelLayers;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.MultiBufferSource;

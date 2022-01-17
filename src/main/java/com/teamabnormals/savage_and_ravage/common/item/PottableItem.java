@@ -1,7 +1,7 @@
 package com.teamabnormals.savage_and_ravage.common.item;
 
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nullable;
 
@@ -10,7 +10,7 @@ import javax.annotation.Nullable;
  *
  * @author Ocelot
  */
-public interface IPottableItem {
+public interface PottableItem {
 
 	/**
 	 * @param direction The direction that the pot should face, ignore if not directional

@@ -1,31 +1,31 @@
 package com.teamabnormals.savage_and_ravage.core.other;
 
+import com.teamabnormals.blueprint.common.world.storage.tracking.IDataManager;
+import com.teamabnormals.blueprint.common.world.storage.tracking.TrackedDataManager;
+import com.teamabnormals.blueprint.core.util.NetworkUtil;
+import com.teamabnormals.savage_and_ravage.common.entity.OwnableMob;
 import com.teamabnormals.savage_and_ravage.common.entity.decoration.BurningBanner;
+import com.teamabnormals.savage_and_ravage.common.entity.goals.CelebrateTargetBlockHitGoal;
+import com.teamabnormals.savage_and_ravage.common.entity.goals.ImprovedCrossbowGoal;
+import com.teamabnormals.savage_and_ravage.common.entity.item.SporeBomb;
 import com.teamabnormals.savage_and_ravage.common.entity.monster.Creepie;
 import com.teamabnormals.savage_and_ravage.common.entity.monster.Executioner;
 import com.teamabnormals.savage_and_ravage.common.entity.monster.Griefer;
-import com.teamabnormals.savage_and_ravage.common.entity.OwnableMob;
 import com.teamabnormals.savage_and_ravage.common.entity.monster.Iceologer;
 import com.teamabnormals.savage_and_ravage.common.entity.monster.SkeletonVillager;
-import com.teamabnormals.savage_and_ravage.common.entity.projectile.SporeCloud;
 import com.teamabnormals.savage_and_ravage.common.entity.monster.Trickster;
-import com.teamabnormals.savage_and_ravage.common.entity.item.SporeBomb;
-import com.teamabnormals.savage_and_ravage.common.entity.goals.CelebrateTargetBlockHitGoal;
-import com.teamabnormals.savage_and_ravage.common.entity.goals.ImprovedCrossbowGoal;
-import com.teamabnormals.savage_and_ravage.common.item.IPottableItem;
+import com.teamabnormals.savage_and_ravage.common.entity.projectile.SporeCloud;
+import com.teamabnormals.savage_and_ravage.common.item.PottableItem;
 import com.teamabnormals.savage_and_ravage.core.SRConfig;
 import com.teamabnormals.savage_and_ravage.core.SavageAndRavage;
 import com.teamabnormals.savage_and_ravage.core.other.tags.SREntityTypeTags;
 import com.teamabnormals.savage_and_ravage.core.other.tags.SRItemTags;
 import com.teamabnormals.savage_and_ravage.core.registry.SRAttributes;
 import com.teamabnormals.savage_and_ravage.core.registry.SRBlocks;
-import com.teamabnormals.savage_and_ravage.core.registry.SRMobEffects;
 import com.teamabnormals.savage_and_ravage.core.registry.SREntityTypes;
 import com.teamabnormals.savage_and_ravage.core.registry.SRItems;
+import com.teamabnormals.savage_and_ravage.core.registry.SRMobEffects;
 import com.teamabnormals.savage_and_ravage.core.registry.SRParticles;
-import com.teamabnormals.blueprint.common.world.storage.tracking.IDataManager;
-import com.teamabnormals.blueprint.common.world.storage.tracking.TrackedDataManager;
-import com.teamabnormals.blueprint.core.util.NetworkUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.BlockParticleOption;
@@ -463,8 +463,8 @@ public class SREvents {
 		BlockPos pos = event.getPos();
 		Level world = event.getWorld();
 
-		if (stack.getItem() instanceof IPottableItem && world.getBlockState(pos).getBlock() == Blocks.FLOWER_POT) {
-			BlockState pottedState = ((IPottableItem) stack.getItem()).getPottedState(player.getDirection().getOpposite());
+		if (stack.getItem() instanceof PottableItem && world.getBlockState(pos).getBlock() == Blocks.FLOWER_POT) {
+			BlockState pottedState = ((PottableItem) stack.getItem()).getPottedState(player.getDirection().getOpposite());
 			if (pottedState == null)
 				return;
 			world.setBlockAndUpdate(pos, pottedState);

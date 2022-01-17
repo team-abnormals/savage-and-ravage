@@ -1,7 +1,7 @@
 package com.teamabnormals.savage_and_ravage.common.block;
 
-import com.teamabnormals.savage_and_ravage.common.entity.item.SporeBomb;
 import com.teamabnormals.blueprint.core.util.item.filling.TargetedItemCategoryFiller;
+import com.teamabnormals.savage_and_ravage.common.entity.item.SporeBomb;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;

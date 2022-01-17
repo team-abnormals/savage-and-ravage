@@ -1,11 +1,11 @@
 package com.teamabnormals.savage_and_ravage.common.entity.goals;
 
 import com.teamabnormals.savage_and_ravage.common.entity.OwnableMob;
-import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.target.TargetGoal;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 
 import java.util.EnumSet;
 

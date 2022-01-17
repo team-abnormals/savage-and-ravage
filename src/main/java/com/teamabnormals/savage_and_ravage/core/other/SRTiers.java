@@ -1,9 +1,9 @@
 package com.teamabnormals.savage_and_ravage.core.other;
 
-import com.teamabnormals.savage_and_ravage.core.SavageAndRavage;
-import com.teamabnormals.savage_and_ravage.core.registry.SRItems;
 import com.teamabnormals.blueprint.core.api.BlueprintArmorMaterial;
 import com.teamabnormals.blueprint.core.api.BlueprintItemTier;
+import com.teamabnormals.savage_and_ravage.core.SavageAndRavage;
+import com.teamabnormals.savage_and_ravage.core.registry.SRItems;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.Items;

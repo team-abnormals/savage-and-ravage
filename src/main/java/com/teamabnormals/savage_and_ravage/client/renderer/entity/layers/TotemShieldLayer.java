@@ -1,11 +1,11 @@
-package com.teamabnormals.savage_and_ravage.client.renderer.layers;
+package com.teamabnormals.savage_and_ravage.client.renderer.entity.layers;
 
-import com.teamabnormals.savage_and_ravage.core.SRConfig;
-import com.teamabnormals.savage_and_ravage.core.other.SRDataProcessors;
-import com.teamabnormals.savage_and_ravage.core.other.SRModelLayers;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.teamabnormals.blueprint.common.world.storage.tracking.TrackedDataManager;
+import com.teamabnormals.savage_and_ravage.core.SRConfig;
+import com.teamabnormals.savage_and_ravage.core.other.SRDataProcessors;
+import com.teamabnormals.savage_and_ravage.core.other.SRModelLayers;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.IllagerModel;
 import net.minecraft.client.model.geom.EntityModelSet;
