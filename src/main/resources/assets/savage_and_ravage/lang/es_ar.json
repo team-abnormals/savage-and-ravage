@@ -48,7 +48,6 @@
   "entity.savage_and_ravage.ice_cloud": "Nube de hielo",
   "entity.savage_and_ravage.trickster": "Bribón",
 
-  "effect.savage_and_ravage.frostbite": "Congelación",
   "effect.savage_and_ravage.weight": "Peso",
 
   "attribute.name.generic.explosive_damage_reduction": "Reducción de daño explosivo",
@@ -58,7 +57,7 @@
   "advancements.savage_and_ravage.adventure.griefer_armor.title": "Dinamita con un rayo láser",
   "advancements.savage_and_ravage.adventure.griefer_armor.description": "Equipate una armadura completa de griefer",
   "advancements.savage_and_ravage.adventure.relic_collector.title": "Coleccionista de reliquias",
-  "advancements.savage_and_ravage.adventure.relic_collector.description": "Conseguí un tótem de inmortalidad, una cuchilla de decapitación, una varita de congelación, una máscara de deshonestidad y una caracola de conjuración",
+  "advancements.savage_and_ravage.adventure.relic_collector.description": "Conseguí todas las reliquias mágicas de los maldeanos",
   "advancements.savage_and_ravage.adventure.mask_of_dishonesty.title": "Ahora no me ves",
   "advancements.savage_and_ravage.adventure.mask_of_dishonesty.description": "Conseguí una máscara de deshonestidad matando a un bribón",
 
