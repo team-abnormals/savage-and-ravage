@@ -1,4 +1,4 @@
-package com.teamabnormals.savage_and_ravage.common.entity.goals;
+package com.teamabnormals.savage_and_ravage.common.entity.ai.goal;
 
 import com.mojang.math.Vector3f;
 import com.teamabnormals.blueprint.common.world.storage.tracking.TrackedDataManager;

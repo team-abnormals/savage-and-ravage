@@ -1,7 +1,7 @@
 package com.teamabnormals.savage_and_ravage.common.entity.monster;
 
 import com.google.common.collect.Maps;
-import com.teamabnormals.savage_and_ravage.common.entity.goals.ImprovedCrossbowGoal;
+import com.teamabnormals.savage_and_ravage.common.entity.ai.goal.ImprovedCrossbowGoal;
 import com.teamabnormals.savage_and_ravage.core.registry.SRItems;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;

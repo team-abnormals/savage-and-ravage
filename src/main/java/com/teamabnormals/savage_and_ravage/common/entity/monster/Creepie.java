@@ -1,10 +1,10 @@
 package com.teamabnormals.savage_and_ravage.common.entity.monster;
 
 import com.teamabnormals.savage_and_ravage.common.entity.OwnableMob;
-import com.teamabnormals.savage_and_ravage.common.entity.goals.CreepieSwellGoal;
-import com.teamabnormals.savage_and_ravage.common.entity.goals.FollowMobOwnerGoal;
-import com.teamabnormals.savage_and_ravage.common.entity.goals.MobOwnerHurtByTargetGoal;
-import com.teamabnormals.savage_and_ravage.common.entity.goals.MobOwnerHurtTargetGoal;
+import com.teamabnormals.savage_and_ravage.common.entity.ai.goal.CreepieSwellGoal;
+import com.teamabnormals.savage_and_ravage.common.entity.ai.goal.FollowMobOwnerGoal;
+import com.teamabnormals.savage_and_ravage.common.entity.ai.goal.MobOwnerHurtByTargetGoal;
+import com.teamabnormals.savage_and_ravage.common.entity.ai.goal.MobOwnerHurtTargetGoal;
 import com.teamabnormals.savage_and_ravage.core.SRConfig;
 import com.teamabnormals.savage_and_ravage.core.registry.SRParticles;
 import com.teamabnormals.savage_and_ravage.core.registry.SRSounds;

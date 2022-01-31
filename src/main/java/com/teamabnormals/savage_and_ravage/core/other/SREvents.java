@@ -5,8 +5,8 @@ import com.teamabnormals.blueprint.common.world.storage.tracking.TrackedDataMana
 import com.teamabnormals.blueprint.core.util.NetworkUtil;
 import com.teamabnormals.savage_and_ravage.common.entity.OwnableMob;
 import com.teamabnormals.savage_and_ravage.common.entity.decoration.BurningBanner;
-import com.teamabnormals.savage_and_ravage.common.entity.goals.CelebrateTargetBlockHitGoal;
-import com.teamabnormals.savage_and_ravage.common.entity.goals.ImprovedCrossbowGoal;
+import com.teamabnormals.savage_and_ravage.common.entity.ai.goal.CelebrateTargetBlockHitGoal;
+import com.teamabnormals.savage_and_ravage.common.entity.ai.goal.ImprovedCrossbowGoal;
 import com.teamabnormals.savage_and_ravage.common.entity.item.SporeBomb;
 import com.teamabnormals.savage_and_ravage.common.entity.monster.Creepie;
 import com.teamabnormals.savage_and_ravage.common.entity.monster.Executioner;

@@ -1,4 +1,4 @@
-package com.teamabnormals.savage_and_ravage.common.entity.goals;
+package com.teamabnormals.savage_and_ravage.common.entity.ai.goal;
 
 import com.teamabnormals.blueprint.common.world.storage.tracking.TrackedDataManager;
 import com.teamabnormals.savage_and_ravage.core.other.SRDataProcessors;
