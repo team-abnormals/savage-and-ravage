@@ -5,6 +5,7 @@ import com.teamabnormals.blueprint.core.util.registry.RegistryHelper;
 import com.teamabnormals.savage_and_ravage.client.model.*;
 import com.teamabnormals.savage_and_ravage.client.renderer.entity.*;
 import com.teamabnormals.savage_and_ravage.client.renderer.entity.layers.TotemShieldLayer;
+import com.teamabnormals.savage_and_ravage.core.data.server.modifiers.SRAdvancementModifiersProvider;
 import com.teamabnormals.savage_and_ravage.core.data.server.tags.SRBlockTagsProvider;
 import com.teamabnormals.savage_and_ravage.core.data.server.tags.SREntityTypeTagsProvider;
 import com.teamabnormals.savage_and_ravage.core.data.server.tags.SRItemTagsProvider;
@@ -50,6 +51,7 @@ public class SavageAndRavage {
 	public SavageAndRavage() {
 		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 		ModLoadingContext context = ModLoadingContext.get();
+		MinecraftForge.EVENT_BUS.register(this);
 
 		SRDataProcessors.registerTrackedData();
 
@@ -60,7 +62,6 @@ public class SavageAndRavage {
 		SRFeatures.FEATURES.register(bus);
 		SRAttributes.ATTRIBUTES.register(bus);
 		SRDataSerializers.SERIALIZERS.register(bus);
-		MinecraftForge.EVENT_BUS.register(this);
 
 		bus.addListener(this::commonSetup);
 		bus.addListener(this::clientSetup);
@@ -100,6 +101,7 @@ public class SavageAndRavage {
 			generator.addProvider(blockTagsProvider);
 			generator.addProvider(new SRItemTagsProvider(generator, blockTagsProvider, fileHelper));
 			generator.addProvider(new SREntityTypeTagsProvider(generator, fileHelper));
+			generator.addProvider(SRAdvancementModifiersProvider.createDataProvider(generator));
 		}
 	}
 

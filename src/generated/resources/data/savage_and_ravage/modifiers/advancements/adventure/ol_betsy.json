@@ -1,0 +1,16 @@
+{
+  "advancement": {
+    "type": "names",
+    "config": [
+      "minecraft:adventure/ol_betsy"
+    ],
+    "conditions": []
+  },
+  "priority": "normal",
+  "modifiers": [
+    {
+      "type": "parent",
+      "config": "minecraft:adventure/shoot_arrow"
+    }
+  ]
+}
