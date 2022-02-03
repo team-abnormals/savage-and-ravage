@@ -42,6 +42,6 @@ public class SRItems {
 
 	public static void registerItemProperties() {
 		ItemProperties.register(Items.CROSSBOW, new ResourceLocation(SavageAndRavage.MOD_ID, "mischief_arrow"), (stack, world, entity, integer) -> entity != null && CrossbowItem.isCharged(stack) && CrossbowItem.containsChargedProjectile(stack, SRItems.MISCHIEF_ARROW.get()) ? 1.0F : 0.0F);
-		ItemProperties.register(Items.CROSSBOW, new ResourceLocation("spectral_arrow"), (stack, world, entity, integer) -> entity != null && CrossbowItem.isCharged(stack) && CrossbowItem.containsChargedProjectile(stack, Items.SPECTRAL_ARROW) ? 1.0F : 0.0F);
+		ItemProperties.register(Items.CROSSBOW, new ResourceLocation(SavageAndRavage.MOD_ID, "spectral_arrow"), (stack, world, entity, integer) -> entity != null && CrossbowItem.isCharged(stack) && CrossbowItem.containsChargedProjectile(stack, Items.SPECTRAL_ARROW) ? 1.0F : 0.0F);
 	}
 }

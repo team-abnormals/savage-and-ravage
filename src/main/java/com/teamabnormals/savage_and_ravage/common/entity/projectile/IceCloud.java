@@ -1,13 +1,10 @@
 package com.teamabnormals.savage_and_ravage.common.entity.projectile;
 
-import com.teamabnormals.savage_and_ravage.common.entity.monster.Iceologer;
 import com.teamabnormals.savage_and_ravage.core.registry.SREntityTypes;
-import com.teamabnormals.savage_and_ravage.core.registry.SRMobEffects;
 import com.teamabnormals.savage_and_ravage.core.registry.SRParticles;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
