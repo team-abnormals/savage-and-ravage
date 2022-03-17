@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "#forge:is_icy",
+    "minecraft:snowy_taiga",
+    "minecraft:grove",
+    "minecraft:snowy_slopes",
+    "minecraft:jagged_peaks",
+    "minecraft:frozen_peaks"
+  ]
+}

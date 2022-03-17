@@ -234,7 +234,7 @@ public class GrieferArmorModel<T extends LivingEntity> extends HumanoidModel<T> 
 	 * @return A new model or a previously cached one
 	 */
 	@SuppressWarnings("unchecked")
-	public static <A extends HumanoidModel<?>> A getModel(EquipmentSlot slot, LivingEntity entity) {
+	public static HumanoidModel<?> getModel(EquipmentSlot slot, LivingEntity entity) {
 		boolean illager = entity instanceof AbstractIllager ||
 				entity instanceof SkeletonVillager ||
 				entity instanceof ZombieVillager ||
@@ -243,6 +243,6 @@ public class GrieferArmorModel<T extends LivingEntity> extends HumanoidModel<T> 
 		boolean piglin = entity instanceof AbstractPiglin ||
 				entity instanceof ZombifiedPiglin;
 		int entityFlag = (slot.ordinal() & 15) | (illager ? 1 : 0) << 4 | (piglin ? 1 : 0) << 5 | (entity.isBaby() ? 1 : 0) << 6;
-		return (A) CACHE.computeIfAbsent(entityFlag, GrieferArmorModel::new);
+		return CACHE.computeIfAbsent(entityFlag, GrieferArmorModel::new);
 	}
 }

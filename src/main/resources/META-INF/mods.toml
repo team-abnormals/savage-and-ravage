@@ -20,20 +20,20 @@ license = "https://github.com/team-abnormals/savage-and-ravage/blob/main/LICENSE
 [[dependencies.savage_and_ravage]]
     modId = "minecraft"
     mandatory = true
-    versionRange = "[1.18.1,1.19)"
+    versionRange = "[1.18.2,1.19)"
     ordering = "NONE"
     side = "BOTH"
 
 [[dependencies.savage_and_ravage]]
     modId = "forge"
     mandatory = true
-    versionRange = "[39.0.0,)"
+    versionRange = "[40.0.18,)"
     ordering = "NONE"
     side = "BOTH"
 
 [[dependencies.savage_and_ravage]]
     modId = "blueprint"
     mandatory = true
-    versionRange = "[5.0.0,)"
+    versionRange = "[5.2.1,)"
     ordering = "AFTER"
     side = "BOTH"

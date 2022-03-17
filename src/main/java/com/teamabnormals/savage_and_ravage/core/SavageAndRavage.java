@@ -6,6 +6,7 @@ import com.teamabnormals.savage_and_ravage.client.model.*;
 import com.teamabnormals.savage_and_ravage.client.renderer.entity.*;
 import com.teamabnormals.savage_and_ravage.client.renderer.entity.layers.TotemShieldLayer;
 import com.teamabnormals.savage_and_ravage.core.data.server.modifiers.SRAdvancementModifiersProvider;
+import com.teamabnormals.savage_and_ravage.core.data.server.tags.SRBiomeTagsProvider;
 import com.teamabnormals.savage_and_ravage.core.data.server.tags.SRBlockTagsProvider;
 import com.teamabnormals.savage_and_ravage.core.data.server.tags.SREntityTypeTagsProvider;
 import com.teamabnormals.savage_and_ravage.core.data.server.tags.SRItemTagsProvider;
@@ -26,6 +27,7 @@ import net.minecraft.client.renderer.entity.EvokerRenderer;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Evoker;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -33,6 +35,7 @@ import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ForgeModelBakery;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -67,6 +70,8 @@ public class SavageAndRavage {
 		bus.addListener(this::clientSetup);
 		bus.addListener(this::dataSetup);
 
+		bus.addGenericListener(Block.class, this::registerConfigConditions);
+
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 			bus.addListener(this::registerLayers);
 			bus.addListener(this::registerLayerDefinitions);
@@ -76,7 +81,6 @@ public class SavageAndRavage {
 
 		context.registerConfig(ModConfig.Type.COMMON, SRConfig.COMMON_SPEC);
 		context.registerConfig(ModConfig.Type.CLIENT, SRConfig.CLIENT_SPEC);
-		DataUtil.registerConfigCondition(SavageAndRavage.MOD_ID, SRConfig.COMMON, SRConfig.CLIENT);
 	}
 
 	private void commonSetup(FMLCommonSetupEvent event) {
@@ -97,12 +101,17 @@ public class SavageAndRavage {
 		ExistingFileHelper fileHelper = event.getExistingFileHelper();
 
 		if (event.includeServer()) {
-			SRBlockTagsProvider blockTagsProvider = new SRBlockTagsProvider(generator, fileHelper);
-			generator.addProvider(blockTagsProvider);
-			generator.addProvider(new SRItemTagsProvider(generator, blockTagsProvider, fileHelper));
+			SRBlockTagsProvider blockTags = new SRBlockTagsProvider(generator, fileHelper);
+			generator.addProvider(blockTags);
+			generator.addProvider(new SRItemTagsProvider(generator, blockTags, fileHelper));
 			generator.addProvider(new SREntityTypeTagsProvider(generator, fileHelper));
+			generator.addProvider(new SRBiomeTagsProvider(generator, fileHelper));
 			generator.addProvider(SRAdvancementModifiersProvider.createDataProvider(generator));
 		}
+	}
+
+	private void registerConfigConditions(RegistryEvent.Register<Block> event) {
+		DataUtil.registerConfigCondition(SavageAndRavage.MOD_ID, SRConfig.COMMON, SRConfig.CLIENT);
 	}
 
 	@OnlyIn(Dist.CLIENT)

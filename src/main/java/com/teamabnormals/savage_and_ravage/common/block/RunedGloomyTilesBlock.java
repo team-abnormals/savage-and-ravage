@@ -42,10 +42,10 @@ public class RunedGloomyTilesBlock extends ChiseledGloomyTilesBlock {
 	public static boolean shouldTrigger(Entity entity, boolean fooledByMask) {
 		if (EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(entity) && entity instanceof LivingEntity livingEntity) {
 			if (!fooledByMask || livingEntity.getItemBySlot(EquipmentSlot.HEAD).getItem() != SRItems.MASK_OF_DISHONESTY.get()) {
-				if (!EntityTypeTags.RAIDERS.contains(livingEntity.getType())) {
+				if (!livingEntity.getType().is(EntityTypeTags.RAIDERS)) {
 					if (livingEntity instanceof OwnableMob) {
 						LivingEntity owner = ((OwnableMob) livingEntity).getOwner();
-						return owner == null || !EntityTypeTags.RAIDERS.contains(owner.getType());
+						return owner == null || !owner.getType().is(EntityTypeTags.RAIDERS);
 					} else return livingEntity.isAffectedByPotions();
 				}
 			}

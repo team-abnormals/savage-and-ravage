@@ -1,6 +1,5 @@
 package com.teamabnormals.savage_and_ravage.core.registry;
 
-import com.teamabnormals.blueprint.common.item.BlueprintSpawnEggItem;
 import com.teamabnormals.blueprint.core.util.registry.ItemSubRegistryHelper;
 import com.teamabnormals.savage_and_ravage.common.item.*;
 import com.teamabnormals.savage_and_ravage.core.SavageAndRavage;
@@ -13,10 +12,11 @@ import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Rarity;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.common.ForgeSpawnEggItem;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.registries.RegistryObject;
 
-@Mod.EventBusSubscriber(modid = SavageAndRavage.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = SavageAndRavage.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class SRItems {
 	public static final ItemSubRegistryHelper HELPER = SavageAndRavage.REGISTRY_HELPER.getItemSubHelper();
 
@@ -34,11 +34,11 @@ public class SRItems {
 	public static final RegistryObject<Item> CONCH_OF_CONJURING = HELPER.createItem("conch_of_conjuring", () -> new ConchOfConjuringItem(new Item.Properties().durability(375).rarity(Rarity.UNCOMMON).tab(CreativeModeTab.TAB_COMBAT)));
 	public static final RegistryObject<Item> MASK_OF_DISHONESTY = HELPER.createItem("mask_of_dishonesty", () -> new MaskOfDishonestyItem(SRTiers.MASK, EquipmentSlot.HEAD, new Item.Properties().rarity(Rarity.UNCOMMON).tab(CreativeModeTab.TAB_COMBAT)));
 
-	public static final RegistryObject<BlueprintSpawnEggItem> SKELETON_VILLAGER_SPAWN_EGG = HELPER.createSpawnEggItem("skeleton_villager", SREntityTypes.SKELETON_VILLAGER::get, 0xAEAEB2, 0x8F8C99);
-	public static final RegistryObject<BlueprintSpawnEggItem> GRIEFER_SPAWN_EGG = HELPER.createSpawnEggItem("griefer", SREntityTypes.GRIEFER::get, 0x7E9658, 0xF4B804);
-	public static final RegistryObject<BlueprintSpawnEggItem> ICEOLOGER_SPAWN_EGG = HELPER.createSpawnEggItem("iceologer", SREntityTypes.ICEOLOGER::get, 0x8E9393, 0x152F6A);
-	public static final RegistryObject<BlueprintSpawnEggItem> EXECUTIONER_SPAWN_EGG = HELPER.createSpawnEggItem("executioner", SREntityTypes.EXECUTIONER::get, 0x8E9393, 0x51272D);
-	public static final RegistryObject<BlueprintSpawnEggItem> TRICKSTER_SPAWN_EGG = HELPER.createSpawnEggItem("trickster", SREntityTypes.TRICKSTER::get, 0x617743, 0x734B4B);
+	public static final RegistryObject<ForgeSpawnEggItem> SKELETON_VILLAGER_SPAWN_EGG = HELPER.createSpawnEggItem("skeleton_villager", SREntityTypes.SKELETON_VILLAGER::get, 0xAEAEB2, 0x8F8C99);
+	public static final RegistryObject<ForgeSpawnEggItem> GRIEFER_SPAWN_EGG = HELPER.createSpawnEggItem("griefer", SREntityTypes.GRIEFER::get, 0x7E9658, 0xF4B804);
+	public static final RegistryObject<ForgeSpawnEggItem> ICEOLOGER_SPAWN_EGG = HELPER.createSpawnEggItem("iceologer", SREntityTypes.ICEOLOGER::get, 0x8E9393, 0x152F6A);
+	public static final RegistryObject<ForgeSpawnEggItem> EXECUTIONER_SPAWN_EGG = HELPER.createSpawnEggItem("executioner", SREntityTypes.EXECUTIONER::get, 0x8E9393, 0x51272D);
+	public static final RegistryObject<ForgeSpawnEggItem> TRICKSTER_SPAWN_EGG = HELPER.createSpawnEggItem("trickster", SREntityTypes.TRICKSTER::get, 0x617743, 0x734B4B);
 
 	public static void registerItemProperties() {
 		ItemProperties.register(Items.CROSSBOW, new ResourceLocation(SavageAndRavage.MOD_ID, "mischief_arrow"), (stack, world, entity, integer) -> entity != null && CrossbowItem.isCharged(stack) && CrossbowItem.containsChargedProjectile(stack, SRItems.MISCHIEF_ARROW.get()) ? 1.0F : 0.0F);
