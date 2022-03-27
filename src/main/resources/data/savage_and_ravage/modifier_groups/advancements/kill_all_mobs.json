@@ -1,5 +1,5 @@
 {
-  "advancement": "minecraft:adventure/kill_all_mobs",
+  "selector": "minecraft:adventure/kill_all_mobs",
   "modifiers": [
     {
       "type": "criteria",

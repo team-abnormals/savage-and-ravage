@@ -1,5 +1,5 @@
 {
-  "target": "entities/pillager",
+  "selector": "entities/pillager",
   "modifiers": [
     {
       "type": "pools",

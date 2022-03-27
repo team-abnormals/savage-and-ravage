@@ -1,5 +1,5 @@
 {
-  "advancement": "minecraft:adventure/voluntary_exile",
+  "selector": "minecraft:adventure/voluntary_exile",
   "modifiers": [
     {
       "type": "criteria",

@@ -1,5 +1,5 @@
 {
-  "target": "chests/pillager_outpost",
+  "selector": "chests/pillager_outpost",
   "modifiers": [
     {
       "type": "pools",

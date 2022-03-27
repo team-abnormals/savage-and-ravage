@@ -1,5 +1,5 @@
 {
-  "target": "entities/vindicator",
+  "selector": "entities/vindicator",
   "modifiers": [
     {
       "type": "pools",

@@ -1,5 +1,5 @@
 {
-  "target": "entities/evoker",
+  "selector": "entities/evoker",
   "modifiers": [
     {
       "type": "pools",
