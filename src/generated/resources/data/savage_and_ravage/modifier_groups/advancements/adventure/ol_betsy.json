@@ -1,5 +1,5 @@
 {
-  "advancement": {
+  "selector": {
     "type": "names",
     "config": [
       "minecraft:adventure/ol_betsy"

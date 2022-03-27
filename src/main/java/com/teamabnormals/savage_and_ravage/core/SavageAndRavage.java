@@ -106,7 +106,7 @@ public class SavageAndRavage {
 			generator.addProvider(new SRItemTagsProvider(generator, blockTags, fileHelper));
 			generator.addProvider(new SREntityTypeTagsProvider(generator, fileHelper));
 			generator.addProvider(new SRBiomeTagsProvider(generator, fileHelper));
-			generator.addProvider(SRAdvancementModifiersProvider.createDataProvider(generator));
+			generator.addProvider(new SRAdvancementModifiersProvider(generator));
 		}
 	}
 
