@@ -2,6 +2,11 @@
   "pools": [
     {
       "rolls": 1,
+      "conditions": [
+        {
+          "condition": "blueprint:raid_check"
+        }
+      ],
       "entries": [
         {
           "type": "minecraft:item",
@@ -33,6 +38,9 @@
           "default_chance": 0.283333333333,
           "peaceful": 0,
           "hard": 0.348717948718
+        },
+        {
+          "condition": "blueprint:raid_check"
         }
       ],
       "entries": [
