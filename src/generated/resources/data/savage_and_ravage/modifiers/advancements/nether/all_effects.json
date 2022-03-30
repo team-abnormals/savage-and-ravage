@@ -1,11 +1,5 @@
 {
-  "selector": {
-    "type": "names",
-    "config": [
-      "minecraft:nether/all_effects"
-    ],
-    "conditions": []
-  },
+  "selector": "minecraft:nether/all_effects",
   "priority": "normal",
   "modifiers": [
     {

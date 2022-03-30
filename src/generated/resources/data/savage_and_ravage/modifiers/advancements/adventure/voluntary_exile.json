@@ -1,0 +1,10 @@
+{
+  "selector": "minecraft:adventure/voluntary_exile",
+  "priority": "normal",
+  "modifiers": [
+    {
+      "type": "parent",
+      "config": "minecraft:adventure/trade"
+    }
+  ]
+}

@@ -1,8 +1,8 @@
 package com.teamabnormals.savage_and_ravage.core.data.server.modifiers;
 
+import com.teamabnormals.blueprint.common.advancement.modification.AdvancementModifierProvider;
 import com.teamabnormals.blueprint.common.advancement.modification.modifiers.EffectsChangedModifier;
 import com.teamabnormals.blueprint.common.advancement.modification.modifiers.ParentModifier;
-import com.teamabnormals.blueprint.core.util.modification.AdvancementModifierProvider;
 import com.teamabnormals.savage_and_ravage.core.SavageAndRavage;
 import com.teamabnormals.savage_and_ravage.core.registry.SRMobEffects;
 import net.minecraft.advancements.critereon.MobEffectsPredicate;
@@ -17,8 +17,8 @@ public class SRAdvancementModifiersProvider extends AdvancementModifierProvider 
 
 	@Override
 	protected void registerEntries() {
-		this.registerEntry("adventure/ol_betsy", new ParentModifier(new ResourceLocation("adventure/shoot_arrow")), new ResourceLocation("adventure/ol_betsy"));
-		this.registerEntry("adventure/voluntary_exile", new ParentModifier(new ResourceLocation("adventure/trade")), new ResourceLocation("adventure/voluntary_exile"));
-		this.registerEntry("nether/all_effects", new EffectsChangedModifier("all_effects", false, MobEffectsPredicate.effects().and(SRMobEffects.WEIGHT.get())), new ResourceLocation(("nether/all_effects")));
+		this.entry("adventure/ol_betsy").selects(new ResourceLocation("adventure/ol_betsy")).addModifier(new ParentModifier(new ResourceLocation("adventure/shoot_arrow")));
+		this.entry("adventure/voluntary_exile").selects(new ResourceLocation("adventure/voluntary_exile")).addModifier(new ParentModifier(new ResourceLocation("adventure/trade")));
+		this.entry("nether/all_effects").selects(new ResourceLocation(("nether/all_effects"))).addModifier(new EffectsChangedModifier("all_effects", false, MobEffectsPredicate.effects().and(SRMobEffects.WEIGHT.get())));
 	}
 }

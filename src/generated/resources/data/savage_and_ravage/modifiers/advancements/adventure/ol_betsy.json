@@ -1,11 +1,5 @@
 {
-  "selector": {
-    "type": "names",
-    "config": [
-      "minecraft:adventure/ol_betsy"
-    ],
-    "conditions": []
-  },
+  "selector": "minecraft:adventure/ol_betsy",
   "priority": "normal",
   "modifiers": [
     {
