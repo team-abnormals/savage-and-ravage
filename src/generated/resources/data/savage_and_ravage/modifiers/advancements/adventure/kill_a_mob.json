@@ -1,25 +1,11 @@
 {
-  "selector": "minecraft:adventure/kill_all_mobs",
+  "selector": "minecraft:adventure/kill_a_mob",
+  "priority": "normal",
   "modifiers": [
     {
       "type": "criteria",
       "config": {
-        "mode": "modify",
         "criteria": {
-          "savage_and_ravage:creepie": {
-            "trigger": "minecraft:player_killed_entity",
-            "conditions": {
-              "entity": [
-                {
-                  "condition": "minecraft:entity_properties",
-                  "predicate": {
-                    "type": "savage_and_ravage:creepie"
-                  },
-                  "entity": "this"
-                }
-              ]
-            }
-          },
           "savage_and_ravage:skeleton_villager": {
             "trigger": "minecraft:player_killed_entity",
             "conditions": {
@@ -34,28 +20,14 @@
               ]
             }
           },
-          "savage_and_ravage:griefer": {
+          "savage_and_ravage:creepie": {
             "trigger": "minecraft:player_killed_entity",
             "conditions": {
               "entity": [
                 {
                   "condition": "minecraft:entity_properties",
                   "predicate": {
-                    "type": "savage_and_ravage:griefer"
-                  },
-                  "entity": "this"
-                }
-              ]
-            }
-          },
-          "savage_and_ravage:executioner": {
-            "trigger": "minecraft:player_killed_entity",
-            "conditions": {
-              "entity": [
-                {
-                  "condition": "minecraft:entity_properties",
-                  "predicate": {
-                    "type": "savage_and_ravage:executioner"
+                    "type": "savage_and_ravage:creepie"
                   },
                   "entity": "this"
                 }
@@ -70,6 +42,20 @@
                   "condition": "minecraft:entity_properties",
                   "predicate": {
                     "type": "savage_and_ravage:iceologer"
+                  },
+                  "entity": "this"
+                }
+              ]
+            }
+          },
+          "savage_and_ravage:executioner": {
+            "trigger": "minecraft:player_killed_entity",
+            "conditions": {
+              "entity": [
+                {
+                  "condition": "minecraft:entity_properties",
+                  "predicate": {
+                    "type": "savage_and_ravage:executioner"
                   },
                   "entity": "this"
                 }
@@ -91,25 +77,18 @@
             }
           }
         },
-        "requirements": [
-          [
-            "savage_and_ravage:creepie"
-          ],
-          [
-            "savage_and_ravage:skeleton_villager"
-          ],
-          [
-            "savage_and_ravage:griefer"
-          ],
-          [
-            "savage_and_ravage:executioner"
-          ],
-          [
-            "savage_and_ravage:iceologer"
-          ],
-          [
-            "savage_and_ravage:trickster"
-          ]
+        "indexed_requirements": [
+          {
+            "index": 0,
+            "replace": false,
+            "requirements": [
+              "savage_and_ravage:skeleton_villager",
+              "savage_and_ravage:creepie",
+              "savage_and_ravage:iceologer",
+              "savage_and_ravage:executioner",
+              "savage_and_ravage:trickster"
+            ]
+          }
         ]
       }
     }

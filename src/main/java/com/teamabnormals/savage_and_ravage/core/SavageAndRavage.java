@@ -5,7 +5,8 @@ import com.teamabnormals.blueprint.core.util.registry.RegistryHelper;
 import com.teamabnormals.savage_and_ravage.client.model.*;
 import com.teamabnormals.savage_and_ravage.client.renderer.entity.*;
 import com.teamabnormals.savage_and_ravage.client.renderer.entity.layers.TotemShieldLayer;
-import com.teamabnormals.savage_and_ravage.core.data.server.modifiers.SRAdvancementModifiersProvider;
+import com.teamabnormals.savage_and_ravage.core.data.server.modifiers.SRAdvancementModifierProvider;
+import com.teamabnormals.savage_and_ravage.core.data.server.modifiers.SRLootModifierProvider;
 import com.teamabnormals.savage_and_ravage.core.data.server.tags.SRBiomeTagsProvider;
 import com.teamabnormals.savage_and_ravage.core.data.server.tags.SRBlockTagsProvider;
 import com.teamabnormals.savage_and_ravage.core.data.server.tags.SREntityTypeTagsProvider;
@@ -61,7 +62,7 @@ public class SavageAndRavage {
 		REGISTRY_HELPER.register(bus);
 		SREntityTypes.ENTITIES.register(bus);
 		SRParticles.PARTICLES.register(bus);
-		SRMobEffects.EFFECTS.register(bus);
+		SRMobEffects.MOB_EFFECTS.register(bus);
 		SRFeatures.FEATURES.register(bus);
 		SRAttributes.ATTRIBUTES.register(bus);
 		SRDataSerializers.SERIALIZERS.register(bus);
@@ -106,7 +107,8 @@ public class SavageAndRavage {
 			generator.addProvider(new SRItemTagsProvider(generator, blockTags, fileHelper));
 			generator.addProvider(new SREntityTypeTagsProvider(generator, fileHelper));
 			generator.addProvider(new SRBiomeTagsProvider(generator, fileHelper));
-			generator.addProvider(new SRAdvancementModifiersProvider(generator));
+			generator.addProvider(new SRAdvancementModifierProvider(generator));
+			generator.addProvider(new SRLootModifierProvider(generator));
 		}
 	}
 
