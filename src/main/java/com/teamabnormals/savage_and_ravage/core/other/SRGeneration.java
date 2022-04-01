@@ -31,11 +31,11 @@ public class SRGeneration {
 		ResourceKey<Biome> key = ResourceKey.create(Registry.BIOME_REGISTRY, name);
 
 		if (BiomeDictionary.getTypes(key).contains(BiomeDictionary.Type.OVERWORLD)) {
-			if ((category == BiomeCategory.ICY || category == BiomeCategory.MOUNTAIN) && !DataUtil.matchesKeys(name, Biomes.MEADOW)) {
+			if ((category.equals(BiomeCategory.ICY) || category.equals(BiomeCategory.MOUNTAIN)) && !DataUtil.matchesKeys(name, Biomes.MEADOW)) {
 				spawns.addSpawn(MobCategory.MONSTER, new SpawnerData(SREntityTypes.ICEOLOGER.get(), 5, 1, 1));
 			}
 
-			if (category != BiomeCategory.MUSHROOM && category != BiomeCategory.NONE) {
+			if (!category.equals(BiomeCategory.MUSHROOM) && !category.equals(BiomeCategory.NONE)) {
 				spawns.addSpawn(MobCategory.MONSTER, new SpawnerData(SREntityTypes.SKELETON_VILLAGER.get(), 5, 1, 1));
 			}
 		}
