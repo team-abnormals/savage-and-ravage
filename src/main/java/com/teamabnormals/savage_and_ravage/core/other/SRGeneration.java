@@ -23,10 +23,12 @@ public class SRGeneration {
 	@SubscribeEvent
 	public static void onBiomeLoad(BiomeLoadingEvent event) {
 		ResourceLocation name = event.getName();
-		ResourceKey<Biome> key = ResourceKey.create(Registry.BIOME_REGISTRY, name);
-
 		BiomeCategory category = event.getCategory();
 		MobSpawnSettingsBuilder spawns = event.getSpawns();
+
+		if (name == null) return;
+
+		ResourceKey<Biome> key = ResourceKey.create(Registry.BIOME_REGISTRY, name);
 
 		if (BiomeDictionary.getTypes(key).contains(BiomeDictionary.Type.OVERWORLD)) {
 			if ((category == BiomeCategory.ICY || category == BiomeCategory.MOUNTAIN) && !DataUtil.matchesKeys(name, Biomes.MEADOW)) {
