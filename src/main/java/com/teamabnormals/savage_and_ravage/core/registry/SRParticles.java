@@ -1,10 +1,6 @@
 package com.teamabnormals.savage_and_ravage.core.registry;
 
-import com.teamabnormals.savage_and_ravage.client.particle.CleaverSweepParticle;
-import com.teamabnormals.savage_and_ravage.client.particle.ConfusionBoltParticle;
-import com.teamabnormals.savage_and_ravage.client.particle.CreeperSporeSprinklesParticle;
-import com.teamabnormals.savage_and_ravage.client.particle.CreeperSporesParticle;
-import com.teamabnormals.savage_and_ravage.client.particle.RuneParticle;
+import com.teamabnormals.savage_and_ravage.client.particle.*;
 import com.teamabnormals.savage_and_ravage.core.SavageAndRavage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.ParticleEngine;

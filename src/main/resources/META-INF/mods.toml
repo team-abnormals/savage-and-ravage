@@ -27,13 +27,13 @@ license = "https://github.com/team-abnormals/savage-and-ravage/blob/main/LICENSE
 [[dependencies.savage_and_ravage]]
     modId = "forge"
     mandatory = true
-    versionRange = "[40.0.18,)"
+    versionRange = "[40.1.0,)"
     ordering = "NONE"
     side = "BOTH"
 
 [[dependencies.savage_and_ravage]]
     modId = "blueprint"
     mandatory = true
-    versionRange = "[5.3.0,)"
+    versionRange = "[5.4.0,)"
     ordering = "AFTER"
     side = "BOTH"
