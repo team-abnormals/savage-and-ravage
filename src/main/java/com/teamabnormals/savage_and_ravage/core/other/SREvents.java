@@ -29,6 +29,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -63,13 +64,14 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.living.*;
-import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
+import net.minecraftforge.event.entity.living.LivingEvent.LivingTickEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.world.ExplosionEvent;
+import net.minecraftforge.event.level.ExplosionEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
@@ -83,7 +85,7 @@ public class SREvents {
 	public static String NO_KNOCKBACK_KEY = SavageAndRavage.MOD_ID + "no_knockback";
 
 	@SubscribeEvent
-	public static void onEntityJoinWorld(EntityJoinWorldEvent event) {
+	public static void onEntityJoinWorld(EntityJoinLevelEvent event) {
 		Entity entity = event.getEntity();
 		if (entity instanceof Mob mob) {
 			if (mob instanceof AbstractVillager villager) {
@@ -137,7 +139,7 @@ public class SREvents {
 		Entity target = event.getTarget();
 		ItemStack stack = event.getItemStack();
 		if (target instanceof Creepie && stack.getItem() == Items.POISONOUS_POTATO && SRConfig.COMMON.poisonPotatoCompat.get() && ModList.get().isLoaded("quark")) {
-			Player player = event.getPlayer();
+			Player player = event.getEntity();
 			CompoundTag persistentData = target.getPersistentData();
 			if (!persistentData.getBoolean(POISON_TAG)) {
 				if (target.level.random.nextDouble() < SRConfig.COMMON.poisonPotatoChance.get()) {
@@ -150,14 +152,14 @@ public class SREvents {
 					target.playSound(SoundEvents.GENERIC_EAT, 0.5f, 0.5f + target.level.random.nextFloat() / 2);
 				}
 				if (!player.isCreative()) stack.shrink(1);
-				event.setCancellationResult(InteractionResult.sidedSuccess(event.getWorld().isClientSide()));
+				event.setCancellationResult(InteractionResult.sidedSuccess(event.getLevel().isClientSide()));
 				event.setCanceled(true);
 			}
 		}
 	}
 
 	@SubscribeEvent
-	public static void onUpdateEntity(LivingEvent.LivingUpdateEvent event) {
+	public static void onUpdateEntity(LivingTickEvent event) {
 		Entity entity = event.getEntity();
 		if (entity instanceof Creepie creepie && SRConfig.COMMON.poisonPotatoCompat.get() && ModList.get().isLoaded("quark")) {
 			if (entity.getPersistentData().getBoolean(POISON_TAG)) creepie.setGrowingAge(-24000);
@@ -165,15 +167,15 @@ public class SREvents {
 	}
 
 	@SubscribeEvent
-	public static void onLivingJump(LivingEvent.LivingJumpEvent event) {
-		LivingEntity entity = event.getEntityLiving();
+	public static void onLivingJump(LivingJumpEvent event) {
+		LivingEntity entity = event.getEntity();
 		if (entity.getEffect(SRMobEffects.WEIGHT.get()) != null)
 			entity.setDeltaMovement(entity.getDeltaMovement().x(), 0.0D, entity.getDeltaMovement().z());
 	}
 
 	@SubscribeEvent
 	public static void onLivingSetAttackTarget(LivingSetAttackTargetEvent event) {
-		LivingEntity entity = event.getEntityLiving();
+		LivingEntity entity = event.getEntity();
 		LivingEntity target = event.getTarget();
 		if (target != null) {
 			if (entity instanceof AbstractGolem && !(entity instanceof Shulker) && target instanceof OwnableMob)
@@ -186,7 +188,7 @@ public class SREvents {
 
 	@SubscribeEvent
 	public static void onExplosion(ExplosionEvent.Detonate event) {
-		Level world = event.getWorld();
+		Level world = event.getLevel();
 		Explosion explosion = event.getExplosion();
 		LivingEntity sourceEntity = explosion.getSourceMob();
 		boolean isCreeper = sourceEntity != null && sourceEntity.getType() == EntityType.CREEPER;
@@ -240,7 +242,7 @@ public class SREvents {
 
 	@SubscribeEvent
 	public static void onAttackEntity(AttackEntityEvent event) {
-		Player player = event.getPlayer();
+		Player player = event.getEntity();
 		Entity target = event.getTarget();
 		Level world = player.level;
 		if (target instanceof LivingEntity) {
@@ -268,7 +270,7 @@ public class SREvents {
 								}
 							}
 							BlockPos.MutableBlockPos checkingPos = new BlockPos.MutableBlockPos();
-							Random random = world.getRandom();
+							RandomSource random = world.getRandom();
 							if (!world.isClientSide) {
 								for (int i = 0; i < 100; i++) {
 									double x = shockwaveBox.minX + (random.nextDouble() * (shockwaveBox.maxX - shockwaveBox.minX));
@@ -322,7 +324,7 @@ public class SREvents {
 
 	@SubscribeEvent
 	public static void onLivingDamage(LivingDamageEvent event) {
-		LivingEntity target = event.getEntityLiving();
+		LivingEntity target = event.getEntity();
 		if (event.getSource().isExplosion()) {
 			double decrease = 0;
 			for (EquipmentSlot slot : EquipmentSlot.values()) {
@@ -342,7 +344,7 @@ public class SREvents {
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public static void onLivingDamageDelayed(LivingDamageEvent event) {
-		LivingEntity target = event.getEntityLiving();
+		LivingEntity target = event.getEntity();
 		Entity attacker = event.getSource().getEntity();
 		if (attacker instanceof LivingEntity && ((LivingEntity) attacker).getMainHandItem().getItem() == SRItems.CLEAVER_OF_BEHEADING.get()) {
 			if (target instanceof Player) {
@@ -394,12 +396,12 @@ public class SREvents {
 		Entity target = event.getTarget();
 		if (target.getType() == EntityType.CREEPER || target.getType() == SREntityTypes.CREEPIE.get()) {
 			if (stack.getItem() == Items.CREEPER_SPAWN_EGG) {
-				Level world = event.getWorld();
+				Level world = event.getLevel();
 				Creepie creepie = SREntityTypes.CREEPIE.get().create(world);
 				if (creepie != null) {
 					creepie.copyPosition(target);
 					if (stack.hasCustomHoverName()) creepie.setCustomName(stack.getHoverName());
-					if (!event.getPlayer().isCreative()) stack.shrink(1);
+					if (!event.getEntity().isCreative()) stack.shrink(1);
 					creepie.attackPlayersOnly = true;
 					world.addFreshEntity(creepie);
 					event.setCancellationResult(InteractionResult.sidedSuccess(world.isClientSide()));
@@ -411,7 +413,7 @@ public class SREvents {
 
 	@SubscribeEvent
 	public static void onLeftClickBlock(PlayerInteractEvent.LeftClickBlock event) {
-		Level world = event.getWorld();
+		Level world = event.getLevel();
 		BlockPos pos = event.getPos();
 		if (world.getBlockState(pos).getBlock() instanceof AbstractBannerBlock) {
 			List<BurningBanner> burningBanners = world.getEntitiesOfClass(BurningBanner.class, new AABB(pos));
@@ -426,9 +428,9 @@ public class SREvents {
 	@SubscribeEvent
 	public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
 		ItemStack stack = event.getItemStack();
-		Player player = event.getPlayer();
+		Player player = event.getEntity();
 		BlockPos pos = event.getPos();
-		Level world = event.getWorld();
+		Level world = event.getLevel();
 
 		if (stack.getItem() instanceof PottableItem && world.getBlockState(pos).getBlock() == Blocks.FLOWER_POT) {
 			BlockState pottedState = ((PottableItem) stack.getItem()).getPottedState(player.getDirection().getOpposite());
@@ -436,7 +438,7 @@ public class SREvents {
 				return;
 			world.setBlockAndUpdate(pos, pottedState);
 			player.awardStat(Stats.POT_FLOWER);
-			if (!event.getPlayer().isCreative()) stack.shrink(1);
+			if (!player.isCreative()) stack.shrink(1);
 			event.setCancellationResult(InteractionResult.SUCCESS);
 			event.setCanceled(true);
 		} else if (isValidBurningBannerPos(world, pos)) {
@@ -460,8 +462,8 @@ public class SREvents {
 	}
 
 	@SubscribeEvent
-	public static void livingUpdate(LivingUpdateEvent event) {
-		LivingEntity entity = event.getEntityLiving();
+	public static void livingUpdate(LivingTickEvent event) {
+		LivingEntity entity = event.getEntity();
 		Level world = entity.level;
 		IDataManager data = (IDataManager) entity;
 		if (!world.isClientSide()) {
@@ -499,7 +501,7 @@ public class SREvents {
 
 	@SubscribeEvent
 	public static void visibilityMultiplierEvent(LivingEvent.LivingVisibilityEvent event) {
-		LivingEntity entity = event.getEntityLiving();
+		LivingEntity entity = event.getEntity();
 		if (TrackedDataManager.INSTANCE.getValue(entity, SRDataProcessors.INVISIBLE_DUE_TO_MASK)) {
 			double armorCover = entity.getArmorCoverPercentage();
 			if (armorCover < 0.1F) {
@@ -518,7 +520,7 @@ public class SREvents {
 
 	public static void spawnMaskParticles(Level world, AABB box, int loops) {
 		if (!world.isClientSide) {
-			Random random = world.getRandom();
+			RandomSource random = world.getRandom();
 			for (int i = 0; i < loops; i++) {
 				double x = box.min(Direction.Axis.X) + (random.nextFloat() * box.getXsize());
 				double y = box.min(Direction.Axis.Y) + (random.nextFloat() * box.getYsize());
@@ -541,7 +543,7 @@ public class SREvents {
 		return false;
 	}
 
-	public static ItemStack createRocket(Random random) {
+	public static ItemStack createRocket(RandomSource random) {
 		ItemStack rocket = new ItemStack(Items.FIREWORK_ROCKET, random.nextInt(16) + 1);
 		CompoundTag fireworks = rocket.getOrCreateTagElement("Fireworks");
 		ListTag explosions = new ListTag();
@@ -561,7 +563,7 @@ public class SREvents {
 		return rocket;
 	}
 
-	public static int[] randomColors(Random random) {
+	public static int[] randomColors(RandomSource random) {
 		int[] colors = new int[random.nextInt(3) + 1];
 		DyeColor[] values = DyeColor.values();
 		for (int i = 0; i < colors.length; i++) {

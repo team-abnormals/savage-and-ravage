@@ -11,8 +11,8 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 
 public class SREntityTypeTagsProvider extends EntityTypeTagsProvider {
 
-	public SREntityTypeTagsProvider(DataGenerator generator, ExistingFileHelper fileHelper) {
-		super(generator, SavageAndRavage.MOD_ID, fileHelper);
+	public SREntityTypeTagsProvider(DataGenerator generator, ExistingFileHelper existingFileHelper) {
+		super(generator, SavageAndRavage.MOD_ID, existingFileHelper);
 	}
 
 	@Override

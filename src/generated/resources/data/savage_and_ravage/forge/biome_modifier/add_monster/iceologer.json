@@ -1,0 +1,10 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": "#savage_and_ravage:has_monster/iceologer",
+  "spawners": {
+    "type": "savage_and_ravage:iceologer",
+    "maxCount": 1,
+    "minCount": 1,
+    "weight": 5
+  }
+}

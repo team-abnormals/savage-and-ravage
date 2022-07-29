@@ -19,7 +19,7 @@ public class SkeletonVillagerRenderer extends MobRenderer<SkeletonVillager, Skel
 	public SkeletonVillagerRenderer(EntityRendererProvider.Context context) {
 		super(context, new SkeletonVillagerModel(context.bakeLayer(SRModelLayers.SKELETON_VILLAGER)), 0.5f);
 		this.addLayer(new HumanoidArmorLayer<>(this, new VillagerArmorModel<>(context.bakeLayer(SRModelLayers.VILLAGER_INNER_ARMOR)), new VillagerArmorModel<>(context.bakeLayer(SRModelLayers.VILLAGER_OUTER_ARMOR))));
-		this.addLayer(new ItemInHandLayer<>(this) {
+		this.addLayer(new ItemInHandLayer<>(this, context.getItemInHandRenderer()) {
 			@Override
 			public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, SkeletonVillager entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
 				if (entity.isAggressive()) {

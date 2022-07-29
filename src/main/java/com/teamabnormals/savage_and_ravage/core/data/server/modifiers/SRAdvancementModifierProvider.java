@@ -17,10 +17,11 @@ import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.KilledTrigger;
 import net.minecraft.advancements.critereon.MobEffectsPredicate;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.common.crafting.conditions.ICondition;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.compress.utils.Lists;
 
 import java.util.ArrayList;
@@ -28,8 +29,8 @@ import java.util.ArrayList;
 public class SRAdvancementModifierProvider extends AdvancementModifierProvider {
 	private static final EntityType<?>[] MOBS_TO_KILL = new EntityType[]{SREntityTypes.SKELETON_VILLAGER.get(), SREntityTypes.CREEPIE.get(), SREntityTypes.ICEOLOGER.get(), SREntityTypes.EXECUTIONER.get(), SREntityTypes.TRICKSTER.get()};
 
-	public SRAdvancementModifierProvider(DataGenerator dataGenerator) {
-		super(dataGenerator, SavageAndRavage.MOD_ID);
+	public SRAdvancementModifierProvider(DataGenerator generator) {
+		super(generator, SavageAndRavage.MOD_ID);
 	}
 
 	@Override
@@ -43,7 +44,7 @@ public class SRAdvancementModifierProvider extends AdvancementModifierProvider {
 		CriteriaModifier.Builder killAllMobs = CriteriaModifier.builder(this.modId);
 		ArrayList<String> names = Lists.newArrayList();
 		for (EntityType<?> entityType : MOBS_TO_KILL) {
-			String name = entityType.getRegistryName().getPath();
+			String name = ForgeRegistries.ENTITY_TYPES.getKey(entityType).getPath();
 			KilledTrigger.TriggerInstance triggerInstance = KilledTrigger.TriggerInstance.playerKilledEntity(EntityPredicate.Builder.entity().of(entityType));
 			killAMob.addCriterion(name, triggerInstance);
 			killAllMobs.addCriterion(name, triggerInstance);
@@ -56,6 +57,6 @@ public class SRAdvancementModifierProvider extends AdvancementModifierProvider {
 		this.entry("adventure/voluntary_exile").selects("adventure/voluntary_exile")
 				.addModifier(new ParentModifier(new ResourceLocation("adventure/trade")))
 				.addModifier(CriteriaModifier.builder(this.modId).addCriterion("voluntary_exile", SRCriteriaTriggers.BURN_OMINOUS_BANNER.createInstance()).build(), noBadOmenOnDeath)
-				.addModifier(DisplayInfoModifier.builder().description(new TranslatableComponent("advancements." + this.modId + ".adventure.voluntary_exile.description")).build(), noBadOmenOnDeath);
+				.addModifier(DisplayInfoModifier.builder().description(Component.translatable("advancements." + this.modId + ".adventure.voluntary_exile.description")).build(), noBadOmenOnDeath);
 	}
 }

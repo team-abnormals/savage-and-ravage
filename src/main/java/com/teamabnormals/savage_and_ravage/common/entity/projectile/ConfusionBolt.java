@@ -12,6 +12,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -25,7 +26,6 @@ import net.minecraft.world.phys.*;
 import net.minecraftforge.network.NetworkHooks;
 
 import java.util.List;
-import java.util.Random;
 
 public class ConfusionBolt extends ThrowableProjectile {
 	private static final EntityDataAccessor<Integer> TICKS_TILL_REMOVE = SynchedEntityData.defineId(ConfusionBolt.class, EntityDataSerializers.INT);
@@ -83,7 +83,7 @@ public class ConfusionBolt extends ThrowableProjectile {
 	}
 
 	public static void spawnGaussianParticles(Level world, AABB box, String name, int loops) {
-		Random random = world.getRandom();
+		RandomSource random = world.getRandom();
 		if (!world.isClientSide) {
 			for (int i = 0; i < loops; i++) {
 				double x = box.min(Direction.Axis.X) + ((0.5 + (random.nextGaussian() * 0.25)) * box.getXsize());

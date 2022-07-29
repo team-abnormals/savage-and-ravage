@@ -6,7 +6,7 @@ import com.teamabnormals.blueprint.core.util.DataUtil;
 import com.teamabnormals.savage_and_ravage.common.levelgen.feature.EnclosureFeature;
 import com.teamabnormals.savage_and_ravage.core.SavageAndRavage;
 import net.minecraft.core.Holder;
-import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.data.worldgen.Pools;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
@@ -21,8 +21,8 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-import java.util.List;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class SRFeatures {
 	public static final DeferredRegister<Feature<?>> FEATURES = DeferredRegister.create(ForgeRegistries.FEATURES, SavageAndRavage.MOD_ID);
@@ -30,7 +30,7 @@ public class SRFeatures {
 	public static final RegistryObject<Feature<NoneFeatureConfiguration>> CREEPER_ENCLOSURE = FEATURES.register("creeper_enclosure", () -> new EnclosureFeature(NoneFeatureConfiguration.CODEC));
 
 	public static void registerPools() {
-		Pools.register(new StructureTemplatePool(new ResourceLocation(SavageAndRavage.MOD_ID, "enclosure/enclosures"), new ResourceLocation("empty"), ImmutableList.of(Pair.of(StructurePoolElement.feature(SRPlacedFeatures.CREEPER_ENCLOSURE), 1)), StructureTemplatePool.Projection.RIGID));
+		Pools.register(new StructureTemplatePool(new ResourceLocation(SavageAndRavage.MOD_ID, "enclosure/enclosures"), new ResourceLocation("empty"), ImmutableList.of(Pair.of(StructurePoolElement.feature(Holder.direct(SRPlacedFeatures.CREEPER_ENCLOSURE.get())), 1)), StructureTemplatePool.Projection.RIGID));
 		Pools.register(new StructureTemplatePool(new ResourceLocation(SavageAndRavage.MOD_ID, "pillager_outpost/pillagers"), new ResourceLocation("empty"), ImmutableList.of(Pair.of(StructurePoolElement.legacy(SavageAndRavage.MOD_ID + ":pillager_outpost/pillager"), 1)), StructureTemplatePool.Projection.RIGID));
 		Pools.register(new StructureTemplatePool(new ResourceLocation(SavageAndRavage.MOD_ID, "pillager_outpost/vindicators"), new ResourceLocation("empty"), ImmutableList.of(Pair.of(StructurePoolElement.legacy(SavageAndRavage.MOD_ID + ":pillager_outpost/vindicator"), 1)), StructureTemplatePool.Projection.RIGID));
 		for (String biome : new String[]{"plains", "snowy", "savanna", "desert", "taiga"})
@@ -47,18 +47,24 @@ public class SRFeatures {
 	}
 
 	public static final class SRConfiguredFeatures {
-		public static final Holder<ConfiguredFeature<?, ?>> CREEPER_ENCLOSURE = register("creeper_enclosure", SRFeatures.CREEPER_ENCLOSURE.get(), NoneFeatureConfiguration.INSTANCE);
+		public static final DeferredRegister<ConfiguredFeature<?, ?>> CONFIGURED_FEATURES = DeferredRegister.create(Registry.CONFIGURED_FEATURE_REGISTRY, SavageAndRavage.MOD_ID);
 
-		public static <FC extends FeatureConfiguration, F extends Feature<FC>> Holder<ConfiguredFeature<?, ?>> register(String name, F feature, FC config) {
-			return BuiltinRegistries.register(BuiltinRegistries.CONFIGURED_FEATURE, new ResourceLocation(SavageAndRavage.MOD_ID, name), new ConfiguredFeature<>(feature, config));
+		public static final RegistryObject<ConfiguredFeature<NoneFeatureConfiguration, ?>> CREEPER_ENCLOSURE = register("creeper_enclosure", () -> new ConfiguredFeature<>(SRFeatures.CREEPER_ENCLOSURE.get(), NoneFeatureConfiguration.INSTANCE));
+
+		private static <FC extends FeatureConfiguration, F extends Feature<FC>> RegistryObject<ConfiguredFeature<FC, ?>> register(String name, Supplier<ConfiguredFeature<FC, F>> feature) {
+			return CONFIGURED_FEATURES.register(name, feature);
 		}
+
 	}
 
 	public static final class SRPlacedFeatures {
-		public static final Holder<PlacedFeature> CREEPER_ENCLOSURE = register("creeper_enclosure", SRConfiguredFeatures.CREEPER_ENCLOSURE);
+		public static final DeferredRegister<PlacedFeature> PLACED_FEATURES = DeferredRegister.create(Registry.PLACED_FEATURE_REGISTRY, SavageAndRavage.MOD_ID);
 
-		public static Holder<PlacedFeature> register(String name, Holder<? extends ConfiguredFeature<?, ?>> configuredFeature, PlacementModifier... placementModifiers) {
-			return BuiltinRegistries.register(BuiltinRegistries.PLACED_FEATURE, new ResourceLocation(SavageAndRavage.MOD_ID, name), new PlacedFeature(Holder.hackyErase(configuredFeature), List.of(placementModifiers)));
+		public static final RegistryObject<PlacedFeature> CREEPER_ENCLOSURE = register("creeper_enclosure", SRConfiguredFeatures.CREEPER_ENCLOSURE);
+
+		@SuppressWarnings("unchecked")
+		private static RegistryObject<PlacedFeature> register(String name, RegistryObject<? extends ConfiguredFeature<?, ?>> feature, PlacementModifier... placementModifiers) {
+			return PLACED_FEATURES.register(name, () -> new PlacedFeature((Holder<ConfiguredFeature<?, ?>>) feature.getHolder().get(), ImmutableList.copyOf(placementModifiers)));
 		}
 	}
 }

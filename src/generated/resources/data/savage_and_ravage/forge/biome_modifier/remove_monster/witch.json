@@ -1,0 +1,5 @@
+{
+  "type": "forge:remove_spawns",
+  "biomes": "#savage_and_ravage:has_monster/iceologer",
+  "entity_types": "minecraft:witch"
+}

@@ -235,7 +235,7 @@ public class GrieferArmorModel<T extends LivingEntity> extends HumanoidModel<T> 
 				entity instanceof SkeletonVillager ||
 				entity instanceof ZombieVillager ||
 				entity instanceof AbstractVillager ||
-				entity.getType() == ForgeRegistries.ENTITIES.getValue(GUARD_VILLAGER_NAME);
+				entity.getType() == ForgeRegistries.ENTITY_TYPES.getValue(GUARD_VILLAGER_NAME);
 		boolean piglin = entity instanceof AbstractPiglin ||
 				entity instanceof ZombifiedPiglin;
 		int entityFlag = (slot.ordinal() & 15) | (illager ? 1 : 0) << 4 | (piglin ? 1 : 0) << 5 | (entity.isBaby() ? 1 : 0) << 6;

@@ -1,12 +1,8 @@
 {
-  "selector": "minecraft:entities/evoker",
-  "priority": "normal",
   "modifiers": [
     {
       "type": "entries",
       "config": {
-        "replace": true,
-        "index": 0,
         "entries": [
           {
             "type": "minecraft:alternatives",
@@ -15,8 +11,8 @@
                 "type": "minecraft:item",
                 "conditions": [
                   {
-                    "condition": "minecraft:random_chance_with_looting",
                     "chance": 0.05,
+                    "condition": "minecraft:random_chance_with_looting",
                     "looting_multiplier": 0.025
                   }
                 ],
@@ -28,8 +24,12 @@
               }
             ]
           }
-        ]
+        ],
+        "index": 0,
+        "replace": true
       }
     }
-  ]
+  ],
+  "priority": "normal",
+  "selector": "minecraft:entities/evoker"
 }

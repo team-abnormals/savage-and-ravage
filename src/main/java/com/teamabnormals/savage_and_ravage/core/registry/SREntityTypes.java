@@ -23,7 +23,7 @@ import net.minecraftforge.registries.RegistryObject;
 @EventBusSubscriber(modid = SavageAndRavage.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class SREntityTypes {
 	public static final EntitySubRegistryHelper HELPER = SavageAndRavage.REGISTRY_HELPER.getEntitySubHelper();
-	public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES, SavageAndRavage.MOD_ID);
+	public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, SavageAndRavage.MOD_ID);
 
 	public static final RegistryObject<EntityType<SkeletonVillager>> SKELETON_VILLAGER = HELPER.createLivingEntity("skeleton_villager", SkeletonVillager::new, MobCategory.MONSTER, 0.6F, 1.99F);
 	public static final RegistryObject<EntityType<Creepie>> CREEPIE = HELPER.createLivingEntity("creepie", Creepie::new, MobCategory.CREATURE, 0.5F, 0.90F);

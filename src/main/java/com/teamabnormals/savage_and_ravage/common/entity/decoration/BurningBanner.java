@@ -9,7 +9,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -201,8 +201,8 @@ public class BurningBanner extends Entity implements IEntityAdditionalSpawnData 
 	public static boolean isOminousBanner(BlockGetter world, BlockPos pos) {
 		if (world.getBlockEntity(pos) instanceof BannerBlockEntity) {
 			BannerBlockEntity banner = (BannerBlockEntity) Objects.requireNonNull(world.getBlockEntity(pos));
-			if (banner.getName() instanceof TranslatableComponent) {
-				return ((TranslatableComponent) banner.getName()).getKey().contains("block.minecraft.ominous_banner");
+			if (banner.getName().getContents() instanceof TranslatableContents) {
+				return ((TranslatableContents) banner.getName().getContents()).getKey().contains("block.minecraft.ominous_banner");
 			}
 		}
 		return false;

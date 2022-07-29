@@ -31,8 +31,8 @@ import java.util.Arrays;
 import java.util.Collections;
 
 public class SRLootModifierProvider extends LootModifierProvider {
-	public SRLootModifierProvider(DataGenerator dataGenerator) {
-		super(dataGenerator, SavageAndRavage.MOD_ID);
+	public SRLootModifierProvider(DataGenerator generator) {
+		super(generator, SavageAndRavage.MOD_ID);
 	}
 
 	@Override

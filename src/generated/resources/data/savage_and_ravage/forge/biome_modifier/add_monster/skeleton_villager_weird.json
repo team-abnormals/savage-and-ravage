@@ -1,0 +1,10 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": "minecraft:old_growth_pine_taiga",
+  "spawners": {
+    "type": "savage_and_ravage:skeleton_villager",
+    "maxCount": 1,
+    "minCount": 1,
+    "weight": 25
+  }
+}

@@ -2,6 +2,7 @@ package com.teamabnormals.savage_and_ravage.common.entity.monster;
 
 import com.google.common.collect.Maps;
 import com.teamabnormals.savage_and_ravage.core.registry.SRItems;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.EntityType;
@@ -30,7 +31,7 @@ public class Executioner extends Vindicator {
 	}
 
 	@Override
-	protected void populateDefaultEquipmentSlots(DifficultyInstance difficulty) {
+	protected void populateDefaultEquipmentSlots(RandomSource random, DifficultyInstance difficulty) {
 		if (this.getCurrentRaid() == null) {
 			this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(SRItems.CLEAVER_OF_BEHEADING.get()));
 			this.handDropChances[EquipmentSlot.MAINHAND.getIndex()] = 0.5F;

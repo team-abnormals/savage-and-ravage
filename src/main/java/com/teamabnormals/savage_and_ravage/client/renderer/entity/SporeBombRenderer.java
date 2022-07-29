@@ -13,7 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.EmptyModelData;
+import net.minecraftforge.client.model.data.ModelData;
 
 public class SporeBombRenderer extends EntityRenderer<SporeBomb> {
 
@@ -50,7 +50,7 @@ public class SporeBombRenderer extends EntityRenderer<SporeBomb> {
 			i = OverlayTexture.NO_OVERLAY;
 		}
 
-		Minecraft.getInstance().getBlockRenderer().renderSingleBlock(blockStateIn, matrixStackIn, renderTypeBuffer, combinedLight, i, EmptyModelData.INSTANCE);
+		Minecraft.getInstance().getBlockRenderer().renderSingleBlock(blockStateIn, matrixStackIn, renderTypeBuffer, combinedLight, i, ModelData.EMPTY, null);
 	}
 
 	@Override

@@ -1,6 +1,4 @@
 {
-  "selector": "minecraft:adventure/voluntary_exile",
-  "priority": "normal",
   "modifiers": [
     {
       "type": "parent",
@@ -8,34 +6,36 @@
     },
     {
       "type": "criteria",
+      "conditions": [
+        {
+          "type": "savage_and_ravage:config",
+          "value": "no_bad_omen_on_death"
+        }
+      ],
       "config": {
         "criteria": {
           "savage_and_ravage:voluntary_exile": {
             "trigger": "savage_and_ravage:burn_ominous_banner"
           }
         }
-      },
-      "conditions": [
-        {
-          "value": "no_bad_omen_on_death",
-          "type": "savage_and_ravage:config"
-        }
-      ]
+      }
     },
     {
       "type": "display",
-      "config": {
-        "mode": "modify",
-        "description": {
-          "translate": "advancements.savage_and_ravage.adventure.voluntary_exile.description"
-        }
-      },
       "conditions": [
         {
-          "value": "no_bad_omen_on_death",
-          "type": "savage_and_ravage:config"
+          "type": "savage_and_ravage:config",
+          "value": "no_bad_omen_on_death"
         }
-      ]
+      ],
+      "config": {
+        "description": {
+          "translate": "advancements.savage_and_ravage.adventure.voluntary_exile.description"
+        },
+        "mode": "modify"
+      }
     }
-  ]
+  ],
+  "priority": "normal",
+  "selector": "minecraft:adventure/voluntary_exile"
 }

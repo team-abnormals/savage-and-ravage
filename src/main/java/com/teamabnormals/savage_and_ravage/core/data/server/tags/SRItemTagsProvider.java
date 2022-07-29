@@ -15,8 +15,8 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 
 public class SRItemTagsProvider extends ItemTagsProvider {
 
-	public SRItemTagsProvider(DataGenerator generator, BlockTagsProvider blockTagsProvider, ExistingFileHelper fileHelper) {
-		super(generator, blockTagsProvider, SavageAndRavage.MOD_ID, fileHelper);
+	public SRItemTagsProvider(DataGenerator generator, BlockTagsProvider blockTags, ExistingFileHelper existingFileHelper) {
+		super(generator, blockTags, SavageAndRavage.MOD_ID, existingFileHelper);
 	}
 
 	@Override

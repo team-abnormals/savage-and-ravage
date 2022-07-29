@@ -2,6 +2,7 @@ package com.teamabnormals.savage_and_ravage.common.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -12,7 +13,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 
 import javax.annotation.Nullable;
-import java.util.Random;
 
 public class ChiseledGloomyTilesBlock extends Block {
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
@@ -42,7 +42,7 @@ public class ChiseledGloomyTilesBlock extends Block {
 	}
 
 	@Override
-	public void tick(BlockState state, ServerLevel world, BlockPos pos, Random rand) {
+	public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource rand) {
 		if (state.getValue(POWERED) && !world.hasNeighborSignal(pos)) {
 			world.setBlock(pos, state.cycle(POWERED), 2);
 		}

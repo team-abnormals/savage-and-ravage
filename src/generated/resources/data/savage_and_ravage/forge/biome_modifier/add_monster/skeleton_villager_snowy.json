@@ -1,0 +1,18 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": "#savage_and_ravage:has_monster/skeleton_villager/rare",
+  "spawners": [
+    {
+      "type": "minecraft:skeleton",
+      "maxCount": 4,
+      "minCount": 4,
+      "weight": 19
+    },
+    {
+      "type": "savage_and_ravage:skeleton_villager",
+      "maxCount": 1,
+      "minCount": 1,
+      "weight": 1
+    }
+  ]
+}

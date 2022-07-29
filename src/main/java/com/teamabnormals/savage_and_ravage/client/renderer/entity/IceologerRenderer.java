@@ -18,7 +18,7 @@ public class IceologerRenderer extends MobRenderer<Iceologer, IceologerModel> {
 
 	public IceologerRenderer(EntityRendererProvider.Context context) {
 		super(context, new IceologerModel(context.bakeLayer(SRModelLayers.ICEOLOGER)), 0.5F);
-		this.addLayer(new CustomHeadLayer<>(this, context.getModelSet()));
+		this.addLayer(new CustomHeadLayer<>(this, context.getModelSet(), context.getItemInHandRenderer()));
 	}
 
 	@Override

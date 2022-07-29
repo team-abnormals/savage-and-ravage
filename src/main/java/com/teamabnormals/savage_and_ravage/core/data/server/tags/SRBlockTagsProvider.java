@@ -11,8 +11,8 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 
 public class SRBlockTagsProvider extends BlockTagsProvider {
 
-	public SRBlockTagsProvider(DataGenerator generator, ExistingFileHelper fileHelper) {
-		super(generator, SavageAndRavage.MOD_ID, fileHelper);
+	public SRBlockTagsProvider(DataGenerator generator, ExistingFileHelper existingFileHelper) {
+		super(generator, SavageAndRavage.MOD_ID, existingFileHelper);
 	}
 
 	@Override

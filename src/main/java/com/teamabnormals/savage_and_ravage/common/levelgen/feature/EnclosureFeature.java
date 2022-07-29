@@ -10,6 +10,7 @@ import com.teamabnormals.savage_and_ravage.core.registry.SREntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
@@ -24,7 +25,6 @@ import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConf
 import net.minecraftforge.fml.ModList;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class EnclosureFeature extends Feature<NoneFeatureConfiguration> {
 	private static final Direction[] horizontalDirections = new Direction[]{Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
@@ -39,7 +39,7 @@ public class EnclosureFeature extends Feature<NoneFeatureConfiguration> {
 	public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
 		WorldGenLevel level = context.level();
 		BlockPos origin = context.origin();
-		Random random = context.random();
+		RandomSource random = context.random();
 
 		int minY = origin.getY() - (4 + random.nextInt(2)); // The lowest y to use when making the pit
 		originalStartPos = origin;
@@ -86,7 +86,7 @@ public class EnclosureFeature extends Feature<NoneFeatureConfiguration> {
 	 * For the area 3 blocks around the center position, checks if the area 5 blocks around it are suitable, returning
 	 * one of these valid positions, or null if none are valid.
 	 */
-	private BlockPos findSuitablePosition(WorldGenLevel reader, BlockPos centerPos, int minY, Random rand) {
+	private BlockPos findSuitablePosition(WorldGenLevel reader, BlockPos centerPos, int minY, RandomSource rand) {
 		BlockPos.MutableBlockPos pos = centerPos.mutable();
 		ArrayList<BlockPos> suitablePositions = new ArrayList<>();
 		for (int bigX = centerPos.getX() - 3; bigX < centerPos.getX() + 3; bigX++) {
@@ -130,7 +130,7 @@ public class EnclosureFeature extends Feature<NoneFeatureConfiguration> {
 	/**
 	 * Takes in an arraylist of the positions at the edge of a hole and makes it bigger. Also increases the size of the holePositions
 	 */
-	private ArrayList<BlockPos> expandHole(ArrayList<BlockPos> edgePositions, ArrayList<BlockPos> holePositions, BlockPos centerPos, WorldGenLevel reader, Random rand) {
+	private ArrayList<BlockPos> expandHole(ArrayList<BlockPos> edgePositions, ArrayList<BlockPos> holePositions, BlockPos centerPos, WorldGenLevel reader, RandomSource rand) {
 		ArrayList<BlockPos> newEdgePositions = new ArrayList<>(edgePositions); // Caching edgePositions as elements need to be removed
 		for (BlockPos edgePos : edgePositions) {
 			// This makes it less likely to expand further as it gets larger, preventing ridiculous hole sizes
@@ -176,7 +176,7 @@ public class EnclosureFeature extends Feature<NoneFeatureConfiguration> {
 	/**
 	 * Generates the blocks at drop off positions, updating the edge positions with the failed drop-offs
 	 */
-	private void generateEdges(ArrayList<BlockPos> edgePositions, WorldGenLevel reader, Random rand) {
+	private void generateEdges(ArrayList<BlockPos> edgePositions, WorldGenLevel reader, RandomSource rand) {
 		for (BlockPos edgePos : edgePositions) {
 			if (rand.nextFloat() < 0.6f) { // Randomised to make the hole look a bit more natural
 				reader.setBlock(edgePos.relative(Direction.DOWN), Blocks.AIR.defaultBlockState(), 3);
@@ -207,7 +207,7 @@ public class EnclosureFeature extends Feature<NoneFeatureConfiguration> {
 	/**
 	 * Takes in an arraylist of hole positions and generates the hole from them, including mobs inside
 	 */
-	private void generateHole(ArrayList<BlockPos> holePositions, int minY, WorldGenLevel reader, Random rand) {
+	private void generateHole(ArrayList<BlockPos> holePositions, int minY, WorldGenLevel reader, RandomSource rand) {
 		for (BlockPos holePos : holePositions) {
 			currentPos.set(holePos);
 			for (int i = minY; i < holePos.getY() + 2; i++) { // holePos.getY() is the block 1 above the surface, so < is used
@@ -239,7 +239,7 @@ public class EnclosureFeature extends Feature<NoneFeatureConfiguration> {
 	 * Takes in an arraylist of positions of the outline around the hole, and generates fences at them.
 	 * Returns the outlines excluding fence positions
 	 */
-	private ArrayList<BlockPos> generateFences(ArrayList<BlockPos> outlinePositions, WorldGenLevel reader, Random rand) {
+	private ArrayList<BlockPos> generateFences(ArrayList<BlockPos> outlinePositions, WorldGenLevel reader, RandomSource rand) {
 		BlockPos.MutableBlockPos secondFencePos = new BlockPos.MutableBlockPos();
 		ArrayList<BlockPos> nonFenceOutlines = new ArrayList<>(outlinePositions);
 		if (!nonFenceOutlines.isEmpty()) {
@@ -343,7 +343,7 @@ public class EnclosureFeature extends Feature<NoneFeatureConfiguration> {
 	/**
 	 * Chooses positions from a potential decoration positions list and generates decorations
 	 */
-	private void generateDecorations(ArrayList<Pair<Direction, BlockPos>> potentialStarts, WorldGenLevel reader, Random rand) {
+	private void generateDecorations(ArrayList<Pair<Direction, BlockPos>> potentialStarts, WorldGenLevel reader, RandomSource rand) {
 		int decorationIndex = 0;
 		BlockPos[] decorationCenters = new BlockPos[3];
 		while (decorationIndex < 3 && !potentialStarts.isEmpty()) {

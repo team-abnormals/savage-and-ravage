@@ -43,12 +43,12 @@ public class SRCompat {
 		registerNoteBlocks();
 	}
 
-	public static void registerFlammables() {
+	private static void registerFlammables() {
 		DataUtil.registerFlammable(SRBlocks.CREEPER_SPORE_SACK.get(), 30, 60);
 		DataUtil.registerFlammable(SRBlocks.SPORE_BOMB.get(), 15, 100);
 	}
 
-	public static void registerDispenserBehaviors() {
+	private static void registerDispenserBehaviors() {
 		DispenserBlock.registerBehavior(SRItems.MISCHIEF_ARROW.get(), new AbstractProjectileDispenseBehavior() {
 			@Override
 			protected Projectile getProjectile(Level world, Position position, ItemStack stack) {
@@ -89,7 +89,7 @@ public class SRCompat {
 		}));
 	}
 
-	public static void registerNoteBlocks() {
+	private static void registerNoteBlocks() {
 		DataUtil.registerNoteBlockInstrument(new DataUtil.CustomNoteBlockInstrument(SavageAndRavage.MOD_ID, source -> source.getBlockState().is(Blocks.TARGET), SRSounds.BLOCK_NOTE_BLOCK_HIT_MARKER.get()));
 		DataUtil.registerNoteBlockInstrument(new DataUtil.CustomNoteBlockInstrument(SavageAndRavage.MOD_ID, source -> source.getBlockState().is(SRBlockTags.HARPSICHORD_NOTE_BLOCKS), SRSounds.BLOCK_NOTE_BLOCK_HARPSICHORD.get()));
 		DataUtil.registerNoteBlockInstrument(new DataUtil.CustomNoteBlockInstrument(SavageAndRavage.MOD_ID, source -> source.getBlockState().is(SRBlockTags.ORCHESTRAL_NOTE_BLOCKS), SRSounds.BLOCK_NOTE_BLOCK_ORCHESTRAL_HIT.get()));

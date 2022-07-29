@@ -9,6 +9,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
@@ -128,8 +129,9 @@ public class SkeletonVillager extends AbstractSkeleton implements CrossbowAttack
 	@Nullable
 	@Override
 	public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
-		this.populateDefaultEquipmentSlots(difficultyIn);
-		this.populateDefaultEquipmentEnchantments(difficultyIn);
+		RandomSource random = worldIn.getRandom();
+		this.populateDefaultEquipmentSlots(random, difficultyIn);
+		this.populateDefaultEquipmentEnchantments(random, difficultyIn);
 		if (worldIn.getRandom().nextInt(100) == 0) {
 			Spider spider = EntityType.SPIDER.create(this.level);
 			if (spider != null) {
@@ -142,9 +144,9 @@ public class SkeletonVillager extends AbstractSkeleton implements CrossbowAttack
 	}
 
 	@Override
-	protected void populateDefaultEquipmentSlots(DifficultyInstance difficulty) {
+	protected void populateDefaultEquipmentSlots(RandomSource random, DifficultyInstance difficulty) {
 		ItemStack itemstack = new ItemStack(Items.CROSSBOW);
-		if (this.random.nextInt(300) == 0) {
+		if (random.nextInt(300) == 0) {
 			Map<Enchantment, Integer> map = Maps.newHashMap();
 			map.put(Enchantments.PIERCING, 1);
 			EnchantmentHelper.setEnchantments(map, itemstack);

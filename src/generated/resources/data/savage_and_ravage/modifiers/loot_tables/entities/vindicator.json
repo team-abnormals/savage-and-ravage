@@ -1,25 +1,25 @@
 {
-  "selector": "minecraft:entities/vindicator",
-  "priority": "normal",
   "modifiers": [
     {
       "type": "pools",
       "config": {
-        "replace": false,
         "pools": [
           {
-            "name": "savage_and_ravage:vindicator_raid_drops",
-            "rolls": 1.0,
             "bonus_rolls": 0.0,
             "entries": [
               {
                 "type": "minecraft:loot_table",
                 "name": "savage_and_ravage:entities/raider_drops"
               }
-            ]
+            ],
+            "name": "savage_and_ravage:vindicator_raid_drops",
+            "rolls": 1.0
           }
-        ]
+        ],
+        "replace": false
       }
     }
-  ]
+  ],
+  "priority": "normal",
+  "selector": "minecraft:entities/vindicator"
 }

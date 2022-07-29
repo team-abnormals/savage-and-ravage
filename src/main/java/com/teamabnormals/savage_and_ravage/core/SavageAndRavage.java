@@ -1,16 +1,19 @@
 package com.teamabnormals.savage_and_ravage.core;
 
-import com.teamabnormals.blueprint.core.util.DataUtil;
 import com.teamabnormals.blueprint.core.util.registry.RegistryHelper;
 import com.teamabnormals.savage_and_ravage.client.model.*;
 import com.teamabnormals.savage_and_ravage.client.renderer.entity.*;
 import com.teamabnormals.savage_and_ravage.client.renderer.entity.layers.TotemShieldLayer;
 import com.teamabnormals.savage_and_ravage.core.data.server.modifiers.SRAdvancementModifierProvider;
+import com.teamabnormals.savage_and_ravage.core.data.server.modifiers.SRBiomeModifierProvider;
 import com.teamabnormals.savage_and_ravage.core.data.server.modifiers.SRLootModifierProvider;
+import com.teamabnormals.savage_and_ravage.core.data.server.tags.SRBiomeTagsProvider;
 import com.teamabnormals.savage_and_ravage.core.data.server.tags.SRBlockTagsProvider;
 import com.teamabnormals.savage_and_ravage.core.data.server.tags.SREntityTypeTagsProvider;
 import com.teamabnormals.savage_and_ravage.core.data.server.tags.SRItemTagsProvider;
 import com.teamabnormals.savage_and_ravage.core.other.*;
+import com.teamabnormals.savage_and_ravage.core.other.SRFeatures.SRConfiguredFeatures;
+import com.teamabnormals.savage_and_ravage.core.other.SRFeatures.SRPlacedFeatures;
 import com.teamabnormals.savage_and_ravage.core.registry.*;
 import net.minecraft.client.model.IllagerModel;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
@@ -19,15 +22,13 @@ import net.minecraft.client.renderer.entity.EvokerRenderer;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Evoker;
-import net.minecraft.world.level.block.Block;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.model.ForgeModelBakery;
+import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -36,7 +37,6 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 
 @Mod(SavageAndRavage.MOD_ID)
 public class SavageAndRavage {
@@ -55,14 +55,15 @@ public class SavageAndRavage {
 		SRParticles.PARTICLES.register(bus);
 		SRMobEffects.MOB_EFFECTS.register(bus);
 		SRFeatures.FEATURES.register(bus);
+		SRConfiguredFeatures.CONFIGURED_FEATURES.register(bus);
+		SRPlacedFeatures.PLACED_FEATURES.register(bus);
 		SRAttributes.ATTRIBUTES.register(bus);
 		SRDataSerializers.SERIALIZERS.register(bus);
+		SRLootConditions.LOOT_CONDITION_TYPES.register(bus);
 
 		bus.addListener(this::commonSetup);
 		bus.addListener(this::clientSetup);
 		bus.addListener(this::dataSetup);
-
-		bus.addGenericListener(Block.class, this::registerConfigConditions);
 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 			bus.addListener(this::registerLayers);
@@ -90,20 +91,17 @@ public class SavageAndRavage {
 
 	private void dataSetup(GatherDataEvent event) {
 		DataGenerator generator = event.getGenerator();
-		ExistingFileHelper fileHelper = event.getExistingFileHelper();
+		ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
 
-		if (event.includeServer()) {
-			SRBlockTagsProvider blockTags = new SRBlockTagsProvider(generator, fileHelper);
-			generator.addProvider(blockTags);
-			generator.addProvider(new SRItemTagsProvider(generator, blockTags, fileHelper));
-			generator.addProvider(new SREntityTypeTagsProvider(generator, fileHelper));
-			generator.addProvider(new SRAdvancementModifierProvider(generator));
-			generator.addProvider(new SRLootModifierProvider(generator));
-		}
-	}
-
-	private void registerConfigConditions(RegistryEvent.Register<Block> event) {
-		DataUtil.registerConfigCondition(SavageAndRavage.MOD_ID, SRConfig.COMMON, SRConfig.CLIENT);
+		boolean includeServer = event.includeServer();
+		SRBlockTagsProvider blockTags = new SRBlockTagsProvider(generator, existingFileHelper);
+		generator.addProvider(includeServer, blockTags);
+		generator.addProvider(includeServer, new SRItemTagsProvider(generator, blockTags, existingFileHelper));
+		generator.addProvider(includeServer, new SREntityTypeTagsProvider(generator, existingFileHelper));
+		generator.addProvider(includeServer, new SRBiomeTagsProvider(generator, existingFileHelper));
+		generator.addProvider(includeServer, new SRAdvancementModifierProvider(generator));
+		generator.addProvider(includeServer, new SRLootModifierProvider(generator));
+		generator.addProvider(includeServer, SRBiomeModifierProvider.create(generator, existingFileHelper));
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -115,8 +113,8 @@ public class SavageAndRavage {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	private void registerModels(ModelRegistryEvent event) {
-		ForgeModelBakery.addSpecialModel(IceChunkRenderer.MODEL_LOCATION);
+	private void registerModels(ModelEvent.RegisterAdditional event) {
+		event.register(IceChunkRenderer.MODEL_LOCATION);
 	}
 
 	@OnlyIn(Dist.CLIENT)

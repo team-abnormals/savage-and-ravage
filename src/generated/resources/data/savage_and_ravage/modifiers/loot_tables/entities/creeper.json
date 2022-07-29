@@ -1,44 +1,11 @@
 {
-  "selector": {
-    "type": "names",
-    "config": [
-      "minecraft:entities/creeper"
-    ],
-    "conditions": [
-      {
-        "value": "creepers_drop_spores_after_explosion_death",
-        "type": "savage_and_ravage:config"
-      }
-    ]
-  },
-  "priority": "normal",
   "modifiers": [
     {
       "type": "pools",
       "config": {
-        "replace": false,
         "pools": [
           {
-            "name": "savage_and_ravage:creeper_explosion_drops",
-            "rolls": 1.0,
             "bonus_rolls": 0.0,
-            "entries": [
-              {
-                "type": "minecraft:item",
-                "functions": [
-                  {
-                    "function": "minecraft:set_count",
-                    "count": {
-                      "type": "minecraft:uniform",
-                      "min": 1.0,
-                      "max": 3.0
-                    },
-                    "add": false
-                  }
-                ],
-                "name": "savage_and_ravage:creeper_spores"
-              }
-            ],
             "conditions": [
               {
                 "condition": "minecraft:damage_source_properties",
@@ -46,10 +13,43 @@
                   "is_explosion": true
                 }
               }
-            ]
+            ],
+            "entries": [
+              {
+                "type": "minecraft:item",
+                "functions": [
+                  {
+                    "add": false,
+                    "count": {
+                      "type": "minecraft:uniform",
+                      "max": 3.0,
+                      "min": 1.0
+                    },
+                    "function": "minecraft:set_count"
+                  }
+                ],
+                "name": "savage_and_ravage:creeper_spores"
+              }
+            ],
+            "name": "savage_and_ravage:creeper_explosion_drops",
+            "rolls": 1.0
           }
-        ]
+        ],
+        "replace": false
       }
     }
-  ]
+  ],
+  "priority": "normal",
+  "selector": {
+    "type": "names",
+    "conditions": [
+      {
+        "type": "savage_and_ravage:config",
+        "value": "creepers_drop_spores_after_explosion_death"
+      }
+    ],
+    "config": [
+      "minecraft:entities/creeper"
+    ]
+  }
 }

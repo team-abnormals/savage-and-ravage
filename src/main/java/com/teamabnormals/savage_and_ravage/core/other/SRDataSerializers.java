@@ -4,14 +4,13 @@ import com.teamabnormals.savage_and_ravage.core.SavageAndRavage;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.registries.DataSerializerEntry;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries.Keys;
 
 import java.util.Optional;
 
 public class SRDataSerializers {
-	public static final DeferredRegister<DataSerializerEntry> SERIALIZERS = DeferredRegister.create(Keys.DATA_SERIALIZERS, SavageAndRavage.MOD_ID);
+	public static final DeferredRegister<EntityDataSerializer<?>> SERIALIZERS = DeferredRegister.create(Keys.ENTITY_DATA_SERIALIZERS, SavageAndRavage.MOD_ID);
 
 	public static final EntityDataSerializer<Optional<Vec3>> OPTIONAL_VECTOR3D = new EntityDataSerializer<Optional<Vec3>>() {
 		@Override
@@ -37,6 +36,6 @@ public class SRDataSerializers {
 	};
 
 	static {
-		SERIALIZERS.register("optional_vector3d", () -> new DataSerializerEntry(OPTIONAL_VECTOR3D));
+		SERIALIZERS.register("optional_vector3d", () -> OPTIONAL_VECTOR3D);
 	}
 }

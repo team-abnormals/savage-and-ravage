@@ -9,6 +9,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -19,8 +20,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.Random;
-
 public class CreeperSporesItem extends Item implements PottableItem {
 	private static final TargetedItemCategoryFiller FILLER = new TargetedItemCategoryFiller(() -> Items.EGG);
 
@@ -28,7 +27,7 @@ public class CreeperSporesItem extends Item implements PottableItem {
 		super(properties);
 	}
 
-	public static int getThrownSporeCloudSize(Random rand) {
+	public static int getThrownSporeCloudSize(RandomSource rand) {
 		return rand.nextInt(50) == 0 ? 0 : 1 + rand.nextInt(3);
 	}
 

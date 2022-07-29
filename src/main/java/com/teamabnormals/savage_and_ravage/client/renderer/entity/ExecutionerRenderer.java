@@ -17,7 +17,7 @@ public class ExecutionerRenderer extends MobRenderer<Vindicator, ExecutionerMode
 
 	public ExecutionerRenderer(EntityRendererProvider.Context context) {
 		super(context, new ExecutionerModel(context.bakeLayer(SRModelLayers.EXECUTIONER)), 0.5f);
-		this.addLayer(new ItemInHandLayer<>(this) {
+		this.addLayer(new ItemInHandLayer<>(this, context.getItemInHandRenderer()) {
 			@Override
 			public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, Vindicator entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
 				if (entity.isAggressive()) {

@@ -2,12 +2,10 @@ package com.teamabnormals.savage_and_ravage.core.registry;
 
 import com.teamabnormals.savage_and_ravage.client.particle.*;
 import com.teamabnormals.savage_and_ravage.core.SavageAndRavage;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.particle.SpellParticle;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
+import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -27,13 +25,12 @@ public class SRParticles {
 	public static final RegistryObject<SimpleParticleType> CLEAVER_SWEEP = PARTICLES.register("cleaver_sweep", () -> new SimpleParticleType(true));
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
-	public static void registerParticleFactories(ParticleFactoryRegisterEvent event) {
-		ParticleEngine manager = Minecraft.getInstance().particleEngine;
-		if (CREEPER_SPORES.isPresent()) manager.register(CREEPER_SPORES.get(), CreeperSporesParticle.Factory::new);
-		if (CREEPER_SPORE_SPRINKLES.isPresent()) manager.register(CREEPER_SPORE_SPRINKLES.get(), CreeperSporeSprinklesParticle.Factory::new);
-		if (RUNE.isPresent()) manager.register(RUNE.get(), RuneParticle.Factory::new);
-		if (CONFUSION_BOLT.isPresent()) manager.register(CONFUSION_BOLT.get(), ConfusionBoltParticle.Factory::new);
-		if (SNOWFLAKE.isPresent()) manager.register(SNOWFLAKE.get(), SpellParticle.Provider::new);
-		if (CLEAVER_SWEEP.isPresent()) manager.register(CLEAVER_SWEEP.get(), CleaverSweepParticle.Factory::new);
+	public static void registerParticleFactories(RegisterParticleProvidersEvent event) {
+		event.register(CREEPER_SPORES.get(), CreeperSporesParticle.Factory::new);
+		event.register(CREEPER_SPORE_SPRINKLES.get(), CreeperSporeSprinklesParticle.Factory::new);
+		event.register(RUNE.get(), RuneParticle.Factory::new);
+		event.register(CONFUSION_BOLT.get(), ConfusionBoltParticle.Factory::new);
+		event.register(SNOWFLAKE.get(), SpellParticle.Provider::new);
+		event.register(CLEAVER_SWEEP.get(), CleaverSweepParticle.Factory::new);
 	}
 }

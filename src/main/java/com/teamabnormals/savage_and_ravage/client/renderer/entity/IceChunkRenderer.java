@@ -14,9 +14,8 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.model.data.EmptyModelData;
-
-import java.util.Random;
+import net.minecraft.util.RandomSource;
+import net.minecraftforge.client.model.data.ModelData;
 
 /**
  * @author Ocelot
@@ -56,13 +55,13 @@ public class IceChunkRenderer extends EntityRenderer<IceChunk> {
 	 * @param packedLight The packed uv into the light texture the parts should be rendered at
 	 */
 	private static void renderModel(BakedModel model, VertexConsumer builder, PoseStack matrixStack, int packedLight) {
-		Random random = new Random(42L);
+		RandomSource random = RandomSource.create(42L);
 		for (Direction direction : Direction.values()) {
-			for (BakedQuad quad : model.getQuads(null, direction, random, EmptyModelData.INSTANCE)) {
+			for (BakedQuad quad : model.getQuads(null, direction, random, ModelData.EMPTY, null)) {
 				builder.putBulkData(matrixStack.last(), quad, 1, 1, 1, packedLight, OverlayTexture.NO_OVERLAY);
 			}
 		}
-		for (BakedQuad quad : model.getQuads(null, null, random, EmptyModelData.INSTANCE)) {
+		for (BakedQuad quad : model.getQuads(null, null, random, ModelData.EMPTY, null)) {
 			builder.putBulkData(matrixStack.last(), quad, 1, 1, 1, packedLight, OverlayTexture.NO_OVERLAY);
 		}
 	}
