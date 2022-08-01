@@ -22,6 +22,8 @@
   
   "item.savage_and_ravage.wand_of_freezing": "Морозный жезл",
   "item.savage_and_ravage.cleaver_of_beheading": "Головоруб",
+  "item.savage_and_ravage.conch_of_conjuring": "Раковина заклинания",
+  "item.savage_and_ravage.mask_of_dishonesty": "Маска нечестности",
 	
   "item.savage_and_ravage.creeper_spores": "Споры криперов",
   "item.savage_and_ravage.mischief_arrow": "Злобная стрела",
@@ -30,6 +32,7 @@
   "item.savage_and_ravage.griefer_spawn_egg": "Яйцо призыва грифера",
   "item.savage_and_ravage.executioner_spawn_egg": "Яйцо призыва палача",
   "item.savage_and_ravage.iceologer_spawn_egg": "Яйцо призыва ледолога",
+  "item.savage_and_ravage.trickster_spawn_egg": "Яйцо призыва плута",
   
   "entity.savage_and_ravage.skeleton_villager": "Скелет-разбойник",
   "entity.savage_and_ravage.griefer": "Грифер",
@@ -43,28 +46,45 @@
   "entity.savage_and_ravage.iceologer": "Ледолог",
   "entity.savage_and_ravage.ice_chunk": "Кусок льда",
   "entity.savage_and_ravage.ice_cloud": "Облако льда",
+  "entity.savage_and_ravage.trickster": "Плут",
   
   "effect.savage_and_ravage.frostbite": "Обморожение",
   
   "attribute.name.generic.explosive_damage_reduction": "Защита от взрывов",
   
+  "advancements.savage_and_ravage.adventure.creeper_spores.title": "Подорвался",
+  "advancements.savage_and_ravage.adventure.creeper_spores.description": "Получите споры крипера убив крипера взрывом",
   "advancements.savage_and_ravage.adventure.griefer_armor.title": "Динамит с лазерным лучом",
   "advancements.savage_and_ravage.adventure.griefer_armor.description": "Получите полный комплект гриферской брони",
   "advancements.savage_and_ravage.adventure.relic_collector.title": "Собиратель реликвий",
-  "advancements.savage_and_ravage.adventure.relic_collector.description": "Получите тотем бессмертия, головоруб и морозный жезл",
+  "advancements.savage_and_ravage.adventure.relic_collector.description": "Получите все реликвии зловредов",
+  "advancements.savage_and_ravage.adventure.mask_of_dishonesty.title": "Искусство обмана",
+  "advancements.savage_and_ravage.adventure.mask_of_dishonesty.description": "Получите маску нечестности убив плута",
+  
   "advancements.savage_and_ravage.adventure.voluntary_exile.description": "Сожгите зловещий флаг.\nМожет, стоит пока держаться подальше от деревень...",
   
-  "subtitles.savage_and_ravage.entity.creepie.hurt": "Криперок получает урон",
-  "subtitles.savage_and_ravage.entity.creepie.death": "Криперок умерает",
+  "subtitles.savage_and_ravage.entity.creepie.hurt": "Криперок ранен",
+  "subtitles.savage_and_ravage.entity.creepie.death": "Криперок погибает",
   "subtitles.savage_and_ravage.entity.creepie.fuse": "Криперок шипит",
   "subtitles.savage_and_ravage.entity.creepie.convert": "Криперок начинает превращаться",
   "subtitles.savage_and_ravage.entity.creepie.grow": "Криперок выростает в крипера",
+  
   "subtitles.savage_and_ravage.entity.iceologer.ambient": "Ледолог бормочит",
-  "subtitles.savage_and_ravage.entity.iceologer.hurt": "Ледолог получает урон",
-  "subtitles.savage_and_ravage.entity.iceologer.death": "Ледолог умерает",
+  "subtitles.savage_and_ravage.entity.iceologer.hurt": "Ледолог ранен",
+  "subtitles.savage_and_ravage.entity.iceologer.death": "Ледолог погибает",
   "subtitles.savage_and_ravage.entity.iceologer.celebrate": "Ледолог празднует",
-  "subtitles.savage_and_ravage.entity.iceologer.cast_spell": "Ледолог применяет заклинание",
+  "subtitles.savage_and_ravage.entity.iceologer.cast_spell": "Ледолог колдует",
+  
+  "subtitles.savage_and_ravage.entity.trickster.ambient": "Плут бормочит",
+  "subtitles.savage_and_ravage.entity.trickster.step": "Плут звенит",
+  "subtitles.savage_and_ravage.entity.trickster.hurt": "Плут ранен",
+  "subtitles.savage_and_ravage.entity.trickster.death": "Плут погибает",
+  "subtitles.savage_and_ravage.entity.trickster.celebrate": "Плут празднует",
+  "subtitles.savage_and_ravage.entity.trickster.laugh": "Плут смеётся",
+  "subtitles.savage_and_ravage.entity.trickster.cast_spell": "Плут колдует",
+  
   "subtitles.savage_and_ravage.entity.player.cast_spell": "Игрок применяет заклинание",
   "subtitles.savage_and_ravage.entity.creeper_spores.throw": "Споры криперов парят",
-  "subtitles.savage_and_ravage.generic.prepare_attack": "Рунический мрачная плитка активировалась"
+  "subtitles.savage_and_ravage.generic.prepare_attack": "Рунический мрачная плитка активировалась",
+  "subtitles.savage_and_ravage.generic.puff_of_smoke": "Дым пыхнул"
 }
