@@ -52,7 +52,7 @@ public class SavageAndRavage {
 
 		REGISTRY_HELPER.register(bus);
 		SREntityTypes.ENTITIES.register(bus);
-		SRParticles.PARTICLES.register(bus);
+		SRParticleTypes.PARTICLES.register(bus);
 		SRMobEffects.MOB_EFFECTS.register(bus);
 		SRFeatures.FEATURES.register(bus);
 		SRConfiguredFeatures.CONFIGURED_FEATURES.register(bus);

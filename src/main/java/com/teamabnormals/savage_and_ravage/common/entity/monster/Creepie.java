@@ -6,7 +6,7 @@ import com.teamabnormals.savage_and_ravage.common.entity.ai.goal.FollowMobOwnerG
 import com.teamabnormals.savage_and_ravage.common.entity.ai.goal.MobOwnerHurtByTargetGoal;
 import com.teamabnormals.savage_and_ravage.common.entity.ai.goal.MobOwnerHurtTargetGoal;
 import com.teamabnormals.savage_and_ravage.core.SRConfig;
-import com.teamabnormals.savage_and_ravage.core.registry.SRParticles;
+import com.teamabnormals.savage_and_ravage.core.registry.SRParticleTypes;
 import com.teamabnormals.savage_and_ravage.core.registry.SRSounds;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -295,7 +295,7 @@ public class Creepie extends Monster implements PowerableMob, OwnableMob {
 					this.finishConversion(this.level);
 				}
 				if (this.level.isClientSide()) {
-					this.level.addParticle(SRParticles.CREEPER_SPORES.get(), this.getX() - 0.5d + (double) (this.random.nextFloat()), this.getY() + 0.5d, this.getZ() - 0.5d + (double) (this.random.nextFloat()), 0.0D, (this.random.nextFloat() / 5.0F), 0.0D);
+					this.level.addParticle(SRParticleTypes.CREEPER_SPORES.get(), this.getX() - 0.5d + (double) (this.random.nextFloat()), this.getY() + 0.5d, this.getZ() - 0.5d + (double) (this.random.nextFloat()), 0.0D, (this.random.nextFloat() / 5.0F), 0.0D);
 				}
 			}
 		}

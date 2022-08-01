@@ -67,7 +67,7 @@ public class ConfusionBolt extends ThrowableProjectile {
 		Vec3 deltaMovement = this.getDeltaMovement();
 		super.tick();
 		this.setDeltaMovement(deltaMovement); //Undoes tampering by superclass
-		spawnGaussianParticles(this.level, this.getBoundingBox(), SRParticles.CONFUSION_BOLT.getId().toString(), 5);
+		spawnGaussianParticles(this.level, this.getBoundingBox(), SRParticleTypes.CONFUSION_BOLT.getId().toString(), 5);
 		this.entityData.set(TICKS_TILL_REMOVE, this.entityData.get(TICKS_TILL_REMOVE) - 1);
 		if (this.entityData.get(TICKS_TILL_REMOVE) <= 0)
 			this.discard();
@@ -135,7 +135,7 @@ public class ConfusionBolt extends ThrowableProjectile {
 					pos.move(direction);
 					if (!this.level.getBlockState(pos).isSolidRender(this.level, pos))
 						for (int i = 0; i < 3; i++)
-							NetworkUtil.spawnParticle(SRParticles.RUNE.getId().toString(), this.level.dimension(), pos.getX() + random.nextDouble(), pos.getY() + 0.25, pos.getZ() + random.nextDouble(), 0.0D, 0.0D, 0.0D);
+							NetworkUtil.spawnParticle(SRParticleTypes.RUNE.getId().toString(), this.level.dimension(), pos.getX() + random.nextDouble(), pos.getY() + 0.25, pos.getZ() + random.nextDouble(), 0.0D, 0.0D, 0.0D);
 					pos.move(direction.getOpposite());
 				}
 			}

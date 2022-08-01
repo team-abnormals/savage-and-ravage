@@ -1,7 +1,7 @@
 package com.teamabnormals.savage_and_ravage.common.entity.projectile;
 
 import com.teamabnormals.savage_and_ravage.core.registry.SREntityTypes;
-import com.teamabnormals.savage_and_ravage.core.registry.SRParticles;
+import com.teamabnormals.savage_and_ravage.core.registry.SRParticleTypes;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.level.ServerLevel;
@@ -50,7 +50,7 @@ public class IceCloud extends AbstractHurtingProjectile {
 
 	@Override
 	protected ParticleOptions getTrailParticle() {
-		return SRParticles.SNOWFLAKE.get();
+		return SRParticleTypes.SNOWFLAKE.get();
 	}
 
 	@Override

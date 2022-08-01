@@ -291,7 +291,7 @@ public class SREvents {
 								}
 								double xAngle = -Mth.sin(player.getYRot() * ((float) Math.PI / 180F));
 								double zAngle = Mth.cos(player.getYRot() * ((float) Math.PI / 180F));
-								((ServerLevel) world).sendParticles(SRParticles.CLEAVER_SWEEP.get(), player.getX() + xAngle, player.getY(0.5D), player.getZ() + zAngle, 0, xAngle, 0.0D, zAngle, 0.0D);
+								((ServerLevel) world).sendParticles(SRParticleTypes.CLEAVER_SWEEP.get(), player.getX() + xAngle, player.getY(0.5D), player.getZ() + zAngle, 0, xAngle, 0.0D, zAngle, 0.0D);
 							}
 							world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.PLAYER_ATTACK_SWEEP, player.getSoundSource(), 1.0F, 1.0F);
 						}

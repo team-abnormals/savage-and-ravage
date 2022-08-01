@@ -12,7 +12,7 @@ import com.teamabnormals.savage_and_ravage.core.other.SRDataSerializers;
 import com.teamabnormals.savage_and_ravage.core.other.SREvents;
 import com.teamabnormals.savage_and_ravage.core.registry.SRBlocks;
 import com.teamabnormals.savage_and_ravage.core.registry.SRItems;
-import com.teamabnormals.savage_and_ravage.core.registry.SRParticles;
+import com.teamabnormals.savage_and_ravage.core.registry.SRParticleTypes;
 import com.teamabnormals.savage_and_ravage.core.registry.SRSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -139,7 +139,7 @@ public class Trickster extends SpellcasterIllager implements TracksHits {
 			float f1 = Mth.cos(f);
 			float f2 = Mth.sin(f);
 			//Spawns particles at hands
-			ParticleOptions particle = this.getCurrentSpell() == IllagerSpell.FANGS ? SRParticles.RUNE.get() : ParticleTypes.ENTITY_EFFECT;
+			ParticleOptions particle = this.getCurrentSpell() == IllagerSpell.FANGS ? SRParticleTypes.RUNE.get() : ParticleTypes.ENTITY_EFFECT;
 			this.level.addParticle(particle, this.getX() + (double) f1 * 0.8D, this.getY() + 1.5D, this.getZ() + (double) f2 * 0.6D, 0.0, 0.0, 0.0);
 			this.level.addParticle(particle, this.getX() - (double) f1 * 0.8D, this.getY() + 1.5D, this.getZ() - (double) f2 * 0.6D, 0.0, 0.0, 0.0);
 		}
@@ -161,7 +161,7 @@ public class Trickster extends SpellcasterIllager implements TracksHits {
 					double x = pos.x + (random.nextInt(2) == 0 ? 1 : -1) * 0.65625D * random.nextDouble(); //Generating the x pos at a random position in the 'prison outline'
 					//Generating the corresponding z pos - if the x value is 'near the edges' (far from the middle) this can be anything, but if it is close to the middle it is constrained to edge values
 					double z = pos.z + (random.nextInt(2) == 0 ? 1 : -1) * (Math.abs(pos.x - x) < 0.34375 ? ((coefficient * random.nextDouble()) + adjustment) : 0.65625D * random.nextDouble());
-					this.level.addParticle(SRParticles.RUNE.get(), x, pos.y + 0.8125D, z, 0.0, 0.0, 0.0);
+					this.level.addParticle(SRParticleTypes.RUNE.get(), x, pos.y + 0.8125D, z, 0.0, 0.0, 0.0);
 				}
 				/* These doubles throughout are not arbitrary - they're calculated by dividing pixel values on
 				 * the prison by 16 (which works because it is never scaled). 0.65625 is half the total length and 0.34375
@@ -223,7 +223,7 @@ public class Trickster extends SpellcasterIllager implements TracksHits {
 										searchPos.move(Direction.UP);
 										if (!this.level.isClientSide && !this.level.getBlockState(searchPos).isSolidRender(this.level, searchPos)) {
 											for (int i = 0; i < 3; i++)
-												NetworkUtil.spawnParticle(SRParticles.RUNE.getId().toString(), this.level.dimension(), x + random.nextDouble(), y + 1.25, z + random.nextDouble(), 0.0D, 0.0D, 0.0D);
+												NetworkUtil.spawnParticle(SRParticleTypes.RUNE.getId().toString(), this.level.dimension(), x + random.nextDouble(), y + 1.25, z + random.nextDouble(), 0.0D, 0.0D, 0.0D);
 										}
 									}
 								}

@@ -2,7 +2,7 @@ package com.teamabnormals.savage_and_ravage.common.entity.projectile;
 
 import com.teamabnormals.savage_and_ravage.common.entity.monster.Creepie;
 import com.teamabnormals.savage_and_ravage.core.registry.SREntityTypes;
-import com.teamabnormals.savage_and_ravage.core.registry.SRParticles;
+import com.teamabnormals.savage_and_ravage.core.registry.SRParticleTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -53,7 +53,7 @@ public class SporeCloud extends ThrowableProjectile implements IEntityAdditional
 		Entity thrower = this.getOwner();
 		if (thrower instanceof LivingEntity)
 			aoe.setOwner((LivingEntity) thrower);
-		aoe.setParticle(SRParticles.CREEPER_SPORES.get());
+		aoe.setParticle(SRParticleTypes.CREEPER_SPORES.get());
 		aoe.setRadius(this.cloudSize + 1.3F);
 		aoe.setRadiusOnUse(-0.05F);
 		aoe.setDuration((this.cloudSize * 20) + 60);
@@ -110,7 +110,7 @@ public class SporeCloud extends ThrowableProjectile implements IEntityAdditional
 		if (!this.level.isClientSide()) {
 			this.spawnAreaEffectCloud(hitVec.x(), hitVec.y(), hitVec.z());
 		} else for (int i = 0; i < 16; i++) {
-			this.level.addParticle(SRParticles.CREEPER_SPORE_SPRINKLES.get(), this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
+			this.level.addParticle(SRParticleTypes.CREEPER_SPORE_SPRINKLES.get(), this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
 		}
 		this.hit = true;
 		if (result instanceof BlockHitResult)
@@ -138,7 +138,7 @@ public class SporeCloud extends ThrowableProjectile implements IEntityAdditional
 
 		if (this.level.isClientSide()) {
 			if (!this.hit)
-				this.level.addParticle(SRParticles.CREEPER_SPORES.get(), this.getX(), this.getY(), this.getZ(), 0, 0, 0);
+				this.level.addParticle(SRParticleTypes.CREEPER_SPORES.get(), this.getX(), this.getY(), this.getZ(), 0, 0, 0);
 		} else if (this.cloudId != null) {
 			AreaEffectCloud aoe = this.getCloudEntity();
 			if (aoe == null) {

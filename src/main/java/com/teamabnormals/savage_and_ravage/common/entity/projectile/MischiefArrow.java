@@ -3,7 +3,7 @@ package com.teamabnormals.savage_and_ravage.common.entity.projectile;
 import com.teamabnormals.savage_and_ravage.common.entity.monster.Creepie;
 import com.teamabnormals.savage_and_ravage.core.registry.SREntityTypes;
 import com.teamabnormals.savage_and_ravage.core.registry.SRItems;
-import com.teamabnormals.savage_and_ravage.core.registry.SRParticles;
+import com.teamabnormals.savage_and_ravage.core.registry.SRParticleTypes;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -91,7 +91,7 @@ public class MischiefArrow extends AbstractArrow {
 	public void tick() {
 		super.tick();
 		if (!this.finished)
-			this.level.addParticle(SRParticles.CREEPER_SPORES.get(), this.getX(), this.getY(), this.getZ() - 0.0D, 0.0D, 0.0D, 0.0D);
+			this.level.addParticle(SRParticleTypes.CREEPER_SPORES.get(), this.getX(), this.getY(), this.getZ() - 0.0D, 0.0D, 0.0D, 0.0D);
 	}
 
 	@Override
