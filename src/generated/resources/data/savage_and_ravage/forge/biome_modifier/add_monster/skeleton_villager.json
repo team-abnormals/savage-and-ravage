@@ -1,18 +1,10 @@
 {
   "type": "forge:add_spawns",
   "biomes": "#savage_and_ravage:has_monster/skeleton_villager/common",
-  "spawners": [
-    {
-      "type": "minecraft:skeleton",
-      "maxCount": 4,
-      "minCount": 4,
-      "weight": 95
-    },
-    {
-      "type": "savage_and_ravage:skeleton_villager",
-      "maxCount": 1,
-      "minCount": 1,
-      "weight": 5
-    }
-  ]
+  "spawners": {
+    "type": "savage_and_ravage:skeleton_villager",
+    "maxCount": 1,
+    "minCount": 1,
+    "weight": 5
+  }
 }

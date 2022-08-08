@@ -21,10 +21,11 @@ public class SRBiomeTagsProvider extends BiomeTagsProvider {
 		this.tag(SRBiomeTags.HAS_ICEOLOGER).addTag(Tags.Biomes.IS_SNOWY);
 		TagAppender<Biome> hasCommonSkeletonVillager = this.tag(SRBiomeTags.HAS_COMMON_SKELETON_VILLAGER);
 		MultiNoiseBiomeSource.Preset.OVERWORLD.possibleBiomes().forEach((biome) -> {
-			if (biome != Biomes.SNOWY_PLAINS && biome != Biomes.ICE_SPIKES)
+			if (biome != Biomes.SNOWY_PLAINS && biome != Biomes.ICE_SPIKES && biome != Biomes.MUSHROOM_FIELDS && biome != Biomes.DEEP_DARK)
 				hasCommonSkeletonVillager.add(biome);
 		});
 		this.tag(SRBiomeTags.HAS_RARE_SKELETON_VILLAGER).add(Biomes.SNOWY_PLAINS, Biomes.ICE_SPIKES);
-		this.tag(SRBiomeTags.HAS_SKELETON_VILLAGER).addTag(SRBiomeTags.HAS_COMMON_SKELETON_VILLAGER).addTag(SRBiomeTags.HAS_RARE_SKELETON_VILLAGER);
+		this.tag(SRBiomeTags.HAS_WEIRD_SKELETON_VILLAGER).add(Biomes.OLD_GROWTH_PINE_TAIGA);
+		this.tag(SRBiomeTags.HAS_SKELETON_VILLAGER).addTag(SRBiomeTags.HAS_COMMON_SKELETON_VILLAGER).addTag(SRBiomeTags.HAS_RARE_SKELETON_VILLAGER).addTag(SRBiomeTags.HAS_WEIRD_SKELETON_VILLAGER);
 	}
 }

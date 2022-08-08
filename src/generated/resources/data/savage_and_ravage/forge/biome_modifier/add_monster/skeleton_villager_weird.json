@@ -1,6 +1,6 @@
 {
   "type": "forge:add_spawns",
-  "biomes": "minecraft:old_growth_pine_taiga",
+  "biomes": "#savage_and_ravage:has_monster/skeleton_villager/weird",
   "spawners": {
     "type": "savage_and_ravage:skeleton_villager",
     "maxCount": 1,

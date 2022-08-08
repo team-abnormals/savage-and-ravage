@@ -35,16 +35,9 @@ public class SRBiomeModifierProvider {
 		addModifier(modifiers, "remove_monster/witch", new RemoveSpawnsBiomeModifier(tag(biomeRegistry, SRBiomeTags.HAS_ICEOLOGER), HolderSet.direct(List.of(ForgeRegistries.ENTITY_TYPES.getHolder(EntityType.WITCH).get()))));
 		addModifier(modifiers, "add_monster/iceologer", new AddSpawnsBiomeModifier(tag(biomeRegistry, SRBiomeTags.HAS_ICEOLOGER), List.of(new MobSpawnSettings.SpawnerData(SREntityTypes.ICEOLOGER.get(), 5, 1, 1))));
 
-		addModifier(modifiers, "remove_monster/skeleton", new RemoveSpawnsBiomeModifier(tag(biomeRegistry, SRBiomeTags.HAS_SKELETON_VILLAGER), HolderSet.direct(List.of(ForgeRegistries.ENTITY_TYPES.getHolder(EntityType.SKELETON).get()))));
-		addModifier(modifiers, "add_monster/skeleton_villager", new AddSpawnsBiomeModifier(tag(biomeRegistry, SRBiomeTags.HAS_COMMON_SKELETON_VILLAGER), List.of(
-				new MobSpawnSettings.SpawnerData(EntityType.SKELETON, 95, 4, 4),
-				new MobSpawnSettings.SpawnerData(SREntityTypes.SKELETON_VILLAGER.get(), 5, 1, 1)))
-		);
-		addModifier(modifiers, "add_monster/skeleton_villager_snowy", new AddSpawnsBiomeModifier(tag(biomeRegistry, SRBiomeTags.HAS_RARE_SKELETON_VILLAGER), List.of(
-				new MobSpawnSettings.SpawnerData(EntityType.SKELETON, 19, 4, 4),
-				new MobSpawnSettings.SpawnerData(SREntityTypes.SKELETON_VILLAGER.get(), 1, 1, 1)))
-		);
-		addModifier(modifiers, "add_monster/skeleton_villager_weird", new AddSpawnsBiomeModifier(HolderSet.direct(biomeRegistry.getHolderOrThrow(Biomes.OLD_GROWTH_PINE_TAIGA)), List.of(new MobSpawnSettings.SpawnerData(SREntityTypes.SKELETON_VILLAGER.get(), 25, 1, 1))));
+		addModifier(modifiers, "add_monster/skeleton_villager", new AddSpawnsBiomeModifier(tag(biomeRegistry, SRBiomeTags.HAS_COMMON_SKELETON_VILLAGER), List.of(new MobSpawnSettings.SpawnerData(SREntityTypes.SKELETON_VILLAGER.get(), 5, 1, 1))));
+		addModifier(modifiers, "add_monster/skeleton_villager_snowy", new AddSpawnsBiomeModifier(tag(biomeRegistry, SRBiomeTags.HAS_RARE_SKELETON_VILLAGER), List.of(new MobSpawnSettings.SpawnerData(SREntityTypes.SKELETON_VILLAGER.get(), 1, 1, 1))));
+		addModifier(modifiers, "add_monster/skeleton_villager_weird", new AddSpawnsBiomeModifier(tag(biomeRegistry, SRBiomeTags.HAS_WEIRD_SKELETON_VILLAGER), List.of(new MobSpawnSettings.SpawnerData(SREntityTypes.SKELETON_VILLAGER.get(), 25, 1, 1))));
 
 		return JsonCodecProvider.forDatapackRegistry(generator, existingFileHelper, SavageAndRavage.MOD_ID, RegistryOps.create(JsonOps.INSTANCE, access), ForgeRegistries.Keys.BIOME_MODIFIERS, modifiers);
 	}

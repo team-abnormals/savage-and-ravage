@@ -1,5 +1,0 @@
-{
-  "type": "forge:remove_spawns",
-  "biomes": "#savage_and_ravage:has_monster/skeleton_villager",
-  "entity_types": "minecraft:skeleton"
-}
