@@ -22,7 +22,7 @@
   
   "item.savage_and_ravage.wand_of_freezing": "Жезл морозу",
   "item.savage_and_ravage.cleaver_of_beheading": "Тесак обезголовлення",
-  "item.savage_and_ravage.conch_of_conjuring": "Conch of Conjuring",
+  "item.savage_and_ravage.conch_of_conjuring": "Мушля заклинань",
   "item.savage_and_ravage.mask_of_dishonesty": "Маска брехні",
 
   "item.savage_and_ravage.creeper_spores": "Спори кріпера",
@@ -48,8 +48,6 @@
   "entity.savage_and_ravage.ice_cloud": "Хмара льоду",
   "entity.savage_and_ravage.trickster": "Обманшик",
 
-  "effect.savage_and_ravage.confusion": "Спантеличеність",
-  "effect.savage_and_ravage.frostbite": "Обмороження",
   "effect.savage_and_ravage.weight": "Вантаж",
 
   "attribute.name.generic.explosive_damage_reduction": "Зменшення пошкоджень від вибухів",
