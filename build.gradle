@@ -40,6 +40,11 @@ minecraft {
                     source sourceSets.main
                 }
             }
+
+            //PlayerAnimation
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+
         }
         server {
             workingDirectory project.file("run")
@@ -53,6 +58,11 @@ minecraft {
                     source sourceSets.main
                 }
             }
+
+            //PlayerAnimation
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+
         }
         data {
             workingDirectory project.file("run")
@@ -83,12 +93,34 @@ dependencies {
     runtimeOnly fg.deobf("mezz.jei:jei-${project.minecraft}-forge:${project.jei}")
 
     annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
+    //Better Combat
+    implementation fg.deobf("maven.modrinth:better-combat:1.4.4+1.19-forge")
+    //ClothConfigAPI
+    implementation fg.deobf("me.shedaniel.cloth:cloth-config-forge:8.2.88")
+
+    //PlayerAnimation
+    //If you don't want to include the library in your jar, remove the include word
+    implementation fg.deobf("dev.kosmx.player-anim:player-animation-lib-forge:0.3.5")
+
+    //Bendy-lib also has a Forge version:
+    //runtimeOnly fg.deobf("io.github.kosmx.bendy-lib:bendy-lib-forge:${project.bendylib_version}")
+
+    //Forge JarJar only works on MC 1.19. Do not use JarJar on older version!
 }
 
 repositories {
     maven { url "https://maven.jaackson.me" }
     maven { url "https://dvs1.progwml6.com/files/maven/" }
     maven { url "https://modmaven.k-4u.nl" }
+    //Better Combat
+    maven { url "https://api.modrinth.com/maven" }
+    //ClothConfigAPI
+    maven { url "https://maven.shedaniel.me/" }
+    //PlayerAnimation
+    maven {
+        name "KosmX's maven"
+        url 'https://maven.kosmx.dev/'
+    }
 }
 
 jar {
