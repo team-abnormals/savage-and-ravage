@@ -2,6 +2,7 @@ package com.teamabnormals.savage_and_ravage.core.other;
 
 import com.teamabnormals.blueprint.common.world.storage.tracking.IDataManager;
 import com.teamabnormals.blueprint.common.world.storage.tracking.TrackedDataManager;
+import com.teamabnormals.blueprint.core.Blueprint;
 import com.teamabnormals.blueprint.core.util.NetworkUtil;
 import com.teamabnormals.savage_and_ravage.common.entity.OwnableMob;
 import com.teamabnormals.savage_and_ravage.common.entity.ai.goal.CelebrateTargetBlockHitGoal;
@@ -189,24 +190,25 @@ public class SREvents {
 		Level world = event.getWorld();
 		Explosion explosion = event.getExplosion();
 		LivingEntity sourceEntity = explosion.getSourceMob();
-		boolean isCreeper = sourceEntity instanceof Creeper && sourceEntity.getType().is(SREntityTypeTags.CREEPER_LIKE);
+		boolean isCreeper = sourceEntity != null && sourceEntity.getType().is(SREntityTypeTags.CREEPER_LIKE);
 		boolean isCreepie = sourceEntity != null && sourceEntity.getType() == SREntityTypes.CREEPIE.get();
+
 		if (isCreeper) {
 			if (!SRConfig.COMMON.creeperExplosionsDestroyBlocks.get())
 				event.getAffectedBlocks().clear();
 			if (SRConfig.COMMON.creeperExplosionsSpawnCreepies.get()) {
-				Creeper creeper = (Creeper) explosion.getSourceMob();
+                boolean isPowered = sourceEntity instanceof Creeper creeper && creeper.isPowered();
 				SporeCloud spores = SREntityTypes.SPORE_CLOUD.get().create(world);
 				if (spores == null)
 					return;
 				spores.setSpawnCloudInstantly(true);
 				spores.creepiesAttackPlayersOnly(true);
-				if (creeper.isPowered()) {
+				if (isPowered) {
 					spores.setCharged(true);
 				}
-				spores.setCloudSize((int) (creeper.getHealth() / creeper.getMaxHealth()) * (creeper.isPowered() ? 10 : 4));
-				spores.copyPosition(creeper);
-				creeper.level.addFreshEntity(spores);
+				spores.setCloudSize((int) (sourceEntity.getHealth() / sourceEntity.getMaxHealth()) * (isPowered ? 10 : 4));
+				spores.copyPosition(sourceEntity);
+                sourceEntity.level.addFreshEntity(spores);
 			}
 		}
 
