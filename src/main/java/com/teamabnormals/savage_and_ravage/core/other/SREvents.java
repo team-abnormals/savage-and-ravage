@@ -189,7 +189,7 @@ public class SREvents {
 		Level world = event.getWorld();
 		Explosion explosion = event.getExplosion();
 		LivingEntity sourceEntity = explosion.getSourceMob();
-		boolean isCreeper = sourceEntity != null && sourceEntity.getType() == EntityType.CREEPER;
+		boolean isCreeper = sourceEntity instanceof Creeper && sourceEntity.getType().is(SREntityTypeTags.CREEPER_LIKE);
 		boolean isCreepie = sourceEntity != null && sourceEntity.getType() == SREntityTypes.CREEPIE.get();
 		if (isCreeper) {
 			if (!SRConfig.COMMON.creeperExplosionsDestroyBlocks.get())

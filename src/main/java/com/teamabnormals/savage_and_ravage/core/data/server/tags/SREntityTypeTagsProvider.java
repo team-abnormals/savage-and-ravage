@@ -24,5 +24,6 @@ public class SREntityTypeTagsProvider extends EntityTypeTagsProvider {
 		this.tag(EntityTypeTags.FREEZE_IMMUNE_ENTITY_TYPES).add(SREntityTypes.ICEOLOGER.get());
 
 		this.tag(SREntityTypeTags.CREEPER_IMMUNE).add(EntityType.PAINTING, EntityType.ITEM_FRAME, EntityType.GLOW_ITEM_FRAME, EntityType.FALLING_BLOCK, EntityType.LEASH_KNOT, EntityType.ARMOR_STAND);
+		this.tag(SREntityTypeTags.CREEPER_LIKE).add(EntityType.CREEPER);
 	}
 }
