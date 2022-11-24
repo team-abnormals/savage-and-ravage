@@ -106,9 +106,11 @@ public class SavageAndRavage {
 
 	@OnlyIn(Dist.CLIENT)
 	private void registerLayers(EntityRenderersEvent.AddLayers event) {
-		EntityRenderer<?> renderer = event.getRenderer(EntityType.EVOKER);
-		if (renderer instanceof EvokerRenderer evokerRenderer) {
-			evokerRenderer.addLayer(new TotemShieldLayer<Evoker, IllagerModel<Evoker>>(evokerRenderer, event.getEntityModels()));
+        	if (!ModList.get().isLoaded("vanilla_animations")) {
+			EntityRenderer<?> renderer = event.getRenderer(EntityType.EVOKER);
+			if (renderer instanceof EvokerRenderer evokerRenderer) {
+				evokerRenderer.addLayer(new TotemShieldLayer<Evoker, IllagerModel<Evoker>>(evokerRenderer, event.getEntityModels()));
+			}
 		}
 	}
 
