@@ -67,7 +67,7 @@ public class ConfusionBolt extends ThrowableProjectile {
 		Vec3 deltaMovement = this.getDeltaMovement();
 		super.tick();
 		this.setDeltaMovement(deltaMovement); //Undoes tampering by superclass
-		spawnGaussianParticles(this.level, this.getBoundingBox(), SRParticleTypes.CONFUSION_BOLT.getId().toString(), 5);
+		spawnGaussianParticles(this.level, this.random, this.getBoundingBox(), SRParticleTypes.CONFUSION_BOLT.getId().toString(), 5);
 		this.entityData.set(TICKS_TILL_REMOVE, this.entityData.get(TICKS_TILL_REMOVE) - 1);
 		if (this.entityData.get(TICKS_TILL_REMOVE) <= 0)
 			this.discard();
@@ -82,8 +82,7 @@ public class ConfusionBolt extends ThrowableProjectile {
 		}
 	}
 
-	public static void spawnGaussianParticles(Level world, AABB box, String name, int loops) {
-		RandomSource random = world.getRandom();
+	public static void spawnGaussianParticles(Level world, RandomSource random, AABB box, String name, int loops) {
 		if (!world.isClientSide) {
 			for (int i = 0; i < loops; i++) {
 				double x = box.min(Direction.Axis.X) + ((0.5 + (random.nextGaussian() * 0.25)) * box.getXsize());
@@ -97,7 +96,7 @@ public class ConfusionBolt extends ThrowableProjectile {
 	@Override
 	protected void onHit(HitResult result) {
 		this.playSound(SRSounds.GENERIC_PUFF_OF_SMOKE.get(), 5.0F, 1.0F);
-		spawnGaussianParticles(this.level, this.getBoundingBox().inflate(0.5D), SREvents.POOF_KEY, 25);
+		spawnGaussianParticles(this.level, this.random, this.getBoundingBox().inflate(0.5D), SREvents.POOF_KEY, 25);
 		super.onHit(result);
 		this.discard();
 	}
@@ -118,7 +117,7 @@ public class ConfusionBolt extends ThrowableProjectile {
 				livingEntity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 30));
 			}
 			livingEntity.playSound(SRSounds.GENERIC_PUFF_OF_SMOKE.get(), 5.0F, 1.0F);
-			spawnGaussianParticles(this.level, livingEntity.getBoundingBox().inflate(0.5D), SREvents.POOF_KEY, 25);
+			spawnGaussianParticles(this.level, this.random, livingEntity.getBoundingBox().inflate(0.5D), SREvents.POOF_KEY, 25);
 			if (owner instanceof TracksHits)
 				((TracksHits) owner).onTrackedHit(this, entity);
 		}

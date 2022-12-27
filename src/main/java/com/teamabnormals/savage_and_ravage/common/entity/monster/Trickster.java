@@ -133,7 +133,7 @@ public class Trickster extends SpellcasterIllager implements TracksHits {
 	public void tick() {
 		super.tick();
 		//Rune particles at hands
-		if (level.random.nextInt(14) == 0 && this.isCastingSpell()) {
+		if (this.random.nextInt(14) == 0 && this.isCastingSpell()) {
 			//Handles entity rotation
 			float f = this.yBodyRot * ((float) Math.PI / 180F) + Mth.cos((float) this.tickCount * 0.6662F) * 0.25F;
 			float f1 = Mth.cos(f);
@@ -210,8 +210,8 @@ public class Trickster extends SpellcasterIllager implements TracksHits {
 					this.level.playSound(null, oldPos, SRSounds.GENERIC_PUFF_OF_SMOKE.get(), this.getSoundSource(), 10.0F, 1.0F);
 					this.level.playSound(null, this.blockPosition(), SRSounds.GENERIC_PUFF_OF_SMOKE.get(), this.getSoundSource(), 10.0F, 1.0F);
 					this.level.playSound(null, oldPos, SRSounds.ENTITY_TRICKSTER_LAUGH.get(), SoundSource.HOSTILE, 1.0F, 1.0F);
-					ConfusionBolt.spawnGaussianParticles(this.level, oldBox, SREvents.POOF_KEY, 50);
-					ConfusionBolt.spawnGaussianParticles(this.level, this.getBoundingBox().inflate(0.5D), SREvents.POOF_KEY, 50);
+					ConfusionBolt.spawnGaussianParticles(this.level, this.random, oldBox, SREvents.POOF_KEY, 50);
+					ConfusionBolt.spawnGaussianParticles(this.level, this.random, this.getBoundingBox().inflate(0.5D), SREvents.POOF_KEY, 50);
 					if (ForgeEventFactory.getMobGriefingEvent(this.level, this)) {
 						BlockPos.MutableBlockPos searchPos = new BlockPos.MutableBlockPos();
 						for (int x = oldPos.getX() - 2; x <= oldPos.getX() + 2; x++) {

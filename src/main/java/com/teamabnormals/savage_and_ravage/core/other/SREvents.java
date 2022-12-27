@@ -142,14 +142,14 @@ public class SREvents {
 			Player player = event.getEntity();
 			CompoundTag persistentData = target.getPersistentData();
 			if (!persistentData.getBoolean(POISON_TAG)) {
-				if (target.level.random.nextDouble() < SRConfig.COMMON.poisonPotatoChance.get()) {
+				if (target.level.getRandom().nextDouble() < SRConfig.COMMON.poisonPotatoChance.get()) {
 					target.playSound(SoundEvents.GENERIC_EAT, 0.5f, 0.25f);
 					persistentData.putBoolean(POISON_TAG, true);
 					if (SRConfig.COMMON.poisonPotatoEffect.get()) {
 						((LivingEntity) target).addEffect(new MobEffectInstance(MobEffects.POISON, 200));
 					}
 				} else {
-					target.playSound(SoundEvents.GENERIC_EAT, 0.5f, 0.5f + target.level.random.nextFloat() / 2);
+					target.playSound(SoundEvents.GENERIC_EAT, 0.5f, 0.5f + target.level.getRandom().nextFloat() / 2);
 				}
 				if (!player.isCreative()) stack.shrink(1);
 				event.setCancellationResult(InteractionResult.sidedSuccess(event.getLevel().isClientSide()));

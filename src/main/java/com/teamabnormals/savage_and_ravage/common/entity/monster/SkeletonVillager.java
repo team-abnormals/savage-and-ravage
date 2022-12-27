@@ -129,10 +129,9 @@ public class SkeletonVillager extends AbstractSkeleton implements CrossbowAttack
 	@Nullable
 	@Override
 	public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
-		RandomSource random = worldIn.getRandom();
-		this.populateDefaultEquipmentSlots(random, difficultyIn);
-		this.populateDefaultEquipmentEnchantments(random, difficultyIn);
-		if (worldIn.getRandom().nextInt(100) == 0) {
+		this.populateDefaultEquipmentSlots(this.getRandom(), difficultyIn);
+		this.populateDefaultEquipmentEnchantments(this.getRandom(), difficultyIn);
+		if (this.getRandom().nextInt(100) == 0) {
 			Spider spider = EntityType.SPIDER.create(this.level);
 			if (spider != null) {
 				spider.copyPosition(this);

@@ -279,7 +279,7 @@ public class ImprovedCrossbowGoal<T extends PathfinderMob & RangedAttackMob & Cr
 
 	private void performShooting(Level world, T shooter, Vec3 targetPos, InteractionHand hand, ItemStack weapon) {
 		List<ItemStack> projectiles = CrossbowItem.getChargedProjectiles(weapon);
-		float[] soundPitches = CrossbowItem.getShotPitches(world.getRandom());
+		float[] soundPitches = CrossbowItem.getShotPitches(this.mob.getRandom());
 
 		for (int i = 0; i < Math.min(projectiles.size(), 3); i++) {
 			ItemStack projectileStack = projectiles.get(i);
