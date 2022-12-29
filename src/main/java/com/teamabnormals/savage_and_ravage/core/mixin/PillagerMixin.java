@@ -26,7 +26,7 @@ public abstract class PillagerMixin extends AbstractIllager implements CrossbowA
 
 	@Inject(method = "finalizeSpawn", at = @At(value = "HEAD"))
 	public void addFirework(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType reason, SpawnGroupData data, CompoundTag nbt, CallbackInfoReturnable<SpawnGroupData> info) {
-		if (this.level.random.nextInt(100) == 0) {
+		if (this.getRandom().nextInt(100) == 0) {
 			this.setItemSlot(EquipmentSlot.OFFHAND, SREvents.createRocket(this.getRandom()));
 			this.startUsingItem(InteractionHand.OFF_HAND);
 			this.setDropChance(EquipmentSlot.OFFHAND, 2.0F);

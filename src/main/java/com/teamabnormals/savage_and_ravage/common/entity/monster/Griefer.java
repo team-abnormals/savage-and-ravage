@@ -206,7 +206,7 @@ public class Griefer extends AbstractIllager implements RangedAttackMob {
 	public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
 		super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
 		this.populateDefaultEquipmentSlots(difficultyIn);
-		this.creeperSporeStacks = 3 + random.nextInt(3);
+		this.creeperSporeStacks = 3 + this.random.nextInt(3);
 		return spawnDataIn;
 	}
 
@@ -241,7 +241,7 @@ public class Griefer extends AbstractIllager implements RangedAttackMob {
 			double d3 = target.getZ() - this.getZ();
 			float f = Mth.sqrt((float) (d1 * d1 + d3 * d3)) * 0.2F;
 			creeperSpores.shoot(d1, d2 + (double) f, d3, 1.6F, 12.0F);
-			creeperSpores.setCloudSize(creeperSpores.level.random.nextInt(50) == 0 ? 0 : 1 + creeperSpores.level.random.nextInt(3));
+			creeperSpores.setCloudSize(this.random.nextInt(50) == 0 ? 0 : 1 + this.random.nextInt(3));
 			this.swing(getUsedItemHand());
 			this.playSound(SRSounds.ENTITY_CREEPER_SPORES_THROW.get(), 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
 			this.level.addFreshEntity(creeperSpores);
@@ -309,7 +309,7 @@ public class Griefer extends AbstractIllager implements RangedAttackMob {
 		@Override
 		protected void checkAndPerformAttack(LivingEntity enemy, double distToEnemySqr) {
 			double distance = this.getAttackReachSqr(enemy);
-			int i = griefer.level.random.nextInt(3);
+			int i = griefer.getRandom().nextInt(3);
 			if (distToEnemySqr <= distance && this.ticksUntilNextAttack <= 0) {
 				this.ticksUntilNextAttack = 60;
 				switch (i) {
