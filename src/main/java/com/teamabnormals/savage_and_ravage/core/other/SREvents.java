@@ -126,7 +126,7 @@ public class SREvents {
 						mob.targetSelector.removeGoal(goal);
 						mob.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(mob, Mob.class, 5, false, false, e -> e instanceof Enemy));
 					});
-				else if (mob.getType() == EntityType.CREEPER)
+				else if (mob.getType().is(SREntityTypeTags.CREEPERS))
 					mob.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(mob, IronGolem.class, true));
 			}
 		}
@@ -191,7 +191,7 @@ public class SREvents {
 		Level world = event.getLevel();
 		Explosion explosion = event.getExplosion();
 		LivingEntity sourceEntity = explosion.getSourceMob();
-		boolean isCreeper = sourceEntity != null && sourceEntity.getType().is(SREntityTypeTags.CREEPER);
+		boolean isCreeper = sourceEntity != null && sourceEntity.getType().is(SREntityTypeTags.CREEPERS);
 		boolean isCreepie = sourceEntity != null && sourceEntity.getType() == SREntityTypes.CREEPIE.get();
 		if (isCreeper) {
 			if (!SRConfig.COMMON.creeperExplosionsDestroyBlocks.get())
@@ -394,7 +394,7 @@ public class SREvents {
 	public static void onInteractWithEntity(PlayerInteractEvent.EntityInteract event) {
 		ItemStack stack = event.getItemStack();
 		Entity target = event.getTarget();
-		if (target.getType() == EntityType.CREEPER || target.getType() == SREntityTypes.CREEPIE.get()) {
+		if (target.getType().is(SREntityTypeTags.CREEPERS) || target.getType() == SREntityTypes.CREEPIE.get()) {
 			if (stack.getItem() == Items.CREEPER_SPAWN_EGG) {
 				Level world = event.getLevel();
 				Creepie creepie = SREntityTypes.CREEPIE.get().create(world);

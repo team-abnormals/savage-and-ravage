@@ -1,7 +1,7 @@
 package com.teamabnormals.savage_and_ravage.core.mixin;
 
 import com.teamabnormals.savage_and_ravage.core.SRConfig;
-import net.minecraft.world.entity.EntityType;
+import com.teamabnormals.savage_and_ravage.core.other.tags.SREntityTypeTags;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Zoglin;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,7 +14,7 @@ public abstract class ZoglinMixin {
 
 	@Inject(at = @At("RETURN"), method = "isTargetable", cancellable = true)
 	private void isTargetable(LivingEntity entity, CallbackInfoReturnable<Boolean> ci) {
-		if (!SRConfig.COMMON.creeperExplosionsDestroyBlocks.get() && entity.getType() == EntityType.CREEPER)
+		if (!SRConfig.COMMON.creeperExplosionsDestroyBlocks.get() && entity.getType().is(SREntityTypeTags.CREEPERS))
 			ci.setReturnValue(true);
 	}
 }
