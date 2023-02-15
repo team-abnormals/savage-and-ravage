@@ -32,7 +32,10 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -195,18 +198,18 @@ public class SREvents {
 			if (!SRConfig.COMMON.creeperExplosionsDestroyBlocks.get())
 				event.getAffectedBlocks().clear();
 			if (SRConfig.COMMON.creeperExplosionsSpawnCreepies.get()) {
-				Creeper creeper = (Creeper) explosion.getSourceMob();
+				boolean isPowered = explosion.getSourceMob() instanceof Creeper creeper && creeper.isPowered();
 				SporeCloud spores = SREntityTypes.SPORE_CLOUD.get().create(world);
 				if (spores == null)
 					return;
 				spores.setSpawnCloudInstantly(true);
 				spores.creepiesAttackPlayersOnly(true);
-				if (creeper.isPowered()) {
+				if (isPowered) {
 					spores.setCharged(true);
 				}
-				spores.setCloudSize((int) (creeper.getHealth() / creeper.getMaxHealth()) * (creeper.isPowered() ? 10 : 4));
-				spores.copyPosition(creeper);
-				creeper.level.addFreshEntity(spores);
+				spores.setCloudSize((int) (sourceEntity.getHealth() / sourceEntity.getMaxHealth()) * (isPowered ? 10 : 4));
+				spores.copyPosition(sourceEntity);
+				sourceEntity.level.addFreshEntity(spores);
 			}
 		}
 
