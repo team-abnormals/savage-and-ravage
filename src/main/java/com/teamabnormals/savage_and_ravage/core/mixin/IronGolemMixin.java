@@ -1,6 +1,7 @@
 package com.teamabnormals.savage_and_ravage.core.mixin;
 
 import com.teamabnormals.savage_and_ravage.core.SRConfig;
+import com.teamabnormals.savage_and_ravage.core.other.tags.SREntityTypeTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -36,7 +37,7 @@ public abstract class IronGolemMixin extends AbstractGolem {
 
 	@Inject(at = @At("RETURN"), method = "canAttackType", cancellable = true)
 	public void canAttack(EntityType<?> typeIn, CallbackInfoReturnable<Boolean> ci) {
-		if (this.isPlayerCreated() && typeIn == EntityType.PLAYER || SRConfig.COMMON.creeperExplosionsDestroyBlocks.get() && typeIn == EntityType.CREEPER) {
+		if (this.isPlayerCreated() && typeIn == EntityType.PLAYER || SRConfig.COMMON.creeperExplosionsDestroyBlocks.get() && typeIn.is(SREntityTypeTags.CREEPERS)) {
 			ci.setReturnValue(false);
 		}
 		ci.setReturnValue(super.canAttackType(typeIn));
