@@ -28,18 +28,21 @@ public abstract class IronGolemMixin extends AbstractGolem {
 
 	@Inject(at = @At("HEAD"), method = "doPush", cancellable = true)
 	public void collideWithEntity(Entity entity, CallbackInfo ci) {
-		if (entity instanceof Enemy && this.getRandom().nextInt(20) == 0) {
-			this.setTarget((LivingEntity) entity);
+		if (SRConfig.COMMON.creeperExplosionsDestroyBlocks.get()) {
+			if (entity instanceof Enemy && this.getRandom().nextInt(20) == 0) {
+				this.setTarget((LivingEntity) entity);
+			}
+			super.doPush(entity);
+			ci.cancel();
 		}
-		super.doPush(entity);
-		ci.cancel();
 	}
 
 	@Inject(at = @At("RETURN"), method = "canAttackType", cancellable = true)
-	public void canAttack(EntityType<?> typeIn, CallbackInfoReturnable<Boolean> ci) {
-		if (this.isPlayerCreated() && typeIn == EntityType.PLAYER || SRConfig.COMMON.creeperExplosionsDestroyBlocks.get() && typeIn.is(SREntityTypeTags.CREEPERS)) {
-			ci.setReturnValue(false);
+	public void canAttack(EntityType<?> type, CallbackInfoReturnable<Boolean> cir) {
+		if ((this.isPlayerCreated() && type == EntityType.PLAYER) || (SRConfig.COMMON.creeperExplosionsDestroyBlocks.get() && type.is(SREntityTypeTags.CREEPERS))) {
+			cir.setReturnValue(false);
+		} else {
+			cir.setReturnValue(super.canAttackType(type));
 		}
-		ci.setReturnValue(super.canAttackType(typeIn));
 	}
 }
