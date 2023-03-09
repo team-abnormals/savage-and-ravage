@@ -9,19 +9,17 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class SRDataProcessors {
-	public static final IDataProcessor<Optional<UUID>> OPTIONAL_UUID = new IDataProcessor<Optional<UUID>>() {
+	public static final IDataProcessor<Optional<UUID>> OPTIONAL_UUID = new IDataProcessor<>() {
 		@Override
 		public CompoundTag write(Optional<UUID> optionalUUID) {
 			CompoundTag nbt = new CompoundTag();
-			if (optionalUUID.isPresent()) {
-				nbt.putUUID("uuid", optionalUUID.get());
-			} else nbt.putBoolean("null", true);
+			optionalUUID.ifPresent(uuid -> nbt.putUUID("OptionalUUID", uuid));
 			return nbt;
 		}
 
 		@Override
 		public Optional<UUID> read(CompoundTag nbt) {
-			return Optional.ofNullable(nbt.getBoolean("null") ? null : nbt.getUUID("uuid"));
+			return nbt.hasUUID("OptionalUUID") ? Optional.of(nbt.getUUID("OptionalUUID")) : Optional.empty();
 		}
 	};
 
