@@ -62,7 +62,7 @@ public class RunePrison extends Entity {
 		if (compound.contains("GloomyTilePosition", 10))
 			this.setBlockPos(NbtUtils.readBlockPos(compound.getCompound("GloomyTilePosition")));
 		if (compound.hasUUID("CasterUUID"))
-			this.casterUUID = compound.getUUID("CasterID");
+			this.casterUUID = compound.getUUID("CasterUUID");
 	}
 
 	@Override
