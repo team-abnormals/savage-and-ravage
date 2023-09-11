@@ -1,0 +1,90 @@
+{
+  "block.savage_and_ravage.gloomy_tiles": "Kasvetli Döşeme",
+  "block.savage_and_ravage.gloomy_tile_stairs": "Kasvetli Döşeme Merdiven",
+  "block.savage_and_ravage.gloomy_tile_slab": "Kasvetli Döşeme Basamak",
+  "block.savage_and_ravage.gloomy_tile_wall": "Kasvetli Döşeme Duvar",
+  "block.savage_and_ravage.chiseled_gloomy_tiles": "Yontulmuş Kasvetli Döşeme",
+  "block.savage_and_ravage.gloomy_tile_vertical_slab": "Kasvetli Döşeme Dikey Basamak",
+  "block.savage_and_ravage.runed_gloomy_tiles": "Rünlü Kasvetli Döşeme",
+  
+  "block.savage_and_ravage.blast_proof_plates": "Patlamaya Dayanıklı Plakalar",
+  "block.savage_and_ravage.blast_proof_slab": "Patlamaya Dayanıklı Basamak",
+  "block.savage_and_ravage.blast_proof_stairs": "Patlamaya Dayanıklı Merdiven",
+  "block.savage_and_ravage.blast_proof_vertical_slab": "Patlamaya Dayanıklı Dikey Basamak",
+  "block.savage_and_ravage.creeper_spore_sack": "Creeper Sporu Torbası",
+  "block.savage_and_ravage.spore_bomb": "Spor Bombası",
+  
+  "item.savage_and_ravage.blast_proof_plating": "Patlamaya Dayanıklı Levha",
+  "item.savage_and_ravage.griefer_helmet": "Gıcık Miğfer",
+  "item.savage_and_ravage.griefer_chestplate": "Gıcık Göğüslük",
+  "item.savage_and_ravage.griefer_leggings": "Gıcık Pantolon",
+  "item.savage_and_ravage.griefer_boots": "Gıcık Çizme",
+  
+  "item.savage_and_ravage.wand_of_freezing": "Donduran Değnek",
+  "item.savage_and_ravage.cleaver_of_beheading": "Kelle Uçuran",
+  "item.savage_and_ravage.conch_of_conjuring": "Sihirbazlık Kabuğu",
+  "item.savage_and_ravage.mask_of_dishonesty": "Sahtekarlık Maskesi",
+
+  "item.savage_and_ravage.creeper_spores": "Creeper Sporları",
+  "item.savage_and_ravage.mischief_arrow": "Haylaz Ok",
+  
+  "item.savage_and_ravage.skeleton_villager_spawn_egg": "İskelet Köylü Çağırma Yumurtası",
+  "item.savage_and_ravage.griefer_spawn_egg": "Gıcık Çağırma Yumurtası",
+  "item.savage_and_ravage.executioner_spawn_egg": "Cellat Çağırma Yumurtası",
+  "item.savage_and_ravage.iceologer_spawn_egg": "Buz Büyücüsü Çağırma Yumurtası",
+  "item.savage_and_ravage.trickster_spawn_egg": "Düzenbaz Çağırma Yumurtası",
+
+  "entity.savage_and_ravage.skeleton_villager": "İskelet Köylü",
+  "entity.savage_and_ravage.griefer": "Gıcık",
+  "entity.savage_and_ravage.creepie": "Creepie",
+  "entity.savage_and_ravage.spore_cloud": "Spor Bulutu",
+  "entity.savage_and_ravage.spore_bomb": "Spor Bombası",
+  "entity.savage_and_ravage.rune_prison": "Rün Hapsi",
+  "entity.savage_and_ravage.burning_banner": "Yanan Flama",
+  "entity.savage_and_ravage.mischief_arrow": "Haylaz Ok",
+  "entity.savage_and_ravage.executioner": "Cellat",
+  "entity.savage_and_ravage.iceologer": "Buz Büyücüsü",
+  "entity.savage_and_ravage.ice_chunk": "Buz Kütlesi",
+  "entity.savage_and_ravage.ice_cloud": "Buz Bulutu",
+  "entity.savage_and_ravage.trickster": "Düzenbaz",
+
+  "effect.savage_and_ravage.weight": "Ağırlık",
+
+  "attribute.name.generic.explosive_damage_reduction": "Patlama Hasarı Azaltma",
+
+  "advancements.savage_and_ravage.adventure.creeper_spores.title": "Ürpertici Yavrular",
+  "advancements.savage_and_ravage.adventure.creeper_spores.description": "Bir Creeper'ı patlatarak öldürüp Creeper Sporları elde edin",
+  "advancements.savage_and_ravage.adventure.griefer_armor.title": "Lazerli Bir Dinamit",
+  "advancements.savage_and_ravage.adventure.griefer_armor.description": "Bütün Gıcık zırh setini toplayın",
+  "advancements.savage_and_ravage.adventure.relic_collector.title": "Kalıntı Toplayıcısı",
+  "advancements.savage_and_ravage.adventure.relic_collector.description": "Tüm büyülü Yağmacı kalıntılarını elde edin",
+  "advancements.savage_and_ravage.adventure.mask_of_dishonesty.title": "Ufak Bir Kandırmaca",
+  "advancements.savage_and_ravage.adventure.mask_of_dishonesty.description": "Bir Düzenbaz öldürerek Sahtekarlık Maskesi elde edin",
+
+  "advancements.savage_and_ravage.adventure.voluntary_exile.description": "Bir Uğursuz Sancağı ateşe verin.\nBelki şimdilik köylerden uzak durmayı düşünebilirsiniz...",
+
+  "subtitles.savage_and_ravage.entity.creepie.hurt": "Creepie hasar aldı",
+  "subtitles.savage_and_ravage.entity.creepie.death": "Creepie öldü",
+  "subtitles.savage_and_ravage.entity.creepie.fuse": "Creepie tıslıyor",
+  "subtitles.savage_and_ravage.entity.creepie.convert": "Creepie dönüştü",
+  "subtitles.savage_and_ravage.entity.creepie.grow": "Creepie büyüdü",
+  
+  "subtitles.savage_and_ravage.entity.iceologer.ambient": "Buz Büyücüsü mırıldanıyor",
+  "subtitles.savage_and_ravage.entity.iceologer.hurt": "Buz Büyücüsü hasar aldı",
+  "subtitles.savage_and_ravage.entity.iceologer.death": "Buz Büyücüsü öldü",
+  "subtitles.savage_and_ravage.entity.iceologer.celebrate": "Buz Büyücüsü tezahürat yapıyor",
+  "subtitles.savage_and_ravage.entity.iceologer.cast_spell": "Buz Büyücüsü büyü yapıyor",
+
+  "subtitles.savage_and_ravage.entity.trickster.ambient": "Düzenbaz mırıldanıyor",
+  "subtitles.savage_and_ravage.entity.trickster.step": "Düzenbaz şıngırdıyor",
+  "subtitles.savage_and_ravage.entity.trickster.hurt": "Düzenbaz hasar aldı",
+  "subtitles.savage_and_ravage.entity.trickster.death": "Düzenbaz öldü",
+  "subtitles.savage_and_ravage.entity.trickster.celebrate": "Düzenbaz tezahürat yapıyor",
+  "subtitles.savage_and_ravage.entity.trickster.laugh": "Düzenbaz gülüyor",
+  "subtitles.savage_and_ravage.entity.trickster.cast_spell": "Düzenbaz büyü yapıyor",
+
+  "subtitles.savage_and_ravage.entity.player.cast_spell": "Oyuncu büyü yapıyor",
+  "subtitles.savage_and_ravage.entity.creeper_spores.throw": "Creeper Sporları uçuyor",
+  "subtitles.savage_and_ravage.generic.prepare_attack": "Bir şey saldırıya hazırlanıyor",
+  "subtitles.savage_and_ravage.generic.puff_of_smoke": "Duman püfledi"
+  }
