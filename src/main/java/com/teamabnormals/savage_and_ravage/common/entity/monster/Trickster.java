@@ -66,6 +66,7 @@ public class Trickster extends SpellcasterIllager implements TracksHits {
 
 	public Trickster(EntityType<? extends SpellcasterIllager> type, Level p_i48551_2_) {
 		super(type, p_i48551_2_);
+		this.xpReward = 10;
 	}
 
 	@Override

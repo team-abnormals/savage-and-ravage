@@ -25,7 +25,7 @@ import net.minecraft.world.phys.HitResult;
 import java.util.Map;
 
 public class Executioner extends Vindicator {
-	//TODO fix attack time
+	//TODO: fix attack time
 	public Executioner(EntityType<? extends Vindicator> entity, Level world) {
 		super(entity, world);
 	}
