@@ -1,6 +1,8 @@
 package com.teamabnormals.savage_and_ravage.client.model;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.teamabnormals.savage_and_ravage.common.entity.monster.Creepie;
 import net.minecraft.client.model.ListModel;
 import net.minecraft.client.model.geom.ModelPart;
@@ -34,14 +36,23 @@ public class CreepieModel extends ListModel<Creepie> {
 	public static LayerDefinition createBodyLayer(CubeDeformation deformation) {
 		MeshDefinition meshdefinition = new MeshDefinition();
 		PartDefinition root = meshdefinition.getRoot();
-		PartDefinition head = root.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, deformation.extend(2.0F)), PartPose.offsetAndRotation(0.0F, 6.0F, 0.0F, 0.0F, 0.0F, 0.0F));
-		PartDefinition sprout = head.addOrReplaceChild("sprout", CubeListBuilder.create().texOffs(48, 16).addBox(0.0F, -24.0F, -4.0F, 0.0F, 8.0F, 8.0F, deformation).texOffs(48, 16).addBox(-4.0F, -24.0F, 0.0F, 8.0F, 8.0F, 0.0F, false), PartPose.offsetAndRotation(0.0F, 6.0F, 0.0F, 0.0F, 0.0F, 0.0F));
+		PartDefinition head = root.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, deformation), PartPose.offsetAndRotation(0.0F, 6.0F, 0.0F, 0.0F, 0.0F, 0.0F));
+		PartDefinition sprout = head.addOrReplaceChild("sprout", CubeListBuilder.create().texOffs(48, 16).addBox(0.0F, -24.0F, -4.0F, 0.0F, 8.0F, 8.0F, deformation).texOffs(48, 16).addBox(-4.0F, -24.0F, 0.0F, 8.0F, 8.0F, 0.0F, deformation), PartPose.offsetAndRotation(0.0F, 8.0F, 0.0F, 0.0F, 0.0F, 0.0F));
 		PartDefinition body = root.addOrReplaceChild("body", CubeListBuilder.create().texOffs(16, 16).addBox(-4.0F, 0.0F, -2.0F, 8.0F, 12.0F, 4.0F, deformation), PartPose.offsetAndRotation(0.0F, 6.0F, 0.0F, 0.0F, 0.0F, 0.0F));
 		PartDefinition leg1 = root.addOrReplaceChild("leg1", CubeListBuilder.create().texOffs(0, 16).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 6.0F, 4.0F, deformation), PartPose.offsetAndRotation(2.0F, 18.0F, 4.0F, 0.0F, 0.0F, 0.0F));
 		PartDefinition leg2 = root.addOrReplaceChild("leg2", CubeListBuilder.create().texOffs(0, 16).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 6.0F, 4.0F, deformation), PartPose.offsetAndRotation(-2.0F, 18.0F, 4.0F, 0.0F, 0.0F, 0.0F));
 		PartDefinition leg3 = root.addOrReplaceChild("leg3", CubeListBuilder.create().texOffs(0, 16).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 6.0F, 4.0F, deformation), PartPose.offsetAndRotation(2.0F, 18.0F, -4.0F, 0.0F, 0.0F, 0.0F));
 		PartDefinition leg4 = root.addOrReplaceChild("leg4", CubeListBuilder.create().texOffs(0, 16).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 6.0F, 4.0F, deformation), PartPose.offsetAndRotation(-2.0F, 18.0F, -4.0F, 0.0F, 0.0F, 0.0F));
 		return LayerDefinition.create(meshdefinition, 64, 32);
+	}
+
+	@Override
+	public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+		poseStack.pushPose();
+		poseStack.scale(1.5F, 1.5F, 1.5F);
+		this.head.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+		poseStack.popPose();
+		this.parts().forEach(modelPart -> modelPart.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha));
 	}
 
 	@Override
@@ -56,7 +67,7 @@ public class CreepieModel extends ListModel<Creepie> {
 
 	@Override
 	public Iterable<ModelPart> parts() {
-		return ImmutableList.of(this.leg4, this.head, this.body, this.leg1, this.leg3, this.leg2);
+		return ImmutableList.of(this.leg4, this.body, this.leg1, this.leg3, this.leg2);
 	}
 }
 
