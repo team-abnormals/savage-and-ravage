@@ -1,0 +1,90 @@
+{
+  "block.savage_and_ravage.gloomy_tiles": "Wicked Tiles",
+  "block.savage_and_ravage.gloomy_tile_stairs": "Wicked Tile Stairs",
+  "block.savage_and_ravage.gloomy_tile_slab": "Wicked Tile Slab",
+  "block.savage_and_ravage.gloomy_tile_wall": "Wicked Tile Hedge",
+  "block.savage_and_ravage.chiseled_gloomy_tiles": "Chisel'd Gloomy Tiles",
+  "block.savage_and_ravage.gloomy_tile_vertical_slab": "Wicked Tile Vertical Slab",
+  "block.savage_and_ravage.runed_gloomy_tiles": "Bewitched Wicked Tiles",
+  
+  "block.savage_and_ravage.blast_proof_plates": "Palladium Plates",
+  "block.savage_and_ravage.blast_proof_slab": "Palladium Slab",
+  "block.savage_and_ravage.blast_proof_stairs": "Palladium Stairs",
+  "block.savage_and_ravage.blast_proof_vertical_slab": "Palladium Vertical Slab",
+  "block.savage_and_ravage.creeper_spore_sack": "Sack of Creeper growths",
+  "block.savage_and_ravage.spore_bomb": "Gunpowder o' Growths",
+  
+  "item.savage_and_ravage.blast_proof_plating": "Palladium Plating",
+  "item.savage_and_ravage.griefer_helmet": "Palladium Adorned Casque",
+  "item.savage_and_ravage.griefer_chestplate": "Palladium Adorned Breast Plate",
+  "item.savage_and_ravage.griefer_leggings": "Palladium Adorned Greaves",
+  "item.savage_and_ravage.griefer_boots": "Palladium Adorned Sabatons",
+  
+  "item.savage_and_ravage.wand_of_freezing": "Wand o' Freezing",
+  "item.savage_and_ravage.cleaver_of_beheading": "Cleaver o' Beheading",
+  "item.savage_and_ravage.conch_of_conjuring": "Conch o' Conjuring",
+  "item.savage_and_ravage.mask_of_dishonesty": "Mask o' Jesting",
+
+  "item.savage_and_ravage.creeper_spores": "Growth o' Creeper",
+  "item.savage_and_ravage.mischief_arrow": "Arrow o' Foolery",
+  
+  "item.savage_and_ravage.skeleton_villager_spawn_egg": "Adder Stone o' Peasant's Restless Skeleton",
+  "item.savage_and_ravage.griefer_spawn_egg": "Adder Stone o' Fool",
+  "item.savage_and_ravage.executioner_spawn_egg": "Adder Stone o' Executioner",
+  "item.savage_and_ravage.iceologer_spawn_egg": "Adder Stone o' Ice Sorcerer",
+  "item.savage_and_ravage.trickster_spawn_egg": "Adder Stone o' Jester",
+
+  "entity.savage_and_ravage.skeleton_villager": "Peasant's Restless Skeleton",
+  "entity.savage_and_ravage.griefer": "Fool",
+  "entity.savage_and_ravage.creepie": "Creepie",
+  "entity.savage_and_ravage.spore_cloud": "Growth Smog",
+  "entity.savage_and_ravage.spore_bomb": "Gunpowder o' Growths",
+  "entity.savage_and_ravage.rune_prison": "Snare Spell",
+  "entity.savage_and_ravage.burning_banner": "Burning Banner",
+  "entity.savage_and_ravage.mischief_arrow": "Arrow o' Foolery",
+  "entity.savage_and_ravage.executioner": "Executioner",
+  "entity.savage_and_ravage.iceologer": "Ice Sorcerer",
+  "entity.savage_and_ravage.ice_chunk": "Ice Chunk",
+  "entity.savage_and_ravage.ice_cloud": "Ice Cloud",
+  "entity.savage_and_ravage.trickster": "Jester",
+
+  "effect.savage_and_ravage.weight": "Ensnared",
+
+  "attribute.name.generic.explosive_damage_reduction": "Gunpowder Palladium",
+
+  "advancements.savage_and_ravage.adventure.creeper_spores.title": "Creepie Crawly",
+  "advancements.savage_and_ravage.adventure.creeper_spores.description": "Obtain Growths by killing a Creeper with an explosion",
+  "advancements.savage_and_ravage.adventure.griefer_armor.title": "Foolishness Human, Foolishness!",
+  "advancements.savage_and_ravage.adventure.griefer_armor.description": "Collect a full set of Palladium Adorned armor, often worn by the Fool",
+  "advancements.savage_and_ravage.adventure.relic_collector.title": "Something wicked this way comes...",
+  "advancements.savage_and_ravage.adventure.relic_collector.description": "Obtain all wicked boons the Boggards hath been treasuring",
+  "advancements.savage_and_ravage.adventure.mask_of_dishonesty.title": "Here's a little lesson in jestery",
+  "advancements.savage_and_ravage.adventure.mask_of_dishonesty.description": "Obtain a Mask o' Jesting, donned by the fiendish Jester",
+
+  "advancements.savage_and_ravage.adventure.voluntary_exile.description": "Set fire to an Ominous Banner.\nMaybe consider staying away from villages for the time being...",
+
+  "subtitles.savage_and_ravage.entity.creepie.hurt": "Creepie cries out",
+  "subtitles.savage_and_ravage.entity.creepie.death": "Creepie perishes",
+  "subtitles.savage_and_ravage.entity.creepie.fuse": "Creepie hisses",
+  "subtitles.savage_and_ravage.entity.creepie.convert": "Creepie transmutes",
+  "subtitles.savage_and_ravage.entity.creepie.grow": "Creepie grows",
+  
+  "subtitles.savage_and_ravage.entity.iceologer.ambient": "Ice Sorcerer murmurs",
+  "subtitles.savage_and_ravage.entity.iceologer.hurt": "Ice Sorcerer cries out",
+  "subtitles.savage_and_ravage.entity.iceologer.death": "Ice Sorcerer perishes",
+  "subtitles.savage_and_ravage.entity.iceologer.celebrate": "Ice Sorcerer cheers",
+  "subtitles.savage_and_ravage.entity.iceologer.cast_spell": "Ice Sorcerer casts spell",
+
+  "subtitles.savage_and_ravage.entity.trickster.ambient": "Jester murmurs",
+  "subtitles.savage_and_ravage.entity.trickster.step": "Jester jingles",
+  "subtitles.savage_and_ravage.entity.trickster.hurt": "Jester cries out",
+  "subtitles.savage_and_ravage.entity.trickster.death": "Jester perishes",
+  "subtitles.savage_and_ravage.entity.trickster.celebrate": "Jester jests",
+  "subtitles.savage_and_ravage.entity.trickster.laugh": "Jester laughs",
+  "subtitles.savage_and_ravage.entity.trickster.cast_spell": "Jester curses thee",
+
+  "subtitles.savage_and_ravage.entity.player.cast_spell": "Player casts spell",
+  "subtitles.savage_and_ravage.entity.creeper_spores.throw": "Creeper Growths fly",
+  "subtitles.savage_and_ravage.generic.prepare_attack": "Something prepares attack",
+  "subtitles.savage_and_ravage.generic.puff_of_smoke": "Puff of smoke"
+}
