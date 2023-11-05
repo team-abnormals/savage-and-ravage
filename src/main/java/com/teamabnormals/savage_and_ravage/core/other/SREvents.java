@@ -101,7 +101,7 @@ public class SREvents {
 					Creepie creepie = ((Creepie) e);
 					return creepie.getOwnerId() == null || creepie.getOwner() instanceof Griefer;
 				}));
-			} else if (mob instanceof Pillager pillager) {
+			} else if (mob instanceof Pillager pillager && SRConfig.COMMON.improvedIllagerBehavior.get()) {
 				mob.goalSelector.availableGoals.stream().map(it -> it.goal).filter(it -> it instanceof RangedCrossbowAttackGoal<?>).findFirst().ifPresent(goal -> {
 					mob.goalSelector.removeGoal(goal);
 					mob.goalSelector.addGoal(3, new ImprovedCrossbowGoal<>(pillager, 1.0D, 8.0F, 5.0D));
