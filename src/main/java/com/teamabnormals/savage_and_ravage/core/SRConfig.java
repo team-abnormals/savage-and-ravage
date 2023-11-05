@@ -16,6 +16,7 @@ public class SRConfig {
 		public final BooleanValue creepieExplosionsDestroyBlocks;
 		public final BooleanValue evokersUseTotems;
 		public final BooleanValue reducedVexHealth;
+		public final BooleanValue improvedIllagerBehavior;
 		@ConfigKey("no_bad_omen_on_death")
 		public final BooleanValue noBadOmenOnDeath;
 		public final BooleanValue poisonPotatoCompat;
@@ -38,6 +39,9 @@ public class SRConfig {
 					.comment("When killed by projectiles, evokers use a totem of undying", "This restores 2 health and gives them a projectile-proof shield for 30 seconds", "When their shield runs out, evokers cannot use totems for another 90 seconds")
 					.define("Evokers use totems", true);
 			reducedVexHealth = builder.define("Vex health is reduced to 2", true);
+			improvedIllagerBehavior = builder
+					.comment("Replaces the vanilla AI of Illagers with the improved AI. Disabling it will revert to the vanilla AI, which can be useful for mob or experience farms that depend on specific Illager behavior")
+					.define("Illagers use the new improved AI", true);
 			builder.pop();
 			builder.pop();
 
