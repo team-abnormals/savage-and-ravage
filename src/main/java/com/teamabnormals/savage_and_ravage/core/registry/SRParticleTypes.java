@@ -27,11 +27,11 @@ public class SRParticleTypes {
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public static void registerParticleFactories(RegisterParticleProvidersEvent event) {
-		event.register(CREEPER_SPORES.get(), CreeperSporesParticle.Factory::new);
-		event.register(CREEPER_SPORE_SPRINKLES.get(), CreeperSporeSprinklesParticle.Factory::new);
-		event.register(RUNE.get(), RuneParticle.Factory::new);
-		event.register(CONFUSION_BOLT.get(), ConfusionBoltParticle.Factory::new);
-		event.register(SNOWFLAKE.get(), SpellParticle.Provider::new);
-		event.register(CLEAVER_SWEEP.get(), CleaverSweepParticle.Factory::new);
+		event.registerSpriteSet(CREEPER_SPORES.get(), CreeperSporesParticle.Factory::new);
+		event.registerSpriteSet(CREEPER_SPORE_SPRINKLES.get(), CreeperSporeSprinklesParticle.Factory::new);
+		event.registerSpriteSet(RUNE.get(), RuneParticle.Factory::new);
+		event.registerSpriteSet(CONFUSION_BOLT.get(), ConfusionBoltParticle.Factory::new);
+		event.registerSpriteSet(SNOWFLAKE.get(), SpellParticle.Provider::new);
+		event.registerSpriteSet(CLEAVER_SWEEP.get(), CleaverSweepParticle.Factory::new);
 	}
 }

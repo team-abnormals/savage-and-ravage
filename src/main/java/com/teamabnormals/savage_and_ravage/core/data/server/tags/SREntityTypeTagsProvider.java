@@ -3,20 +3,23 @@ package com.teamabnormals.savage_and_ravage.core.data.server.tags;
 import com.teamabnormals.savage_and_ravage.core.SavageAndRavage;
 import com.teamabnormals.savage_and_ravage.core.other.tags.SREntityTypeTags;
 import com.teamabnormals.savage_and_ravage.core.registry.SREntityTypes;
-import net.minecraft.data.DataGenerator;
+import net.minecraft.core.HolderLookup.Provider;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.EntityTypeTagsProvider;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
+import java.util.concurrent.CompletableFuture;
+
 public class SREntityTypeTagsProvider extends EntityTypeTagsProvider {
 
-	public SREntityTypeTagsProvider(DataGenerator generator, ExistingFileHelper existingFileHelper) {
-		super(generator, SavageAndRavage.MOD_ID, existingFileHelper);
+	public SREntityTypeTagsProvider(PackOutput output, CompletableFuture<Provider> provider, ExistingFileHelper helper) {
+		super(output, provider, SavageAndRavage.MOD_ID, helper);
 	}
 
 	@Override
-	protected void addTags() {
+	public void addTags(Provider provider) {
 		this.tag(EntityTypeTags.ARROWS).add(SREntityTypes.MISCHIEF_ARROW.get());
 		this.tag(EntityTypeTags.IMPACT_PROJECTILES).add(SREntityTypes.SPORE_CLOUD.get(), SREntityTypes.CONFUSION_BOLT.get());
 		this.tag(EntityTypeTags.RAIDERS).add(SREntityTypes.GRIEFER.get(), SREntityTypes.EXECUTIONER.get(), SREntityTypes.ICEOLOGER.get(), SREntityTypes.TRICKSTER.get());

@@ -9,6 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -67,15 +68,15 @@ public class ConfusionBolt extends ThrowableProjectile {
 		Vec3 deltaMovement = this.getDeltaMovement();
 		super.tick();
 		this.setDeltaMovement(deltaMovement); //Undoes tampering by superclass
-		spawnGaussianParticles(this.level, this.random, this.getBoundingBox(), SRParticleTypes.CONFUSION_BOLT.getId().toString(), 5);
+		spawnGaussianParticles(this.level(), this.random, this.getBoundingBox(), SRParticleTypes.CONFUSION_BOLT.getId().toString(), 5);
 		this.entityData.set(TICKS_TILL_REMOVE, this.entityData.get(TICKS_TILL_REMOVE) - 1);
 		if (this.entityData.get(TICKS_TILL_REMOVE) <= 0)
 			this.discard();
 		//Normal projectile hit detection is bad
-		if (!this.level.isClientSide()) {
-			HitResult result = ProjectileUtil.getHitResult(this, this::canHitEntity);
+		if (!this.level().isClientSide()) {
+			HitResult result = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
 			if (result.getType() == HitResult.Type.MISS && this.isAlive()) {
-				List<Entity> intersecting = this.level.getEntitiesOfClass(Entity.class, this.getBoundingBox(), this::canHitEntity);
+				List<Entity> intersecting = this.level().getEntitiesOfClass(Entity.class, this.getBoundingBox(), this::canHitEntity);
 				if (!intersecting.isEmpty())
 					this.onHit(new EntityHitResult(intersecting.get(0)));
 			}
@@ -96,7 +97,7 @@ public class ConfusionBolt extends ThrowableProjectile {
 	@Override
 	protected void onHit(HitResult result) {
 		this.playSound(SRSounds.GENERIC_PUFF_OF_SMOKE.get(), 5.0F, 1.0F);
-		spawnGaussianParticles(this.level, this.random, this.getBoundingBox().inflate(0.5D), SREvents.POOF_KEY, 25);
+		spawnGaussianParticles(this.level(), this.random, this.getBoundingBox().inflate(0.5D), SREvents.POOF_KEY, 25);
 		super.onHit(result);
 		this.discard();
 	}
@@ -117,7 +118,7 @@ public class ConfusionBolt extends ThrowableProjectile {
 				livingEntity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 30));
 			}
 			livingEntity.playSound(SRSounds.GENERIC_PUFF_OF_SMOKE.get(), 5.0F, 1.0F);
-			spawnGaussianParticles(this.level, this.random, livingEntity.getBoundingBox().inflate(0.5D), SREvents.POOF_KEY, 25);
+			spawnGaussianParticles(this.level(), this.random, livingEntity.getBoundingBox().inflate(0.5D), SREvents.POOF_KEY, 25);
 			if (owner instanceof TracksHits)
 				((TracksHits) owner).onTrackedHit(this, entity);
 		}
@@ -126,15 +127,15 @@ public class ConfusionBolt extends ThrowableProjectile {
 	@Override
 	protected void onHitBlock(BlockHitResult result) {
 		super.onHitBlock(result);
-		if (!this.level.isClientSide) {
+		if (!this.level().isClientSide) {
 			BlockPos.MutableBlockPos pos = result.getBlockPos().mutable();
-			if (this.level.getBlockState(pos).getBlock() == SRBlocks.GLOOMY_TILES.get()) {
-				this.level.setBlock(pos, SRBlocks.RUNED_GLOOMY_TILES.get().defaultBlockState(), 2);
+			if (this.level().getBlockState(pos).getBlock() == SRBlocks.GLOOMY_TILES.get()) {
+				this.level().setBlock(pos, SRBlocks.RUNED_GLOOMY_TILES.get().defaultBlockState(), 2);
 				for (Direction direction : Direction.values()) {
 					pos.move(direction);
-					if (!this.level.getBlockState(pos).isSolidRender(this.level, pos))
+					if (!this.level().getBlockState(pos).isSolidRender(this.level(), pos))
 						for (int i = 0; i < 3; i++)
-							NetworkUtil.spawnParticle(SRParticleTypes.RUNE.getId().toString(), this.level.dimension(), pos.getX() + random.nextDouble(), pos.getY() + 0.25, pos.getZ() + random.nextDouble(), 0.0D, 0.0D, 0.0D);
+							NetworkUtil.spawnParticle(SRParticleTypes.RUNE.getId().toString(), this.level().dimension(), pos.getX() + random.nextDouble(), pos.getY() + 0.25, pos.getZ() + random.nextDouble(), 0.0D, 0.0D, 0.0D);
 					pos.move(direction.getOpposite());
 				}
 			}
@@ -154,7 +155,7 @@ public class ConfusionBolt extends ThrowableProjectile {
 	}
 
 	@Override
-	public Packet<?> getAddEntityPacket() {
+	public Packet<ClientGamePacketListener> getAddEntityPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 }

@@ -9,6 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -76,9 +77,9 @@ public class RunePrison extends Entity {
 
 	@Nullable
 	public TracksHits getCaster() {
-		if (this.casterUUID != null && this.level instanceof ServerLevel)
-			return (TracksHits) ((ServerLevel) this.level).getEntity(this.casterUUID);
-		else return this.casterID != 0 ? (TracksHits) this.level.getEntity(this.casterID) : null;
+		if (this.casterUUID != null && this.level() instanceof ServerLevel)
+			return (TracksHits) ((ServerLevel) this.level()).getEntity(this.casterUUID);
+		else return this.casterID != 0 ? (TracksHits) this.level().getEntity(this.casterID) : null;
 	}
 
 	public void setCaster(@Nullable Entity caster) {
@@ -107,7 +108,7 @@ public class RunePrison extends Entity {
 	public void tick() {
 		super.tick();
 
-		if (level.isClientSide() && getTicksTillRemove() % 5 == 0) {
+		if (this.level().isClientSide() && getTicksTillRemove() % 5 == 0) {
 			if (!isBackwardsFrameCycle) {
 				currentFrame++;
 				if (currentFrame == 4) {
@@ -124,7 +125,7 @@ public class RunePrison extends Entity {
 		if (getTicksTillRemove() > 0)
 			setTicksTillRemove(getTicksTillRemove() - 1);
 
-		for (LivingEntity livingEntity : this.level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox())) {
+		for (LivingEntity livingEntity : this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox())) {
 			if (livingEntity.isAffectedByPotions()) {
 				livingEntity.addEffect(new MobEffectInstance(SRMobEffects.WEIGHT.get(), 60, 2));
 				if (this.getCaster() != null)
@@ -137,8 +138,8 @@ public class RunePrison extends Entity {
 
 			BlockPos pos = this.getBlockPos();
 			if (pos != null && this.fromTrap) {
-				if (this.level.getBlockState(pos).getBlock() instanceof RunedGloomyTilesBlock)
-					this.level.setBlockAndUpdate(pos, SRBlocks.GLOOMY_TILES.get().defaultBlockState());
+				if (this.level().getBlockState(pos).getBlock() instanceof RunedGloomyTilesBlock)
+					this.level().setBlockAndUpdate(pos, SRBlocks.GLOOMY_TILES.get().defaultBlockState());
 			}
 		}
 	}
@@ -148,7 +149,7 @@ public class RunePrison extends Entity {
 	}
 
 	@Override
-	public Packet<?> getAddEntityPacket() {
+	public Packet<ClientGamePacketListener> getAddEntityPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 }

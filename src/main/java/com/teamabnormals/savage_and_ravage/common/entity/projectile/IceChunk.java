@@ -6,8 +6,8 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -52,18 +52,18 @@ public class IceChunk extends Entity implements IEntityAdditionalSpawnData {
 	}
 
 	private void onImpact(HitResult result) {
-		if (!this.level.isClientSide()) {
+		if (!this.level().isClientSide()) {
 			BlockState state = Blocks.PACKED_ICE.defaultBlockState();
-			SoundType soundtype = state.getSoundType(this.level, this.blockPosition(), null);
+			SoundType soundtype = state.getSoundType(this.level(), this.blockPosition(), null);
 			this.playSound(soundtype.getBreakSound(), (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-			((ServerLevel) this.level).sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, state), this.getX(), this.getY() + this.getBbHeight() / 2.0, this.getZ(), 256, this.getBbWidth() / 2.0, this.getBbHeight() / 2.0, this.getBbWidth() / 2.0, 1);
+			((ServerLevel) this.level()).sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, state), this.getX(), this.getY() + this.getBbHeight() / 2.0, this.getZ(), 256, this.getBbWidth() / 2.0, this.getBbHeight() / 2.0, this.getBbWidth() / 2.0, 1);
 		}
 		this.discard();
 	}
 
 	private void onImpactEntity(EntityHitResult result) {
 		Entity entity = result.getEntity();
-		entity.hurt(DamageSource.indirectMagic(this, this.getCaster()), 8.0f);
+		entity.hurt(this.damageSources().indirectMagic(this, this.getCaster()), 8.0f);
 		if (entity instanceof LivingEntity && entity.canFreeze()) {
 			entity.setTicksFrozen(600);
 		}
@@ -71,10 +71,10 @@ public class IceChunk extends Entity implements IEntityAdditionalSpawnData {
 
 	@Nullable
 	public Entity getCaster() {
-		if (this.casterEntityUUID != null && this.level instanceof ServerLevel) {
-			return ((ServerLevel) this.level).getEntity(this.casterEntityUUID);
+		if (this.casterEntityUUID != null && this.level() instanceof ServerLevel) {
+			return ((ServerLevel) this.level()).getEntity(this.casterEntityUUID);
 		} else {
-			return this.casterEntity != 0 ? this.level.getEntity(this.casterEntity) : null;
+			return this.casterEntity != 0 ? this.level().getEntity(this.casterEntity) : null;
 		}
 	}
 
@@ -85,10 +85,10 @@ public class IceChunk extends Entity implements IEntityAdditionalSpawnData {
 
 	@Nullable
 	public Entity getTarget() {
-		if (this.targetEntityUUID != null && this.level instanceof ServerLevel) {
-			return ((ServerLevel) this.level).getEntity(this.targetEntityUUID);
+		if (this.targetEntityUUID != null && this.level() instanceof ServerLevel) {
+			return ((ServerLevel) this.level()).getEntity(this.targetEntityUUID);
 		} else {
-			return this.targetEntity != 0 ? this.level.getEntity(this.targetEntity) : null;
+			return this.targetEntity != 0 ? this.level().getEntity(this.targetEntity) : null;
 		}
 	}
 
@@ -113,9 +113,9 @@ public class IceChunk extends Entity implements IEntityAdditionalSpawnData {
 			this.setTarget(null);
 		}
 
-		if (!this.level.isClientSide()) {
-			HitResult result = ProjectileUtil.getHitResult(this, this::canHitEntity);
-			List<Entity> intersecting = this.level.getEntitiesOfClass(Entity.class, this.getBoundingBox(), this::canHitEntity);
+		if (!this.level().isClientSide()) {
+			HitResult result = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
+			List<Entity> intersecting = this.level().getEntitiesOfClass(Entity.class, this.getBoundingBox(), this::canHitEntity);
 			if (result.getType() != HitResult.Type.MISS || !intersecting.isEmpty()) {
 				intersecting.forEach(e -> this.onImpactEntity(new EntityHitResult(e)));
 				if (result.getType() == HitResult.Type.ENTITY && intersecting.isEmpty())
@@ -161,7 +161,7 @@ public class IceChunk extends Entity implements IEntityAdditionalSpawnData {
 	}
 
 	@Override
-	public Packet<?> getAddEntityPacket() {
+	public Packet<ClientGamePacketListener> getAddEntityPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 

@@ -5,6 +5,7 @@ import com.teamabnormals.savage_and_ravage.core.registry.SREntityTypes;
 import com.teamabnormals.savage_and_ravage.core.registry.SRItems;
 import com.teamabnormals.savage_and_ravage.core.registry.SRParticleTypes;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -42,7 +43,7 @@ public class MischiefArrow extends AbstractArrow {
 		if (!finished) {
 			this.pickup = Pickup.DISALLOWED;
 
-			Creepie creepie = SREntityTypes.CREEPIE.get().create(level);
+			Creepie creepie = SREntityTypes.CREEPIE.get().create(this.level());
 			if (creepie != null) {
 				creepie.moveTo(this.getX(), this.getY(), this.getZ(), 0.0F, 0.0F);
 
@@ -52,7 +53,7 @@ public class MischiefArrow extends AbstractArrow {
 						creepie.setOwnerId(thrower.getUUID());
 				}
 
-				this.level.addFreshEntity(creepie);
+				this.level().addFreshEntity(creepie);
 			}
 			this.finished = true;
 		}
@@ -64,7 +65,7 @@ public class MischiefArrow extends AbstractArrow {
 		if (!finished) {
 			this.pickup = Pickup.DISALLOWED;
 
-			Creepie creepie = SREntityTypes.CREEPIE.get().create(level);
+			Creepie creepie = SREntityTypes.CREEPIE.get().create(this.level());
 			if (creepie != null) {
 				creepie.moveTo(this.getX(), this.getY(), this.getZ(), 0.0F, 0.0F);
 
@@ -80,7 +81,7 @@ public class MischiefArrow extends AbstractArrow {
 						creepie.setTarget((LivingEntity) hit);
 				}
 
-				this.level.addFreshEntity(creepie);
+				this.level().addFreshEntity(creepie);
 			}
 
 			this.finished = true;
@@ -91,7 +92,7 @@ public class MischiefArrow extends AbstractArrow {
 	public void tick() {
 		super.tick();
 		if (!this.finished)
-			this.level.addParticle(SRParticleTypes.CREEPER_SPORES.get(), this.getX(), this.getY(), this.getZ() - 0.0D, 0.0D, 0.0D, 0.0D);
+			this.level().addParticle(SRParticleTypes.CREEPER_SPORES.get(), this.getX(), this.getY(), this.getZ() - 0.0D, 0.0D, 0.0D, 0.0D);
 	}
 
 	@Override
@@ -100,7 +101,7 @@ public class MischiefArrow extends AbstractArrow {
 	}
 
 	@Override
-	public Packet<?> getAddEntityPacket() {
+	public Packet<ClientGamePacketListener> getAddEntityPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 }

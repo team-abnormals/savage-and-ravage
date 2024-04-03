@@ -1,34 +1,38 @@
 package com.teamabnormals.savage_and_ravage.core.registry;
 
+import com.teamabnormals.blueprint.core.util.item.CreativeModeTabContentsPopulator;
 import com.teamabnormals.blueprint.core.util.registry.ItemSubRegistryHelper;
 import com.teamabnormals.savage_and_ravage.common.item.*;
 import com.teamabnormals.savage_and_ravage.core.SavageAndRavage;
 import com.teamabnormals.savage_and_ravage.core.other.SRTiers;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.*;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.registries.RegistryObject;
 
+import static com.teamabnormals.blueprint.core.util.item.ItemStackUtil.is;
+import static net.minecraft.world.item.CreativeModeTabs.*;
+import static net.minecraft.world.item.crafting.Ingredient.of;
+
 @EventBusSubscriber(modid = SavageAndRavage.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class SRItems {
 	public static final ItemSubRegistryHelper HELPER = SavageAndRavage.REGISTRY_HELPER.getItemSubHelper();
 
-	public static final RegistryObject<Item> CREEPER_SPORES = HELPER.createItem("creeper_spores", () -> new CreeperSporesItem(new Item.Properties().tab(CreativeModeTab.TAB_MATERIALS)));
-	public static final RegistryObject<Item> MISCHIEF_ARROW = HELPER.createItem("mischief_arrow", () -> new MischiefArrowItem(new Item.Properties().tab(CreativeModeTab.TAB_COMBAT)));
+	public static final RegistryObject<Item> CREEPER_SPORES = HELPER.createItem("creeper_spores", () -> new CreeperSporesItem(new Item.Properties()));
+	public static final RegistryObject<Item> MISCHIEF_ARROW = HELPER.createItem("mischief_arrow", () -> new MischiefArrowItem(new Item.Properties()));
 
-	public static final RegistryObject<Item> BLAST_PROOF_PLATING = HELPER.createItem("blast_proof_plating", () -> new Item(new Item.Properties().tab(CreativeModeTab.TAB_MATERIALS)));
-	public static final RegistryObject<Item> GRIEFER_HELMET = HELPER.createItem("griefer_helmet", () -> new GrieferArmorItem(SRTiers.GRIEFER, EquipmentSlot.HEAD, new Item.Properties().tab(CreativeModeTab.TAB_COMBAT)));
-	public static final RegistryObject<Item> GRIEFER_CHESTPLATE = HELPER.createItem("griefer_chestplate", () -> new GrieferArmorItem(SRTiers.GRIEFER, EquipmentSlot.CHEST, new Item.Properties().tab(CreativeModeTab.TAB_COMBAT)));
-	public static final RegistryObject<Item> GRIEFER_LEGGINGS = HELPER.createItem("griefer_leggings", () -> new GrieferArmorItem(SRTiers.GRIEFER, EquipmentSlot.LEGS, new Item.Properties().tab(CreativeModeTab.TAB_COMBAT)));
-	public static final RegistryObject<Item> GRIEFER_BOOTS = HELPER.createItem("griefer_boots", () -> new GrieferArmorItem(SRTiers.GRIEFER, EquipmentSlot.FEET, new Item.Properties().tab(CreativeModeTab.TAB_COMBAT)));
+	public static final RegistryObject<Item> BLAST_PROOF_PLATING = HELPER.createItem("blast_proof_plating", () -> new Item(new Item.Properties()));
+	public static final RegistryObject<Item> GRIEFER_HELMET = HELPER.createItem("griefer_helmet", () -> new GrieferArmorItem(SRTiers.GRIEFER, ArmorItem.Type.HELMET, new Item.Properties()));
+	public static final RegistryObject<Item> GRIEFER_CHESTPLATE = HELPER.createItem("griefer_chestplate", () -> new GrieferArmorItem(SRTiers.GRIEFER, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
+	public static final RegistryObject<Item> GRIEFER_LEGGINGS = HELPER.createItem("griefer_leggings", () -> new GrieferArmorItem(SRTiers.GRIEFER, ArmorItem.Type.LEGGINGS, new Item.Properties()));
+	public static final RegistryObject<Item> GRIEFER_BOOTS = HELPER.createItem("griefer_boots", () -> new GrieferArmorItem(SRTiers.GRIEFER, ArmorItem.Type.BOOTS, new Item.Properties()));
 
-	public static final RegistryObject<Item> WAND_OF_FREEZING = HELPER.createItem("wand_of_freezing", () -> new WandOfFreezingItem(new Item.Properties().durability(250).rarity(Rarity.UNCOMMON).tab(CreativeModeTab.TAB_COMBAT)));
-	public static final RegistryObject<Item> CLEAVER_OF_BEHEADING = HELPER.createItem("cleaver_of_beheading", () -> new CleaverOfBeheadingItem(SRTiers.CLEAVER, 11.0F, -3.4F, new Item.Properties().rarity(Rarity.UNCOMMON).stacksTo(1).tab(CreativeModeTab.TAB_COMBAT)));
-	public static final RegistryObject<Item> CONCH_OF_CONJURING = HELPER.createItem("conch_of_conjuring", () -> new ConchOfConjuringItem(new Item.Properties().durability(375).rarity(Rarity.UNCOMMON).tab(CreativeModeTab.TAB_COMBAT)));
-	public static final RegistryObject<Item> MASK_OF_DISHONESTY = HELPER.createItem("mask_of_dishonesty", () -> new MaskOfDishonestyItem(SRTiers.MASK, EquipmentSlot.HEAD, new Item.Properties().rarity(Rarity.UNCOMMON).tab(CreativeModeTab.TAB_COMBAT)));
+	public static final RegistryObject<Item> WAND_OF_FREEZING = HELPER.createItem("wand_of_freezing", () -> new WandOfFreezingItem(new Item.Properties().durability(250).rarity(Rarity.UNCOMMON)));
+	public static final RegistryObject<Item> CLEAVER_OF_BEHEADING = HELPER.createItem("cleaver_of_beheading", () -> new CleaverOfBeheadingItem(SRTiers.CLEAVER, 11.0F, -3.4F, new Item.Properties().rarity(Rarity.UNCOMMON).stacksTo(1)));
+	public static final RegistryObject<Item> CONCH_OF_CONJURING = HELPER.createItem("conch_of_conjuring", () -> new ConchOfConjuringItem(new Item.Properties().durability(375).rarity(Rarity.UNCOMMON)));
+	public static final RegistryObject<Item> MASK_OF_DISHONESTY = HELPER.createItem("mask_of_dishonesty", () -> new MaskOfDishonestyItem(SRTiers.MASK, ArmorItem.Type.HELMET, new Item.Properties().rarity(Rarity.UNCOMMON)));
 
 	public static final RegistryObject<ForgeSpawnEggItem> SKELETON_VILLAGER_SPAWN_EGG = HELPER.createSpawnEggItem("skeleton_villager", SREntityTypes.SKELETON_VILLAGER::get, 0xAEAEB2, 0x8F8C99);
 	public static final RegistryObject<ForgeSpawnEggItem> GRIEFER_SPAWN_EGG = HELPER.createSpawnEggItem("griefer", SREntityTypes.GRIEFER::get, 0x7E9658, 0xF4B804);
@@ -39,5 +43,18 @@ public class SRItems {
 	public static void registerItemProperties() {
 		ItemProperties.register(Items.CROSSBOW, new ResourceLocation(SavageAndRavage.MOD_ID, "mischief_arrow"), (stack, world, entity, integer) -> entity != null && CrossbowItem.isCharged(stack) && CrossbowItem.containsChargedProjectile(stack, SRItems.MISCHIEF_ARROW.get()) ? 1.0F : 0.0F);
 		ItemProperties.register(Items.CROSSBOW, new ResourceLocation(SavageAndRavage.MOD_ID, "spectral_arrow"), (stack, world, entity, integer) -> entity != null && CrossbowItem.isCharged(stack) && CrossbowItem.containsChargedProjectile(stack, Items.SPECTRAL_ARROW) ? 1.0F : 0.0F);
+	}
+
+	public static void setupTabEditors() {
+		CreativeModeTabContentsPopulator.mod(SavageAndRavage.MOD_ID)
+				.tab(INGREDIENTS)
+				.addItemsAfter(of(Items.BONE_MEAL), CREEPER_SPORES, BLAST_PROOF_PLATING)
+				.tab(COMBAT)
+				.addItemsBefore(of(Items.EGG), CREEPER_SPORES)
+				.addItemsAfter(of(Items.IRON_BOOTS), GRIEFER_HELMET, GRIEFER_CHESTPLATE, GRIEFER_LEGGINGS, GRIEFER_BOOTS)
+				.addItemsAfter(of(Items.TOTEM_OF_UNDYING), MASK_OF_DISHONESTY, WAND_OF_FREEZING, CLEAVER_OF_BEHEADING, CONCH_OF_CONJURING)
+				.addItemsAfter(of(Items.SPECTRAL_ARROW), MISCHIEF_ARROW)
+				.tab(SPAWN_EGGS)
+				.addItemsAlphabetically(is(SpawnEggItem.class), SKELETON_VILLAGER_SPAWN_EGG, GRIEFER_SPAWN_EGG, ICEOLOGER_SPAWN_EGG, EXECUTIONER_SPAWN_EGG, TRICKSTER_SPAWN_EGG);
 	}
 }

@@ -28,6 +28,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
@@ -145,14 +146,14 @@ public class SREvents {
 			Player player = event.getEntity();
 			CompoundTag persistentData = target.getPersistentData();
 			if (!persistentData.getBoolean(POISON_TAG)) {
-				if (target.level.random.nextDouble() < SRConfig.COMMON.poisonPotatoChance.get()) {
+				if (target.level().random.nextDouble() < SRConfig.COMMON.poisonPotatoChance.get()) {
 					target.playSound(SoundEvents.GENERIC_EAT, 0.5f, 0.25f);
 					persistentData.putBoolean(POISON_TAG, true);
 					if (SRConfig.COMMON.poisonPotatoEffect.get()) {
 						((LivingEntity) target).addEffect(new MobEffectInstance(MobEffects.POISON, 200));
 					}
 				} else {
-					target.playSound(SoundEvents.GENERIC_EAT, 0.5f, 0.5f + target.level.random.nextFloat() / 2);
+					target.playSound(SoundEvents.GENERIC_EAT, 0.5f, 0.5f + target.level().random.nextFloat() / 2);
 				}
 				if (!player.isCreative()) stack.shrink(1);
 				event.setCancellationResult(InteractionResult.sidedSuccess(event.getLevel().isClientSide()));
@@ -177,15 +178,15 @@ public class SREvents {
 	}
 
 	@SubscribeEvent
-	public static void onLivingSetAttackTarget(LivingSetAttackTargetEvent event) {
+	public static void onLivingSetAttackTarget(LivingChangeTargetEvent event) {
 		LivingEntity entity = event.getEntity();
-		LivingEntity target = event.getTarget();
+		LivingEntity target = event.getOriginalTarget();
 		if (target != null) {
-			if (entity instanceof AbstractGolem && !(entity instanceof Shulker) && target instanceof OwnableMob)
-				if (((OwnableMob) target).getOwner() instanceof Player && ((Mob) target).getTarget() != entity)
-					((AbstractGolem) entity).setTarget(null);
+			if (entity instanceof AbstractGolem && !(entity instanceof Shulker) && target instanceof OwnableMob ownableMob)
+				if (ownableMob.getOwner() instanceof Player && ((Mob) target).getTarget() != entity)
+					event.setNewTarget(null);
 			if (entity instanceof Evoker && SRConfig.COMMON.evokersUseTotems.get() && TrackedDataManager.INSTANCE.getValue(entity, SRDataProcessors.TOTEM_SHIELD_TIME) > 0)
-				((Evoker) entity).setTarget(null);
+				event.setNewTarget(null);
 		}
 	}
 
@@ -193,14 +194,14 @@ public class SREvents {
 	public static void onExplosion(ExplosionEvent.Detonate event) {
 		Level world = event.getLevel();
 		Explosion explosion = event.getExplosion();
-		LivingEntity sourceEntity = explosion.getSourceMob();
+		LivingEntity sourceEntity = explosion.getIndirectSourceEntity();
 		boolean isCreeper = sourceEntity != null && sourceEntity.getType().is(SREntityTypeTags.CREEPERS);
 		boolean isCreepie = sourceEntity != null && sourceEntity.getType() == SREntityTypes.CREEPIE.get();
 		if (isCreeper) {
 			if (!SRConfig.COMMON.creeperExplosionsDestroyBlocks.get())
 				event.getAffectedBlocks().clear();
 			if (SRConfig.COMMON.creeperExplosionsSpawnCreepies.get()) {
-				boolean isPowered = explosion.getSourceMob() instanceof Creeper creeper && creeper.isPowered();
+				boolean isPowered = sourceEntity instanceof Creeper creeper && creeper.isPowered();
 				SporeCloud spores = SREntityTypes.SPORE_CLOUD.get().create(world);
 				if (spores == null)
 					return;
@@ -211,7 +212,7 @@ public class SREvents {
 				}
 				spores.setCloudSize((int) (sourceEntity.getHealth() / sourceEntity.getMaxHealth()) * (isPowered ? 10 : 4));
 				spores.copyPosition(sourceEntity);
-				sourceEntity.level.addFreshEntity(spores);
+				sourceEntity.level().addFreshEntity(spores);
 			}
 		}
 
@@ -219,7 +220,7 @@ public class SREvents {
 			for (BlockPos pos : event.getAffectedBlocks()) {
 				if (world.getBlockState(pos).getBlock() == SRBlocks.SPORE_BOMB.get()) {
 					world.removeBlock(pos, false);
-					SporeBomb sporebomb = new SporeBomb(world, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, explosion.getSourceMob());
+					SporeBomb sporebomb = new SporeBomb(world, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, sourceEntity);
 					sporebomb.setFuse((short) (world.getRandom().nextInt(sporebomb.getFuse() / 4) + sporebomb.getFuse() / 8));
 					world.addFreshEntity(sporebomb);
 				}
@@ -247,7 +248,7 @@ public class SREvents {
 	public static void onAttackEntity(AttackEntityEvent event) {
 		Player player = event.getEntity();
 		Entity target = event.getTarget();
-		Level world = player.level;
+		Level world = player.level();
 		if (target instanceof LivingEntity) {
 			ItemStack mainHandStack = player.getMainHandItem();
 			if (mainHandStack.getItem() == SRItems.CLEAVER_OF_BEHEADING.get()) {
@@ -259,8 +260,8 @@ public class SREvents {
 				attackDamage = attackDamage * (0.2F + attackStrength * attackStrength * 0.8F);
 				enchantDamageBonus = enchantDamageBonus * attackStrength;
 				if ((attackDamage > 0.0F || enchantDamageBonus > 0.0F) && attackStrength > 0.9F) {
-					if (!player.isSprinting() && player.isOnGround() && (player.walkDist - player.walkDistO) < (double) player.getSpeed()) {
-						boolean shouldCrit = player.fallDistance > 0.0F && !player.isOnGround() && !player.onClimbable() && !player.isInWater() && !player.hasEffect(MobEffects.BLINDNESS) && !player.isPassenger();
+					if (!player.isSprinting() && player.onGround() && (player.walkDist - player.walkDistO) < (double) player.getSpeed()) {
+						boolean shouldCrit = player.fallDistance > 0.0F && !player.onGround() && !player.onClimbable() && !player.isInWater() && !player.hasEffect(MobEffects.BLINDNESS) && !player.isPassenger();
 						if (ForgeHooks.getCriticalHit(player, target, shouldCrit, shouldCrit ? 1.5F : 1.0F) == null) {
 							target.getPersistentData().putBoolean(NO_KNOCKBACK_KEY, true);
 							AABB targetBox = target.getBoundingBox().inflate(1.5D, 0.25D, 1.5D);
@@ -328,7 +329,7 @@ public class SREvents {
 	@SubscribeEvent
 	public static void onLivingDamage(LivingDamageEvent event) {
 		LivingEntity target = event.getEntity();
-		if (event.getSource().isExplosion()) {
+		if (event.getSource().is(DamageTypeTags.IS_EXPLOSION)) {
 			double decrease = 0;
 			for (EquipmentSlot slot : EquipmentSlot.values()) {
 				ItemStack stack = target.getItemBySlot(slot);
@@ -366,8 +367,8 @@ public class SREvents {
 					event.setCanceled(true);
 					target.setHealth(2.0F);
 					data.setValue(SRDataProcessors.TOTEM_SHIELD_TIME, 600);
-					if (!target.level.isClientSide())
-						target.level.broadcastEntityEvent(target, (byte) 35);
+					if (!target.level().isClientSide())
+						target.level().broadcastEntityEvent(target, (byte) 35);
 				}
 			}
 		}
@@ -378,12 +379,12 @@ public class SREvents {
 		HitResult result = event.getRayTraceResult();
 		if (result instanceof BlockHitResult blockResult) {
 			Entity entity = event.getEntity();
-			if (entity.level.getBlockState(blockResult.getBlockPos()).is(Blocks.TARGET)) {
-				if (!entity.level.isClientSide()) {
+			if (entity.level().getBlockState(blockResult.getBlockPos()).is(Blocks.TARGET)) {
+				if (!entity.level().isClientSide()) {
 					IDataManager data = (IDataManager) entity;
 					UUID id = data.getValue(SRDataProcessors.CROSSBOW_OWNER).orElse(null);
 					if (id != null) {
-						Entity crossbowOwner = ((ServerLevel) entity.level).getEntity(id);
+						Entity crossbowOwner = ((ServerLevel) entity.level()).getEntity(id);
 						if (crossbowOwner instanceof Raider)
 							TrackedDataManager.INSTANCE.setValue(crossbowOwner, SRDataProcessors.TARGET_HIT, true);
 						data.setValue(SRDataProcessors.CROSSBOW_OWNER, Optional.empty());
@@ -467,7 +468,7 @@ public class SREvents {
 	@SubscribeEvent
 	public static void livingUpdate(LivingTickEvent event) {
 		LivingEntity entity = event.getEntity();
-		Level world = entity.level;
+		Level world = entity.level();
 		IDataManager data = (IDataManager) entity;
 		if (!world.isClientSide()) {
 			CompoundTag persistentData = entity.getPersistentData();

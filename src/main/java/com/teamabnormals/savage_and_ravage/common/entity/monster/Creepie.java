@@ -5,7 +5,6 @@ import com.teamabnormals.savage_and_ravage.common.entity.ai.goal.CreepieSwellGoa
 import com.teamabnormals.savage_and_ravage.common.entity.ai.goal.FollowMobOwnerGoal;
 import com.teamabnormals.savage_and_ravage.common.entity.ai.goal.MobOwnerHurtByTargetGoal;
 import com.teamabnormals.savage_and_ravage.common.entity.ai.goal.MobOwnerHurtTargetGoal;
-import com.teamabnormals.savage_and_ravage.core.SRConfig;
 import com.teamabnormals.savage_and_ravage.core.registry.SRParticleTypes;
 import com.teamabnormals.savage_and_ravage.core.registry.SRSounds;
 import net.minecraft.core.particles.ParticleTypes;
@@ -34,13 +33,12 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.Level.ExplosionInteraction;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.scores.Team;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.event.ForgeEventFactory;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -213,11 +211,10 @@ public class Creepie extends Monster implements PowerableMob, OwnableMob {
 	 * Creates an explosion as determined by this creeper's power and explosion radius.
 	 */
 	protected void explode() {
-		if (!this.level.isClientSide()) {
-			Explosion.BlockInteraction mode = SRConfig.COMMON.creepieExplosionsDestroyBlocks.get() && ForgeEventFactory.getMobGriefingEvent(this.level, this) ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE;
+		if (!this.level().isClientSide()) {
 			float chargedModifier = this.isPowered() ? 2.0F : 1.0F;
 			this.dead = true;
-			this.level.explode(this, this.getX(), this.getY(), this.getZ(), this.explosionRadius * chargedModifier, mode);
+			this.level().explode(this, this.getX(), this.getY(), this.getZ(), this.explosionRadius * chargedModifier, ExplosionInteraction.MOB);
 			this.discard();
 			this.spawnLingeringCloud();
 		}
@@ -226,10 +223,10 @@ public class Creepie extends Monster implements PowerableMob, OwnableMob {
 	@Override
 	public void aiStep() {
 		super.aiStep();
-		if (this.level.isClientSide()) {
+		if (this.level().isClientSide()) {
 			if (this.forcedAgeTimer > 0) {
 				if (this.forcedAgeTimer % 4 == 0) {
-					this.level.addParticle(ParticleTypes.HAPPY_VILLAGER, this.getRandomX(1.0D), this.getRandomY() + 0.5D, this.getRandomZ(1.0D), 0.0D, 0.0D, 0.0D);
+					this.level().addParticle(ParticleTypes.HAPPY_VILLAGER, this.getRandomX(1.0D), this.getRandomY() + 0.5D, this.getRandomZ(1.0D), 0.0D, 0.0D, 0.0D);
 				}
 				this.forcedAgeTimer--;
 			}
@@ -292,10 +289,10 @@ public class Creepie extends Monster implements PowerableMob, OwnableMob {
 				}
 				this.setConversionTime(this.getConversionTime() - 1);
 				if (this.getConversionTime() <= 0) {
-					this.finishConversion(this.level);
+					this.finishConversion(this.level());
 				}
-				if (this.level.isClientSide()) {
-					this.level.addParticle(SRParticleTypes.CREEPER_SPORES.get(), this.getX() - 0.5d + (double) (this.random.nextFloat()), this.getY() + 0.5d, this.getZ() - 0.5d + (double) (this.random.nextFloat()), 0.0D, (this.random.nextFloat() / 5.0F), 0.0D);
+				if (this.level().isClientSide()) {
+					this.level().addParticle(SRParticleTypes.CREEPER_SPORES.get(), this.getX() - 0.5d + (double) (this.random.nextFloat()), this.getY() + 0.5d, this.getZ() - 0.5d + (double) (this.random.nextFloat()), 0.0D, (this.random.nextFloat() / 5.0F), 0.0D);
 				}
 			}
 		}
@@ -318,8 +315,8 @@ public class Creepie extends Monster implements PowerableMob, OwnableMob {
 			}
 		}
 		if (itemstack.getItem() == Items.FLINT_AND_STEEL) {
-			this.level.playSound(player, this.getX(), this.getY(), this.getZ(), SoundEvents.FLINTANDSTEEL_USE, this.getSoundSource(), 1.0F, this.random.nextFloat() * 0.4F + 0.8F);
-			if (!this.level.isClientSide()) {
+			this.level().playSound(player, this.getX(), this.getY(), this.getZ(), SoundEvents.FLINTANDSTEEL_USE, this.getSoundSource(), 1.0F, this.random.nextFloat() * 0.4F + 0.8F);
+			if (!this.level().isClientSide()) {
 				this.ignite();
 				itemstack.hurtAndBreak(1, player, (p_213625_1_) -> p_213625_1_.broadcastBreakEvent(hand));
 			}
@@ -363,7 +360,7 @@ public class Creepie extends Monster implements PowerableMob, OwnableMob {
 	protected void spawnLingeringCloud() {
 		Collection<MobEffectInstance> collection = this.getActiveEffects();
 		if (!collection.isEmpty()) {
-			AreaEffectCloud areaeffectcloudentity = new AreaEffectCloud(this.level, this.getX(), this.getY(), this.getZ());
+			AreaEffectCloud areaeffectcloudentity = new AreaEffectCloud(this.level(), this.getX(), this.getY(), this.getZ());
 			areaeffectcloudentity.setRadius(1.0F);
 			areaeffectcloudentity.setRadiusOnUse(-0.5F);
 			areaeffectcloudentity.setWaitTime(10);
@@ -374,7 +371,7 @@ public class Creepie extends Monster implements PowerableMob, OwnableMob {
 				areaeffectcloudentity.addEffect(new MobEffectInstance(effectinstance));
 			}
 
-			this.level.addFreshEntity(areaeffectcloudentity);
+			this.level().addFreshEntity(areaeffectcloudentity);
 		}
 
 	}
@@ -404,11 +401,11 @@ public class Creepie extends Monster implements PowerableMob, OwnableMob {
 	@Override
 	@Nullable
 	public LivingEntity getOwner() {
-		if (!this.level.isClientSide()) { //TODO: this is experimental, if anything breaks by being only on the client, a packet is needed
+		if (!this.level().isClientSide()) { //TODO: this is experimental, if anything breaks by being only on the client, a packet is needed
 			UUID uuid = this.getOwnerId();
 			if (uuid == null)
 				return null;
-			Entity entity = ((ServerLevel) this.level).getEntity(uuid);
+			Entity entity = ((ServerLevel) this.level()).getEntity(uuid);
 			return entity instanceof LivingEntity ? (LivingEntity) entity : null;
 		}
 		return null;
@@ -450,13 +447,13 @@ public class Creepie extends Monster implements PowerableMob, OwnableMob {
 	}
 
 	private LivingEntity finishConversion(Level world) {
-		Creeper creeperEntity = EntityType.CREEPER.create(this.level);
+		Creeper creeperEntity = EntityType.CREEPER.create(this.level());
 		if (creeperEntity == null)
 			return null;
 
 		creeperEntity.copyPosition(this);
-		if (!this.level.isClientSide())
-			creeperEntity.finalizeSpawn((ServerLevel) world, this.level.getCurrentDifficultyAt(creeperEntity.blockPosition()), MobSpawnType.CONVERSION, null, null);
+		if (!this.level().isClientSide())
+			creeperEntity.finalizeSpawn((ServerLevel) world, this.level().getCurrentDifficultyAt(creeperEntity.blockPosition()), MobSpawnType.CONVERSION, null, null);
 		creeperEntity.setNoAi(this.isNoAi());
 		if (this.hasCustomName()) {
 			creeperEntity.setCustomName(this.getCustomName());
@@ -481,7 +478,7 @@ public class Creepie extends Monster implements PowerableMob, OwnableMob {
 		creeperEntity.setHealth(creeperEntity.getMaxHealth());
 		this.dead = true;
 		this.discard();
-		this.level.addFreshEntity(creeperEntity);
+		this.level().addFreshEntity(creeperEntity);
 		this.playSound(SRSounds.ENTITY_CREEPIE_GROW.get(), 1.0F, 1.0F);
 		return creeperEntity;
 	}

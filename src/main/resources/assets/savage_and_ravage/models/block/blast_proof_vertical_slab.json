@@ -1,8 +1,0 @@
-{
-    "parent": "savage_and_ravage:block/vertical_slab",
-    "textures": {
-        "side": "savage_and_ravage:block/blast_proof_plates",
-        "top": "savage_and_ravage:block/blast_proof_plates",
-        "bottom": "savage_and_ravage:block/blast_proof_plates"
-    }
-}

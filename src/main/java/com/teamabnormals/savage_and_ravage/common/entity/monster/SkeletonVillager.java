@@ -132,7 +132,7 @@ public class SkeletonVillager extends AbstractSkeleton implements CrossbowAttack
 		this.populateDefaultEquipmentSlots(this.getRandom(), difficultyIn);
 		this.populateDefaultEquipmentEnchantments(this.getRandom(), difficultyIn);
 		if (this.getRandom().nextInt(100) == 0) {
-			Spider spider = EntityType.SPIDER.create(this.level);
+			Spider spider = EntityType.SPIDER.create(this.level());
 			if (spider != null) {
 				spider.copyPosition(this);
 				worldIn.addFreshEntity(spider);

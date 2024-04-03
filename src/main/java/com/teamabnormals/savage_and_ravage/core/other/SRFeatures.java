@@ -6,8 +6,11 @@ import com.teamabnormals.blueprint.core.util.DataUtil;
 import com.teamabnormals.savage_and_ravage.common.levelgen.feature.EnclosureFeature;
 import com.teamabnormals.savage_and_ravage.core.SavageAndRavage;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.data.worldgen.Pools;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
@@ -21,50 +24,84 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.List;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class SRFeatures {
 	public static final DeferredRegister<Feature<?>> FEATURES = DeferredRegister.create(ForgeRegistries.FEATURES, SavageAndRavage.MOD_ID);
 
 	public static final RegistryObject<Feature<NoneFeatureConfiguration>> CREEPER_ENCLOSURE = FEATURES.register("creeper_enclosure", () -> new EnclosureFeature(NoneFeatureConfiguration.CODEC));
 
-	public static void registerPools() {
-		Pools.register(new StructureTemplatePool(new ResourceLocation(SavageAndRavage.MOD_ID, "enclosure/enclosures"), new ResourceLocation("empty"), ImmutableList.of(Pair.of(StructurePoolElement.feature(Holder.direct(SRPlacedFeatures.CREEPER_ENCLOSURE.get())), 1)), StructureTemplatePool.Projection.RIGID));
-		Pools.register(new StructureTemplatePool(new ResourceLocation(SavageAndRavage.MOD_ID, "pillager_outpost/pillagers"), new ResourceLocation("empty"), ImmutableList.of(Pair.of(StructurePoolElement.legacy(SavageAndRavage.MOD_ID + ":pillager_outpost/pillager"), 1)), StructureTemplatePool.Projection.RIGID));
-		Pools.register(new StructureTemplatePool(new ResourceLocation(SavageAndRavage.MOD_ID, "pillager_outpost/vindicators"), new ResourceLocation("empty"), ImmutableList.of(Pair.of(StructurePoolElement.legacy(SavageAndRavage.MOD_ID + ":pillager_outpost/vindicator"), 1)), StructureTemplatePool.Projection.RIGID));
+	public static void addToJigsawPatterns() {
 		for (String biome : new String[]{"plains", "snowy", "savanna", "desert", "taiga"})
-			DataUtil.addToJigsawPattern(new ResourceLocation("village/" + biome + "/zombie/villagers"), StructurePoolElement.legacy(SavageAndRavage.MOD_ID + ":village/skeleton_villager").apply(StructureTemplatePool.Projection.RIGID), 10);
-		DataUtil.addToJigsawPattern(new ResourceLocation("pillager_outpost/features"), StructurePoolElement.legacy(SavageAndRavage.MOD_ID + ":pillager_outpost/feature_targets_arrow").apply(StructureTemplatePool.Projection.RIGID), 2);
-		Pools.register(new StructureTemplatePool(new ResourceLocation(SavageAndRavage.MOD_ID, "pillager_outpost/note_blocks"), new ResourceLocation("empty"), noteBlocks(), StructureTemplatePool.Projection.RIGID));
+			DataUtil.addToJigsawPattern(new ResourceLocation("village/" + biome + "/zombie/villagers"), access -> StructurePoolElement.legacy(SavageAndRavage.MOD_ID + ":village/skeleton_villager").apply(StructureTemplatePool.Projection.RIGID), 10);
+		DataUtil.addToJigsawPattern(new ResourceLocation("pillager_outpost/features"), access -> StructurePoolElement.legacy(SavageAndRavage.MOD_ID + ":pillager_outpost/feature_targets_arrow").apply(StructureTemplatePool.Projection.RIGID), 2);
 	}
 
-	private static ImmutableList<Pair<Function<StructureTemplatePool.Projection, ? extends StructurePoolElement>, Integer>> noteBlocks() {
-		ImmutableList.Builder<Pair<Function<StructureTemplatePool.Projection, ? extends StructurePoolElement>, Integer>> builder = ImmutableList.builder();
-		for (int i = 0; i <= 24; i++)
-			builder.add(Pair.of(StructurePoolElement.legacy(SavageAndRavage.MOD_ID + ":pillager_outpost/note_blocks/note_block" + i), 1));
-		return builder.build();
+	public static final class SRTemplatePools {
+		public static final ResourceKey<StructureTemplatePool> ENCLOSURES = createKey("enclosure/enclosures");
+		public static final ResourceKey<StructureTemplatePool> PILLAGERS = createKey("pillager_outpost/pillagers");
+		public static final ResourceKey<StructureTemplatePool> VINDICATORS = createKey("pillager_outpost/vindicators");
+		public static final ResourceKey<StructureTemplatePool> NOTE_BLOCKS = createKey("pillager_outpost/note_blocks");
+
+		public static void bootstrap(BootstapContext<StructureTemplatePool> context) {
+			HolderGetter<StructureTemplatePool> pools = context.lookup(Registries.TEMPLATE_POOL);
+			HolderGetter<PlacedFeature> features = context.lookup(Registries.PLACED_FEATURE);
+
+			Holder<StructureTemplatePool> empty = pools.getOrThrow(Pools.EMPTY);
+
+			context.register(ENCLOSURES, new StructureTemplatePool(empty, ImmutableList.of(Pair.of(StructurePoolElement.feature(features.getOrThrow(SRPlacedFeatures.CREEPER_ENCLOSURE)), 1)), StructureTemplatePool.Projection.RIGID));
+			context.register(PILLAGERS, new StructureTemplatePool(empty, ImmutableList.of(Pair.of(StructurePoolElement.legacy(SavageAndRavage.MOD_ID + ":pillager_outpost/pillager"), 1)), StructureTemplatePool.Projection.RIGID));
+			context.register(VINDICATORS, new StructureTemplatePool(empty, ImmutableList.of(Pair.of(StructurePoolElement.legacy(SavageAndRavage.MOD_ID + ":pillager_outpost/vindicator"), 1)), StructureTemplatePool.Projection.RIGID));
+			context.register(NOTE_BLOCKS, new StructureTemplatePool(empty, noteBlocks(), StructureTemplatePool.Projection.RIGID));
+		}
+
+		private static ImmutableList<Pair<Function<StructureTemplatePool.Projection, ? extends StructurePoolElement>, Integer>> noteBlocks() {
+			ImmutableList.Builder<Pair<Function<StructureTemplatePool.Projection, ? extends StructurePoolElement>, Integer>> builder = ImmutableList.builder();
+			for (int i = 0; i <= 24; i++)
+				builder.add(Pair.of(StructurePoolElement.legacy(SavageAndRavage.MOD_ID + ":pillager_outpost/note_blocks/note_block" + i), 1));
+			return builder.build();
+		}
+
+		public static ResourceKey<StructureTemplatePool> createKey(String name) {
+			return ResourceKey.create(Registries.TEMPLATE_POOL, new ResourceLocation(SavageAndRavage.MOD_ID, name));
+		}
 	}
 
 	public static final class SRConfiguredFeatures {
-		public static final DeferredRegister<ConfiguredFeature<?, ?>> CONFIGURED_FEATURES = DeferredRegister.create(Registry.CONFIGURED_FEATURE_REGISTRY, SavageAndRavage.MOD_ID);
+		public static final ResourceKey<ConfiguredFeature<?, ?>> CREEPER_ENCLOSURE = createKey("creeper_enclosure");
 
-		public static final RegistryObject<ConfiguredFeature<NoneFeatureConfiguration, ?>> CREEPER_ENCLOSURE = register("creeper_enclosure", () -> new ConfiguredFeature<>(SRFeatures.CREEPER_ENCLOSURE.get(), NoneFeatureConfiguration.INSTANCE));
+		public static void bootstrap(BootstapContext<ConfiguredFeature<?, ?>> context) {
+			register(context, CREEPER_ENCLOSURE, SRFeatures.CREEPER_ENCLOSURE.get(), NoneFeatureConfiguration.INSTANCE);
+		}
 
-		private static <FC extends FeatureConfiguration, F extends Feature<FC>> RegistryObject<ConfiguredFeature<FC, ?>> register(String name, Supplier<ConfiguredFeature<FC, F>> feature) {
-			return CONFIGURED_FEATURES.register(name, feature);
+		public static ResourceKey<ConfiguredFeature<?, ?>> createKey(String name) {
+			return ResourceKey.create(Registries.CONFIGURED_FEATURE, new ResourceLocation(SavageAndRavage.MOD_ID, name));
+		}
+
+		public static <FC extends FeatureConfiguration, F extends Feature<FC>> void register(BootstapContext<ConfiguredFeature<?, ?>> context, ResourceKey<ConfiguredFeature<?, ?>> key, F feature, FC config) {
+			context.register(key, new ConfiguredFeature<>(feature, config));
 		}
 
 	}
 
 	public static final class SRPlacedFeatures {
-		public static final DeferredRegister<PlacedFeature> PLACED_FEATURES = DeferredRegister.create(Registry.PLACED_FEATURE_REGISTRY, SavageAndRavage.MOD_ID);
+		public static final ResourceKey<PlacedFeature> CREEPER_ENCLOSURE = createKey("creeper_enclosure");
 
-		public static final RegistryObject<PlacedFeature> CREEPER_ENCLOSURE = register("creeper_enclosure", SRConfiguredFeatures.CREEPER_ENCLOSURE);
+		public static void bootstrap(BootstapContext<PlacedFeature> context) {
+			register(context, CREEPER_ENCLOSURE, SRConfiguredFeatures.CREEPER_ENCLOSURE);
+		}
 
-		@SuppressWarnings("unchecked")
-		private static RegistryObject<PlacedFeature> register(String name, RegistryObject<? extends ConfiguredFeature<?, ?>> feature, PlacementModifier... placementModifiers) {
-			return PLACED_FEATURES.register(name, () -> new PlacedFeature((Holder<ConfiguredFeature<?, ?>>) feature.getHolder().get(), ImmutableList.copyOf(placementModifiers)));
+		public static ResourceKey<PlacedFeature> createKey(String name) {
+			return ResourceKey.create(Registries.PLACED_FEATURE, new ResourceLocation(SavageAndRavage.MOD_ID, name));
+		}
+
+		public static void register(BootstapContext<PlacedFeature> context, ResourceKey<PlacedFeature> key, ResourceKey<ConfiguredFeature<?, ?>> feature, List<PlacementModifier> modifiers) {
+			context.register(key, new PlacedFeature(context.lookup(Registries.CONFIGURED_FEATURE).getOrThrow(feature), modifiers));
+		}
+
+		public static void register(BootstapContext<PlacedFeature> context, ResourceKey<PlacedFeature> key, ResourceKey<ConfiguredFeature<?, ?>> feature, PlacementModifier... modifiers) {
+			register(context, key, feature, List.of(modifiers));
 		}
 	}
 }

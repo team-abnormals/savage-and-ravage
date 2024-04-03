@@ -11,6 +11,7 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -81,16 +82,16 @@ public class BurningBanner extends Entity implements IEntityAdditionalSpawnData 
 		if (bannerPos == null || ticksRemaining <= 0) {
 			this.discard();
 			return;
-		} else if (ticksRemaining > 10 && !(this.level.getBlockEntity(bannerPos) instanceof BannerBlockEntity)) {
+		} else if (ticksRemaining > 10 && !(this.level().getBlockEntity(bannerPos) instanceof BannerBlockEntity)) {
 			extinguishFire();
 			return;
 		}
 
-		if (this.level.isClientSide()) {
+		if (this.level().isClientSide()) {
 			for (int i = 0; i < 5; i++) {
-				double randomPositionX = this.burningBox.min(Direction.Axis.X) + (this.level.getRandom().nextFloat() * this.burningBox.getXsize());
-				double randomPositionY = this.burningBox.min(Direction.Axis.Y) + (this.level.getRandom().nextFloat() * this.burningBox.getYsize());
-				double randomPositionZ = this.burningBox.min(Direction.Axis.Z) + (this.level.getRandom().nextFloat() * this.burningBox.getZsize());
+				double randomPositionX = this.burningBox.min(Direction.Axis.X) + (this.level().getRandom().nextFloat() * this.burningBox.getXsize());
+				double randomPositionY = this.burningBox.min(Direction.Axis.Y) + (this.level().getRandom().nextFloat() * this.burningBox.getYsize());
+				double randomPositionZ = this.burningBox.min(Direction.Axis.Z) + (this.level().getRandom().nextFloat() * this.burningBox.getZsize());
 				double[] rotatedPosition = rotate(randomPositionX, randomPositionY, randomPositionZ, this.burningBoxRotation);
 				randomPositionX = bannerPos.getX() + rotatedPosition[0];
 				randomPositionY = bannerPos.getY() + rotatedPosition[1];
@@ -98,35 +99,35 @@ public class BurningBanner extends Entity implements IEntityAdditionalSpawnData 
 
 				if (ticksRemaining > 10) {
 					if (this.random.nextInt(5) == 2)
-						this.level.addParticle(ParticleTypes.FLAME, randomPositionX, randomPositionY, randomPositionZ, 0.0D, 0.0D, 0.0D);
+						this.level().addParticle(ParticleTypes.FLAME, randomPositionX, randomPositionY, randomPositionZ, 0.0D, 0.0D, 0.0D);
 					if (this.random.nextInt(5) == 3)
-						this.level.addParticle(ParticleTypes.LAVA, randomPositionX, randomPositionY, randomPositionZ, 0.0D, 0.0D, 0.0D);
+						this.level().addParticle(ParticleTypes.LAVA, randomPositionX, randomPositionY, randomPositionZ, 0.0D, 0.0D, 0.0D);
 				} else {
-					this.level.addParticle(ParticleTypes.LARGE_SMOKE, randomPositionX, randomPositionY, randomPositionZ, 0.0D, 0.0D, 0.0D);
+					this.level().addParticle(ParticleTypes.LARGE_SMOKE, randomPositionX, randomPositionY, randomPositionZ, 0.0D, 0.0D, 0.0D);
 				}
 			}
 		} else {
 			if (this.getTicksTillRemove() > 10) {
-				this.playSound(this.level.getBlockEntity(bannerPos) instanceof BannerBlockEntity ? SoundEvents.FIRE_AMBIENT : SoundEvents.FIRE_EXTINGUISH, 2F, this.level.getRandom().nextFloat() * 0.4F + 0.8F);
+				this.playSound(this.level().getBlockEntity(bannerPos) instanceof BannerBlockEntity ? SoundEvents.FIRE_AMBIENT : SoundEvents.FIRE_EXTINGUISH, 2F, this.level().getRandom().nextFloat() * 0.4F + 0.8F);
 			} else if (this.getTicksTillRemove() == 10) {
-				this.playSound(SoundEvents.FIRE_EXTINGUISH, 2F, this.level.getRandom().nextFloat() * 0.4F + 0.8F);
+				this.playSound(SoundEvents.FIRE_EXTINGUISH, 2F, this.level().getRandom().nextFloat() * 0.4F + 0.8F);
 				Player offender = this.getOffender();
-				if (offender != null && isOminousBanner(this.level, bannerPos) && ((ServerLevel) this.level).getRaidAt(bannerPos) == null) {
+				if (offender != null && isOminousBanner(this.level(), bannerPos) && ((ServerLevel) this.level()).getRaidAt(bannerPos) == null) {
 					SRCriteriaTriggers.BURN_OMINOUS_BANNER.trigger((ServerPlayer) offender);
-					if (SRConfig.COMMON.noBadOmenOnDeath.get() && !this.level.getGameRules().getBoolean(GameRules.RULE_DISABLE_RAIDS)) {
+					if (SRConfig.COMMON.noBadOmenOnDeath.get() && !this.level().getGameRules().getBoolean(GameRules.RULE_DISABLE_RAIDS)) {
 						MobEffectInstance effect = offender.getEffect(MobEffects.BAD_OMEN);
 						if (effect != null)
 							offender.removeEffectNoUpdate(MobEffects.BAD_OMEN);
 						offender.addEffect(new MobEffectInstance(MobEffects.BAD_OMEN, 120000, Mth.clamp(effect == null ? 0 : (effect.getAmplifier() + 1), 0, 4), false, false, true));
 					}
 				}
-				this.level.removeBlock(bannerPos, false);
+				this.level().removeBlock(bannerPos, false);
 			}
 		}
 	}
 
 	public void extinguishFire() {
-		this.playSound(SoundEvents.FIRE_EXTINGUISH, 0.5F, this.level.getRandom().nextFloat() * 0.4F + 0.8F);
+		this.playSound(SoundEvents.FIRE_EXTINGUISH, 0.5F, this.level().getRandom().nextFloat() * 0.4F + 0.8F);
 		this.discard();
 	}
 
@@ -182,7 +183,7 @@ public class BurningBanner extends Entity implements IEntityAdditionalSpawnData 
 	@Nullable
 	public Player getOffender() {
 		UUID uuid = this.getOffenderId();
-		return uuid == null ? null : this.level.getPlayerByUUID(uuid);
+		return uuid == null ? null : this.level().getPlayerByUUID(uuid);
 	}
 
 	public AABB getBurningBox() {
@@ -194,7 +195,7 @@ public class BurningBanner extends Entity implements IEntityAdditionalSpawnData 
 	}
 
 	@Override
-	public Packet<?> getAddEntityPacket() {
+	public Packet<ClientGamePacketListener> getAddEntityPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 
@@ -238,7 +239,7 @@ public class BurningBanner extends Entity implements IEntityAdditionalSpawnData 
 	public void readSpawnData(FriendlyByteBuf buf) {
 		BlockPos bannerPos = buf.readBoolean() ? buf.readBlockPos() : null;
 		if (bannerPos != null) {
-			BlockState state = this.level.getBlockState(bannerPos);
+			BlockState state = this.level().getBlockState(bannerPos);
 			this.burningBox = getBurningBox(state);
 			this.burningBoxRotation = getBurningBoxRotation(state);
 		}

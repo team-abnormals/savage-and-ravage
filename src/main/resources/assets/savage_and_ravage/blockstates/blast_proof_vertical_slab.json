@@ -1,9 +1,0 @@
-{
-    "variants": {
- 	"type=north": { "model": "savage_and_ravage:block/blast_proof_vertical_slab", "y": 0, "uvlock": true },
- 	"type=south": { "model": "savage_and_ravage:block/blast_proof_vertical_slab", "y": 180, "uvlock": true },
-  	"type=east": { "model": "savage_and_ravage:block/blast_proof_vertical_slab", "y": 90, "uvlock": true },
- 	"type=west": { "model": "savage_and_ravage:block/blast_proof_vertical_slab", "y": 270, "uvlock": true },
-        "type=double": { "model": "savage_and_ravage:block/blast_proof_plates" }
-    }
-}

@@ -6,7 +6,6 @@
   "refmap": "savage_and_ravage.refmap.json",
   "mixins": [
     "RaiderMixin",
-    "BannerItemMixin",
     "RaiderAccessor",
     "IronGolemMixin",
     "PillagerMixin",

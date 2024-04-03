@@ -16,7 +16,8 @@ import net.minecraft.advancements.RequirementsStrategy;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.KilledTrigger;
 import net.minecraft.advancements.critereon.MobEffectsPredicate;
-import net.minecraft.data.DataGenerator;
+import net.minecraft.core.HolderLookup.Provider;
+import net.minecraft.data.PackOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -25,16 +26,17 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.compress.utils.Lists;
 
 import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
 
 public class SRAdvancementModifierProvider extends AdvancementModifierProvider {
 	private static final EntityType<?>[] MOBS_TO_KILL = new EntityType[]{SREntityTypes.SKELETON_VILLAGER.get(), SREntityTypes.CREEPIE.get(), SREntityTypes.ICEOLOGER.get(), SREntityTypes.EXECUTIONER.get(), SREntityTypes.TRICKSTER.get()};
 
-	public SRAdvancementModifierProvider(DataGenerator generator) {
-		super(generator, SavageAndRavage.MOD_ID);
+	public SRAdvancementModifierProvider(PackOutput output, CompletableFuture<Provider> provider) {
+		super(SavageAndRavage.MOD_ID, output, provider);
 	}
 
 	@Override
-	protected void registerEntries() {
+	protected void registerEntries(Provider provider) {
 		MobEffectsPredicate predicate = MobEffectsPredicate.effects();
 		SRMobEffects.MOB_EFFECTS.getEntries().forEach(mobEffect -> predicate.and(mobEffect.get()));
 		this.entry("nether/all_effects").selects("nether/all_effects").addModifier(new EffectsChangedModifier("all_effects", false, predicate));

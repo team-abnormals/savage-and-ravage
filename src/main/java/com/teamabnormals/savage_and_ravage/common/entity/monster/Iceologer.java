@@ -128,7 +128,7 @@ public class Iceologer extends SpellcasterIllager {
 
 		this.prevCameraYaw = this.cameraYaw;
 		float f;
-		if (this.onGround && !this.isDeadOrDying() && !this.isSwimming()) {
+		if (this.onGround() && !this.isDeadOrDying() && !this.isSwimming()) {
 			f = Math.min(0.1F, Mth.sqrt((float) this.getDeltaMovement().horizontalDistanceSqr()));
 		} else {
 			f = 0.0F;
@@ -172,14 +172,14 @@ public class Iceologer extends SpellcasterIllager {
 
 	@Nullable
 	public IceChunk getIceChunk() {
-		if (this.iceChunkEntityUUID != null && this.level instanceof ServerLevel) {
-			Entity entity = ((ServerLevel) this.level).getEntity(this.iceChunkEntityUUID);
+		if (this.iceChunkEntityUUID != null && this.level() instanceof ServerLevel) {
+			Entity entity = ((ServerLevel) this.level()).getEntity(this.iceChunkEntityUUID);
 			return entity instanceof IceChunk ? (IceChunk) entity : null;
 		} else {
 			if (this.iceChunkEntity == 0)
 				return null;
 
-			Entity entity = this.level.getEntity(this.iceChunkEntity);
+			Entity entity = this.level().getEntity(this.iceChunkEntity);
 			return entity instanceof IceChunk ? (IceChunk) entity : null;
 		}
 	}
@@ -228,9 +228,9 @@ public class Iceologer extends SpellcasterIllager {
 		protected void performSpellCasting() {
 			LivingEntity target = Iceologer.this.getTarget();
 			if (Iceologer.this.getIceChunk() == null) {
-				IceChunk iceChunk = new IceChunk(Iceologer.this.level, Iceologer.this, target);
+				IceChunk iceChunk = new IceChunk(Iceologer.this.level(), Iceologer.this, target);
 				Iceologer.this.setIceChunk(iceChunk);
-				Iceologer.this.level.addFreshEntity(iceChunk);
+				Iceologer.this.level().addFreshEntity(iceChunk);
 			}
 		}
 
@@ -263,9 +263,9 @@ public class Iceologer extends SpellcasterIllager {
 		protected void performSpellCasting() {
 			LivingEntity target = Iceologer.this.getTarget();
 			if (target != null) {
-				IceCloud iceCloud = new IceCloud(Iceologer.this.getX(), Iceologer.this.getY(), Iceologer.this.getZ(), target.getX(), target.getY(), target.getZ(), Iceologer.this.level);
+				IceCloud iceCloud = new IceCloud(Iceologer.this.getX(), Iceologer.this.getY(), Iceologer.this.getZ(), target.getX(), target.getY(), target.getZ(), Iceologer.this.level());
 				iceCloud.setOwner(Iceologer.this);
-				Iceologer.this.level.addFreshEntity(iceCloud);
+				Iceologer.this.level().addFreshEntity(iceCloud);
 			}
 		}
 

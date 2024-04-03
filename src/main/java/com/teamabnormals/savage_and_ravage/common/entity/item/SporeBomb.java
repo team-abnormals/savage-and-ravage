@@ -3,11 +3,12 @@ package com.teamabnormals.savage_and_ravage.common.entity.item;
 import com.teamabnormals.savage_and_ravage.common.entity.projectile.SporeCloud;
 import com.teamabnormals.savage_and_ravage.core.registry.SREntityTypes;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.PrimedTnt;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.Level.ExplosionInteraction;
 import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nullable;
@@ -34,15 +35,15 @@ public class SporeBomb extends PrimedTnt {
 
 	@Override
 	protected void explode() {
-		SporeCloud sporeCloud = SREntityTypes.SPORE_CLOUD.get().create(this.level);
+		SporeCloud sporeCloud = SREntityTypes.SPORE_CLOUD.get().create(this.level());
 		if (sporeCloud == null)
 			return;
 
-		sporeCloud.setCloudSize(4 + this.level.getRandom().nextInt(3));
+		sporeCloud.setCloudSize(4 + this.level().getRandom().nextInt(3));
 		sporeCloud.setSpawnCloudInstantly(true);
-		this.level.explode(this, this.getX(), this.getY(0.0625D), this.getZ(), 4.0F, Explosion.BlockInteraction.NONE);
+		this.level().explode(this, this.getX(), this.getY(0.0625D), this.getZ(), 4.0F, ExplosionInteraction.NONE);
 		sporeCloud.absMoveTo(this.getX(), this.getY(0.0625), this.getZ(), this.getYRot(), this.getXRot());
-		this.level.addFreshEntity(sporeCloud);
+		this.level().addFreshEntity(sporeCloud);
 	}
 
 	@Override
@@ -52,7 +53,7 @@ public class SporeBomb extends PrimedTnt {
 	}
 
 	@Override
-	public Packet<?> getAddEntityPacket() {
+	public Packet<ClientGamePacketListener> getAddEntityPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 }

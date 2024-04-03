@@ -10,7 +10,12 @@
               {
                 "condition": "minecraft:damage_source_properties",
                 "predicate": {
-                  "is_explosion": true
+                  "tags": [
+                    {
+                      "expected": true,
+                      "id": "minecraft:is_explosion"
+                    }
+                  ]
                 }
               }
             ],

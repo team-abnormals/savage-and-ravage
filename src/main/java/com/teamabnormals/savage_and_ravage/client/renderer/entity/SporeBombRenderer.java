@@ -1,7 +1,7 @@
 package com.teamabnormals.savage_and_ravage.client.renderer.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.teamabnormals.savage_and_ravage.common.entity.item.SporeBomb;
 import com.teamabnormals.savage_and_ravage.core.registry.SRBlocks;
 import net.minecraft.client.Minecraft;
@@ -34,9 +34,9 @@ public class SporeBombRenderer extends EntityRenderer<SporeBomb> {
 			matrixStackIn.scale(f1, f1, f1);
 		}
 
-		matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-90.0F));
+		matrixStackIn.mulPose(Axis.YP.rotationDegrees(-90.0F));
 		matrixStackIn.translate(-0.5D, -0.5D, 0.5D);
-		matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(90.0F));
+		matrixStackIn.mulPose(Axis.YP.rotationDegrees(90.0F));
 		SporeBombRenderer.renderBombFlash(SRBlocks.SPORE_BOMB.get().defaultBlockState(), matrixStackIn, bufferIn, packedLightIn, entityIn.getFuse() / 5 % 2 == 0);
 		matrixStackIn.popPose();
 		super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);

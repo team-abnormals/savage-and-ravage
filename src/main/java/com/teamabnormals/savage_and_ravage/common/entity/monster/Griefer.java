@@ -139,7 +139,7 @@ public class Griefer extends AbstractIllager implements RangedAttackMob {
 		if (this.isKicking()) {
 			((LivingEntity) entityIn).knockback(1.5F, Mth.sin(this.getYRot() * ((float) Math.PI / 180F)), (-Mth.cos(this.getYRot() * ((float) Math.PI / 180F))));
 			this.kickTicks = 10;
-			this.level.broadcastEntityEvent(this, (byte) 4);
+			this.level().broadcastEntityEvent(this, (byte) 4);
 			this.lookAt(entityIn, 90.0F, 90.0F);
 		}
 		return super.doHurtTarget(entityIn);
@@ -233,8 +233,8 @@ public class Griefer extends AbstractIllager implements RangedAttackMob {
 
 	@Override
 	public void performRangedAttack(LivingEntity target, float distanceFactor) {
-		if (this.level.getNearbyEntities(Creepie.class, distance, this, this.getBoundingBox().inflate(10.0D, 4.0D, 10.0D)).size() < 5 && this.getMainHandItem().getItem() instanceof CreeperSporesItem) {
-			SporeCloud creeperSpores = new SporeCloud(this.level, this);
+		if (this.level().getNearbyEntities(Creepie.class, distance, this, this.getBoundingBox().inflate(10.0D, 4.0D, 10.0D)).size() < 5 && this.getMainHandItem().getItem() instanceof CreeperSporesItem) {
+			SporeCloud creeperSpores = new SporeCloud(this.level(), this);
 			double distance = target.getY() - 1;
 			double d1 = target.getX() - this.getX();
 			double d2 = distance - creeperSpores.getY();
@@ -244,7 +244,7 @@ public class Griefer extends AbstractIllager implements RangedAttackMob {
 			creeperSpores.setCloudSize(this.random.nextInt(50) == 0 ? 0 : 1 + this.random.nextInt(3));
 			this.swing(getUsedItemHand());
 			this.playSound(SRSounds.ENTITY_CREEPER_SPORES_THROW.get(), 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
-			this.level.addFreshEntity(creeperSpores);
+			this.level().addFreshEntity(creeperSpores);
 			this.lookAt(target, 30.0F, 30.0F);
 			this.creeperSporeStacks--;
 		}
@@ -389,7 +389,7 @@ public class Griefer extends AbstractIllager implements RangedAttackMob {
 		private boolean isWalkable() {
 			PathNavigation pathnavigator = this.griefer.getNavigation();
 			NodeEvaluator nodeprocessor = pathnavigator.getNodeEvaluator();
-			return nodeprocessor.getBlockPathType(this.griefer.level, Mth.floor(this.griefer.getX() + 1.0D), Mth.floor(this.griefer.getY()), Mth.floor(this.griefer.getZ() + 1.0D)) == BlockPathTypes.WALKABLE;
+			return nodeprocessor.getBlockPathType(this.griefer.level(), Mth.floor(this.griefer.getX() + 1.0D), Mth.floor(this.griefer.getY()), Mth.floor(this.griefer.getZ() + 1.0D)) == BlockPathTypes.WALKABLE;
 		}
 
 		@Override

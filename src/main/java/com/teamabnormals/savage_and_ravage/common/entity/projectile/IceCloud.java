@@ -4,6 +4,7 @@ import com.teamabnormals.savage_and_ravage.core.registry.SREntityTypes;
 import com.teamabnormals.savage_and_ravage.core.registry.SRParticleTypes;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -29,14 +30,14 @@ public class IceCloud extends AbstractHurtingProjectile {
 	public void tick() {
 		super.tick();
 
-		for (Entity entity : this.level.getEntities(this.getOwner(), this.getBoundingBox().expandTowards(2, 2, 2), this::canHitEntity)) {
+		for (Entity entity : this.level().getEntities(this.getOwner(), this.getBoundingBox().expandTowards(2, 2, 2), this::canHitEntity)) {
 			if (entity instanceof LivingEntity && entity.canFreeze()) {
 				entity.setTicksFrozen(300);
 			}
 		}
 
-		if (!this.level.isClientSide()) {
-			((ServerLevel) this.level).sendParticles(this.getTrailParticle(), this.getX(), this.getY(), this.getZ(), 30, 1.5, 1.5, 1.5, 1);
+		if (!this.level().isClientSide()) {
+			((ServerLevel) this.level()).sendParticles(this.getTrailParticle(), this.getX(), this.getY(), this.getZ(), 30, 1.5, 1.5, 1.5, 1);
 		}
 
 		if (this.tickCount > 100)
@@ -54,7 +55,7 @@ public class IceCloud extends AbstractHurtingProjectile {
 	}
 
 	@Override
-	public Packet<?> getAddEntityPacket() {
+	public Packet<ClientGamePacketListener> getAddEntityPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 }

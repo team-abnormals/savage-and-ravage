@@ -2,7 +2,6 @@ package com.teamabnormals.savage_and_ravage.client.renderer.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix4f;
 import com.teamabnormals.savage_and_ravage.common.entity.decoration.BurningBanner;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -16,6 +15,7 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BannerBlockEntity;
 import net.minecraft.world.phys.AABB;
+import org.joml.Matrix4f;
 
 public class BurningBannerRenderer extends EntityRenderer<BurningBanner> {
 
@@ -28,7 +28,7 @@ public class BurningBannerRenderer extends EntityRenderer<BurningBanner> {
 		if (!Minecraft.getInstance().getEntityRenderDispatcher().shouldRenderHitBoxes())
 			return;
 
-		Level world = entity.level;
+		Level world = entity.level();
 		BlockPos bannerPos = entity.getBannerPosition();
 		if (bannerPos == null || !(world.getBlockEntity(bannerPos) instanceof BannerBlockEntity))
 			return;

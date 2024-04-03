@@ -1,27 +1,22 @@
 package com.teamabnormals.savage_and_ravage.common.item;
 
-import com.teamabnormals.blueprint.core.util.item.filling.TargetedItemCategoryFiller;
 import com.teamabnormals.savage_and_ravage.common.block.PottedCreeperSporesBlock;
 import com.teamabnormals.savage_and_ravage.common.entity.projectile.SporeCloud;
 import com.teamabnormals.savage_and_ravage.core.registry.SRBlocks;
 import com.teamabnormals.savage_and_ravage.core.registry.SRSounds;
 import net.minecraft.core.Direction;
-import net.minecraft.core.NonNullList;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class CreeperSporesItem extends Item implements PottableItem {
-	private static final TargetedItemCategoryFiller FILLER = new TargetedItemCategoryFiller(() -> Items.EGG);
 
 	public CreeperSporesItem(Item.Properties properties) {
 		super(properties);
@@ -38,7 +33,7 @@ public class CreeperSporesItem extends Item implements PottableItem {
 		if (!world.isClientSide()) {
 			SporeCloud spores = new SporeCloud(world, player);
 			spores.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 0.99F, 1.0F);
-			spores.setCloudSize(getThrownSporeCloudSize(spores.level.getRandom()));
+			spores.setCloudSize(getThrownSporeCloudSize(world.getRandom()));
 			world.addFreshEntity(spores);
 		}
 
@@ -52,10 +47,5 @@ public class CreeperSporesItem extends Item implements PottableItem {
 	@Override
 	public BlockState getPottedState(Direction direction) {
 		return ((PottedCreeperSporesBlock) SRBlocks.POTTED_CREEPER_SPORES.get()).getDirectionalState(direction);
-	}
-
-	@Override
-	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
-		FILLER.fillItem(this, group, items);
 	}
 }

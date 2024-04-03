@@ -141,8 +141,8 @@ public class Trickster extends SpellcasterIllager implements TracksHits {
 			float f2 = Mth.sin(f);
 			//Spawns particles at hands
 			ParticleOptions particle = this.getCurrentSpell() == IllagerSpell.FANGS ? SRParticleTypes.RUNE.get() : ParticleTypes.ENTITY_EFFECT;
-			this.level.addParticle(particle, this.getX() + (double) f1 * 0.8D, this.getY() + 1.5D, this.getZ() + (double) f2 * 0.6D, 0.0, 0.0, 0.0);
-			this.level.addParticle(particle, this.getX() - (double) f1 * 0.8D, this.getY() + 1.5D, this.getZ() - (double) f2 * 0.6D, 0.0, 0.0, 0.0);
+			this.level().addParticle(particle, this.getX() + (double) f1 * 0.8D, this.getY() + 1.5D, this.getZ() + (double) f2 * 0.6D, 0.0, 0.0, 0.0);
+			this.level().addParticle(particle, this.getX() - (double) f1 * 0.8D, this.getY() + 1.5D, this.getZ() - (double) f2 * 0.6D, 0.0, 0.0, 0.0);
 		}
 		//Dealing with the prison spell charge up
 		this.entityData.get(PRISON_POS).ifPresent(pos -> {
@@ -162,16 +162,16 @@ public class Trickster extends SpellcasterIllager implements TracksHits {
 					double x = pos.x + (random.nextInt(2) == 0 ? 1 : -1) * 0.65625D * random.nextDouble(); //Generating the x pos at a random position in the 'prison outline'
 					//Generating the corresponding z pos - if the x value is 'near the edges' (far from the middle) this can be anything, but if it is close to the middle it is constrained to edge values
 					double z = pos.z + (random.nextInt(2) == 0 ? 1 : -1) * (Math.abs(pos.x - x) < 0.34375 ? ((coefficient * random.nextDouble()) + adjustment) : 0.65625D * random.nextDouble());
-					this.level.addParticle(SRParticleTypes.RUNE.get(), x, pos.y + 0.8125D, z, 0.0, 0.0, 0.0);
+					this.level().addParticle(SRParticleTypes.RUNE.get(), x, pos.y + 0.8125D, z, 0.0, 0.0, 0.0);
 				}
 				/* These doubles throughout are not arbitrary - they're calculated by dividing pixel values on
 				 * the prison by 16 (which works because it is never scaled). 0.65625 is half the total length and 0.34375
 				 * is the distance between the middle and the start of the 'outer ring'*/
 				this.entityData.set(PRISON_CHARGING_TIME, time - 1);
 			} else if (time == 0) {
-				RunePrison runePrison = new RunePrison(this.level, null, prisonTime, false, this);
+				RunePrison runePrison = new RunePrison(this.level(), null, prisonTime, false, this);
 				runePrison.moveTo(pos.x, pos.y + 0.5, pos.z, 0.0F, 0.0F);
-				this.level.addFreshEntity(runePrison);
+				this.level().addFreshEntity(runePrison);
 				this.trackedSpellEntities.add(runePrison);
 				this.entityData.set(PRISON_POS, Optional.empty());
 				this.entityData.set(PRISON_CHARGING_TIME, -1);
@@ -186,8 +186,8 @@ public class Trickster extends SpellcasterIllager implements TracksHits {
 		if (source.getDirectEntity() instanceof Projectile && this.getHealth() - amount <= 0 && data.getValue(SRDataProcessors.TOTEM_SHIELD_COOLDOWN) <= 0) {
 			this.setHealth(2.0F);
 			data.setValue(SRDataProcessors.TOTEM_SHIELD_COOLDOWN, 1800);
-			if (!this.level.isClientSide()) {
-				this.level.broadcastEntityEvent(this, (byte) 35);
+			if (!this.level().isClientSide()) {
+				this.level().broadcastEntityEvent(this, (byte) 35);
 				for (int i = 0; i < 64; i++) {
 					if (this.teleport())
 						return true;
@@ -202,29 +202,29 @@ public class Trickster extends SpellcasterIllager implements TracksHits {
 		if (this.isAlive()) {
 			double randomX = this.getX() + (this.random.nextDouble() - 0.5D) * 64.0D;
 			double randomZ = this.getZ() + (this.random.nextDouble() - 0.5D) * 64.0D;
-			BlockState state = this.level.getBlockState(new BlockPos.MutableBlockPos(randomX, this.getY() - 1, randomZ));
-			if (state.getMaterial().blocksMotion() && !state.getFluidState().is(FluidTags.LAVA)) {
+			BlockState state = this.level().getBlockState(new BlockPos.MutableBlockPos(randomX, this.getY() - 1, randomZ));
+			if (state.blocksMotion() && !state.getFluidState().is(FluidTags.LAVA)) {
 				AABB oldBox = this.getBoundingBox().inflate(0.5D);
 				BlockPos oldPos = this.blockPosition();
 				boolean successful = this.randomTeleport(randomX, this.getY(), randomZ, true);
 				if (successful) {
-					this.level.playSound(null, oldPos, SRSounds.GENERIC_PUFF_OF_SMOKE.get(), this.getSoundSource(), 10.0F, 1.0F);
-					this.level.playSound(null, this.blockPosition(), SRSounds.GENERIC_PUFF_OF_SMOKE.get(), this.getSoundSource(), 10.0F, 1.0F);
-					this.level.playSound(null, oldPos, SRSounds.ENTITY_TRICKSTER_LAUGH.get(), SoundSource.HOSTILE, 1.0F, 1.0F);
-					ConfusionBolt.spawnGaussianParticles(this.level, this.random, oldBox, SREvents.POOF_KEY, 50);
-					ConfusionBolt.spawnGaussianParticles(this.level, this.random, this.getBoundingBox().inflate(0.5D), SREvents.POOF_KEY, 50);
-					if (ForgeEventFactory.getMobGriefingEvent(this.level, this)) {
+					this.level().playSound(null, oldPos, SRSounds.GENERIC_PUFF_OF_SMOKE.get(), this.getSoundSource(), 10.0F, 1.0F);
+					this.level().playSound(null, this.blockPosition(), SRSounds.GENERIC_PUFF_OF_SMOKE.get(), this.getSoundSource(), 10.0F, 1.0F);
+					this.level().playSound(null, oldPos, SRSounds.ENTITY_TRICKSTER_LAUGH.get(), SoundSource.HOSTILE, 1.0F, 1.0F);
+					ConfusionBolt.spawnGaussianParticles(this.level(), this.random, oldBox, SREvents.POOF_KEY, 50);
+					ConfusionBolt.spawnGaussianParticles(this.level(), this.random, this.getBoundingBox().inflate(0.5D), SREvents.POOF_KEY, 50);
+					if (ForgeEventFactory.getMobGriefingEvent(this.level(), this)) {
 						BlockPos.MutableBlockPos searchPos = new BlockPos.MutableBlockPos();
 						for (int x = oldPos.getX() - 2; x <= oldPos.getX() + 2; x++) {
 							for (int y = oldPos.getY() - 2; y <= oldPos.getY() + 2; y++) {
 								for (int z = oldPos.getZ() - 2; z <= oldPos.getZ() + 2; z++) {
 									searchPos.set(x, y, z);
-									if (this.level.getBlockState(searchPos).getBlock() == SRBlocks.GLOOMY_TILES.get()) {
-										this.level.setBlock(searchPos, SRBlocks.RUNED_GLOOMY_TILES.get().defaultBlockState(), 2);
+									if (this.level().getBlockState(searchPos).getBlock() == SRBlocks.GLOOMY_TILES.get()) {
+										this.level().setBlock(searchPos, SRBlocks.RUNED_GLOOMY_TILES.get().defaultBlockState(), 2);
 										searchPos.move(Direction.UP);
-										if (!this.level.isClientSide && !this.level.getBlockState(searchPos).isSolidRender(this.level, searchPos)) {
+										if (!this.level().isClientSide && !this.level().getBlockState(searchPos).isSolidRender(this.level(), searchPos)) {
 											for (int i = 0; i < 3; i++)
-												NetworkUtil.spawnParticle(SRParticleTypes.RUNE.getId().toString(), this.level.dimension(), x + random.nextDouble(), y + 1.25, z + random.nextDouble(), 0.0D, 0.0D, 0.0D);
+												NetworkUtil.spawnParticle(SRParticleTypes.RUNE.getId().toString(), this.level().dimension(), x + random.nextDouble(), y + 1.25, z + random.nextDouble(), 0.0D, 0.0D, 0.0D);
 										}
 									}
 								}
@@ -299,7 +299,7 @@ public class Trickster extends SpellcasterIllager implements TracksHits {
 	public void onTrackedHit(Entity hitter, Entity hit) {
 		if (RunedGloomyTilesBlock.shouldTrigger(hit, false)) {
 			if (trackedSpellEntities.contains(hitter)) {
-				this.level.playSound(null, this.blockPosition(), SRSounds.ENTITY_TRICKSTER_LAUGH.get(), SoundSource.HOSTILE, 1.0f, 1.0f);
+				this.level().playSound(null, this.blockPosition(), SRSounds.ENTITY_TRICKSTER_LAUGH.get(), SoundSource.HOSTILE, 1.0f, 1.0f);
 				trackedSpellEntities.remove(hitter);
 			}
 		}
@@ -342,7 +342,7 @@ public class Trickster extends SpellcasterIllager implements TracksHits {
 
 		@Override
 		protected void performSpellCasting() {
-			Level world = Trickster.this.level;
+			Level world = Trickster.this.level();
 			LivingEntity target = Trickster.this.getTarget();
 			if (target != null) {
 				ConfusionBolt bolt = new ConfusionBolt(world, Trickster.this, 240);

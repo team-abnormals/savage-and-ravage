@@ -1,16 +1,16 @@
 package com.teamabnormals.savage_and_ravage.common.item;
 
 import com.teamabnormals.blueprint.common.world.storage.tracking.TrackedDataManager;
-import com.teamabnormals.blueprint.core.util.item.filling.TargetedItemCategoryFiller;
 import com.teamabnormals.savage_and_ravage.client.model.MaskOfDishonestyModel;
 import com.teamabnormals.savage_and_ravage.core.SavageAndRavage;
 import com.teamabnormals.savage_and_ravage.core.other.SRDataProcessors;
 import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderLivingEvent;
@@ -22,9 +22,8 @@ import java.util.function.Consumer;
 
 @Mod.EventBusSubscriber(modid = SavageAndRavage.MOD_ID, value = Dist.CLIENT)
 public class MaskOfDishonestyItem extends ArmorItem {
-	private static final TargetedItemCategoryFiller FILLER = new TargetedItemCategoryFiller(() -> Items.TOTEM_OF_UNDYING);
 
-	public MaskOfDishonestyItem(ArmorMaterial material, EquipmentSlot slot, Properties properties) {
+	public MaskOfDishonestyItem(ArmorMaterial material, ArmorItem.Type slot, Properties properties) {
 		super(material, slot, properties);
 	}
 
@@ -42,11 +41,6 @@ public class MaskOfDishonestyItem extends ArmorItem {
 				return new MaskOfDishonestyModel<>(MaskOfDishonestyModel.createArmorLayer().bakeRoot());
 			}
 		});
-	}
-
-	@Override
-	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
-		FILLER.fillItem(this, group, items);
 	}
 
 	@SubscribeEvent

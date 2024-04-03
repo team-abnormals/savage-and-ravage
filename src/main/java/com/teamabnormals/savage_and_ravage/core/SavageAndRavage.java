@@ -4,22 +4,22 @@ import com.teamabnormals.blueprint.core.util.registry.RegistryHelper;
 import com.teamabnormals.savage_and_ravage.client.model.*;
 import com.teamabnormals.savage_and_ravage.client.renderer.entity.*;
 import com.teamabnormals.savage_and_ravage.client.renderer.entity.layers.TotemShieldLayer;
+import com.teamabnormals.savage_and_ravage.core.data.server.SRDatapackBuiltinEntriesProvider;
 import com.teamabnormals.savage_and_ravage.core.data.server.modifiers.SRAdvancementModifierProvider;
-import com.teamabnormals.savage_and_ravage.core.data.server.modifiers.SRBiomeModifierProvider;
 import com.teamabnormals.savage_and_ravage.core.data.server.modifiers.SRLootModifierProvider;
 import com.teamabnormals.savage_and_ravage.core.data.server.tags.SRBiomeTagsProvider;
 import com.teamabnormals.savage_and_ravage.core.data.server.tags.SRBlockTagsProvider;
 import com.teamabnormals.savage_and_ravage.core.data.server.tags.SREntityTypeTagsProvider;
 import com.teamabnormals.savage_and_ravage.core.data.server.tags.SRItemTagsProvider;
 import com.teamabnormals.savage_and_ravage.core.other.*;
-import com.teamabnormals.savage_and_ravage.core.other.SRFeatures.SRConfiguredFeatures;
-import com.teamabnormals.savage_and_ravage.core.other.SRFeatures.SRPlacedFeatures;
 import com.teamabnormals.savage_and_ravage.core.registry.*;
 import net.minecraft.client.model.IllagerModel;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EvokerRenderer;
+import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Evoker;
 import net.minecraftforge.api.distmarker.Dist;
@@ -38,6 +38,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
+import java.util.concurrent.CompletableFuture;
+
 @Mod(SavageAndRavage.MOD_ID)
 public class SavageAndRavage {
 	public static final String MOD_ID = "savage_and_ravage";
@@ -55,8 +57,6 @@ public class SavageAndRavage {
 		SRParticleTypes.PARTICLES.register(bus);
 		SRMobEffects.MOB_EFFECTS.register(bus);
 		SRFeatures.FEATURES.register(bus);
-		SRConfiguredFeatures.CONFIGURED_FEATURES.register(bus);
-		SRPlacedFeatures.PLACED_FEATURES.register(bus);
 		SRAttributes.ATTRIBUTES.register(bus);
 		SRDataSerializers.SERIALIZERS.register(bus);
 		SRLootConditions.LOOT_CONDITION_TYPES.register(bus);
@@ -66,6 +66,8 @@ public class SavageAndRavage {
 		bus.addListener(this::dataSetup);
 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+			SRItems.setupTabEditors();
+			SRBlocks.setupTabEditors();
 			bus.addListener(this::registerLayers);
 			bus.addListener(this::registerLayerDefinitions);
 			bus.addListener(this::registerModels);
@@ -78,9 +80,8 @@ public class SavageAndRavage {
 
 	private void commonSetup(FMLCommonSetupEvent event) {
 		event.enqueueWork(() -> {
-			SREntityTypes.registerEntitySpawns();
+			SRFeatures.addToJigsawPatterns();
 			SREntityTypes.registerWaveMembers();
-			SRFeatures.registerPools();
 			SRCompat.registerCompat();
 		});
 	}
@@ -91,17 +92,19 @@ public class SavageAndRavage {
 
 	private void dataSetup(GatherDataEvent event) {
 		DataGenerator generator = event.getGenerator();
-		ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
+		PackOutput output = generator.getPackOutput();
+		CompletableFuture<Provider> provider = event.getLookupProvider();
+		ExistingFileHelper helper = event.getExistingFileHelper();
 
 		boolean includeServer = event.includeServer();
-		SRBlockTagsProvider blockTags = new SRBlockTagsProvider(generator, existingFileHelper);
+		SRBlockTagsProvider blockTags = new SRBlockTagsProvider(output, provider, helper);
 		generator.addProvider(includeServer, blockTags);
-		generator.addProvider(includeServer, new SRItemTagsProvider(generator, blockTags, existingFileHelper));
-		generator.addProvider(includeServer, new SREntityTypeTagsProvider(generator, existingFileHelper));
-		generator.addProvider(includeServer, new SRBiomeTagsProvider(generator, existingFileHelper));
-		generator.addProvider(includeServer, new SRAdvancementModifierProvider(generator));
-		generator.addProvider(includeServer, new SRLootModifierProvider(generator));
-		generator.addProvider(includeServer, SRBiomeModifierProvider.create(generator, existingFileHelper));
+		generator.addProvider(includeServer, new SRItemTagsProvider(output, provider, blockTags.contentsGetter(), helper));
+		generator.addProvider(includeServer, new SREntityTypeTagsProvider(output, provider, helper));
+		generator.addProvider(includeServer, new SRBiomeTagsProvider(output, provider, helper));
+		generator.addProvider(includeServer, new SRAdvancementModifierProvider(output, provider));
+		generator.addProvider(includeServer, new SRLootModifierProvider(output, provider));
+		generator.addProvider(includeServer, new SRDatapackBuiltinEntriesProvider(output, provider));
 	}
 
 	@OnlyIn(Dist.CLIENT)

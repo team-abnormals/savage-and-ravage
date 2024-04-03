@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.AreaEffectCloud;
@@ -49,7 +50,7 @@ public class SporeCloud extends ThrowableProjectile implements IEntityAdditional
 			return;
 
 		this.setPos(x, y, z);
-		AreaEffectCloud aoe = new AreaEffectCloud(this.level, x, y, z);
+		AreaEffectCloud aoe = new AreaEffectCloud(this.level(), x, y, z);
 		Entity thrower = this.getOwner();
 		if (thrower instanceof LivingEntity)
 			aoe.setOwner((LivingEntity) thrower);
@@ -58,9 +59,9 @@ public class SporeCloud extends ThrowableProjectile implements IEntityAdditional
 		aoe.setRadiusOnUse(-0.05F);
 		aoe.setDuration((this.cloudSize * 20) + 60);
 		aoe.setRadiusPerTick(-aoe.getRadius() / (float) aoe.getDuration());
-		this.level.addFreshEntity(aoe);
+		this.level().addFreshEntity(aoe);
 		this.setCloudEntity(aoe);
-		this.level.broadcastEntityEvent(this, (byte) 3);
+		this.level().broadcastEntityEvent(this, (byte) 3);
 	}
 
 	public void setCloudEntity(@Nullable AreaEffectCloud entity) {
@@ -70,8 +71,8 @@ public class SporeCloud extends ThrowableProjectile implements IEntityAdditional
 
 	@Nullable
 	private AreaEffectCloud getCloudEntity() {
-		if (this.cloudId != null && this.level instanceof ServerLevel) {
-			Entity entity = ((ServerLevel) this.level).getEntity(this.cloudId);
+		if (this.cloudId != null && this.level() instanceof ServerLevel) {
+			Entity entity = ((ServerLevel) this.level()).getEntity(this.cloudId);
 			return entity instanceof AreaEffectCloud ? (AreaEffectCloud) entity : null;
 		}
 		return null;
@@ -107,10 +108,10 @@ public class SporeCloud extends ThrowableProjectile implements IEntityAdditional
 	@Override
 	protected void onHit(HitResult result) {
 		Vec3 hitVec = result.getLocation();
-		if (!this.level.isClientSide()) {
+		if (!this.level().isClientSide()) {
 			this.spawnAreaEffectCloud(hitVec.x(), hitVec.y(), hitVec.z());
 		} else for (int i = 0; i < 16; i++) {
-			this.level.addParticle(SRParticleTypes.CREEPER_SPORE_SPRINKLES.get(), this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
+			this.level().addParticle(SRParticleTypes.CREEPER_SPORE_SPRINKLES.get(), this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
 		}
 		this.hit = true;
 		if (result instanceof BlockHitResult)
@@ -130,15 +131,15 @@ public class SporeCloud extends ThrowableProjectile implements IEntityAdditional
 	public void tick() {
 		super.tick();
 
-		if (!this.level.isClientSide() && this.spawnCloudInstantly)
+		if (!this.level().isClientSide() && this.spawnCloudInstantly)
 			this.spawnAreaEffectCloud(this.getX(), this.getY(), this.getZ());
 
 		if (this.cloudId != null || this.hit)
 			this.setDeltaMovement(0, 0, 0);
 
-		if (this.level.isClientSide()) {
+		if (this.level().isClientSide()) {
 			if (!this.hit)
-				this.level.addParticle(SRParticleTypes.CREEPER_SPORES.get(), this.getX(), this.getY(), this.getZ(), 0, 0, 0);
+				this.level().addParticle(SRParticleTypes.CREEPER_SPORES.get(), this.getX(), this.getY(), this.getZ(), 0, 0, 0);
 		} else if (this.cloudId != null) {
 			AreaEffectCloud aoe = this.getCloudEntity();
 			if (aoe == null) {
@@ -147,7 +148,7 @@ public class SporeCloud extends ThrowableProjectile implements IEntityAdditional
 				return;
 			}
 
-			Creepie creepie = SREntityTypes.CREEPIE.get().create(this.level);
+			Creepie creepie = SREntityTypes.CREEPIE.get().create(this.level());
 			if (creepie != null) {
 				if (this.charged) {
 					creepie.setCharged(true);
@@ -165,8 +166,8 @@ public class SporeCloud extends ThrowableProjectile implements IEntityAdditional
 						creepie.moveTo(xPos, aoe.getY(), zPos, 0.0F, 0.0F);
 						AABB box = creepie.getBoundingBox();
 						if (BlockPos.betweenClosedStream(Mth.floor(box.minX), Mth.floor(box.minY), Mth.floor(box.minZ), Mth.ceil(box.maxX), Mth.ceil(box.maxY), Mth.ceil(box.maxZ)).distinct().noneMatch(pos -> {
-							if (this.level.getBlockState(pos).isSuffocating(this.level, pos)) {
-								for (AABB blockBox : this.level.getBlockState(pos).getShape(this.level, pos).toAabbs()) {
+							if (this.level().getBlockState(pos).isSuffocating(this.level(), pos)) {
+								for (AABB blockBox : this.level().getBlockState(pos).getShape(this.level(), pos).toAabbs()) {
 									blockBox = new AABB(blockBox.minX + pos.getX(), blockBox.minY + pos.getY(), blockBox.minZ + pos.getZ(), blockBox.maxX + pos.getX(), blockBox.maxY + pos.getY(), blockBox.maxZ + pos.getZ());
 									if (blockBox.intersects(creepie.getBoundingBox())) {
 										return true;
@@ -175,12 +176,12 @@ public class SporeCloud extends ThrowableProjectile implements IEntityAdditional
 							}
 							return false;
 						})) {
-							nextPosition = new BlockPos(xPos, aoe.getY(), zPos);
+							nextPosition = BlockPos.containing(xPos, aoe.getY(), zPos);
 							break;
 						}
 					}
 					if (nextPosition != null) {
-						this.level.addFreshEntity(creepie);
+						this.level().addFreshEntity(creepie);
 					}
 				}
 
@@ -196,7 +197,7 @@ public class SporeCloud extends ThrowableProjectile implements IEntityAdditional
 	}
 
 	@Override
-	public Packet<?> getAddEntityPacket() {
+	public Packet<ClientGamePacketListener> getAddEntityPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 

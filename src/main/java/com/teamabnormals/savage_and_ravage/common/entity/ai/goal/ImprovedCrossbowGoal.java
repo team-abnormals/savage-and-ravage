@@ -1,6 +1,5 @@
 package com.teamabnormals.savage_and_ravage.common.entity.ai.goal;
 
-import com.mojang.math.Vector3f;
 import com.teamabnormals.blueprint.common.world.storage.tracking.TrackedDataManager;
 import com.teamabnormals.savage_and_ravage.core.mixin.RaiderAccessor;
 import com.teamabnormals.savage_and_ravage.core.other.SRDataProcessors;
@@ -34,6 +33,7 @@ import net.minecraft.world.level.pathfinder.NodeEvaluator;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3f;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -92,7 +92,7 @@ public class ImprovedCrossbowGoal<T extends PathfinderMob & RangedAttackMob & Cr
 
 	@Override
 	public boolean canContinueToUse() {
-		return this.hasAttackTarget() || (this.practisingTicks > 0 && this.isValidTarget(this.mob.level, this.blockPos) && this.noCelebrationAndNoRaid());
+		return this.hasAttackTarget() || (this.practisingTicks > 0 && this.isValidTarget(this.mob.level(), this.blockPos) && this.noCelebrationAndNoRaid());
 	}
 
 	@Override
@@ -204,14 +204,14 @@ public class ImprovedCrossbowGoal<T extends PathfinderMob & RangedAttackMob & Cr
 
 	private boolean noCelebrationAndNoRaid() {
 		if (this.mob instanceof Raider)
-			return ((ServerLevel) this.mob.level).getRaidAt(this.mob.blockPosition()) == null && !(this.mob.getEntityData().get(((RaiderAccessor) this.mob).getIsCelebrating()));
+			return ((ServerLevel) this.mob.level()).getRaidAt(this.mob.blockPosition()) == null && !(this.mob.getEntityData().get(((RaiderAccessor) this.mob).getIsCelebrating()));
 		return true;
 	}
 
 	private boolean isWalkable() {
 		PathNavigation pathnavigator = this.mob.getNavigation();
 		NodeEvaluator nodeprocessor = pathnavigator.getNodeEvaluator();
-		return nodeprocessor.getBlockPathType(this.mob.level, Mth.floor(this.mob.getX() + 1.0D), Mth.floor(this.mob.getY()), Mth.floor(this.mob.getZ() + 1.0D)) == BlockPathTypes.WALKABLE;
+		return nodeprocessor.getBlockPathType(this.mob.level(), Mth.floor(this.mob.getX() + 1.0D), Mth.floor(this.mob.getY()), Mth.floor(this.mob.getZ() + 1.0D)) == BlockPathTypes.WALKABLE;
 	}
 
 	protected boolean findNearestBlock() {
@@ -226,7 +226,7 @@ public class ImprovedCrossbowGoal<T extends PathfinderMob & RangedAttackMob & Cr
 					for (int z =
 						 x < hDist && x > -hDist ? hDist : 0; z <= hDist; z = z > 0 ? -z : 1 - z) {
 						searchPos.setWithOffset(pos, x, y - 1, z);
-						if (this.mob.isWithinRestriction(searchPos) && this.isValidTarget(this.mob.level, searchPos)) {
+						if (this.mob.isWithinRestriction(searchPos) && this.isValidTarget(this.mob.level(), searchPos)) {
 							this.blockPos = searchPos;
 							return true;
 						}
@@ -247,11 +247,11 @@ public class ImprovedCrossbowGoal<T extends PathfinderMob & RangedAttackMob & Cr
 	}
 
 	private boolean canSeeTargetBlock() {
-		this.mob.level.getProfiler().push("canSee");
+		this.mob.level().getProfiler().push("canSee");
 		Vec3 mobPos = new Vec3(this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
-		BlockHitResult result = this.mob.level.clip(new ClipContext(mobPos, this.blockPosVectorCentred, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this.mob));
+		BlockHitResult result = this.mob.level().clip(new ClipContext(mobPos, this.blockPosVectorCentred, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this.mob));
 		boolean canSee = result.getBlockPos().equals(this.blockPos) || result.getType() == HitResult.Type.MISS;
-		this.mob.level.getProfiler().pop();
+		this.mob.level().getProfiler().pop();
 		return canSee;
 	}
 
@@ -272,7 +272,7 @@ public class ImprovedCrossbowGoal<T extends PathfinderMob & RangedAttackMob & Cr
 		InteractionHand hand = ProjectileUtil.getWeaponHoldingHand(this.mob, item -> item instanceof CrossbowItem);
 		ItemStack weapon = this.mob.getItemInHand(hand);
 		if (this.mob.isHolding(stack -> stack.getItem() instanceof CrossbowItem)) {
-			performShooting(this.mob.level, this.mob, targetPos, hand, weapon);
+			performShooting(this.mob.level(), this.mob, targetPos, hand, weapon);
 		}
 		this.mob.onCrossbowAttackPerformed();
 	}
@@ -287,7 +287,7 @@ public class ImprovedCrossbowGoal<T extends PathfinderMob & RangedAttackMob & Cr
 				if (!world.isClientSide()) {
 					float yaw = i == 0 ? 0.0F : i == 1 ? -10.0F : 10.0F;
 					if (this.hasAttackTarget() && !(projectileStack.getItem() == Items.FIREWORK_ROCKET))
-						CrossbowItem.shootProjectile(world, shooter, hand, weapon, projectileStack, soundPitches[i], false, 1.6F, (float) (14 - shooter.level.getDifficulty().getId() * 4), yaw);
+						CrossbowItem.shootProjectile(world, shooter, hand, weapon, projectileStack, soundPitches[i], false, 1.6F, (float) (14 - shooter.level().getDifficulty().getId() * 4), yaw);
 					else {
 						Projectile shot = shootProjectile(world, shooter, targetPos, hand, weapon, projectileStack, soundPitches[i], yaw);
 						if (i == 0)
@@ -315,7 +315,7 @@ public class ImprovedCrossbowGoal<T extends PathfinderMob & RangedAttackMob & Cr
 		double distance = Mth.sqrt((float) (x * x + z * z));
 		double y = isFirework ? (targetPos.y() + 1.0D) - projectile.getY() : getYIntoBox(targetPos.y()) - projectile.getY() + distance * (double) 0.2F;
 		Vector3f vector3f = shooter.getProjectileShotVector(shooter, new Vec3(x, y, z), yaw);
-		projectile.shoot(vector3f.x(), vector3f.y(), vector3f.z(), 1.6F, (float) (14 - shooter.level.getDifficulty().getId() * 4));
+		projectile.shoot(vector3f.x(), vector3f.y(), vector3f.z(), 1.6F, (float) (14 - shooter.level().getDifficulty().getId() * 4));
 		shooter.playSound(SoundEvents.CROSSBOW_SHOOT, 1.0F, 1.0F / (shooter.getRandom().nextFloat() * 0.4F + 0.8F));
 	}
 
