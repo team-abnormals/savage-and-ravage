@@ -210,7 +210,7 @@ public class SREvents {
 				if (isPowered) {
 					spores.setCharged(true);
 				}
-				spores.setCloudSize((int) (sourceEntity.getHealth() / sourceEntity.getMaxHealth()) * (isPowered ? 10 : 4));
+				spores.setCloudSize((int) (((sourceEntity.getHealth() / sourceEntity.getMaxHealth()) * (isPowered ? 5.0 : 2.0))));
 				spores.copyPosition(sourceEntity);
 				sourceEntity.level().addFreshEntity(spores);
 			}
