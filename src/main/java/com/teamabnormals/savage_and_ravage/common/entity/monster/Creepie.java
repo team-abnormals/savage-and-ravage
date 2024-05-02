@@ -5,6 +5,7 @@ import com.teamabnormals.savage_and_ravage.common.entity.ai.goal.CreepieSwellGoa
 import com.teamabnormals.savage_and_ravage.common.entity.ai.goal.FollowMobOwnerGoal;
 import com.teamabnormals.savage_and_ravage.common.entity.ai.goal.MobOwnerHurtByTargetGoal;
 import com.teamabnormals.savage_and_ravage.common.entity.ai.goal.MobOwnerHurtTargetGoal;
+import com.teamabnormals.savage_and_ravage.core.SRConfig;
 import com.teamabnormals.savage_and_ravage.core.registry.SRParticleTypes;
 import com.teamabnormals.savage_and_ravage.core.registry.SRSounds;
 import net.minecraft.core.particles.ParticleTypes;
@@ -214,7 +215,7 @@ public class Creepie extends Monster implements PowerableMob, OwnableMob {
 		if (!this.level().isClientSide()) {
 			float chargedModifier = this.isPowered() ? 2.0F : 1.0F;
 			this.dead = true;
-			this.level().explode(this, this.getX(), this.getY(), this.getZ(), this.explosionRadius * chargedModifier, ExplosionInteraction.MOB);
+			this.level().explode(this, this.getX(), this.getY(), this.getZ(), this.explosionRadius * chargedModifier, SRConfig.COMMON.creepieExplosionsDestroyBlocks.get() ? ExplosionInteraction.MOB : ExplosionInteraction.NONE);
 			this.discard();
 			this.spawnLingeringCloud();
 		}
