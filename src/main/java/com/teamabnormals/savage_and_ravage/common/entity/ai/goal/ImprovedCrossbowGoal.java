@@ -51,7 +51,6 @@ public class ImprovedCrossbowGoal<T extends PathfinderMob & RangedAttackMob & Cr
 	private int practisingTicks;
 	private BlockPos blockPos;
 	private Vec3 blockPosVector;
-	private Vec3 blockPosVectorCentred;
 
 	public ImprovedCrossbowGoal(T mob, double speedChanger, float radius, double blocksUntilBackup) {
 		this.mob = mob;
@@ -101,7 +100,6 @@ public class ImprovedCrossbowGoal<T extends PathfinderMob & RangedAttackMob & Cr
 		this.practisingTicks = 200 + this.mob.getRandom().nextInt(160);
 		if (this.blockPos != null) {
 			this.blockPosVector = new Vec3(this.blockPos.getX(), this.blockPos.getY(), this.blockPos.getZ());
-			this.blockPosVectorCentred = this.blockPosVector.add(0.5D, 0.5D, 0.5D);
 		}
 	}
 
@@ -247,12 +245,16 @@ public class ImprovedCrossbowGoal<T extends PathfinderMob & RangedAttackMob & Cr
 	}
 
 	private boolean canSeeTargetBlock() {
-		this.mob.level().getProfiler().push("canSee");
-		Vec3 mobPos = new Vec3(this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
-		BlockHitResult result = this.mob.level().clip(new ClipContext(mobPos, this.blockPosVectorCentred, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this.mob));
-		boolean canSee = result.getBlockPos().equals(this.blockPos) || result.getType() == HitResult.Type.MISS;
-		this.mob.level().getProfiler().pop();
-		return canSee;
+		if (this.blockPosVector != null) {
+			this.mob.level().getProfiler().push("canSee");
+			Vec3 mobPos = new Vec3(this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
+			BlockHitResult result = this.mob.level().clip(new ClipContext(mobPos, this.blockPosVector.add(0.5D, 0.5D, 0.5D), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this.mob));
+			boolean canSee = result.getBlockPos().equals(this.blockPos) || result.getType() == HitResult.Type.MISS;
+			this.mob.level().getProfiler().pop();
+			return canSee;
+		}
+
+		return false;
 	}
 
 	private boolean isCrossbowUncharged() {
