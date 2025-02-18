@@ -18,6 +18,7 @@ public class SRConfig {
 		public final BooleanValue reducedVexHealth;
 		@ConfigKey("no_bad_omen_on_death")
 		public final BooleanValue noBadOmenOnDeath;
+		public final BooleanValue improvedIllagerBehavior;
 		public final BooleanValue poisonPotatoCompat;
 		public final DoubleValue poisonPotatoChance;
 		public final BooleanValue poisonPotatoEffect;
@@ -38,6 +39,9 @@ public class SRConfig {
 					.comment("When killed by projectiles, evokers use a totem of undying", "This restores 2 health and gives them a projectile-proof shield for 30 seconds", "When their shield runs out, evokers cannot use totems for another 90 seconds")
 					.define("Evokers use totems", true);
 			reducedVexHealth = builder.define("Vex health is reduced to 2", true);
+			improvedIllagerBehavior = builder
+					.comment("Illagers have a smarter AI when using Crossbows, making them more of a threat in combat")
+					.define("Improved Illager behavior", true);
 			builder.pop();
 			builder.pop();
 
