@@ -116,9 +116,12 @@ public class BurningBanner extends Entity implements IEntityAdditionalSpawnData 
 					SRCriteriaTriggers.BURN_OMINOUS_BANNER.trigger((ServerPlayer) offender);
 					if (SRConfig.COMMON.noBadOmenOnDeath.get() && !this.level().getGameRules().getBoolean(GameRules.RULE_DISABLE_RAIDS)) {
 						MobEffectInstance effect = offender.getEffect(MobEffects.BAD_OMEN);
-						if (effect != null)
+						int amplifier = 0;
+						if (effect != null) {
+							amplifier = effect.getAmplifier() + 1;
 							offender.removeEffectNoUpdate(MobEffects.BAD_OMEN);
-						offender.addEffect(new MobEffectInstance(MobEffects.BAD_OMEN, 120000, Mth.clamp(effect == null ? 0 : (effect.getAmplifier() + 1), 0, 4), false, false, true));
+						}
+						offender.addEffect(new MobEffectInstance(MobEffects.BAD_OMEN, 120000, Mth.clamp(amplifier, 0, 4), false, false, true));
 					}
 				}
 				this.level().removeBlock(bannerPos, false);

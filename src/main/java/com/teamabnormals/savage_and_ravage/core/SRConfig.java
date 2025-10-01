@@ -34,7 +34,7 @@ public class SRConfig {
 			builder.push("illagers");
 			noBadOmenOnDeath = builder
 					.comment("Illagers with banners will no longer give Bad Omen when you kill them", "Instead, you will have to place and burn the banner that they drop with flint and steel or a fire charge")
-					.define("Illagers no longer give Bad Omen on death", false);
+					.define("Illagers no longer give Bad Omen on death", true);
 			evokersUseTotems = builder
 					.comment("When killed by projectiles, evokers use a totem of undying", "This restores 2 health and gives them a projectile-proof shield for 30 seconds", "When their shield runs out, evokers cannot use totems for another 90 seconds")
 					.define("Evokers use totems", true);
