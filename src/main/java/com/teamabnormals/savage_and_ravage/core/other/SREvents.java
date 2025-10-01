@@ -350,14 +350,11 @@ public class SREvents {
 	public static void onLivingDamageDelayed(LivingDamageEvent event) {
 		LivingEntity target = event.getEntity();
 		Entity attacker = event.getSource().getEntity();
-		if (attacker instanceof LivingEntity && ((LivingEntity) attacker).getMainHandItem().getItem() == SRItems.CLEAVER_OF_BEHEADING.get()) {
-			if (target instanceof Player) {
-				Player targetPlayer = (Player) event.getEntity();
-				if (targetPlayer != null && targetPlayer.getHealth() - event.getAmount() <= 0) {
-					ItemStack stack = new ItemStack(Items.PLAYER_HEAD);
-					stack.addTagElement("SkullOwner", NbtUtils.writeGameProfile(new CompoundTag(), targetPlayer.getGameProfile()));
-					target.spawnAtLocation(stack);
-				}
+		if (attacker instanceof LivingEntity living && living.getMainHandItem().is(SRItems.CLEAVER_OF_BEHEADING.get())) {
+			if (target instanceof Player player && player != null && player.getHealth() - event.getAmount() <= 0) {
+				ItemStack stack = new ItemStack(Items.PLAYER_HEAD);
+				stack.addTagElement("SkullOwner", NbtUtils.writeGameProfile(new CompoundTag(), player.getGameProfile()));
+				target.spawnAtLocation(stack);
 			}
 		}
 		if (target instanceof Evoker && SRConfig.COMMON.evokersUseTotems.get()) {
@@ -366,6 +363,7 @@ public class SREvents {
 				if (data.getValue(SRDataProcessors.TOTEM_SHIELD_TIME) <= 0 && data.getValue(SRDataProcessors.TOTEM_SHIELD_COOLDOWN) <= 0) {
 					event.setCanceled(true);
 					target.setHealth(2.0F);
+					target.extinguishFire();
 					data.setValue(SRDataProcessors.TOTEM_SHIELD_TIME, 600);
 					if (!target.level().isClientSide())
 						target.level().broadcastEntityEvent(target, (byte) 35);
