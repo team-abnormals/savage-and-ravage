@@ -58,7 +58,10 @@ public class SRAdvancementModifierProvider extends AdvancementModifierProvider {
 		this.entry("adventure/kill_all_mobs").selects("adventure/kill_all_mobs").addModifier(killAllMobs.requirements(RequirementsStrategy.AND).build());
 		this.entry("adventure/voluntary_exile").selects("adventure/voluntary_exile")
 				.addModifier(new ParentModifier(new ResourceLocation("adventure/trade")))
-				.addModifier(CriteriaModifier.builder(this.modId).addCriterion("voluntary_exile", SRCriteriaTriggers.BURN_OMINOUS_BANNER.createInstance()).build(), noBadOmenOnDeath)
+				.addModifier(CriteriaModifier.builder(this.modId).addCriterion("voluntary_exile_burn", SRCriteriaTriggers.BURN_OMINOUS_BANNER.createInstance())
+						.addIndexedRequirements(0, true, "voluntary_exile_burn")
+						.shouldReplaceRequirements(true).build(), noBadOmenOnDeath)
 				.addModifier(DisplayInfoModifier.builder().description(Component.translatable("advancements." + this.modId + ".adventure.voluntary_exile.description")).build(), noBadOmenOnDeath);
+
 	}
 }

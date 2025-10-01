@@ -14,10 +14,19 @@
       ],
       "config": {
         "criteria": {
-          "savage_and_ravage:voluntary_exile": {
+          "savage_and_ravage:voluntary_exile_burn": {
             "trigger": "savage_and_ravage:burn_ominous_banner"
           }
-        }
+        },
+        "indexed_requirements": [
+          {
+            "index": 0,
+            "replace": true,
+            "requirements": [
+              "savage_and_ravage:voluntary_exile_burn"
+            ]
+          }
+        ]
       }
     },
     {
