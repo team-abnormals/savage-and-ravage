@@ -21,8 +21,8 @@ import net.minecraftforge.client.model.data.ModelData;
  * @author Ocelot
  */
 public class IceChunkRenderer extends EntityRenderer<IceChunk> {
-	public static final ResourceLocation MODEL_LOCATION = new ResourceLocation(SavageAndRavage.MOD_ID, "entity/ice_chunk");
-	public static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation(SavageAndRavage.MOD_ID, "textures/entity/ice_chunk.png");
+	public static final ResourceLocation MODEL_LOCATION = SavageAndRavage.location("entity/ice_chunk");
+	public static final ResourceLocation TEXTURE_LOCATION = SavageAndRavage.location("textures/entity/ice_chunk.png");
 
 	public IceChunkRenderer(EntityRendererProvider.Context context) {
 		super(context);

@@ -14,7 +14,7 @@ import net.minecraft.resources.ResourceLocation;
  * @author Ocelot
  */
 public class IceologerRenderer extends MobRenderer<Iceologer, IceologerModel> {
-	private static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation(SavageAndRavage.MOD_ID, "textures/entity/iceologer.png");
+	private static final ResourceLocation TEXTURE_LOCATION = SavageAndRavage.location("textures/entity/iceologer.png");
 
 	public IceologerRenderer(EntityRendererProvider.Context context) {
 		super(context, new IceologerModel(context.bakeLayer(SRModelLayers.ICEOLOGER)), 0.5F);

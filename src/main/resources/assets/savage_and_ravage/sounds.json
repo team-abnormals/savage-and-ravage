@@ -115,6 +115,38 @@
     ],
     "subtitle": "subtitles.savage_and_ravage.entity.trickster.cast_spell"
   },
+  "entity.executioner.ambient": {
+    "sounds": [
+      "mob/vindication_illager/idle1",
+      "mob/vindication_illager/idle2",
+      "mob/vindication_illager/idle3",
+      "mob/vindication_illager/idle4",
+      "mob/vindication_illager/idle5"
+    ],
+    "subtitle": "subtitles.savage_and_ravage.entity.executioner.ambient"
+  },
+  "entity.executioner.celebrate": {
+    "sounds": [
+      "mob/vindication_illager/celebrate1",
+      "mob/vindication_illager/celebrate2"
+    ],
+    "subtitle": "subtitles.savage_and_ravage.entity.executioner.celebrate"
+  },
+  "entity.executioner.death": {
+    "sounds": [
+      "mob/vindication_illager/death1",
+      "mob/vindication_illager/death2"
+    ],
+    "subtitle": "subtitles.savage_and_ravage.entity.executioner.death"
+  },
+  "entity.executioner.hurt": {
+    "sounds": [
+      "mob/vindication_illager/hurt1",
+      "mob/vindication_illager/hurt2",
+      "mob/vindication_illager/hurt3"
+    ],
+    "subtitle": "subtitles.savage_and_ravage.entity.executioner.hurt"
+  },
   "entity.player.cast_spell": {
     "sounds": [
       "mob/evocation_illager/cast1",

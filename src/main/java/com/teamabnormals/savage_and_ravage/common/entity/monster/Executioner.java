@@ -2,9 +2,12 @@ package com.teamabnormals.savage_and_ravage.common.entity.monster;
 
 import com.google.common.collect.Maps;
 import com.teamabnormals.savage_and_ravage.core.registry.SRItems;
+import com.teamabnormals.savage_and_ravage.core.registry.SRSoundEvents;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -60,6 +63,27 @@ public class Executioner extends Vindicator {
 	@Override
 	public ItemStack getPickedResult(HitResult target) {
 		return new ItemStack(SRItems.EXECUTIONER_SPAWN_EGG.get());
+	}
+
+
+	@Override
+	public SoundEvent getCelebrateSound() {
+		return SRSoundEvents.EXECUTIONER_CELEBRATE.get();
+	}
+
+	@Override
+	protected SoundEvent getAmbientSound() {
+		return SRSoundEvents.EXECUTIONER_AMBIENT.get();
+	}
+
+	@Override
+	protected SoundEvent getDeathSound() {
+		return SRSoundEvents.EXECUTIONER_DEATH.get();
+	}
+
+	@Override
+	protected SoundEvent getHurtSound(DamageSource source) {
+		return SRSoundEvents.EXECUTIONER_HURT.get();
 	}
 
 	@Override

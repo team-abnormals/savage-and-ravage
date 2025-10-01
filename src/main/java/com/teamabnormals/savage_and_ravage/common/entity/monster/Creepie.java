@@ -7,7 +7,7 @@ import com.teamabnormals.savage_and_ravage.common.entity.ai.goal.MobOwnerHurtByT
 import com.teamabnormals.savage_and_ravage.common.entity.ai.goal.MobOwnerHurtTargetGoal;
 import com.teamabnormals.savage_and_ravage.core.SRConfig;
 import com.teamabnormals.savage_and_ravage.core.registry.SRParticleTypes;
-import com.teamabnormals.savage_and_ravage.core.registry.SRSounds;
+import com.teamabnormals.savage_and_ravage.core.registry.SRSoundEvents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -252,12 +252,12 @@ public class Creepie extends Monster implements PowerableMob, OwnableMob {
 
 	@Override
 	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-		return SRSounds.ENTITY_CREEPIE_HURT.get();
+		return SRSoundEvents.CREEPIE_HURT.get();
 	}
 
 	@Override
 	protected SoundEvent getDeathSound() {
-		return SRSounds.ENTITY_CREEPIE_DEATH.get();
+		return SRSoundEvents.CREEPIE_DEATH.get();
 	}
 
 	/**
@@ -272,7 +272,7 @@ public class Creepie extends Monster implements PowerableMob, OwnableMob {
 			}
 			int i = this.getCreeperState();
 			if (i > 0 && this.timeSinceIgnited == 0) {
-				this.playSound(SRSounds.ENTITY_CREEPIE_PRIMED.get(), this.getSoundVolume(), this.getVoicePitch());
+				this.playSound(SRSoundEvents.CREEPIE_PRIMED.get(), this.getSoundVolume(), this.getVoicePitch());
 			}
 			this.timeSinceIgnited += i;
 			if (this.timeSinceIgnited < 0) {
@@ -285,7 +285,7 @@ public class Creepie extends Monster implements PowerableMob, OwnableMob {
 			}
 			if (this.isConverting()) {
 				if (this.hasStartedConverting) {
-					this.playSound(SRSounds.ENTITY_CREEPIE_CONVERT.get(), 1.0F, 1.0F);
+					this.playSound(SRSoundEvents.CREEPIE_CONVERT.get(), 1.0F, 1.0F);
 					this.hasStartedConverting = false;
 				}
 				this.setConversionTime(this.getConversionTime() - 1);
@@ -480,7 +480,7 @@ public class Creepie extends Monster implements PowerableMob, OwnableMob {
 		this.dead = true;
 		this.discard();
 		this.level().addFreshEntity(creeperEntity);
-		this.playSound(SRSounds.ENTITY_CREEPIE_GROW.get(), 1.0F, 1.0F);
+		this.playSound(SRSoundEvents.CREEPIE_GROW.get(), 1.0F, 1.0F);
 		return creeperEntity;
 	}
 

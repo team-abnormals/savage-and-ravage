@@ -3,7 +3,7 @@ package com.teamabnormals.savage_and_ravage.common.entity.monster;
 import com.teamabnormals.savage_and_ravage.common.entity.projectile.IceChunk;
 import com.teamabnormals.savage_and_ravage.common.entity.projectile.IceCloud;
 import com.teamabnormals.savage_and_ravage.core.registry.SRItems;
-import com.teamabnormals.savage_and_ravage.core.registry.SRSounds;
+import com.teamabnormals.savage_and_ravage.core.registry.SRSoundEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
@@ -142,27 +142,27 @@ public class Iceologer extends SpellcasterIllager {
 
 	@Override
 	protected SoundEvent getAmbientSound() {
-		return SRSounds.ENTITY_ICEOLOGER_AMBIENT.get();
+		return SRSoundEvents.ICEOLOGER_AMBIENT.get();
 	}
 
 	@Override
 	protected SoundEvent getDeathSound() {
-		return SRSounds.ENTITY_ICEOLOGER_DEATH.get();
+		return SRSoundEvents.ICEOLOGER_DEATH.get();
 	}
 
 	@Override
 	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-		return SRSounds.ENTITY_ICEOLOGER_HURT.get();
+		return SRSoundEvents.ICEOLOGER_HURT.get();
 	}
 
 	@Override
 	public SoundEvent getCelebrateSound() {
-		return SRSounds.ENTITY_ICEOLOGER_CELEBRATE.get();
+		return SRSoundEvents.ICEOLOGER_CELEBRATE.get();
 	}
 
 	@Override
 	public SoundEvent getCastingSoundEvent() {
-		return SRSounds.ENTITY_ICEOLOGER_CAST_SPELL.get();
+		return SRSoundEvents.ICEOLOGER_CAST_SPELL.get();
 	}
 
 	@Override
@@ -236,7 +236,7 @@ public class Iceologer extends SpellcasterIllager {
 
 		@Override
 		protected SoundEvent getSpellPrepareSound() {
-			return SRSounds.GENERIC_PREPARE_ATTACK.get();
+			return SRSoundEvents.GENERIC_PREPARE_ATTACK.get();
 		}
 
 		@Override
@@ -271,7 +271,7 @@ public class Iceologer extends SpellcasterIllager {
 
 		@Override
 		protected SoundEvent getSpellPrepareSound() {
-			return SRSounds.GENERIC_PREPARE_ATTACK.get();
+			return SRSoundEvents.GENERIC_PREPARE_ATTACK.get();
 		}
 
 		@Override

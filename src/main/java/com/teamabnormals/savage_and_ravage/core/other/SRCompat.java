@@ -10,7 +10,7 @@ import com.teamabnormals.savage_and_ravage.core.SavageAndRavage;
 import com.teamabnormals.savage_and_ravage.core.other.tags.SRBlockTags;
 import com.teamabnormals.savage_and_ravage.core.registry.SRBlocks;
 import com.teamabnormals.savage_and_ravage.core.registry.SRItems;
-import com.teamabnormals.savage_and_ravage.core.registry.SRSounds;
+import com.teamabnormals.savage_and_ravage.core.registry.SRSoundEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.Position;
@@ -90,8 +90,8 @@ public class SRCompat {
 	}
 
 	private static void registerNoteBlocks() {
-		DataUtil.registerNoteBlockInstrument(new DataUtil.CustomNoteBlockInstrument(SavageAndRavage.MOD_ID, source -> source.getBlockState().is(Blocks.TARGET), SRSounds.BLOCK_NOTE_BLOCK_HIT_MARKER.get()));
-		DataUtil.registerNoteBlockInstrument(new DataUtil.CustomNoteBlockInstrument(SavageAndRavage.MOD_ID, source -> source.getBlockState().is(SRBlockTags.HARPSICHORD_NOTE_BLOCKS), SRSounds.BLOCK_NOTE_BLOCK_HARPSICHORD.get()));
-		DataUtil.registerNoteBlockInstrument(new DataUtil.CustomNoteBlockInstrument(SavageAndRavage.MOD_ID, source -> source.getBlockState().is(SRBlockTags.ORCHESTRAL_NOTE_BLOCKS), SRSounds.BLOCK_NOTE_BLOCK_ORCHESTRAL_HIT.get()));
+		DataUtil.registerNoteBlockInstrument(new DataUtil.CustomNoteBlockInstrument(SavageAndRavage.MOD_ID, source -> source.getBlockState().is(Blocks.TARGET), SRSoundEvents.NOTE_BLOCK_HIT_MARKER.get()));
+		DataUtil.registerNoteBlockInstrument(new DataUtil.CustomNoteBlockInstrument(SavageAndRavage.MOD_ID, source -> source.getBlockState().is(SRBlockTags.HARPSICHORD_NOTE_BLOCKS), SRSoundEvents.NOTE_BLOCK_HARPSICHORD.get()));
+		DataUtil.registerNoteBlockInstrument(new DataUtil.CustomNoteBlockInstrument(SavageAndRavage.MOD_ID, source -> source.getBlockState().is(SRBlockTags.ORCHESTRAL_NOTE_BLOCKS), SRSoundEvents.NOTE_BLOCK_ORCHESTRAL_HIT.get()));
 	}
 }

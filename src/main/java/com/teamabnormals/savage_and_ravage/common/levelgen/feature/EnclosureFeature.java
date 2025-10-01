@@ -9,7 +9,6 @@ import com.teamabnormals.savage_and_ravage.core.registry.SRBlocks;
 import com.teamabnormals.savage_and_ravage.core.registry.SREntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -387,7 +386,7 @@ public class EnclosureFeature extends Feature<NoneFeatureConfiguration> {
 									currentPos.set(currentPos.relative(Direction.UP));
 									if (i == 1 && j == 2) {
 										reader.setBlock(currentPos, Blocks.CHEST.defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, dir), 3);
-										RandomizableContainerBlockEntity.setLootTable(reader, rand, currentPos, new ResourceLocation(SavageAndRavage.MOD_ID, "chests/enclosure"));
+										RandomizableContainerBlockEntity.setLootTable(reader, rand, currentPos, SavageAndRavage.location("chests/enclosure"));
 									} else {
 										reader.setBlock(currentPos, Blocks.CRAFTING_TABLE.defaultBlockState(), 3);
 									}
@@ -405,7 +404,7 @@ public class EnclosureFeature extends Feature<NoneFeatureConfiguration> {
 									reader.setBlock(decorationPositions[1][i], SRBlocks.BLAST_PROOF_STAIRS.get().defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, dir.getClockWise()), 3);
 									reader.setBlock(decorationPositions[2][i], SRBlocks.BLAST_PROOF_PLATES.get().defaultBlockState(), 3);
 									reader.setBlock(decorationPositions[2][i].relative(Direction.UP), Blocks.CHEST.defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, dir), 3);
-									RandomizableContainerBlockEntity.setLootTable(reader, rand, decorationPositions[2][i].relative(Direction.UP), new ResourceLocation(SavageAndRavage.MOD_ID, "chests/enclosure"));
+									RandomizableContainerBlockEntity.setLootTable(reader, rand, decorationPositions[2][i].relative(Direction.UP), SavageAndRavage.location("chests/enclosure"));
 									reader.setBlock(decorationPositions[3][i], SRBlocks.BLAST_PROOF_STAIRS.get().defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, dir.getCounterClockWise()), 3);
 								} else {
 									BlockState stairsState = SRBlocks.BLAST_PROOF_STAIRS.get().defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, dir.getOpposite());
@@ -418,7 +417,7 @@ public class EnclosureFeature extends Feature<NoneFeatureConfiguration> {
 						case 2:
 							reader.setBlock(decorationPositions[2][0], SRBlocks.CREEPER_SPORE_SACK.get().defaultBlockState(), 3);
 							reader.setBlock(decorationPositions[3][0], Blocks.CHEST.defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, dir), 3);
-							RandomizableContainerBlockEntity.setLootTable(reader, rand, decorationPositions[3][0], new ResourceLocation(SavageAndRavage.MOD_ID, "chests/enclosure"));
+							RandomizableContainerBlockEntity.setLootTable(reader, rand, decorationPositions[3][0], SavageAndRavage.location("chests/enclosure"));
 					}
 				} else {
 					switch (rand.nextInt(3)) {

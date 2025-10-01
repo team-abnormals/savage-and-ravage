@@ -11,10 +11,9 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.resources.ResourceLocation;
 
 public class RunePrisonModel extends ListModel<RunePrison> {
-	public static final ModelLayerLocation RUNE_PRISON = new ModelLayerLocation(new ResourceLocation(SavageAndRavage.MOD_ID, "rune_prison"), "main");
+	public static final ModelLayerLocation RUNE_PRISON = new ModelLayerLocation(SavageAndRavage.location("rune_prison"), "main");
 
 	public ModelPart plane;
 

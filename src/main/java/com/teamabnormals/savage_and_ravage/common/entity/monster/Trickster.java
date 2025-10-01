@@ -13,7 +13,7 @@ import com.teamabnormals.savage_and_ravage.core.other.SREvents;
 import com.teamabnormals.savage_and_ravage.core.registry.SRBlocks;
 import com.teamabnormals.savage_and_ravage.core.registry.SRItems;
 import com.teamabnormals.savage_and_ravage.core.registry.SRParticleTypes;
-import com.teamabnormals.savage_and_ravage.core.registry.SRSounds;
+import com.teamabnormals.savage_and_ravage.core.registry.SRSoundEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
@@ -208,9 +208,9 @@ public class Trickster extends SpellcasterIllager implements TracksHits {
 				BlockPos oldPos = this.blockPosition();
 				boolean successful = this.randomTeleport(randomX, this.getY(), randomZ, true);
 				if (successful) {
-					this.level().playSound(null, oldPos, SRSounds.GENERIC_PUFF_OF_SMOKE.get(), this.getSoundSource(), 10.0F, 1.0F);
-					this.level().playSound(null, this.blockPosition(), SRSounds.GENERIC_PUFF_OF_SMOKE.get(), this.getSoundSource(), 10.0F, 1.0F);
-					this.level().playSound(null, oldPos, SRSounds.ENTITY_TRICKSTER_LAUGH.get(), SoundSource.HOSTILE, 1.0F, 1.0F);
+					this.level().playSound(null, oldPos, SRSoundEvents.GENERIC_PUFF_OF_SMOKE.get(), this.getSoundSource(), 10.0F, 1.0F);
+					this.level().playSound(null, this.blockPosition(), SRSoundEvents.GENERIC_PUFF_OF_SMOKE.get(), this.getSoundSource(), 10.0F, 1.0F);
+					this.level().playSound(null, oldPos, SRSoundEvents.ENTITY_TRICKSTER_LAUGH.get(), SoundSource.HOSTILE, 1.0F, 1.0F);
 					ConfusionBolt.spawnGaussianParticles(this.level(), this.random, oldBox, SREvents.POOF_KEY, 50);
 					ConfusionBolt.spawnGaussianParticles(this.level(), this.random, this.getBoundingBox().inflate(0.5D), SREvents.POOF_KEY, 50);
 					if (ForgeEventFactory.getMobGriefingEvent(this.level(), this)) {
@@ -242,17 +242,17 @@ public class Trickster extends SpellcasterIllager implements TracksHits {
 	@Nullable
 	@Override
 	protected SoundEvent getAmbientSound() {
-		return SRSounds.ENTITY_TRICKSTER_AMBIENT.get();
+		return SRSoundEvents.TRICKSTER_AMBIENT.get();
 	}
 
 	@Override
 	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-		return SRSounds.ENTITY_TRICKSTER_HURT.get();
+		return SRSoundEvents.TRICKSTER_HURT.get();
 	}
 
 	@Override
 	protected SoundEvent getDeathSound() {
-		return SRSounds.ENTITY_TRICKSTER_DEATH.get();
+		return SRSoundEvents.TRICKSTER_DEATH.get();
 	}
 
 	@Override
@@ -265,12 +265,12 @@ public class Trickster extends SpellcasterIllager implements TracksHits {
 	@Override
 	protected void playStepSound(BlockPos pos, BlockState blockIn) {
 		super.playStepSound(pos, blockIn);
-		this.playSound(SRSounds.ENTITY_TRICKSTER_STEP.get(), 0.5F, 1.0F);
+		this.playSound(SRSoundEvents.TRICKSTER_STEP.get(), 0.5F, 1.0F);
 	}
 
 	@Override
 	protected SoundEvent getCastingSoundEvent() {
-		return SRSounds.ENTITY_TRICKSTER_CAST_SPELL.get();
+		return SRSoundEvents.ENTITY_TRICKSTER_CAST_SPELL.get();
 	}
 
 	@Override
@@ -279,7 +279,7 @@ public class Trickster extends SpellcasterIllager implements TracksHits {
 
 	@Override
 	public SoundEvent getCelebrateSound() {
-		return SRSounds.ENTITY_TRICKSTER_CELEBRATE.get();
+		return SRSoundEvents.TRICKSTER_CELEBRATE.get();
 	}
 
 	@Override
@@ -299,7 +299,7 @@ public class Trickster extends SpellcasterIllager implements TracksHits {
 	public void onTrackedHit(Entity hitter, Entity hit) {
 		if (RunedGloomyTilesBlock.shouldTrigger(hit, false)) {
 			if (trackedSpellEntities.contains(hitter)) {
-				this.level().playSound(null, this.blockPosition(), SRSounds.ENTITY_TRICKSTER_LAUGH.get(), SoundSource.HOSTILE, 1.0f, 1.0f);
+				this.level().playSound(null, this.blockPosition(), SRSoundEvents.ENTITY_TRICKSTER_LAUGH.get(), SoundSource.HOSTILE, 1.0f, 1.0f);
 				trackedSpellEntities.remove(hitter);
 			}
 		}
@@ -329,7 +329,7 @@ public class Trickster extends SpellcasterIllager implements TracksHits {
 		@Nullable
 		@Override
 		protected SoundEvent getSpellPrepareSound() {
-			return SRSounds.GENERIC_PREPARE_ATTACK.get();
+			return SRSoundEvents.GENERIC_PREPARE_ATTACK.get();
 		}
 
 		@Override
@@ -368,7 +368,7 @@ public class Trickster extends SpellcasterIllager implements TracksHits {
 		@Nullable
 		@Override
 		protected SoundEvent getSpellPrepareSound() {
-			return SRSounds.GENERIC_PREPARE_ATTACK.get();
+			return SRSoundEvents.GENERIC_PREPARE_ATTACK.get();
 		}
 
 		@Override

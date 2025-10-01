@@ -1,7 +1,7 @@
 package com.teamabnormals.savage_and_ravage.common.item;
 
 import com.teamabnormals.savage_and_ravage.common.entity.projectile.IceChunk;
-import com.teamabnormals.savage_and_ravage.core.registry.SRSounds;
+import com.teamabnormals.savage_and_ravage.core.registry.SRSoundEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -39,7 +39,7 @@ public class WandOfFreezingItem extends Item {
 
 		if (result.getType() != HitResult.Type.MISS || entityraytraceresult != null) {
 			stack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
-			world.playSound(player, player.blockPosition(), SRSounds.ENTITY_PLAYER_CAST_SPELL.get(), SoundSource.PLAYERS, 1.0f, 1.0f);
+			world.playSound(player, player.blockPosition(), SRSoundEvents.PLAYER_CAST_SPELL.get(), SoundSource.PLAYERS, 1.0f, 1.0f);
 
 			player.getCooldowns().addCooldown(this, 20);
 			if (!world.isClientSide()) {

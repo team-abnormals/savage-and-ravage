@@ -53,7 +53,7 @@ public class SRAdvancementModifierProvider extends AdvancementModifierProvider {
 			names.add(name);
 		}
 
-		ICondition noBadOmenOnDeath = new ConfigValueCondition(new ResourceLocation(SavageAndRavage.MOD_ID, "config"), SRConfig.COMMON.noBadOmenOnDeath, "no_bad_omen_on_death", Maps.newHashMap(), false);
+		ICondition noBadOmenOnDeath = new ConfigValueCondition(SavageAndRavage.location("config"), SRConfig.COMMON.noBadOmenOnDeath, "no_bad_omen_on_death", Maps.newHashMap(), false);
 		this.entry("adventure/kill_a_mob").selects("adventure/kill_a_mob").addModifier(killAMob.addIndexedRequirements(0, false, names.toArray(new String[0])).build());
 		this.entry("adventure/kill_all_mobs").selects("adventure/kill_all_mobs").addModifier(killAllMobs.requirements(RequirementsStrategy.AND).build());
 		this.entry("adventure/voluntary_exile").selects("adventure/voluntary_exile")

@@ -13,7 +13,7 @@ import net.minecraft.world.entity.monster.Vindicator;
 
 public class ExecutionerRenderer extends MobRenderer<Vindicator, ExecutionerModel> {
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(SavageAndRavage.MOD_ID, "textures/entity/executioner.png");
+	private static final ResourceLocation TEXTURE = SavageAndRavage.location("textures/entity/executioner.png");
 
 	public ExecutionerRenderer(EntityRendererProvider.Context context) {
 		super(context, new ExecutionerModel(context.bakeLayer(SRModelLayers.EXECUTIONER)), 0.5f);

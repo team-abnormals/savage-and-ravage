@@ -3,7 +3,7 @@ package com.teamabnormals.savage_and_ravage.common.entity.monster;
 import com.teamabnormals.savage_and_ravage.common.entity.projectile.SporeCloud;
 import com.teamabnormals.savage_and_ravage.common.item.CreeperSporesItem;
 import com.teamabnormals.savage_and_ravage.core.registry.SRItems;
-import com.teamabnormals.savage_and_ravage.core.registry.SRSounds;
+import com.teamabnormals.savage_and_ravage.core.registry.SRSoundEvents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -243,7 +243,7 @@ public class Griefer extends AbstractIllager implements RangedAttackMob {
 			creeperSpores.shoot(d1, d2 + (double) f, d3, 1.6F, 12.0F);
 			creeperSpores.setCloudSize(this.random.nextInt(50) == 0 ? 0 : 1 + this.random.nextInt(3));
 			this.swing(getUsedItemHand());
-			this.playSound(SRSounds.ENTITY_CREEPER_SPORES_THROW.get(), 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
+			this.playSound(SRSoundEvents.CREEPER_SPORES_THROW.get(), 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
 			this.level().addFreshEntity(creeperSpores);
 			this.lookAt(target, 30.0F, 30.0F);
 			this.creeperSporeStacks--;

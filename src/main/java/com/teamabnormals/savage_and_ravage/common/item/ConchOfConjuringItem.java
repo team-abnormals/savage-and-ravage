@@ -1,6 +1,6 @@
 package com.teamabnormals.savage_and_ravage.common.item;
 
-import com.teamabnormals.savage_and_ravage.core.registry.SRSounds;
+import com.teamabnormals.savage_and_ravage.core.registry.SRSoundEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
@@ -46,7 +46,7 @@ public class ConchOfConjuringItem extends Item {
 		}
 		ItemStack stack = player.getItemInHand(hand);
 		if (hasSucceeded) {
-			player.playSound(SRSounds.GENERIC_PREPARE_ATTACK.get(), 1.0F, 1.0F);
+			player.playSound(SRSoundEvents.GENERIC_PREPARE_ATTACK.get(), 1.0F, 1.0F);
 			player.getCooldowns().addCooldown(this, 60);
 			stack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
 			return InteractionResultHolder.success(stack);

@@ -12,8 +12,8 @@ import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.resources.ResourceLocation;
 
 public class GrieferRenderer extends HumanoidMobRenderer<Griefer, GrieferModel> {
-	private static final ResourceLocation GRIEFER_TEXTURE = new ResourceLocation(SavageAndRavage.MOD_ID, "textures/entity/griefer/griefer.png");
-	private static final ResourceLocation APESHIT_MODE_TEXTURE = new ResourceLocation(SavageAndRavage.MOD_ID, "textures/entity/griefer/griefer_melee.png");
+	private static final ResourceLocation GRIEFER_TEXTURE = SavageAndRavage.location("textures/entity/griefer/griefer.png");
+	private static final ResourceLocation APESHIT_MODE_TEXTURE = SavageAndRavage.location("textures/entity/griefer/griefer_melee.png");
 
 	public GrieferRenderer(EntityRendererProvider.Context context) {
 		super(context, new GrieferModel(context.bakeLayer(SRModelLayers.GRIEFER)), 0.5F);

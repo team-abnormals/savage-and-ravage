@@ -3,7 +3,6 @@ package com.teamabnormals.savage_and_ravage.core.other;
 import com.teamabnormals.blueprint.common.world.storage.tracking.*;
 import com.teamabnormals.savage_and_ravage.core.SavageAndRavage;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -33,11 +32,11 @@ public class SRDataProcessors {
 	public static final TrackedData<Integer> CELEBRATION_TIME = TrackedData.Builder.create(DataProcessors.INT, () -> 0).setSyncType(SyncType.NOPE).build();
 
 	public static void registerTrackedData() {
-		TrackedDataManager.INSTANCE.registerData(new ResourceLocation(SavageAndRavage.MOD_ID, "evoker_shield_time"), TOTEM_SHIELD_TIME);
-		TrackedDataManager.INSTANCE.registerData(new ResourceLocation(SavageAndRavage.MOD_ID, "evoker_shield_cooldown"), TOTEM_SHIELD_COOLDOWN);
-		TrackedDataManager.INSTANCE.registerData(new ResourceLocation(SavageAndRavage.MOD_ID, "invisible_due_to_mask"), INVISIBLE_DUE_TO_MASK);
-		TrackedDataManager.INSTANCE.registerData(new ResourceLocation(SavageAndRavage.MOD_ID, "target_hit"), TARGET_HIT);
-		TrackedDataManager.INSTANCE.registerData(new ResourceLocation(SavageAndRavage.MOD_ID, "crossbow_owner"), CROSSBOW_OWNER);
-		TrackedDataManager.INSTANCE.registerData(new ResourceLocation(SavageAndRavage.MOD_ID, "celebration_time"), CELEBRATION_TIME);
+		TrackedDataManager.INSTANCE.registerData(SavageAndRavage.location("evoker_shield_time"), TOTEM_SHIELD_TIME);
+		TrackedDataManager.INSTANCE.registerData(SavageAndRavage.location("evoker_shield_cooldown"), TOTEM_SHIELD_COOLDOWN);
+		TrackedDataManager.INSTANCE.registerData(SavageAndRavage.location("invisible_due_to_mask"), INVISIBLE_DUE_TO_MASK);
+		TrackedDataManager.INSTANCE.registerData(SavageAndRavage.location("target_hit"), TARGET_HIT);
+		TrackedDataManager.INSTANCE.registerData(SavageAndRavage.location("crossbow_owner"), CROSSBOW_OWNER);
+		TrackedDataManager.INSTANCE.registerData(SavageAndRavage.location("celebration_time"), CELEBRATION_TIME);
 	}
 }

@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 
 public class MischiefArrowRenderer extends ArrowRenderer<MischiefArrow> {
-	private static final ResourceLocation MISCHIEF_ARROW_TEXTURE = new ResourceLocation(SavageAndRavage.MOD_ID, "textures/entity/projectiles/mischief_arrow.png");
+	private static final ResourceLocation MISCHIEF_ARROW_TEXTURE = SavageAndRavage.location("textures/entity/projectiles/mischief_arrow.png");
 
 	public MischiefArrowRenderer(EntityRendererProvider.Context context) {
 		super(context);

@@ -64,7 +64,7 @@ public class SRFeatures {
 		}
 
 		public static ResourceKey<StructureTemplatePool> createKey(String name) {
-			return ResourceKey.create(Registries.TEMPLATE_POOL, new ResourceLocation(SavageAndRavage.MOD_ID, name));
+			return ResourceKey.create(Registries.TEMPLATE_POOL, SavageAndRavage.location(name));
 		}
 	}
 
@@ -76,7 +76,7 @@ public class SRFeatures {
 		}
 
 		public static ResourceKey<ConfiguredFeature<?, ?>> createKey(String name) {
-			return ResourceKey.create(Registries.CONFIGURED_FEATURE, new ResourceLocation(SavageAndRavage.MOD_ID, name));
+			return ResourceKey.create(Registries.CONFIGURED_FEATURE, SavageAndRavage.location(name));
 		}
 
 		public static <FC extends FeatureConfiguration, F extends Feature<FC>> void register(BootstapContext<ConfiguredFeature<?, ?>> context, ResourceKey<ConfiguredFeature<?, ?>> key, F feature, FC config) {
@@ -93,7 +93,7 @@ public class SRFeatures {
 		}
 
 		public static ResourceKey<PlacedFeature> createKey(String name) {
-			return ResourceKey.create(Registries.PLACED_FEATURE, new ResourceLocation(SavageAndRavage.MOD_ID, name));
+			return ResourceKey.create(Registries.PLACED_FEATURE, SavageAndRavage.location(name));
 		}
 
 		public static void register(BootstapContext<PlacedFeature> context, ResourceKey<PlacedFeature> key, ResourceKey<ConfiguredFeature<?, ?>> feature, List<PlacementModifier> modifiers) {

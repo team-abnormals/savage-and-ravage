@@ -7,7 +7,6 @@ import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.biome.Biome;
@@ -42,6 +41,6 @@ public class SRBiomeModifiers {
 	}
 
 	private static void register(BootstapContext<BiomeModifier> context, String name, Supplier<? extends BiomeModifier> modifier) {
-		context.register(ResourceKey.create(ForgeRegistries.Keys.BIOME_MODIFIERS, new ResourceLocation(SavageAndRavage.MOD_ID, name)), modifier.get());
+		context.register(ResourceKey.create(ForgeRegistries.Keys.BIOME_MODIFIERS, SavageAndRavage.location(name)), modifier.get());
 	}
 }

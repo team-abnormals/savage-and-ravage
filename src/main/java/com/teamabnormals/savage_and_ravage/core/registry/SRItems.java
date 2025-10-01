@@ -6,7 +6,6 @@ import com.teamabnormals.savage_and_ravage.common.item.*;
 import com.teamabnormals.savage_and_ravage.core.SavageAndRavage;
 import com.teamabnormals.savage_and_ravage.core.other.SRTiers;
 import net.minecraft.client.renderer.item.ItemProperties;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -41,8 +40,8 @@ public class SRItems {
 	public static final RegistryObject<ForgeSpawnEggItem> TRICKSTER_SPAWN_EGG = HELPER.createSpawnEggItem("trickster", SREntityTypes.TRICKSTER::get, 0x617743, 0x734B4B);
 
 	public static void registerItemProperties() {
-		ItemProperties.register(Items.CROSSBOW, new ResourceLocation(SavageAndRavage.MOD_ID, "mischief_arrow"), (stack, world, entity, integer) -> entity != null && CrossbowItem.isCharged(stack) && CrossbowItem.containsChargedProjectile(stack, SRItems.MISCHIEF_ARROW.get()) ? 1.0F : 0.0F);
-		ItemProperties.register(Items.CROSSBOW, new ResourceLocation(SavageAndRavage.MOD_ID, "spectral_arrow"), (stack, world, entity, integer) -> entity != null && CrossbowItem.isCharged(stack) && CrossbowItem.containsChargedProjectile(stack, Items.SPECTRAL_ARROW) ? 1.0F : 0.0F);
+		ItemProperties.register(Items.CROSSBOW, SavageAndRavage.location("mischief_arrow"), (stack, world, entity, integer) -> entity != null && CrossbowItem.isCharged(stack) && CrossbowItem.containsChargedProjectile(stack, SRItems.MISCHIEF_ARROW.get()) ? 1.0F : 0.0F);
+		ItemProperties.register(Items.CROSSBOW, SavageAndRavage.location("spectral_arrow"), (stack, world, entity, integer) -> entity != null && CrossbowItem.isCharged(stack) && CrossbowItem.containsChargedProjectile(stack, Items.SPECTRAL_ARROW) ? 1.0F : 0.0F);
 	}
 
 	public static void setupTabEditors() {

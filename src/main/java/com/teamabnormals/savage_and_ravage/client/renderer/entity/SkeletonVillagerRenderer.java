@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.resources.ResourceLocation;
 
 public class SkeletonVillagerRenderer extends MobRenderer<SkeletonVillager, SkeletonVillagerModel> {
-	private static final ResourceLocation SKELETON_VILLAGER_TEXTURES = new ResourceLocation(SavageAndRavage.MOD_ID, "textures/entity/skeleton_villager.png");
+	private static final ResourceLocation SKELETON_VILLAGER_TEXTURES = SavageAndRavage.location("textures/entity/skeleton_villager.png");
 
 	public SkeletonVillagerRenderer(EntityRendererProvider.Context context) {
 		super(context, new SkeletonVillagerModel(context.bakeLayer(SRModelLayers.SKELETON_VILLAGER)), 0.5f);

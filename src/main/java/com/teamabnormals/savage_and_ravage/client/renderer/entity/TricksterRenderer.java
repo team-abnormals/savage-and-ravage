@@ -10,8 +10,8 @@ import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
 import net.minecraft.resources.ResourceLocation;
 
 public class TricksterRenderer extends MobRenderer<Trickster, TricksterModel> {
-	private static final ResourceLocation NORMAL = new ResourceLocation(SavageAndRavage.MOD_ID, "textures/entity/trickster/trickster.png");
-	private static final ResourceLocation BASED = new ResourceLocation(SavageAndRavage.MOD_ID, "textures/entity/trickster/trickster_based.png");
+	private static final ResourceLocation NORMAL = SavageAndRavage.location("textures/entity/trickster/trickster.png");
+	private static final ResourceLocation BASED = SavageAndRavage.location("textures/entity/trickster/trickster_based.png");
 
 	public TricksterRenderer(EntityRendererProvider.Context context) {
 		super(context, new TricksterModel(context.bakeLayer(SRModelLayers.TRICKSTER)), 0.5f);

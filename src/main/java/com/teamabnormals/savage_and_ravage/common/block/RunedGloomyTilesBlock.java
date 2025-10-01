@@ -3,7 +3,7 @@ package com.teamabnormals.savage_and_ravage.common.block;
 import com.teamabnormals.savage_and_ravage.common.entity.OwnableMob;
 import com.teamabnormals.savage_and_ravage.common.entity.projectile.RunePrison;
 import com.teamabnormals.savage_and_ravage.core.registry.SRItems;
-import com.teamabnormals.savage_and_ravage.core.registry.SRSounds;
+import com.teamabnormals.savage_and_ravage.core.registry.SRSoundEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.EntityTypeTags;
@@ -23,7 +23,7 @@ public class RunedGloomyTilesBlock extends ChiseledGloomyTilesBlock {
 		super.stepOn(world, pos, state, entity);
 		if (!state.getValue(POWERED) && shouldTrigger(entity, true)) {
 			world.setBlockAndUpdate(pos, state.setValue(POWERED, true));
-			world.playSound(null, pos, SRSounds.GENERIC_PREPARE_ATTACK.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
+			world.playSound(null, pos, SRSoundEvents.GENERIC_PREPARE_ATTACK.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
 			EvokerFangs evokerFangs = EntityType.EVOKER_FANGS.create(world);
 			if (evokerFangs != null) {
 				evokerFangs.moveTo(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 0.0F, 0.0F);

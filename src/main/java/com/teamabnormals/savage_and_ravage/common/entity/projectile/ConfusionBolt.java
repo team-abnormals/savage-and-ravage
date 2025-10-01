@@ -96,7 +96,7 @@ public class ConfusionBolt extends ThrowableProjectile {
 
 	@Override
 	protected void onHit(HitResult result) {
-		this.playSound(SRSounds.GENERIC_PUFF_OF_SMOKE.get(), 5.0F, 1.0F);
+		this.playSound(SRSoundEvents.GENERIC_PUFF_OF_SMOKE.get(), 5.0F, 1.0F);
 		spawnGaussianParticles(this.level(), this.random, this.getBoundingBox().inflate(0.5D), SREvents.POOF_KEY, 25);
 		super.onHit(result);
 		this.discard();
@@ -117,7 +117,7 @@ public class ConfusionBolt extends ThrowableProjectile {
 				livingEntity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 140, 1));
 				livingEntity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 30));
 			}
-			livingEntity.playSound(SRSounds.GENERIC_PUFF_OF_SMOKE.get(), 5.0F, 1.0F);
+			livingEntity.playSound(SRSoundEvents.GENERIC_PUFF_OF_SMOKE.get(), 5.0F, 1.0F);
 			spawnGaussianParticles(this.level(), this.random, livingEntity.getBoundingBox().inflate(0.5D), SREvents.POOF_KEY, 25);
 			if (owner instanceof TracksHits)
 				((TracksHits) owner).onTrackedHit(this, entity);
