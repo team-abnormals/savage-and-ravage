@@ -107,20 +107,19 @@ public class ConfusionBolt extends ThrowableProjectile {
 		super.onHitEntity(result);
 		Entity entity = result.getEntity();
 		Entity owner = this.getOwner();
-		if (owner != null && entity instanceof LivingEntity) {
-			LivingEntity livingEntity = (LivingEntity) entity;
+		if (owner != null && entity instanceof LivingEntity living) {
 			Vec3 oldPos = owner.position();
-			teleport(owner, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ());
-			teleport(livingEntity, oldPos.x(), oldPos.y(), oldPos.z());
-			if (livingEntity.isAffectedByPotions()) {
-				livingEntity.addEffect(new MobEffectInstance(SRMobEffects.WEIGHT.get(), 140, 2));
-				livingEntity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 140, 1));
-				livingEntity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 30));
+			teleport(owner, living.getX(), living.getY(), living.getZ());
+			teleport(living, oldPos.x(), oldPos.y(), oldPos.z());
+			if (living.isAffectedByPotions()) {
+				living.addEffect(new MobEffectInstance(SRMobEffects.WEIGHT.get(), 140, 2));
+				living.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 140, 1));
+				living.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 30));
 			}
-			livingEntity.playSound(SRSoundEvents.GENERIC_PUFF_OF_SMOKE.get(), 5.0F, 1.0F);
-			spawnGaussianParticles(this.level(), this.random, livingEntity.getBoundingBox().inflate(0.5D), SREvents.POOF_KEY, 25);
-			if (owner instanceof TracksHits)
-				((TracksHits) owner).onTrackedHit(this, entity);
+			living.playSound(SRSoundEvents.GENERIC_PUFF_OF_SMOKE.get(), 5.0F, 1.0F);
+			spawnGaussianParticles(this.level(), this.random, living.getBoundingBox().inflate(0.5D), SREvents.POOF_KEY, 25);
+			if (owner instanceof TracksHits tracksHits)
+				tracksHits.onTrackedHit(this, entity);
 		}
 	}
 
@@ -144,9 +143,12 @@ public class ConfusionBolt extends ThrowableProjectile {
 
 	private void teleport(Entity entity, double x, double y, double z) {
 		Vec3 originalPos = entity.position();
-		NetworkUtil.teleportEntity(entity, x, y, z);
-		if (!(entity instanceof Mob && ((Mob) entity).isNoAi()))
+		if (!entity.level().isClientSide()) {
+			NetworkUtil.teleportEntity(entity, x, y, z);
+		}
+		if (!(entity instanceof Mob mob && mob.isNoAi())) {
 			entity.lookAt(EntityAnchorArgument.Anchor.EYES, originalPos);
+		}
 	}
 
 	@Override
