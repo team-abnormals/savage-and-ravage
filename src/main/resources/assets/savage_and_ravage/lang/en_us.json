@@ -23,6 +23,7 @@
   "block.savage_and_ravage.runed_gloomy_tiles": "Runed Gloomy Tiles",
   "block.savage_and_ravage.spore_bomb": "Spore Bomb",
   "effect.savage_and_ravage.weight": "Weight",
+  "effect.savage_and_ravage.weight.description": "Slows movement speed and prevents jumping."
   "entity.savage_and_ravage.burning_banner": "Burning Banner",
   "entity.savage_and_ravage.creepie": "Creepie",
   "entity.savage_and_ravage.executioner": "Executioner",
